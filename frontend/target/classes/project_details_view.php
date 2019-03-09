@@ -371,6 +371,7 @@ class project_details_view extends project_details
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -402,6 +403,10 @@ class project_details_view extends project_details
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
+		// Table object (user_dtls)
+		if (!isset($GLOBALS['user_dtls']))
+			$GLOBALS['user_dtls'] = new user_dtls();
+
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
 			define(PROJECT_NAMESPACE . "PAGE_ID", 'view');
@@ -420,6 +425,12 @@ class project_details_view extends project_details
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 
 		// Export options
 		$this->ExportOptions = new ListOptions();
@@ -623,6 +634,56 @@ class project_details_view extends project_details
 		// Is modal
 		$this->IsModal = (Param("modal") == "1");
 
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canView()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("project_detailslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -790,7 +851,7 @@ class project_details_view extends project_details
 			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("ViewPageAddLink") . "</a>";
 		else
 			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "");
+		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 
 		// Copy
 		$item = &$option->add("copy");
@@ -799,7 +860,7 @@ class project_details_view extends project_details
 			$item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->CopyUrl) . "'});\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
 		else
 			$item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-		$item->Visible = ($this->CopyUrl <> "");
+		$item->Visible = ($this->CopyUrl <> "" && $Security->canAdd());
 
 		// Set up action default
 		$option = &$options["action"];

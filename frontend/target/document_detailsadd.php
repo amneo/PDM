@@ -23,6 +23,7 @@ $document_details_add = new document_details_add();
 $document_details_add->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

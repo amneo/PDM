@@ -23,6 +23,7 @@ $transaction_details_list = new transaction_details_list();
 $transaction_details_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -182,6 +183,7 @@ ftransaction_detailslistsrch.filterList = <?php echo $transaction_details_list->
 <?php
 $transaction_details_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$transaction_details->isExport() && !$transaction_details->CurrentAction) { ?>
 <form name="ftransaction_detailslistsrch" id="ftransaction_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($transaction_details_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -208,6 +210,7 @@ $transaction_details_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $transaction_details_list->showPageHeader(); ?>
 <?php
@@ -513,7 +516,9 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 <span id="as_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" class="text-nowrap" style="z-index: <?php echo (9000 - $transaction_details_list->RowCnt * 10) ?>">
 	<div class="input-group">
 		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
 <div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $transaction_details_list->RowIndex ?>_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
 	</div>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
@@ -722,7 +727,9 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 <span id="as_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" class="text-nowrap" style="z-index: <?php echo (9000 - $transaction_details_list->RowCnt * 10) ?>">
 	<div class="input-group">
 		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
 <div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $transaction_details_list->RowIndex ?>_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
 	</div>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>

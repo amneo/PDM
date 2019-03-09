@@ -71,6 +71,14 @@ fregister.validate = function() {
 		<?php } ?>
 			if (fobj.c_password.value != fobj.x_password.value)
 				return this.onError(fobj.c_password, ew.language.phrase("MismatchPassword"));
+		<?php if ($register->email_addreess->Required) { ?>
+			elm = this.getElements("x" + infix + "_email_addreess");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->email_addreess->caption(), $user_dtls->email_addreess->RequiredErrorMessage)) ?>");
+		<?php } ?>
+			elm = this.getElements("x" + infix + "_email_addreess");
+			if (elm && !ew.checkEmail(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($user_dtls->email_addreess->errorMessage()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -165,7 +173,7 @@ $register->showMessage();
 		<div class="<?php echo $register->RightColumnClass ?>"><div<?php echo $user_dtls->password->cellAttributes() ?>>
 <?php if (!$user_dtls->isConfirm()) { ?>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_user_dtls_password">
@@ -182,7 +190,7 @@ $register->showMessage();
 		<td<?php echo $user_dtls->password->cellAttributes() ?>>
 <?php if (!$user_dtls->isConfirm()) { ?>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_user_dtls_password">
@@ -202,7 +210,7 @@ $register->showMessage();
 		<div class="<?php echo $register->RightColumnClass ?>"><div<?php echo $user_dtls->password->cellAttributes() ?>>
 <?php if (!$user_dtls->isConfirm()) { ?>
 <span id="el_c_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="c_password" name="c_password" id="c_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="c_password" name="c_password" id="c_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_c_user_dtls_password">
@@ -219,7 +227,7 @@ $register->showMessage();
 		<td<?php echo $user_dtls->password->cellAttributes() ?>>
 <?php if (!$user_dtls->isConfirm()) { ?>
 <span id="el_c_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="c_password" name="c_password" id="c_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="c_password" name="c_password" id="c_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_c_user_dtls_password">
@@ -229,6 +237,43 @@ $register->showMessage();
 <input type="hidden" data-table="user_dtls" data-field="c_password" name="c_password" id="c_password" value="<?php echo HtmlEncode($user_dtls->password->FormValue) ?>">
 <?php } ?>
 </td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($user_dtls->email_addreess->Visible) { // email_addreess ?>
+<?php if (IsMobile()) { ?>
+	<div id="r_email_addreess" class="form-group row">
+		<label id="elh_user_dtls_email_addreess" for="x_email_addreess" class="<?php echo $register->LeftColumnClass ?>"><?php echo $user_dtls->email_addreess->caption() ?><?php echo ($user_dtls->email_addreess->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $register->RightColumnClass ?>"><div<?php echo $user_dtls->email_addreess->cellAttributes() ?>>
+<?php if (!$user_dtls->isConfirm()) { ?>
+<span id="el_user_dtls_email_addreess">
+<input type="text" data-table="user_dtls" data-field="x_email_addreess" name="x_email_addreess" id="x_email_addreess" size="30" placeholder="<?php echo HtmlEncode($user_dtls->email_addreess->getPlaceHolder()) ?>" value="<?php echo $user_dtls->email_addreess->EditValue ?>"<?php echo $user_dtls->email_addreess->editAttributes() ?>>
+</span>
+<?php } else { ?>
+<span id="el_user_dtls_email_addreess">
+<span<?php echo $user_dtls->email_addreess->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->email_addreess->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="user_dtls" data-field="x_email_addreess" name="x_email_addreess" id="x_email_addreess" value="<?php echo HtmlEncode($user_dtls->email_addreess->FormValue) ?>">
+<?php } ?>
+<?php echo $user_dtls->email_addreess->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_email_addreess">
+		<td class="<?php echo $register->TableLeftColumnClass ?>"><span id="elh_user_dtls_email_addreess"><?php echo $user_dtls->email_addreess->caption() ?><?php echo ($user_dtls->email_addreess->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $user_dtls->email_addreess->cellAttributes() ?>>
+<?php if (!$user_dtls->isConfirm()) { ?>
+<span id="el_user_dtls_email_addreess">
+<input type="text" data-table="user_dtls" data-field="x_email_addreess" name="x_email_addreess" id="x_email_addreess" size="30" placeholder="<?php echo HtmlEncode($user_dtls->email_addreess->getPlaceHolder()) ?>" value="<?php echo $user_dtls->email_addreess->EditValue ?>"<?php echo $user_dtls->email_addreess->editAttributes() ?>>
+</span>
+<?php } else { ?>
+<span id="el_user_dtls_email_addreess">
+<span<?php echo $user_dtls->email_addreess->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->email_addreess->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="user_dtls" data-field="x_email_addreess" name="x_email_addreess" id="x_email_addreess" value="<?php echo HtmlEncode($user_dtls->email_addreess->FormValue) ?>">
+<?php } ?>
+<?php echo $user_dtls->email_addreess->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>

@@ -379,6 +379,7 @@ class user_dtls_list extends user_dtls
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -431,6 +432,12 @@ class user_dtls_list extends user_dtls
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 
 		// List options
 		$this->ListOptions = new ListOptions();
@@ -663,6 +670,58 @@ class user_dtls_list extends user_dtls
 				session_start();
 		}
 
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canList()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				$this->terminate(GetUrl("index.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate();
+					return;
+				}
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -712,7 +771,7 @@ class user_dtls_list extends user_dtls
 		$this->setupExportOptions();
 		$this->user_id->setVisibility();
 		$this->username->setVisibility();
-		$this->password->setVisibility();
+		$this->password->Visible = FALSE;
 		$this->create_login->setVisibility();
 		$this->account_valid->setVisibility();
 		$this->last_login->setVisibility();
@@ -737,6 +796,9 @@ class user_dtls_list extends user_dtls
 
 		// Setup other options
 		$this->setupOtherOptions();
+		$this->ListActions->add("resetconcurrentuser", $Language->phrase("ResetConcurrentUserBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
+		$this->ListActions->add("resetloginretry", $Language->phrase("ResetLoginRetryBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
+		$this->ListActions->add("setpasswordexpired", $Language->phrase("SetPasswordExpiredBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 
 		// Set up custom action (compatible with old version)
 		foreach ($this->CustomActions as $name => $action)
@@ -858,6 +920,8 @@ class user_dtls_list extends user_dtls
 
 		// Build filter
 		$filter = "";
+		if (!$Security->canList())
+			$filter = "(0=1)"; // Filter all records
 		AddFilter($filter, $this->DbDetailFilter);
 		AddFilter($filter, $this->SearchWhere);
 
@@ -899,6 +963,8 @@ class user_dtls_list extends user_dtls
 
 			// Set no record found message
 			if (!$this->CurrentAction && $this->TotalRecs == 0) {
+				if (!$Security->canList())
+					$this->setWarningMessage(DeniedMessage());
 				if ($this->SearchWhere == "0=101")
 					$this->setWarningMessage($Language->phrase("EnterSearchCriteria"));
 				else
@@ -974,6 +1040,10 @@ class user_dtls_list extends user_dtls
 		// Initialize
 		$filterList = "";
 		$savedFilterList = "";
+
+		// Load server side filters
+		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
+			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fuser_dtlslistsrch");
 		$filterList = Concat($filterList, $this->user_id->AdvancedSearch->toJson(), ","); // Field user_id
 		$filterList = Concat($filterList, $this->username->AdvancedSearch->toJson(), ","); // Field username
 		$filterList = Concat($filterList, $this->password->AdvancedSearch->toJson(), ","); // Field password
@@ -1171,6 +1241,8 @@ class user_dtls_list extends user_dtls
 	{
 		global $Security;
 		$searchStr = "";
+		if (!$Security->canSearch())
+			return "";
 		$searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
 		$searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1256,7 +1328,6 @@ class user_dtls_list extends user_dtls
 			$this->CurrentOrderType = Get("ordertype", "");
 			$this->updateSort($this->user_id, $ctrl); // user_id
 			$this->updateSort($this->username, $ctrl); // username
-			$this->updateSort($this->password, $ctrl); // password
 			$this->updateSort($this->create_login, $ctrl); // create_login
 			$this->updateSort($this->account_valid, $ctrl); // account_valid
 			$this->updateSort($this->last_login, $ctrl); // last_login
@@ -1299,7 +1370,6 @@ class user_dtls_list extends user_dtls
 				$this->setSessionOrderBy($orderBy);
 				$this->user_id->setSort("");
 				$this->username->setSort("");
-				$this->password->setSort("");
 				$this->create_login->setSort("");
 				$this->account_valid->setSort("");
 				$this->last_login->setSort("");
@@ -1327,19 +1397,19 @@ class user_dtls_list extends user_dtls
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canEdit();
 		$item->OnLeft = FALSE;
 
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canAdd();
 		$item->OnLeft = FALSE;
 
 		// "delete"
 		$item = &$this->ListOptions->add("delete");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canDelete();
 		$item->OnLeft = FALSE;
 
 		// List actions
@@ -1386,7 +1456,7 @@ class user_dtls_list extends user_dtls
 		// "edit"
 		$opt = &$this->ListOptions->Items["edit"];
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
-		if (TRUE) {
+		if ($Security->canEdit() && $this->showOptionLink('edit')) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -1395,7 +1465,7 @@ class user_dtls_list extends user_dtls
 		// "copy"
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
-		if (TRUE) {
+		if ($Security->canAdd() && $this->showOptionLink('add')) {
 			if (IsMobile())
 				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
 			else
@@ -1406,7 +1476,7 @@ class user_dtls_list extends user_dtls
 
 		// "delete"
 		$opt = &$this->ListOptions->Items["delete"];
-		if (TRUE)
+		if ($Security->canDelete() && $this->showOptionLink('delete'))
 			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
 		else
 			$opt->Body = "";
@@ -1463,7 +1533,7 @@ class user_dtls_list extends user_dtls
 			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		else
 			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"user_dtls\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("AddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "");
+		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1529,6 +1599,7 @@ class user_dtls_list extends user_dtls
 	protected function processListAction()
 	{
 		global $Language, $Security;
+		global $UserProfile;
 		$userlist = "";
 		$user = "";
 		$filter = $this->getFilterFromRecordKeys();
@@ -1564,17 +1635,42 @@ class user_dtls_list extends user_dtls
 				while (!$rs->EOF) {
 					$this->SelectedIndex++;
 					$row = $rs->fields;
-					$processed = $this->Row_CustomAction($userAction, $row);
+					$user = $row['username'];
+					if ($userlist <> "")
+						$userlist .= ",";
+					$userlist .= $user;
+					if ($userAction == "resendregisteremail")
+						$processed = FALSE;
+					elseif ($userAction == "resetconcurrentuser")
+						$processed = $UserProfile->resetConcurrentUser($user);
+					elseif ($userAction == "resetloginretry")
+						$processed = $UserProfile->resetLoginRetry($user);
+					elseif ($userAction == "setpasswordexpired")
+						$processed = $UserProfile->setPasswordExpired($user);
+					else
+						$processed = $this->Row_CustomAction($userAction, $row);
 					if (!$processed)
 						break;
 					$rs->moveNext();
 				}
 				if ($processed) {
 					$conn->commitTrans(); // Commit the changes
+					if ($userAction == "resetconcurrentuser")
+						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResetConcurrentUserSuccess")));
+					if ($userAction == "resetloginretry")
+						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResetLoginRetrySuccess")));
+					if ($userAction == "setpasswordexpired")
+						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("SetPasswordExpiredSuccess")));
 					if ($this->getSuccessMessage() == "" && !ob_get_length()) // No output
 						$this->setSuccessMessage(str_replace('%s', $actionCaption, $Language->phrase("CustomActionCompleted"))); // Set up success message
 				} else {
 					$conn->rollbackTrans(); // Rollback changes
+					if ($userAction == "resetconcurrentuser")
+						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResetConcurrentUserFailure")));
+					if ($userAction == "resetloginretry")
+						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResetLoginRetryFailure")));
+					if ($userAction == "setpasswordexpired")
+						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("SetPasswordExpiredFailure")));
 
 					// Set up error message
 					if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -1638,6 +1734,11 @@ class user_dtls_list extends user_dtls
 		// Hide search options
 		if ($this->isExport() || $this->CurrentAction)
 			$this->SearchOptions->hideAllOptions();
+		global $Security;
+		if (!$Security->canSearch()) {
+			$this->SearchOptions->hideAllOptions();
+			$this->FilterOptions->hideAllOptions();
+		}
 	}
 	protected function setupListOptionsExt()
 	{
@@ -1840,10 +1941,6 @@ class user_dtls_list extends user_dtls
 			$this->username->ViewValue = $this->username->CurrentValue;
 			$this->username->ViewCustomAttributes = "";
 
-			// password
-			$this->password->ViewValue = $this->password->CurrentValue;
-			$this->password->ViewCustomAttributes = "";
-
 			// create_login
 			$this->create_login->ViewValue = $this->create_login->CurrentValue;
 			$this->create_login->ViewValue = FormatDateTime($this->create_login->ViewValue, 0);
@@ -1867,6 +1964,7 @@ class user_dtls_list extends user_dtls
 			$this->email_addreess->ViewCustomAttributes = "";
 
 			// UserLevel
+			if ($Security->canAdmin()) { // System admin
 			$curVal = strval($this->UserLevel->CurrentValue);
 			if ($curVal <> "") {
 				$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
@@ -1886,6 +1984,9 @@ class user_dtls_list extends user_dtls
 			} else {
 				$this->UserLevel->ViewValue = NULL;
 			}
+			} else {
+				$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
+			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
 			// user_id
@@ -1897,11 +1998,6 @@ class user_dtls_list extends user_dtls
 			$this->username->LinkCustomAttributes = "";
 			$this->username->HrefValue = "";
 			$this->username->TooltipValue = "";
-
-			// password
-			$this->password->LinkCustomAttributes = "";
-			$this->password->HrefValue = "";
-			$this->password->TooltipValue = "";
 
 			// create_login
 			$this->create_login->LinkCustomAttributes = "";
@@ -2124,6 +2220,15 @@ class user_dtls_list extends user_dtls
 				return $content;
 			}
 		}
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->user_id->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

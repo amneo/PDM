@@ -23,6 +23,7 @@ $distribution_details_list = new distribution_details_list();
 $distribution_details_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -88,6 +89,7 @@ fdistribution_detailslistsrch.filterList = <?php echo $distribution_details_list
 <?php
 $distribution_details_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$distribution_details->isExport() && !$distribution_details->CurrentAction) { ?>
 <form name="fdistribution_detailslistsrch" id="fdistribution_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($distribution_details_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -114,6 +116,7 @@ $distribution_details_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $distribution_details_list->showPageHeader(); ?>
 <?php

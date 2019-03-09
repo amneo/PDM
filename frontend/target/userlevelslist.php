@@ -23,6 +23,7 @@ $userlevels_list = new userlevels_list();
 $userlevels_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -83,6 +84,7 @@ fuserlevelslistsrch.filterList = <?php echo $userlevels_list->getFilterList() ?>
 <?php
 $userlevels_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$userlevels->isExport() && !$userlevels->CurrentAction) { ?>
 <form name="fuserlevelslistsrch" id="fuserlevelslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($userlevels_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -109,6 +111,7 @@ $userlevels_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $userlevels_list->showPageHeader(); ?>
 <?php

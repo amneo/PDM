@@ -23,6 +23,7 @@ $userlevels_edit = new userlevels_edit();
 $userlevels_edit->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -66,6 +67,26 @@ fuserlevelsedit.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $userlevels->userlevelname->caption(), $userlevels->userlevelname->RequiredErrorMessage)) ?>");
 		<?php } ?>
+			var elId = fobj.elements["x" + infix + "_userlevelid"];
+			var elName = fobj.elements["x" + infix + "_userlevelname"];
+			if (elId && elName) {
+				elId.value = $.trim(elId.value);
+				elName.value = $.trim(elName.value);
+				if (elId && !ew.checkInteger(elId.value))
+					return this.onError(elId, ew.language.phrase("UserLevelIDInteger"));
+				var level = parseInt(elId.value, 10);
+				if (level == 0 && !ew.sameText(elName.value, "Default")) {
+					return this.onError(elName, ew.language.phrase("UserLevelDefaultName"));
+				} else if (level == -1 && !ew.sameText(elName.value, "Administrator")) {
+					return this.onError(elName, ew.language.phrase("UserLevelAdministratorName"));
+				} else if (level == -2 && !ew.sameText(elName.value, "Anonymous")) {
+					return this.onError(elName, ew.language.phrase("UserLevelAnonymousName"));
+				} else if (level < -2) {
+					return this.onError(elId, ew.language.phrase("UserLevelIDIncorrect"));
+				} else if (level > 0 && ["anonymous", "administrator", "default"].includes(elName.value.toLowerCase())) {
+					return this.onError(elName, ew.language.phrase("UserLevelNameIncorrect"));
+				}
+			}
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))

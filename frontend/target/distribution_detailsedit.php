@@ -23,6 +23,7 @@ $distribution_details_edit = new distribution_details_edit();
 $distribution_details_edit->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

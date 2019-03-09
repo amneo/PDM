@@ -316,6 +316,7 @@ class userpriv extends userlevels
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -350,6 +351,12 @@ class userpriv extends userlevels
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 	}
 
 	// Terminate page
@@ -409,6 +416,49 @@ class userpriv extends userlevels
 			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
 			if (is_callable($func) && Param(TOKEN_NAME) !== NULL && $func(Param(TOKEN_NAME), SessionTimeoutTime()))
 				session_start();
+		}
+
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel(CurrentProjectID() . 'userlevels');
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canAdmin()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("userlevelslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
 

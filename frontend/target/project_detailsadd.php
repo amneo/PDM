@@ -23,6 +23,7 @@ $project_details_add = new project_details_add();
 $project_details_add->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

@@ -23,6 +23,7 @@ $transaction_details_update = new transaction_details_update();
 $transaction_details_update->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

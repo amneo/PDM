@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 // Relative path
 if (!isset($RELATIVE_PATH)) {
 	$RELATIVE_PATH = "";
-	$ROOT_RELATIVE_PATH = ".."; // Relative path of app root
+	$ROOT_RELATIVE_PATH = "."; // Relative path of app root
 }
 
 // Composer autoloader

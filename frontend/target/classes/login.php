@@ -546,8 +546,19 @@ class login extends user_dtls
 				if ($validate) {
 					$validPwd = $Security->validateUser($this->Username, $password, FALSE); // Manual login
 					if (!$validPwd) {
+
+						// Password expired, force change password
+						if (IsPasswordExpired()) {
+							$this->setFailureMessage($Language->phrase("PasswordExpired"));
+							$this->terminate("changepwd.php");
+						}
 						if ($this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->phrase("InvalidUidPwd")); // Invalid user name or password
+
+					// Password changed date not initialized, set as today
+					} elseif ($UserProfile->emptyPasswordChangedDate($this->Username)) {
+						$UserProfile->setValue(USER_PROFILE_LAST_PASSWORD_CHANGED_DATE, StdCurrentDate());
+						$UserProfile->saveProfileToDatabase($this->Username);
 					}
 				} else {
 					if ($this->getFailureMessage() == "")

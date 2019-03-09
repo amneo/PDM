@@ -429,7 +429,7 @@ class changepwd extends user_dtls
 				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
 		}
 		if (!$validRequest) {
-			if (!IsPasswordReset()) {
+			if (!IsPasswordReset() && !IsPasswordExpired()) {
 			if (!$Security->isLoggedIn()) $Security->autoLogin();
 			if (!$Security->isLoggedIn() || $Security->isSysAdmin())
 				$this->terminate(GetUrl("login.php"));
@@ -480,6 +480,8 @@ class changepwd extends user_dtls
 			$userName = $Security->currentUserName();
 			if (IsPasswordReset())
 				$userName = $_SESSION[SESSION_USER_PROFILE_USER_NAME];
+			if (IsPasswordExpired())
+				$userName = $_SESSION[SESSION_USER_PROFILE_USER_NAME];
 			$filter = str_replace("%u", AdjustSql($userName, USER_TABLE_DBID), USER_NAME_FILTER);
 
 			// Set up filter (WHERE Clause)
@@ -518,6 +520,17 @@ class changepwd extends user_dtls
 			if (IsPasswordReset()) {
 				$_SESSION[SESSION_STATUS] = "";
 				$_SESSION[SESSION_USER_PROFILE_USER_NAME] = "";
+			}
+
+			// Update user profile and login again
+			global $UserProfile;
+			$UserProfile->loadProfileFromDatabase($userName);
+			$UserProfile->setValue(USER_PROFILE_LAST_PASSWORD_CHANGED_DATE, StdCurrentDate());
+			$UserProfile->saveProfileToDatabase($userName);
+			if (IsPasswordExpired()) {
+				$_SESSION[SESSION_USER_PROFILE_PASSWORD] = @$newPassword;
+				$_SESSION[SESSION_STATUS] = "loggingin";
+				$this->terminate("login.php"); // Return to login page
 			}
 			$this->terminate("index.php"); // Return to default page
 		}

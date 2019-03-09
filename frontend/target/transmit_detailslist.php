@@ -23,6 +23,7 @@ $transmit_details_list = new transmit_details_list();
 $transmit_details_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -88,6 +89,7 @@ ftransmit_detailslistsrch.filterList = <?php echo $transmit_details_list->getFil
 <?php
 $transmit_details_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$transmit_details->isExport() && !$transmit_details->CurrentAction) { ?>
 <form name="ftransmit_detailslistsrch" id="ftransmit_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($transmit_details_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -114,6 +116,7 @@ $transmit_details_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $transmit_details_list->showPageHeader(); ?>
 <?php

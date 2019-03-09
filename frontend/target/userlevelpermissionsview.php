@@ -23,6 +23,7 @@ $userlevelpermissions_view = new userlevelpermissions_view();
 $userlevelpermissions_view->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

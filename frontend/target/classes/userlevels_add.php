@@ -330,6 +330,7 @@ class userlevels_add extends userlevels
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -349,6 +350,10 @@ class userlevels_add extends userlevels
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
+		// Table object (user_dtls)
+		if (!isset($GLOBALS['user_dtls']))
+			$GLOBALS['user_dtls'] = new user_dtls();
+
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
 			define(PROJECT_NAMESPACE . "PAGE_ID", 'add');
@@ -367,6 +372,12 @@ class userlevels_add extends userlevels
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 	}
 
 	// Terminate page
@@ -550,6 +561,56 @@ class userlevels_add extends userlevels
 		// Is modal
 		$this->IsModal = (Param("modal") == "1");
 
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canAdd()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("userlevelslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
+
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
@@ -615,6 +676,18 @@ class userlevels_add extends userlevels
 		// Load form values
 		if ($postBack) {
 			$this->loadFormValues(); // Load form values
+
+			// Load values for user privileges
+			$allowAdd = (int)Post("x__AllowAdd");
+			$allowEdit = (int)Post("x__AllowEdit");
+			$allowDelete = (int)Post("x__AllowDelete");
+			$allowList = (int)Post("x__AllowList");
+			$this->Priv = $allowAdd + $allowEdit + $allowDelete + $allowList;
+			if (!defined(PROJECT_NAMESPACE . "USER_LEVEL_COMPAT")) {
+				$allowView = (int)Post("x__AllowView");
+				$allowSearch = (int)Post("x__AllowSearch");
+				$this->Priv += $allowView + $allowSearch;
+			}
 		}
 
 		// Validate form if post back
@@ -762,6 +835,7 @@ class userlevels_add extends userlevels
 		if (!$rs || $rs->EOF)
 			return;
 		$this->userlevelid->setDbValue($row['userlevelid']);
+		$this->userlevelid->CurrentValue = (int)$this->userlevelid->CurrentValue;
 		$this->userlevelname->setDbValue($row['userlevelname']);
 	}
 
@@ -909,6 +983,25 @@ class userlevels_add extends userlevels
 	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
+		if (trim(strval($this->userlevelid->CurrentValue)) == "") {
+			$this->setFailureMessage($Language->phrase("MissingUserLevelID"));
+		} elseif (trim($this->userlevelname->CurrentValue) == "") {
+			$this->setFailureMessage($Language->phrase("MissingUserLevelName"));
+		} elseif (!is_numeric($this->userlevelid->CurrentValue)) {
+			$this->setFailureMessage($Language->phrase("UserLevelIDInteger"));
+		} elseif ((int)$this->userlevelid->CurrentValue < -2) {
+			$this->setFailureMessage($Language->phrase("UserLevelIDIncorrect"));
+		} elseif ((int)$this->userlevelid->CurrentValue == 0 && !SameText($this->userlevelname->CurrentValue, "Default")) {
+			$this->setFailureMessage($Language->phrase("UserLevelDefaultName"));
+		} elseif ((int)$this->userlevelid->CurrentValue == -1 && !SameText($this->userlevelname->CurrentValue, "Administrator")) {
+			$this->setFailureMessage($Language->phrase("UserLevelAdministratorName"));
+		} elseif ((int)$this->userlevelid->CurrentValue == -2 && !SameText($this->userlevelname->CurrentValue, "Anonymous")) {
+			$this->setFailureMessage($Language->phrase("UserLevelAnonymousName"));
+		} elseif ((int)$this->userlevelid->CurrentValue > 0 && in_array(strtolower(trim($this->userlevelname->CurrentValue)), ["anonymous", "administrator", "default"])) {
+			$this->setFailureMessage($Language->phrase("UserLevelNameIncorrect"));
+		}
+		if ($this->getFailureMessage() <> "")
+			return FALSE;
 		if ($this->userlevelid->CurrentValue <> "") { // Check field with unique index
 			$filter = "(userlevelid = " . AdjustSql($this->userlevelid->CurrentValue, $this->Dbid) . ")";
 			$rsChk = $this->loadRs($filter);
@@ -978,6 +1071,29 @@ class userlevels_add extends userlevels
 			// Call Row Inserted event
 			$rs = ($rsold) ? $rsold->fields : NULL;
 			$this->Row_Inserted($rs, $rsnew);
+		}
+		if ($addRow) {
+
+			// Add User Level priv
+			if ($this->Priv > 0) {
+				$userLevelList = [];
+				$userLevelPrivList = [];
+				$tableList = [];
+				$GLOBALS["Security"]->loadUserLevelFromConfigFile($userLevelList, $userLevelPrivList, $tableList, TRUE);
+				$tableNameCount = count($tableList);
+				for ($i = 0; $i < $tableNameCount; $i++) {
+					$sql = "INSERT INTO " . USER_LEVEL_PRIV_TABLE . " (" .
+						USER_LEVEL_PRIV_TABLE_NAME_FIELD . ", " .
+						USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . ", " .
+						USER_LEVEL_PRIV_PRIV_FIELD . ") VALUES ('" .
+						AdjustSql($tableList[$i][4] . $tableList[$i][0], USER_LEVEL_PRIV_DBID) .
+						"', " . $this->userlevelid->CurrentValue . ", " . $this->Priv . ")";
+					$conn->execute($sql);
+				}
+			}
+
+			// Load user level information again
+			$Security->setupUserLevel();
 		}
 
 		// Write JSON for API request

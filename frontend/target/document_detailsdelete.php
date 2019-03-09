@@ -23,6 +23,7 @@ $document_details_delete = new document_details_delete();
 $document_details_delete->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

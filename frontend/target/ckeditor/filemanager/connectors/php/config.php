@@ -1,8 +1,8 @@
 <?php
 session_start();
 $RELATIVE_PATH = "../../../../";
-$ROOT_RELATIVE_PATH = "../../../../../";
-$rootRelativePath = "../"; // Used for userfile path calculation
+$ROOT_RELATIVE_PATH = "../../../../";
+$rootRelativePath = ""; // Used for userfile path calculation
 require_once $RELATIVE_PATH . "autoload.php";
 use PHPMaker2019\pdm as PHPMaker;
 
@@ -35,6 +35,8 @@ global $Config;
 //		authenticated users can access this file or use some kind of session checking.
 
 $Config['Enabled'] = TRUE; // Enable file manager
+if (!PHPMaker\IsLoggedIn())
+	$Config['Enabled'] = FALSE;
 
 // Path to user files relative to the document root
 $path = PHPMaker\PathCombine($rootRelativePath, PHPMaker\UPLOAD_DEST_PATH, FALSE); // Global upload folder

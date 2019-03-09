@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2019/03/09" author="e.World Technology Ltd.">
-  <project id="{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}" file="E:\pdm\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/03/09 17:08:46" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0">
-    <table id="transaction_details" name="transaction_details" caption="Transactions" userlevel="-2,&quot;Anonymous&quot;,32;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,109" priv="1" />
-    <table id="distribution_details" name="distribution_details" caption="Distribution" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="inbox" name="inbox" caption="inbox" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="document_details" name="document_details" caption="Document Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="project_details" name="project_details" caption="Project Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="app_version" name="app_version" caption="app version" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="audittrail" name="audittrail" caption="audittrail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="transmit_details" name="transmit_details" caption="Transmittal Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="user_dtls" name="user_dtls" caption="user dtls" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="approval_details" name="approval_details" caption="approval details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="userlevels" name="userlevels" caption="userlevels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
-    <table id="userlevelpermissions" name="userlevelpermissions" caption="userlevelpermissions" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0;1,&quot;doc_controller&quot;,0" priv="1" />
+<configuration date="2019/03/10" author="e.World Technology Ltd.">
+  <project id="{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}" file="E:\pdm\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/03/10 01:28:39" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+    <table id="transaction_details" name="transaction_details" caption="Transactions" userlevel="-2,&quot;Anonymous&quot;,104;0,&quot;Default&quot;,0" priv="1" />
+    <table id="distribution_details" name="distribution_details" caption="Distribution" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="inbox" name="inbox" caption="Inbox" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="document_details" name="document_details" caption="Document Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="project_details" name="project_details" caption="Project Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="app_version" name="app_version" caption="App Version" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="audittrail" name="audittrail" caption="Audit Trail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="transmit_details" name="transmit_details" caption="Transmittal Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="user_dtls" name="user_dtls" caption="User Details" userlevel="-2,&quot;Anonymous&quot;,8;0,&quot;Default&quot;,0" priv="1" />
+    <table id="approval_details" name="approval_details" caption="Approval Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="userlevels" name="userlevels" caption="userlevels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="userlevelpermissions" name="userlevelpermissions" caption="userlevelpermissions" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

@@ -23,6 +23,7 @@ $userlevels_add = new userlevels_add();
 $userlevels_add->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -66,6 +67,26 @@ fuserlevelsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $userlevels->userlevelname->caption(), $userlevels->userlevelname->RequiredErrorMessage)) ?>");
 		<?php } ?>
+			var elId = fobj.elements["x" + infix + "_userlevelid"];
+			var elName = fobj.elements["x" + infix + "_userlevelname"];
+			if (elId && elName) {
+				elId.value = $.trim(elId.value);
+				elName.value = $.trim(elName.value);
+				if (elId && !ew.checkInteger(elId.value))
+					return this.onError(elId, ew.language.phrase("UserLevelIDInteger"));
+				var level = parseInt(elId.value, 10);
+				if (level == 0 && !ew.sameText(elName.value, "Default")) {
+					return this.onError(elName, ew.language.phrase("UserLevelDefaultName"));
+				} else if (level == -1 && !ew.sameText(elName.value, "Administrator")) {
+					return this.onError(elName, ew.language.phrase("UserLevelAdministratorName"));
+				} else if (level == -2 && !ew.sameText(elName.value, "Anonymous")) {
+					return this.onError(elName, ew.language.phrase("UserLevelAnonymousName"));
+				} else if (level < -2) {
+					return this.onError(elId, ew.language.phrase("UserLevelIDIncorrect"));
+				} else if (level > 0 && ["anonymous", "administrator", "default"].includes(elName.value.toLowerCase())) {
+					return this.onError(elName, ew.language.phrase("UserLevelNameIncorrect"));
+				}
+			}
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -161,6 +182,68 @@ $userlevels_add->showMessage();
 <?php echo $userlevels->userlevelname->CustomMsg ?></td>
 	</tr>
 <?php } ?>
+<?php } ?>
+	<!-- row for permission values -->
+<?php if ($userlevels_add->IsMobileOrModal) { ?>
+	<div id="rp_permission" class="form-group row">
+		<label id="elh_permission" class="<?php echo $userlevels_add->LeftColumnClass ?>"><?php echo HtmlTitle($Language->phrase("Permission")) ?></label>
+		<div class="<?php echo $userlevels_add->RightColumnClass ?>">
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowAdd" id="Add" value="<?php echo ALLOW_ADD ?>"><label class="form-check-label" for="Add"><?php echo $Language->Phrase("PermissionAddCopy") ?></label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowDelete" id="Delete" value="<?php echo ALLOW_DELETE ?>"><label class="form-check-label" for="Delete"><?php echo $Language->Phrase("PermissionDelete") ?></label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowEdit" id="Edit" value="<?php echo ALLOW_EDIT ?>"><label class="form-check-label" for="Edit"><?php echo $Language->Phrase("PermissionEdit") ?></label>
+			</div>
+			<?php if (defined(PROJECT_NAMESPACE . "USER_LEVEL_COMPAT")) { ?>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowList" id="List" value="<?php echo ALLOW_LIST ?>"><label class="form-check-label" for="List"><?php echo $Language->Phrase("PermissionListSearchView") ?></label>
+			</div>
+			<?php } else { ?>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowList" id="List" value="<?php echo ALLOW_LIST ?>"><label class="form-check-label" for="List"><?php echo $Language->Phrase("PermissionList") ?></label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowView" id="View" value="<?php echo ALLOW_VIEW ?>"><label class="form-check-label" for="View"><?php echo $Language->Phrase("PermissionView") ?></label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input type="checkbox" class="form-check-input" name="x__AllowSearch" id="Search" value="<?php echo ALLOW_SEARCH ?>"><label class="form-check-label" for="Search"><?php echo $Language->Phrase("PermissionSearch") ?></label>
+			</div>
+<?php } ?>
+		</div>
+	</div>
+<?php } else { ?>
+	<tr id="rp_permission">
+		<td class="<?php echo $userlevels_add->TableLeftColumnClass ?>"><span id="elh_permission"><?php echo HtmlTitle($Language->phrase("Permission")) ?></span></td>
+		<td>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowAdd" id="Add" value="<?php echo ALLOW_ADD ?>" /><label class="form-check-label" for="Add"><?php echo $Language->Phrase("PermissionAddCopy") ?></label>
+			</div>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowDelete" id="Delete" value="<?php echo ALLOW_DELETE ?>" /><label class="form-check-label" for="Delete"><?php echo $Language->Phrase("PermissionDelete") ?></label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowEdit" id="Edit" value="<?php echo ALLOW_EDIT ?>" /><label class="form-check-label" for="Edit"><?php echo $Language->Phrase("PermissionEdit") ?></label>
+		</div>
+		<?php if (defined(PROJECT_NAMESPACE . "USER_LEVEL_COMPAT")) { ?>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowList" id="List" value="<?php echo ALLOW_LIST ?>" /><label class="form-check-label" for="List"><?php echo $Language->Phrase("PermissionListSearchView") ?></label>
+		</div>
+		<?php } else { ?>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowList" id="List" value="<?php echo ALLOW_LIST ?>" /><label class="form-check-label" for="List"><?php echo $Language->Phrase("PermissionList") ?></label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowView" id="View" value="<?php echo ALLOW_VIEW ?>" /><label class="form-check-label" for="View"><?php echo $Language->Phrase("PermissionView") ?></label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input type="checkbox" class="form-check-input" name="x__AllowSearch" id="Search" value="<?php echo ALLOW_SEARCH ?>" /><label class="form-check-label" for="Search"><?php echo $Language->Phrase("PermissionSearch") ?></label>
+		</div>
+<?php } ?>
+		</td>
+	</tr>
 <?php } ?>
 <?php if ($userlevels_add->IsMobileOrModal) { ?>
 </div><!-- /page* -->

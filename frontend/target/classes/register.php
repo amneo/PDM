@@ -566,6 +566,15 @@ class register extends user_dtls
 				$this->password->setFormValue($val);
 		}
 		$this->password->ConfirmValue = $CurrentForm->getValue("c_password");
+
+		// Check field name 'email_addreess' first before field var 'x_email_addreess'
+		$val = $CurrentForm->hasValue("email_addreess") ? $CurrentForm->getValue("email_addreess") : $CurrentForm->getValue("x_email_addreess");
+		if (!$this->email_addreess->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->email_addreess->Visible = FALSE; // Disable update for API request
+			else
+				$this->email_addreess->setFormValue($val);
+		}
 	}
 
 	// Restore form values
@@ -574,6 +583,7 @@ class register extends user_dtls
 		global $CurrentForm;
 		$this->username->CurrentValue = $this->username->FormValue;
 		$this->password->CurrentValue = $this->password->FormValue;
+		$this->email_addreess->CurrentValue = $this->email_addreess->FormValue;
 	}
 
 	// Load row based on key values
@@ -668,7 +678,7 @@ class register extends user_dtls
 			$this->username->ViewCustomAttributes = "";
 
 			// password
-			$this->password->ViewValue = $this->password->CurrentValue;
+			$this->password->ViewValue = $Language->phrase("PasswordMask");
 			$this->password->ViewCustomAttributes = "";
 
 			// create_login
@@ -733,6 +743,11 @@ class register extends user_dtls
 			$this->password->LinkCustomAttributes = "";
 			$this->password->HrefValue = "";
 			$this->password->TooltipValue = "";
+
+			// email_addreess
+			$this->email_addreess->LinkCustomAttributes = "";
+			$this->email_addreess->HrefValue = "";
+			$this->email_addreess->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// user_id
@@ -748,10 +763,16 @@ class register extends user_dtls
 			// password
 			$this->password->EditAttrs["class"] = "form-control";
 			$this->password->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->password->CurrentValue = HtmlDecode($this->password->CurrentValue);
 			$this->password->EditValue = HtmlEncode($this->password->CurrentValue);
 			$this->password->PlaceHolder = RemoveHtml($this->password->caption());
+
+			// email_addreess
+			$this->email_addreess->EditAttrs["class"] = "form-control";
+			$this->email_addreess->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->email_addreess->CurrentValue = HtmlDecode($this->email_addreess->CurrentValue);
+			$this->email_addreess->EditValue = HtmlEncode($this->email_addreess->CurrentValue);
+			$this->email_addreess->PlaceHolder = RemoveHtml($this->email_addreess->caption());
 
 			// Add refer script
 			// user_id
@@ -766,6 +787,10 @@ class register extends user_dtls
 			// password
 			$this->password->LinkCustomAttributes = "";
 			$this->password->HrefValue = "";
+
+			// email_addreess
+			$this->email_addreess->LinkCustomAttributes = "";
+			$this->email_addreess->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -824,6 +849,9 @@ class register extends user_dtls
 				AddMessage($FormError, str_replace("%s", $this->email_addreess->caption(), $this->email_addreess->RequiredErrorMessage));
 			}
 		}
+		if (!CheckEmail($this->email_addreess->FormValue)) {
+			AddMessage($FormError, $this->email_addreess->errorMessage());
+		}
 		if ($this->UserLevel->Required) {
 			if (!$this->UserLevel->IsDetailKey && $this->UserLevel->FormValue != NULL && $this->UserLevel->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->UserLevel->caption(), $this->UserLevel->RequiredErrorMessage));
@@ -846,12 +874,35 @@ class register extends user_dtls
 	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
+
+		// Check if valid User ID
+		$validUser = FALSE;
+		if ($Security->currentUserID() <> "" && !EmptyValue($this->user_id->CurrentValue) && !$Security->isAdmin()) { // Non system admin
+			$validUser = $Security->isValidUserID($this->user_id->CurrentValue);
+			if (!$validUser) {
+				$userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
+				$userIdMsg = str_replace("%u", $this->user_id->CurrentValue, $userIdMsg);
+				$this->setFailureMessage($userIdMsg);
+				return FALSE;
+			}
+		}
 		if ($this->username->CurrentValue <> "") { // Check field with unique index
 			$filter = "(username = '" . AdjustSql($this->username->CurrentValue, $this->Dbid) . "')";
 			$rsChk = $this->loadRs($filter);
 			if ($rsChk && !$rsChk->EOF) {
 				$idxErrMsg = str_replace("%f", $this->username->caption(), $Language->phrase("DupIndex"));
 				$idxErrMsg = str_replace("%v", $this->username->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		if ($this->email_addreess->CurrentValue <> "") { // Check field with unique index
+			$filter = "(email_addreess = '" . AdjustSql($this->email_addreess->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->email_addreess->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->email_addreess->CurrentValue, $idxErrMsg);
 				$this->setFailureMessage($idxErrMsg);
 				$rsChk->close();
 				return FALSE;
@@ -870,6 +921,9 @@ class register extends user_dtls
 
 		// password
 		$this->password->setDbValueDef($rsnew, $this->password->CurrentValue, NULL, FALSE);
+
+		// email_addreess
+		$this->email_addreess->setDbValueDef($rsnew, $this->email_addreess->CurrentValue, NULL, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;

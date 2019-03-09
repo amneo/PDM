@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'tByBriht0miTg8y7'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'noQVg7OCJrcir62J'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -290,6 +290,25 @@ define(PROJECT_NAMESPACE . "ALLOW_LOGIN_BY_SESSION", FALSE); // Allow login by s
 define(PROJECT_NAMESPACE . "PHPASS_ITERATION_COUNT_LOG2", "[10,8]"); // Note: Use JSON array syntax
 define(PROJECT_NAMESPACE . "PASSWORD_HASH", FALSE); // Use PHP 5.5+ password hashing functions
 
+/**
+ * Dynamic User Level settings
+ */
+// User level definition table/field names
+
+define(PROJECT_NAMESPACE . "USER_LEVEL_DBID", "DB");
+define(PROJECT_NAMESPACE . "USER_LEVEL_TABLE", "\"public\".\"userlevels\"");
+define(PROJECT_NAMESPACE . "USER_LEVEL_ID_FIELD", "\"userlevelid\"");
+define(PROJECT_NAMESPACE . "USER_LEVEL_NAME_FIELD", "\"userlevelname\"");
+
+// User Level privileges table/field names
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_DBID", "DB");
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_TABLE", "\"public\".\"userlevelpermissions\"");
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_TABLE_NAME_FIELD", "\"tablename\"");
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_TABLE_NAME_FIELD_2", "tablename");
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_TABLE_NAME_FIELD_SIZE", 255);
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD", "\"userlevelid\"");
+define(PROJECT_NAMESPACE . "USER_LEVEL_PRIV_PRIV_FIELD", "\"permission\"");
+
 // User level constants
 define(PROJECT_NAMESPACE . "ALLOW_ADD", 1); // Add
 define(PROJECT_NAMESPACE . "ALLOW_DELETE", 2); // Delete
@@ -321,17 +340,25 @@ define(PROJECT_NAMESPACE . "USER_ID_ALLOW", 104);
 define(PROJECT_NAMESPACE . "USER_TABLE_NAME", "user_dtls");
 define(PROJECT_NAMESPACE . "LOGIN_USERNAME_FIELD_NAME", "username");
 define(PROJECT_NAMESPACE . "LOGIN_PASSWORD_FIELD_NAME", "password");
-define(PROJECT_NAMESPACE . "USER_ID_FIELD_NAME", "");
+define(PROJECT_NAMESPACE . "USER_ID_FIELD_NAME", "user_id");
 define(PROJECT_NAMESPACE . "USER_LEVEL_FIELD_NAME", "UserLevel");
 define(PROJECT_NAMESPACE . "USER_PROFILE_FIELD_NAME", "username");
 define(PROJECT_NAMESPACE . "REGISTER_ACTIVATE_FIELD_NAME", "account_valid");
 define(PROJECT_NAMESPACE . "USER_EMAIL_FIELD_NAME", "email_addreess");
 
+// User table filters
+define(PROJECT_NAMESPACE . "USER_TABLE_DBID", "DB");
+define(PROJECT_NAMESPACE . "USER_TABLE", "\"public\".\"user_dtls\"");
+define(PROJECT_NAMESPACE . "USER_NAME_FILTER", "(\"username\" = '%u')");
+define(PROJECT_NAMESPACE . "USER_ID_FILTER", "(\"user_id\" = %u)");
+define(PROJECT_NAMESPACE . "USER_EMAIL_FILTER", "(\"email_addreess\" = '%e')");
+define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "");
+
 // User Profile Constants
 define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_ID", "SessionID");
 define(PROJECT_NAMESPACE . "USER_PROFILE_LAST_ACCESSED_DATE_TIME", "LastAccessedDateTime");
 define(PROJECT_NAMESPACE . "USER_PROFILE_CONCURRENT_SESSION_COUNT", 1); // Maximum sessions allowed
-define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_TIMEOUT", 20);
+define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_TIMEOUT", 120);
 define(PROJECT_NAMESPACE . "USER_PROFILE_LOGIN_RETRY_COUNT", "LoginRetryCount");
 define(PROJECT_NAMESPACE . "USER_PROFILE_LAST_BAD_LOGIN_DATE_TIME", "LastBadLoginDateTime");
 define(PROJECT_NAMESPACE . "USER_PROFILE_MAX_RETRY", 3);
@@ -349,12 +376,12 @@ define(PROJECT_NAMESPACE . "AUTO_HIDE_PAGE_SIZE_SELECTOR", TRUE);
 // Email
 define(PROJECT_NAMESPACE . "PHPMAILER_MAILER", "smtp"); // PHPMailer mailer
 define(PROJECT_NAMESPACE . "SMTP_SERVER", "smtp.gmail.com"); // SMTP server
-define(PROJECT_NAMESPACE . "SMTP_SERVER_PORT", 465); // SMTP server port
+define(PROJECT_NAMESPACE . "SMTP_SERVER_PORT", 587); // SMTP server port
 define(PROJECT_NAMESPACE . "SMTP_SECURE_OPTION", "tls");
-define(PROJECT_NAMESPACE . "SMTP_SERVER_USERNAME", "hired@vishal.net.in"); // SMTP server user name
-define(PROJECT_NAMESPACE . "SMTP_SERVER_PASSWORD", ""); // SMTP server password
-define(PROJECT_NAMESPACE . "SENDER_EMAIL", "hired@vishal.net.in"); // Sender email address
-define(PROJECT_NAMESPACE . "RECIPIENT_EMAIL", "hired@vishal.net.in"); // Recipient email address
+define(PROJECT_NAMESPACE . "SMTP_SERVER_USERNAME", "ajkaanabshanab@gmail.com"); // SMTP server user name
+define(PROJECT_NAMESPACE . "SMTP_SERVER_PASSWORD", "wakarewara11"); // SMTP server password
+define(PROJECT_NAMESPACE . "SENDER_EMAIL", "ajkaanabshanab@gmail.com"); // Sender email address
+define(PROJECT_NAMESPACE . "RECIPIENT_EMAIL", "ajkaanabshanab@gmail.com"); // Recipient email address
 define(PROJECT_NAMESPACE . "MAX_EMAIL_RECIPIENT", 3);
 define(PROJECT_NAMESPACE . "MAX_EMAIL_SENT_COUNT", 3);
 define(PROJECT_NAMESPACE . "EXPORT_EMAIL_COUNTER", SESSION_STATUS . "_EmailCounter");
@@ -1063,6 +1090,9 @@ $RequestSecurity = NULL;
 // HTML purifier
 $PurifierConfig = NULL;
 $Purifier = NULL;
+?>
+<?php
+define(PROJECT_NAMESPACE .  "USE_PHPWORD", TRUE);
 ?>
 <?php
 define(PROJECT_NAMESPACE . "USE_PHPEXCEL", TRUE);

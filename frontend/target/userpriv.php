@@ -23,6 +23,7 @@ $userpriv = new userpriv();
 $userpriv->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

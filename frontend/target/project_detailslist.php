@@ -23,6 +23,7 @@ $project_details_list = new project_details_list();
 $project_details_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -83,6 +84,7 @@ fproject_detailslistsrch.filterList = <?php echo $project_details_list->getFilte
 <?php
 $project_details_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$project_details->isExport() && !$project_details->CurrentAction) { ?>
 <form name="fproject_detailslistsrch" id="fproject_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($project_details_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -109,6 +111,7 @@ $project_details_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $project_details_list->showPageHeader(); ?>
 <?php

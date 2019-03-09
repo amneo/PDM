@@ -23,6 +23,7 @@ $transmit_details_delete = new transmit_details_delete();
 $transmit_details_delete->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

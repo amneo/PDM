@@ -90,13 +90,13 @@ class user_dtls extends DbTable
 		$this->fields['username'] = &$this->username;
 
 		// password
-		$this->password = new DbField('user_dtls', 'user_dtls', 'x_password', 'password', '"password"', '"password"', 200, -1, FALSE, '"password"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->password = new DbField('user_dtls', 'user_dtls', 'x_password', 'password', '"password"', '"password"', 200, -1, FALSE, '"password"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'PASSWORD');
 		$this->password->Required = TRUE; // Required field
-		$this->password->Sortable = TRUE; // Allow sort
+		$this->password->Sortable = FALSE; // Allow sort
 		$this->fields['password'] = &$this->password;
 
 		// create_login
-		$this->create_login = new DbField('user_dtls', 'user_dtls', 'x_create_login', 'create_login', '"create_login"', CastDateFieldForLike('"create_login"', 0, "DB"), 133, 0, FALSE, '"create_login"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->create_login = new DbField('user_dtls', 'user_dtls', 'x_create_login', 'create_login', '"create_login"', CastDateFieldForLike('"create_login"', 0, "DB"), 135, 0, FALSE, '"create_login"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->create_login->Sortable = TRUE; // Allow sort
 		$this->create_login->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['create_login'] = &$this->create_login;
@@ -261,13 +261,19 @@ class user_dtls extends DbTable
 	// Apply User ID filters
 	public function applyUserIDFilters($filter)
 	{
+		global $Security;
+
+		// Add User ID filter
+		if ($Security->currentUserID() <> "" && !$Security->isAdmin()) { // Non system admin
+			$filter = $this->addUserIDFilter($filter);
+		}
 		return $filter;
 	}
 
 	// Check if User ID security allows view all
 	public function userIDAllow($id = "")
 	{
-		$allow = USER_ID_ALLOW;
+		$allow = $this->UserIDAllowSecurity;
 		switch ($id) {
 			case "add":
 			case "copy":
@@ -400,6 +406,8 @@ class user_dtls extends DbTable
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->IsCustom)
 				continue;
+			if (ENCRYPTED_PASSWORD && $name == 'password')
+				$value = (CASE_SENSITIVE_PASSWORD) ? EncryptPassword($value) : EncryptPassword(strtolower($value));
 			$names .= $this->fields[$name]->Expression . ",";
 			$values .= QuotedValue($value, $this->fields[$name]->DataType, $this->Dbid) . ",";
 		}
@@ -431,6 +439,11 @@ class user_dtls extends DbTable
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->IsCustom || $this->fields[$name]->IsPrimaryKey)
 				continue;
+			if (ENCRYPTED_PASSWORD && $name == 'password') {
+				if ($value == $this->fields[$name]->OldValue) // No need to update hashed password if not changed
+					continue;
+				$value = (CASE_SENSITIVE_PASSWORD) ? EncryptPassword($value) : EncryptPassword(strtolower($value));
+			}
 			$sql .= $this->fields[$name]->Expression . "=";
 			$sql .= QuotedValue($value, $this->fields[$name]->DataType, $this->Dbid) . ",";
 		}
@@ -766,7 +779,7 @@ class user_dtls extends DbTable
 		$this->username->ViewCustomAttributes = "";
 
 		// password
-		$this->password->ViewValue = $this->password->CurrentValue;
+		$this->password->ViewValue = $Language->phrase("PasswordMask");
 		$this->password->ViewCustomAttributes = "";
 
 		// create_login
@@ -792,6 +805,7 @@ class user_dtls extends DbTable
 		$this->email_addreess->ViewCustomAttributes = "";
 
 		// UserLevel
+		if ($Security->canAdmin()) { // System admin
 		$curVal = strval($this->UserLevel->CurrentValue);
 		if ($curVal <> "") {
 			$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
@@ -810,6 +824,9 @@ class user_dtls extends DbTable
 			}
 		} else {
 			$this->UserLevel->ViewValue = NULL;
+		}
+		} else {
+			$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
 		}
 		$this->UserLevel->ViewCustomAttributes = "";
 
@@ -885,8 +902,6 @@ class user_dtls extends DbTable
 		// password
 		$this->password->EditAttrs["class"] = "form-control";
 		$this->password->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->password->CurrentValue = HtmlDecode($this->password->CurrentValue);
 		$this->password->EditValue = $this->password->CurrentValue;
 		$this->password->PlaceHolder = RemoveHtml($this->password->caption());
 
@@ -917,6 +932,10 @@ class user_dtls extends DbTable
 		// UserLevel
 		$this->UserLevel->EditAttrs["class"] = "form-control";
 		$this->UserLevel->EditCustomAttributes = "";
+		if (!$Security->canAdmin()) { // System admin
+			$this->UserLevel->EditValue = $Language->phrase("PasswordMask");
+		} else {
+		}
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -950,7 +969,6 @@ class user_dtls extends DbTable
 					$doc->exportCaption($this->user_id);
 					$doc->exportCaption($this->username);
 					$doc->exportCaption($this->password);
-					$doc->exportCaption($this->create_login);
 					$doc->exportCaption($this->account_valid);
 					$doc->exportCaption($this->last_login);
 					$doc->exportCaption($this->email_addreess);
@@ -958,7 +976,6 @@ class user_dtls extends DbTable
 				} else {
 					$doc->exportCaption($this->user_id);
 					$doc->exportCaption($this->username);
-					$doc->exportCaption($this->password);
 					$doc->exportCaption($this->create_login);
 					$doc->exportCaption($this->account_valid);
 					$doc->exportCaption($this->last_login);
@@ -998,7 +1015,6 @@ class user_dtls extends DbTable
 						$doc->exportField($this->user_id);
 						$doc->exportField($this->username);
 						$doc->exportField($this->password);
-						$doc->exportField($this->create_login);
 						$doc->exportField($this->account_valid);
 						$doc->exportField($this->last_login);
 						$doc->exportField($this->email_addreess);
@@ -1006,7 +1022,6 @@ class user_dtls extends DbTable
 					} else {
 						$doc->exportField($this->user_id);
 						$doc->exportField($this->username);
-						$doc->exportField($this->password);
 						$doc->exportField($this->create_login);
 						$doc->exportField($this->account_valid);
 						$doc->exportField($this->last_login);
@@ -1027,12 +1042,109 @@ class user_dtls extends DbTable
 		}
 	}
 
+	// User ID filter
+	public function getUserIDFilter($userId)
+	{
+		$userIdFilter = '"user_id" = ' . QuotedValue($userId, DATATYPE_NUMBER, USER_TABLE_DBID);
+		return $userIdFilter;
+	}
+
+	// Add User ID filter
+	public function addUserIDFilter($filter = "")
+	{
+		global $Security;
+		$filterWrk = "";
+		$id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
+		if (!$this->userIdAllow($id) && !$Security->isAdmin()) {
+			$filterWrk = $Security->userIdList();
+			if ($filterWrk <> "")
+				$filterWrk = '"user_id" IN (' . $filterWrk . ')';
+		}
+
+		// Call User ID Filtering event
+		$this->UserID_Filtering($filterWrk);
+		AddFilter($filter, $filterWrk);
+		return $filter;
+	}
+
+	// User ID subquery
+	public function getUserIDSubquery(&$fld, &$masterfld)
+	{
+		global $UserTableConn;
+		$wrk = "";
+		$sql = "SELECT " . $masterfld->Expression . " FROM \"public\".\"user_dtls\"";
+		$filter = $this->addUserIDFilter("");
+		if ($filter <> "")
+			$sql .= " WHERE " . $filter;
+
+		// Use subquery
+		if (USE_SUBQUERY_FOR_MASTER_USER_ID) {
+			$wrk = $sql;
+		} else {
+
+			// List all values
+			if ($rs = $UserTableConn->execute($sql)) {
+				while (!$rs->EOF) {
+					if ($wrk <> "")
+						$wrk .= ",";
+					$wrk .= QuotedValue($rs->fields[0], $masterfld->DataType, USER_TABLE_DBID);
+					$rs->moveNext();
+				}
+				$rs->close();
+			}
+		}
+		if ($wrk <> "")
+			$wrk = $fld->Expression . " IN (" . $wrk . ")";
+		return $wrk;
+	}
+
 	// Lookup data from table
 	public function lookup()
 	{
 		global $Language, $LANGUAGE_FOLDER, $PROJECT_ID;
 		if (!isset($Language))
 			$Language = new Language($LANGUAGE_FOLDER, Post("language", ""));
+		global $Security, $RequestSecurity;
+
+		// Check token first
+		$func = PROJECT_NAMESPACE . "CheckToken";
+		$validRequest = FALSE;
+		if (is_callable($func) && Post(TOKEN_NAME) !== NULL) {
+			$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			if ($validRequest) {
+				if (!isset($Security)) {
+					if (session_status() !== PHP_SESSION_ACTIVE)
+						session_start(); // Init session data
+					$Security = new AdvancedSecurity();
+					if ($Security->isLoggedIn()) $Security->TablePermission_Loading();
+					$Security->loadCurrentUserLevel($PROJECT_ID . $this->TableName);
+					if ($Security->isLoggedIn()) $Security->TablePermission_Loaded();
+					$validRequest = $Security->canList(); // List permission
+					if ($validRequest) {
+						$Security->UserID_Loading();
+						$Security->loadUserID();
+						$Security->UserID_Loaded();
+					}
+				}
+			}
+		} else {
+
+			// User profile
+			$UserProfile = new UserProfile();
+
+			// Security
+			$Security = new AdvancedSecurity();
+			if (is_array($RequestSecurity)) // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+			$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel(CurrentProjectID() . $this->TableName);
+			$Security->TablePermission_Loaded();
+			$validRequest = $Security->canList(); // List permission
+		}
+
+		// Reject invalid request
+		if (!$validRequest)
+			return FALSE;
 
 		// Load lookup parameters
 		$distinct = ConvertToBool(Post("distinct"));
@@ -1132,7 +1244,7 @@ class user_dtls extends DbTable
 	public function writeAuditTrailDummy($typ)
 	{
 		$table = 'user_dtls';
-		$usr = CurrentUserName();
+		$usr = CurrentUserID();
 		WriteAuditTrail("log", DbCurrentDateTime(), ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
 
@@ -1153,7 +1265,7 @@ class user_dtls extends DbTable
 		// Write Audit Trail
 		$dt = DbCurrentDateTime();
 		$id = ScriptName();
-		$usr = CurrentUserName();
+		$usr = CurrentUserID();
 		foreach (array_keys($rs) as $fldname) {
 			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
 				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
@@ -1192,7 +1304,7 @@ class user_dtls extends DbTable
 		// Write Audit Trail
 		$dt = DbCurrentDateTime();
 		$id = ScriptName();
-		$usr = CurrentUserName();
+		$usr = CurrentUserID();
 		foreach (array_keys($rsnew) as $fldname) {
 			if (array_key_exists($fldname, $this->fields) && array_key_exists($fldname, $rsold) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
 				if ($this->fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
@@ -1246,7 +1358,7 @@ class user_dtls extends DbTable
 		// Write Audit Trail
 		$dt = DbCurrentDateTime();
 		$id = ScriptName();
-		$curUser = CurrentUserName();
+		$curUser = CurrentUserID();
 		foreach (array_keys($rs) as $fldname) {
 			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
 				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {

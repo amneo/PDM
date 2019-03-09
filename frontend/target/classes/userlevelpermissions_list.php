@@ -371,6 +371,7 @@ class userlevelpermissions_list extends userlevelpermissions
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -405,6 +406,10 @@ class userlevelpermissions_list extends userlevelpermissions
 		$this->MultiUpdateUrl = "userlevelpermissionsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
+		// Table object (user_dtls)
+		if (!isset($GLOBALS['user_dtls']))
+			$GLOBALS['user_dtls'] = new user_dtls();
+
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
 			define(PROJECT_NAMESPACE . "PAGE_ID", 'list');
@@ -423,6 +428,12 @@ class userlevelpermissions_list extends userlevelpermissions
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 
 		// List options
 		$this->ListOptions = new ListOptions();
@@ -654,6 +665,53 @@ class userlevelpermissions_list extends userlevelpermissions
 				session_start();
 		}
 
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canList()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				$this->terminate(GetUrl("index.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -843,6 +901,8 @@ class userlevelpermissions_list extends userlevelpermissions
 
 		// Build filter
 		$filter = "";
+		if (!$Security->canList())
+			$filter = "(0=1)"; // Filter all records
 		AddFilter($filter, $this->DbDetailFilter);
 		AddFilter($filter, $this->SearchWhere);
 
@@ -884,6 +944,8 @@ class userlevelpermissions_list extends userlevelpermissions
 
 			// Set no record found message
 			if (!$this->CurrentAction && $this->TotalRecs == 0) {
+				if (!$Security->canList())
+					$this->setWarningMessage(DeniedMessage());
 				if ($this->SearchWhere == "0=101")
 					$this->setWarningMessage($Language->phrase("EnterSearchCriteria"));
 				else
@@ -953,6 +1015,10 @@ class userlevelpermissions_list extends userlevelpermissions
 		// Initialize
 		$filterList = "";
 		$savedFilterList = "";
+
+		// Load server side filters
+		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
+			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fuserlevelpermissionslistsrch");
 		$filterList = Concat($filterList, $this->userlevelid->AdvancedSearch->toJson(), ","); // Field userlevelid
 		$filterList = Concat($filterList, $this->_tablename->AdvancedSearch->toJson(), ","); // Field tablename
 		$filterList = Concat($filterList, $this->permission->AdvancedSearch->toJson(), ","); // Field permission
@@ -1103,6 +1169,8 @@ class userlevelpermissions_list extends userlevelpermissions
 	{
 		global $Security;
 		$searchStr = "";
+		if (!$Security->canSearch())
+			return "";
 		$searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
 		$searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1249,25 +1317,25 @@ class userlevelpermissions_list extends userlevelpermissions
 		// "view"
 		$item = &$this->ListOptions->add("view");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canView();
 		$item->OnLeft = FALSE;
 
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canEdit();
 		$item->OnLeft = FALSE;
 
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canAdd();
 		$item->OnLeft = FALSE;
 
 		// "delete"
 		$item = &$this->ListOptions->add("delete");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
+		$item->Visible = $Security->canDelete();
 		$item->OnLeft = FALSE;
 
 		// List actions
@@ -1314,7 +1382,7 @@ class userlevelpermissions_list extends userlevelpermissions
 		// "view"
 		$opt = &$this->ListOptions->Items["view"];
 		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if (TRUE) {
+		if ($Security->canView()) {
 			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -1323,7 +1391,7 @@ class userlevelpermissions_list extends userlevelpermissions
 		// "edit"
 		$opt = &$this->ListOptions->Items["edit"];
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
-		if (TRUE) {
+		if ($Security->canEdit()) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -1332,7 +1400,7 @@ class userlevelpermissions_list extends userlevelpermissions
 		// "copy"
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
-		if (TRUE) {
+		if ($Security->canAdd()) {
 			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -1340,7 +1408,7 @@ class userlevelpermissions_list extends userlevelpermissions
 
 		// "delete"
 		$opt = &$this->ListOptions->Items["delete"];
-		if (TRUE)
+		if ($Security->canDelete())
 			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
 		else
 			$opt->Body = "";
@@ -1394,7 +1462,7 @@ class userlevelpermissions_list extends userlevelpermissions
 		$item = &$option->add("add");
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
 		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "");
+		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1569,6 +1637,11 @@ class userlevelpermissions_list extends userlevelpermissions
 		// Hide search options
 		if ($this->isExport() || $this->CurrentAction)
 			$this->SearchOptions->hideAllOptions();
+		global $Security;
+		if (!$Security->canSearch()) {
+			$this->SearchOptions->hideAllOptions();
+			$this->FilterOptions->hideAllOptions();
+		}
 	}
 	protected function setupListOptionsExt()
 	{

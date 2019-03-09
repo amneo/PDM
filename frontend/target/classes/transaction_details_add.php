@@ -338,6 +338,7 @@ class transaction_details_add extends transaction_details
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -357,6 +358,10 @@ class transaction_details_add extends transaction_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
+		// Table object (user_dtls)
+		if (!isset($GLOBALS['user_dtls']))
+			$GLOBALS['user_dtls'] = new user_dtls();
+
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
 			define(PROJECT_NAMESPACE . "PAGE_ID", 'add');
@@ -375,6 +380,12 @@ class transaction_details_add extends transaction_details
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 	}
 
 	// Terminate page
@@ -559,6 +570,56 @@ class transaction_details_add extends transaction_details
 
 		// Is modal
 		$this->IsModal = (Param("modal") == "1");
+
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canAdd()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("transaction_detailslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
 
 		// Create form object
 		$CurrentForm = new HttpForm();

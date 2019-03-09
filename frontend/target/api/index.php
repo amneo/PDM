@@ -3,7 +3,7 @@ namespace PHPMaker2019\pdm;
 
 // Set up relative path
 $RELATIVE_PATH = "../";
-$ROOT_RELATIVE_PATH = "../../";
+$ROOT_RELATIVE_PATH = "../";
 include_once $RELATIVE_PATH . "autoload.php";
 
 // Create language object

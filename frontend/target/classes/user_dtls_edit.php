@@ -338,6 +338,7 @@ class user_dtls_edit extends user_dtls
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -375,6 +376,12 @@ class user_dtls_edit extends user_dtls
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 	}
 
 	// Terminate page
@@ -555,6 +562,61 @@ class user_dtls_edit extends user_dtls
 
 		// Is modal
 		$this->IsModal = (Param("modal") == "1");
+
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canEdit()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("user_dtlslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate(GetUrl("user_dtlslist.php"));
+					return;
+				}
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
 
 		// Create form object
 		$CurrentForm = new HttpForm();
@@ -847,6 +909,15 @@ class user_dtls_edit extends user_dtls
 			$this->loadRowValues($rs); // Load row values
 			$rs->close();
 		}
+
+		// Check if valid User ID
+		if ($res) {
+			$res = $this->showOptionLink('edit');
+			if (!$res) {
+				$userIdMsg = DeniedMessage();
+				$this->setFailureMessage($userIdMsg);
+			}
+		}
 		return $res;
 	}
 
@@ -941,7 +1012,7 @@ class user_dtls_edit extends user_dtls
 			$this->username->ViewCustomAttributes = "";
 
 			// password
-			$this->password->ViewValue = $this->password->CurrentValue;
+			$this->password->ViewValue = $Language->phrase("PasswordMask");
 			$this->password->ViewCustomAttributes = "";
 
 			// create_login
@@ -967,6 +1038,7 @@ class user_dtls_edit extends user_dtls
 			$this->email_addreess->ViewCustomAttributes = "";
 
 			// UserLevel
+			if ($Security->canAdmin()) { // System admin
 			$curVal = strval($this->UserLevel->CurrentValue);
 			if ($curVal <> "") {
 				$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
@@ -985,6 +1057,9 @@ class user_dtls_edit extends user_dtls
 				}
 			} else {
 				$this->UserLevel->ViewValue = NULL;
+			}
+			} else {
+				$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
@@ -1046,8 +1121,6 @@ class user_dtls_edit extends user_dtls
 			// password
 			$this->password->EditAttrs["class"] = "form-control";
 			$this->password->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->password->CurrentValue = HtmlDecode($this->password->CurrentValue);
 			$this->password->EditValue = HtmlEncode($this->password->CurrentValue);
 			$this->password->PlaceHolder = RemoveHtml($this->password->caption());
 
@@ -1078,6 +1151,9 @@ class user_dtls_edit extends user_dtls
 			// UserLevel
 			$this->UserLevel->EditAttrs["class"] = "form-control";
 			$this->UserLevel->EditCustomAttributes = "";
+			if (!$Security->canAdmin()) { // System admin
+				$this->UserLevel->EditValue = $Language->phrase("PasswordMask");
+			} else {
 			$curVal = trim(strval($this->UserLevel->CurrentValue));
 			if ($curVal <> "")
 				$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
@@ -1096,6 +1172,7 @@ class user_dtls_edit extends user_dtls
 				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 				if ($rswrk) $rswrk->Close();
 				$this->UserLevel->EditValue = $arwrk;
+			}
 			}
 
 			// Edit refer script
@@ -1279,7 +1356,7 @@ class user_dtls_edit extends user_dtls
 			$this->username->setDbValueDef($rsnew, $this->username->CurrentValue, NULL, $this->username->ReadOnly);
 
 			// password
-			$this->password->setDbValueDef($rsnew, $this->password->CurrentValue, NULL, $this->password->ReadOnly);
+			$this->password->setDbValueDef($rsnew, $this->password->CurrentValue, NULL, $this->password->ReadOnly || ENCRYPTED_PASSWORD && $rs->fields('password') == $this->password->CurrentValue);
 
 			// create_login
 			$this->create_login->setDbValueDef($rsnew, UnFormatDateTime($this->create_login->CurrentValue, 0), NULL, $this->create_login->ReadOnly);
@@ -1297,7 +1374,9 @@ class user_dtls_edit extends user_dtls
 			$this->email_addreess->setDbValueDef($rsnew, $this->email_addreess->CurrentValue, NULL, $this->email_addreess->ReadOnly);
 
 			// UserLevel
-			$this->UserLevel->setDbValueDef($rsnew, $this->UserLevel->CurrentValue, NULL, $this->UserLevel->ReadOnly);
+			if ($Security->canAdmin()) { // System admin
+				$this->UserLevel->setDbValueDef($rsnew, $this->UserLevel->CurrentValue, NULL, $this->UserLevel->ReadOnly);
+			}
 
 			// Call Row Updating event
 			$updateRow = $this->Row_Updating($rsold, $rsnew);
@@ -1335,6 +1414,15 @@ class user_dtls_edit extends user_dtls
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $editRow;
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->user_id->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

@@ -23,6 +23,7 @@ $userlevels_view = new userlevels_view();
 $userlevels_view->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

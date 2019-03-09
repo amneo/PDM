@@ -23,6 +23,7 @@ $user_dtls_delete = new user_dtls_delete();
 $user_dtls_delete->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -85,9 +86,6 @@ $user_dtls_delete->showMessage();
 <?php if ($user_dtls->username->Visible) { // username ?>
 		<th class="<?php echo $user_dtls->username->headerCellClass() ?>"><span id="elh_user_dtls_username" class="user_dtls_username"><?php echo $user_dtls->username->caption() ?></span></th>
 <?php } ?>
-<?php if ($user_dtls->password->Visible) { // password ?>
-		<th class="<?php echo $user_dtls->password->headerCellClass() ?>"><span id="elh_user_dtls_password" class="user_dtls_password"><?php echo $user_dtls->password->caption() ?></span></th>
-<?php } ?>
 <?php if ($user_dtls->create_login->Visible) { // create_login ?>
 		<th class="<?php echo $user_dtls->create_login->headerCellClass() ?>"><span id="elh_user_dtls_create_login" class="user_dtls_create_login"><?php echo $user_dtls->create_login->caption() ?></span></th>
 <?php } ?>
@@ -137,14 +135,6 @@ while (!$user_dtls_delete->Recordset->EOF) {
 <span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_username" class="user_dtls_username">
 <span<?php echo $user_dtls->username->viewAttributes() ?>>
 <?php echo $user_dtls->username->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($user_dtls->password->Visible) { // password ?>
-		<td<?php echo $user_dtls->password->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_password" class="user_dtls_password">
-<span<?php echo $user_dtls->password->viewAttributes() ?>>
-<?php echo $user_dtls->password->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

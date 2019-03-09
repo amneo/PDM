@@ -23,6 +23,7 @@ $transmit_details_addopt = new transmit_details_addopt();
 $transmit_details_addopt->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

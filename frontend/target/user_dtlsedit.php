@@ -23,6 +23,7 @@ $user_dtls_edit = new user_dtls_edit();
 $user_dtls_edit->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -215,7 +216,7 @@ $user_dtls_edit->showMessage();
 		<label id="elh_user_dtls_password" for="x_password" class="<?php echo $user_dtls_edit->LeftColumnClass ?>"><?php echo $user_dtls->password->caption() ?><?php echo ($user_dtls->password->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $user_dtls_edit->RightColumnClass ?>"><div<?php echo $user_dtls->password->cellAttributes() ?>>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" value="<?php echo $user_dtls->password->EditValue ?>" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php echo $user_dtls->password->CustomMsg ?></div></div>
 	</div>
@@ -224,7 +225,7 @@ $user_dtls_edit->showMessage();
 		<td class="<?php echo $user_dtls_edit->TableLeftColumnClass ?>"><span id="elh_user_dtls_password"><?php echo $user_dtls->password->caption() ?><?php echo ($user_dtls->password->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $user_dtls->password->cellAttributes() ?>>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" value="<?php echo $user_dtls->password->EditValue ?>" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php echo $user_dtls->password->CustomMsg ?></td>
 	</tr>
@@ -345,6 +346,11 @@ ew.createDateTimePicker("fuser_dtlsedit", "x_last_login", {"ignoreReadonly":true
 	<div id="r_UserLevel" class="form-group row">
 		<label id="elh_user_dtls_UserLevel" for="x_UserLevel" class="<?php echo $user_dtls_edit->LeftColumnClass ?>"><?php echo $user_dtls->UserLevel->caption() ?><?php echo ($user_dtls->UserLevel->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $user_dtls_edit->RightColumnClass ?>"><div<?php echo $user_dtls->UserLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user_dtls_UserLevel">
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->UserLevel->EditValue) ?>">
+</span>
+<?php } else { ?>
 <span id="el_user_dtls_UserLevel">
 <div class="input-group">
 	<select class="custom-select ew-custom-select" data-table="user_dtls" data-field="x_UserLevel" data-value-separator="<?php echo $user_dtls->UserLevel->displayValueSeparatorAttribute() ?>" id="x_UserLevel" name="x_UserLevel"<?php echo $user_dtls->UserLevel->editAttributes() ?>>
@@ -353,12 +359,18 @@ ew.createDateTimePicker("fuser_dtlsedit", "x_last_login", {"ignoreReadonly":true
 </div>
 <?php echo $user_dtls->UserLevel->Lookup->getParamTag("p_x_UserLevel") ?>
 </span>
+<?php } ?>
 <?php echo $user_dtls->UserLevel->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_UserLevel">
 		<td class="<?php echo $user_dtls_edit->TableLeftColumnClass ?>"><span id="elh_user_dtls_UserLevel"><?php echo $user_dtls->UserLevel->caption() ?><?php echo ($user_dtls->UserLevel->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $user_dtls->UserLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user_dtls_UserLevel">
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->UserLevel->EditValue) ?>">
+</span>
+<?php } else { ?>
 <span id="el_user_dtls_UserLevel">
 <div class="input-group">
 	<select class="custom-select ew-custom-select" data-table="user_dtls" data-field="x_UserLevel" data-value-separator="<?php echo $user_dtls->UserLevel->displayValueSeparatorAttribute() ?>" id="x_UserLevel" name="x_UserLevel"<?php echo $user_dtls->UserLevel->editAttributes() ?>>
@@ -367,6 +379,7 @@ ew.createDateTimePicker("fuser_dtlsedit", "x_last_login", {"ignoreReadonly":true
 </div>
 <?php echo $user_dtls->UserLevel->Lookup->getParamTag("p_x_UserLevel") ?>
 </span>
+<?php } ?>
 <?php echo $user_dtls->UserLevel->CustomMsg ?></td>
 	</tr>
 <?php } ?>

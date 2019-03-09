@@ -452,7 +452,7 @@ class personaldata
 	{
 		global $UserTable, $UserTableConn;
 		$result = [];
-		$fldNames = ["user_id", "username", "password"];
+		$fldNames = ["user_id", "username", "password", "email_addreess"];
 		$filter = str_replace("%u", AdjustSql(CurrentUserName(), USER_TABLE_DBID), USER_NAME_FILTER);
 		if (!isset($UserTable)) {
 			$UserTable = new user_dtls();

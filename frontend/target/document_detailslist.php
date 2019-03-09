@@ -23,6 +23,7 @@ $document_details_list = new document_details_list();
 $document_details_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -174,6 +175,7 @@ fdocument_detailslistsrch.filterList = <?php echo $document_details_list->getFil
 <?php
 $document_details_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$document_details->isExport() && !$document_details->CurrentAction) { ?>
 <form name="fdocument_detailslistsrch" id="fdocument_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($document_details_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -200,6 +202,7 @@ $document_details_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $document_details_list->showPageHeader(); ?>
 <?php

@@ -338,6 +338,7 @@ class user_dtls_delete extends user_dtls
 	public function __construct()
 	{
 		global $Language, $COMPOSITE_KEY_SEPARATOR;
+		global $UserTable, $UserTableConn;
 
 		// Initialize
 		$GLOBALS["Page"] = &$this;
@@ -375,6 +376,12 @@ class user_dtls_delete extends user_dtls
 		// Open connection
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
+
+		// User table object (user_dtls)
+		if (!isset($UserTable)) {
+			$UserTable = new user_dtls();
+			$UserTableConn = Conn($UserTable->Dbid);
+		}
 	}
 
 	// Terminate page
@@ -538,10 +545,65 @@ class user_dtls_delete extends user_dtls
 			if (is_callable($func) && Param(TOKEN_NAME) !== NULL && $func(Param(TOKEN_NAME), SessionTimeoutTime()))
 				session_start();
 		}
+
+		// User profile
+		$UserProfile = new UserProfile();
+
+		// Security
+		$Security = new AdvancedSecurity();
+		$validRequest = FALSE;
+
+		// Check security for API request
+		If (IsApi()) {
+
+			// Check token first
+			$func = PROJECT_NAMESPACE . CHECK_TOKEN_FUNC;
+			if (is_callable($func) && Post(TOKEN_NAME) !== NULL)
+				$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			elseif (is_array($RequestSecurity) && @$RequestSecurity["username"] <> "") // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+		}
+		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canDelete()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				if ($Security->canList())
+					$this->terminate(GetUrl("user_dtlslist.php"));
+				else
+					$this->terminate(GetUrl("login.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate(GetUrl("user_dtlslist.php"));
+					return;
+				}
+			}
+		}
+
+		// Update last accessed time
+		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
+		} else {
+			Write($Language->phrase("UserProfileCorrupted"));
+			$this->terminate();
+		}
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->user_id->setVisibility();
 		$this->username->setVisibility();
-		$this->password->setVisibility();
+		$this->password->Visible = FALSE;
 		$this->create_login->setVisibility();
 		$this->account_valid->setVisibility();
 		$this->last_login->setVisibility();
@@ -583,6 +645,28 @@ class user_dtls_delete extends user_dtls
 
 		// Set up filter (WHERE Clause)
 		$this->CurrentFilter = $filter;
+
+		// Check if valid User ID
+		$conn = &$this->getConnection();
+		$sql = $this->getSql($this->CurrentFilter);
+		if ($rs = LoadRecordset($sql, $conn)) {
+			$res = TRUE;
+			while (!$rs->EOF) {
+				$this->loadRowValues($rs);
+				if (!$this->showOptionLink('delete')) {
+					$userIdMsg = $Language->phrase("NoDeletePermission");
+					$this->setFailureMessage($userIdMsg);
+					$res = FALSE;
+					break;
+				}
+				$rs->moveNext();
+			}
+			$rs->close();
+			if (!$res) {
+				$this->terminate("user_dtlslist.php"); // Return to list
+				return;
+			}
+		}
 
 		// Get action
 		if (IsApi()) {
@@ -741,10 +825,6 @@ class user_dtls_delete extends user_dtls
 			$this->username->ViewValue = $this->username->CurrentValue;
 			$this->username->ViewCustomAttributes = "";
 
-			// password
-			$this->password->ViewValue = $this->password->CurrentValue;
-			$this->password->ViewCustomAttributes = "";
-
 			// create_login
 			$this->create_login->ViewValue = $this->create_login->CurrentValue;
 			$this->create_login->ViewValue = FormatDateTime($this->create_login->ViewValue, 0);
@@ -768,6 +848,7 @@ class user_dtls_delete extends user_dtls
 			$this->email_addreess->ViewCustomAttributes = "";
 
 			// UserLevel
+			if ($Security->canAdmin()) { // System admin
 			$curVal = strval($this->UserLevel->CurrentValue);
 			if ($curVal <> "") {
 				$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
@@ -787,6 +868,9 @@ class user_dtls_delete extends user_dtls
 			} else {
 				$this->UserLevel->ViewValue = NULL;
 			}
+			} else {
+				$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
+			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
 			// user_id
@@ -798,11 +882,6 @@ class user_dtls_delete extends user_dtls
 			$this->username->LinkCustomAttributes = "";
 			$this->username->HrefValue = "";
 			$this->username->TooltipValue = "";
-
-			// password
-			$this->password->LinkCustomAttributes = "";
-			$this->password->HrefValue = "";
-			$this->password->TooltipValue = "";
 
 			// create_login
 			$this->create_login->LinkCustomAttributes = "";
@@ -839,6 +918,10 @@ class user_dtls_delete extends user_dtls
 	protected function deleteRows()
 	{
 		global $Language, $Security;
+		if (!$Security->canDelete()) {
+			$this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
+			return FALSE;
+		}
 		$deleteRows = TRUE;
 		$sql = $this->getCurrentSql();
 		$conn = &$this->getConnection();
@@ -925,6 +1008,15 @@ class user_dtls_delete extends user_dtls
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $deleteRows;
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->user_id->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

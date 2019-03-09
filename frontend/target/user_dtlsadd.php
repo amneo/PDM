@@ -23,6 +23,7 @@ $user_dtls_add = new user_dtls_add();
 $user_dtls_add->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -63,14 +64,6 @@ fuser_dtlsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->password->caption(), $user_dtls->password->RequiredErrorMessage)) ?>");
 		<?php } ?>
-		<?php if ($user_dtls_add->create_login->Required) { ?>
-			elm = this.getElements("x" + infix + "_create_login");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->create_login->caption(), $user_dtls->create_login->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_create_login");
-			if (elm && !ew.checkDateDef(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($user_dtls->create_login->errorMessage()) ?>");
 		<?php if ($user_dtls_add->account_valid->Required) { ?>
 			elm = this.getElements("x" + infix + "_account_valid[]");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -185,7 +178,7 @@ $user_dtls_add->showMessage();
 		<label id="elh_user_dtls_password" for="x_password" class="<?php echo $user_dtls_add->LeftColumnClass ?>"><?php echo $user_dtls->password->caption() ?><?php echo ($user_dtls->password->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $user_dtls_add->RightColumnClass ?>"><div<?php echo $user_dtls->password->cellAttributes() ?>>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php echo $user_dtls->password->CustomMsg ?></div></div>
 	</div>
@@ -194,40 +187,9 @@ $user_dtls_add->showMessage();
 		<td class="<?php echo $user_dtls_add->TableLeftColumnClass ?>"><span id="elh_user_dtls_password"><?php echo $user_dtls->password->caption() ?><?php echo ($user_dtls->password->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $user_dtls->password->cellAttributes() ?>>
 <span id="el_user_dtls_password">
-<input type="text" data-table="user_dtls" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>" value="<?php echo $user_dtls->password->EditValue ?>"<?php echo $user_dtls->password->editAttributes() ?>>
+<input type="password" data-field="x_password" name="x_password" id="x_password" size="30" placeholder="<?php echo HtmlEncode($user_dtls->password->getPlaceHolder()) ?>"<?php echo $user_dtls->password->editAttributes() ?>>
 </span>
 <?php echo $user_dtls->password->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
-<?php if ($user_dtls->create_login->Visible) { // create_login ?>
-<?php if ($user_dtls_add->IsMobileOrModal) { ?>
-	<div id="r_create_login" class="form-group row">
-		<label id="elh_user_dtls_create_login" for="x_create_login" class="<?php echo $user_dtls_add->LeftColumnClass ?>"><?php echo $user_dtls->create_login->caption() ?><?php echo ($user_dtls->create_login->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $user_dtls_add->RightColumnClass ?>"><div<?php echo $user_dtls->create_login->cellAttributes() ?>>
-<span id="el_user_dtls_create_login">
-<input type="text" data-table="user_dtls" data-field="x_create_login" name="x_create_login" id="x_create_login" placeholder="<?php echo HtmlEncode($user_dtls->create_login->getPlaceHolder()) ?>" value="<?php echo $user_dtls->create_login->EditValue ?>"<?php echo $user_dtls->create_login->editAttributes() ?>>
-<?php if (!$user_dtls->create_login->ReadOnly && !$user_dtls->create_login->Disabled && !isset($user_dtls->create_login->EditAttrs["readonly"]) && !isset($user_dtls->create_login->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fuser_dtlsadd", "x_create_login", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
-</span>
-<?php echo $user_dtls->create_login->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_create_login">
-		<td class="<?php echo $user_dtls_add->TableLeftColumnClass ?>"><span id="elh_user_dtls_create_login"><?php echo $user_dtls->create_login->caption() ?><?php echo ($user_dtls->create_login->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $user_dtls->create_login->cellAttributes() ?>>
-<span id="el_user_dtls_create_login">
-<input type="text" data-table="user_dtls" data-field="x_create_login" name="x_create_login" id="x_create_login" placeholder="<?php echo HtmlEncode($user_dtls->create_login->getPlaceHolder()) ?>" value="<?php echo $user_dtls->create_login->EditValue ?>"<?php echo $user_dtls->create_login->editAttributes() ?>>
-<?php if (!$user_dtls->create_login->ReadOnly && !$user_dtls->create_login->Disabled && !isset($user_dtls->create_login->EditAttrs["readonly"]) && !isset($user_dtls->create_login->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fuser_dtlsadd", "x_create_login", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
-</span>
-<?php echo $user_dtls->create_login->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>
@@ -315,6 +277,11 @@ ew.createDateTimePicker("fuser_dtlsadd", "x_last_login", {"ignoreReadonly":true,
 	<div id="r_UserLevel" class="form-group row">
 		<label id="elh_user_dtls_UserLevel" for="x_UserLevel" class="<?php echo $user_dtls_add->LeftColumnClass ?>"><?php echo $user_dtls->UserLevel->caption() ?><?php echo ($user_dtls->UserLevel->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $user_dtls_add->RightColumnClass ?>"><div<?php echo $user_dtls->UserLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user_dtls_UserLevel">
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->UserLevel->EditValue) ?>">
+</span>
+<?php } else { ?>
 <span id="el_user_dtls_UserLevel">
 <div class="input-group">
 	<select class="custom-select ew-custom-select" data-table="user_dtls" data-field="x_UserLevel" data-value-separator="<?php echo $user_dtls->UserLevel->displayValueSeparatorAttribute() ?>" id="x_UserLevel" name="x_UserLevel"<?php echo $user_dtls->UserLevel->editAttributes() ?>>
@@ -323,12 +290,18 @@ ew.createDateTimePicker("fuser_dtlsadd", "x_last_login", {"ignoreReadonly":true,
 </div>
 <?php echo $user_dtls->UserLevel->Lookup->getParamTag("p_x_UserLevel") ?>
 </span>
+<?php } ?>
 <?php echo $user_dtls->UserLevel->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_UserLevel">
 		<td class="<?php echo $user_dtls_add->TableLeftColumnClass ?>"><span id="elh_user_dtls_UserLevel"><?php echo $user_dtls->UserLevel->caption() ?><?php echo ($user_dtls->UserLevel->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $user_dtls->UserLevel->cellAttributes() ?>>
+<?php if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin ?>
+<span id="el_user_dtls_UserLevel">
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($user_dtls->UserLevel->EditValue) ?>">
+</span>
+<?php } else { ?>
 <span id="el_user_dtls_UserLevel">
 <div class="input-group">
 	<select class="custom-select ew-custom-select" data-table="user_dtls" data-field="x_UserLevel" data-value-separator="<?php echo $user_dtls->UserLevel->displayValueSeparatorAttribute() ?>" id="x_UserLevel" name="x_UserLevel"<?php echo $user_dtls->UserLevel->editAttributes() ?>>
@@ -337,6 +310,7 @@ ew.createDateTimePicker("fuser_dtlsadd", "x_last_login", {"ignoreReadonly":true,
 </div>
 <?php echo $user_dtls->UserLevel->Lookup->getParamTag("p_x_UserLevel") ?>
 </span>
+<?php } ?>
 <?php echo $user_dtls->UserLevel->CustomMsg ?></td>
 	</tr>
 <?php } ?>

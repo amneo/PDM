@@ -23,6 +23,7 @@ $userlevelpermissions_list = new userlevelpermissions_list();
 $userlevelpermissions_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -83,6 +84,7 @@ fuserlevelpermissionslistsrch.filterList = <?php echo $userlevelpermissions_list
 <?php
 $userlevelpermissions_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$userlevelpermissions->isExport() && !$userlevelpermissions->CurrentAction) { ?>
 <form name="fuserlevelpermissionslistsrch" id="fuserlevelpermissionslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($userlevelpermissions_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -109,6 +111,7 @@ $userlevelpermissions_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $userlevelpermissions_list->showPageHeader(); ?>
 <?php

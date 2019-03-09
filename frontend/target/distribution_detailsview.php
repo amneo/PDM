@@ -23,6 +23,7 @@ $distribution_details_view = new distribution_details_view();
 $distribution_details_view->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)

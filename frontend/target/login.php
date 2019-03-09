@@ -119,6 +119,7 @@ $login->showMessage();
 	}
 ?>
 <p>&nbsp;</p>
+<a class="ew-link ew-link-separator" href="forgotpwd.php"><?php echo $Language->phrase("ForgotPwd") ?></a>
 <a class="ew-link ew-link-separator" href="register.php"><?php echo $Language->phrase("Register") ?></a>
 </div>
 </div>

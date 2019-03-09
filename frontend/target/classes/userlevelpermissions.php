@@ -867,6 +867,47 @@ class userlevelpermissions extends DbTable
 		global $Language, $LANGUAGE_FOLDER, $PROJECT_ID;
 		if (!isset($Language))
 			$Language = new Language($LANGUAGE_FOLDER, Post("language", ""));
+		global $Security, $RequestSecurity;
+
+		// Check token first
+		$func = PROJECT_NAMESPACE . "CheckToken";
+		$validRequest = FALSE;
+		if (is_callable($func) && Post(TOKEN_NAME) !== NULL) {
+			$validRequest = $func(Post(TOKEN_NAME), SessionTimeoutTime());
+			if ($validRequest) {
+				if (!isset($Security)) {
+					if (session_status() !== PHP_SESSION_ACTIVE)
+						session_start(); // Init session data
+					$Security = new AdvancedSecurity();
+					if ($Security->isLoggedIn()) $Security->TablePermission_Loading();
+					$Security->loadCurrentUserLevel($PROJECT_ID . $this->TableName);
+					if ($Security->isLoggedIn()) $Security->TablePermission_Loaded();
+					$validRequest = $Security->canList(); // List permission
+					if ($validRequest) {
+						$Security->UserID_Loading();
+						$Security->loadUserID();
+						$Security->UserID_Loaded();
+					}
+				}
+			}
+		} else {
+
+			// User profile
+			$UserProfile = new UserProfile();
+
+			// Security
+			$Security = new AdvancedSecurity();
+			if (is_array($RequestSecurity)) // Login user for API request
+				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
+			$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel(CurrentProjectID() . $this->TableName);
+			$Security->TablePermission_Loaded();
+			$validRequest = $Security->canList(); // List permission
+		}
+
+		// Reject invalid request
+		if (!$validRequest)
+			return FALSE;
 
 		// Load lookup parameters
 		$distinct = ConvertToBool(Post("distinct"));

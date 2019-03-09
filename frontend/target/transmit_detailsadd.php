@@ -23,6 +23,7 @@ $transmit_details_add = new transmit_details_add();
 $transmit_details_add->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -183,7 +184,9 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 <span id="as_x_project_name" class="text-nowrap" style="z-index: 8970">
 	<div class="input-group">
 		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($transmit_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>"<?php echo $transmit_details->project_name->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$transmit_details->project_name->ReadOnly) { ?>
 <div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transmit_details->project_name->caption() ?>" data-title="<?php echo $transmit_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
 	</div>
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
@@ -207,7 +210,9 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 <span id="as_x_project_name" class="text-nowrap" style="z-index: 8970">
 	<div class="input-group">
 		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($transmit_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>"<?php echo $transmit_details->project_name->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$transmit_details->project_name->ReadOnly) { ?>
 <div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transmit_details->project_name->caption() ?>" data-title="<?php echo $transmit_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
 	</div>
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>

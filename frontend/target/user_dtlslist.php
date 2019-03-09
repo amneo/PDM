@@ -23,6 +23,7 @@ $user_dtls_list = new user_dtls_list();
 $user_dtls_list->run();
 
 // Setup login status
+SetupLoginStatus();
 SetClientVar("login", LoginStatus());
 
 // Global Page Rendering event (in userfn*.php)
@@ -87,6 +88,7 @@ fuser_dtlslistsrch.filterList = <?php echo $user_dtls_list->getFilterList() ?>;
 <?php
 $user_dtls_list->renderOtherOptions();
 ?>
+<?php if ($Security->CanSearch()) { ?>
 <?php if (!$user_dtls->isExport() && !$user_dtls->CurrentAction) { ?>
 <form name="fuser_dtlslistsrch" id="fuser_dtlslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
 <?php $searchPanelClass = ($user_dtls_list->SearchWhere <> "") ? " show" : " show"; ?>
@@ -113,6 +115,7 @@ $user_dtls_list->renderOtherOptions();
 	</div>
 </div>
 </form>
+<?php } ?>
 <?php } ?>
 <?php $user_dtls_list->showPageHeader(); ?>
 <?php
@@ -195,15 +198,6 @@ $user_dtls_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="username" class="<?php echo $user_dtls->username->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->username) ?>',2);"><div id="elh_user_dtls_username" class="user_dtls_username">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->username->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->username->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->username->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($user_dtls->password->Visible) { // password ?>
-	<?php if ($user_dtls->sortUrl($user_dtls->password) == "") { ?>
-		<th data-name="password" class="<?php echo $user_dtls->password->headerCellClass() ?>"><div id="elh_user_dtls_password" class="user_dtls_password"><div class="ew-table-header-caption"><?php echo $user_dtls->password->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="password" class="<?php echo $user_dtls->password->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->password) ?>',2);"><div id="elh_user_dtls_password" class="user_dtls_password">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->password->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->password->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->password->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -330,14 +324,6 @@ $user_dtls_list->ListOptions->render("body", "left", $user_dtls_list->RowCnt);
 <span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_username" class="user_dtls_username">
 <span<?php echo $user_dtls->username->viewAttributes() ?>>
 <?php echo $user_dtls->username->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($user_dtls->password->Visible) { // password ?>
-		<td data-name="password"<?php echo $user_dtls->password->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_password" class="user_dtls_password">
-<span<?php echo $user_dtls->password->viewAttributes() ?>>
-<?php echo $user_dtls->password->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
