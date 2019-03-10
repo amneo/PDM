@@ -1047,7 +1047,19 @@ class userlevelpermissions extends DbTable
 
 		// Enter your code here
 		// To cancel, set return value to FALSE
+		//Code to change the file name to our requirement and save the same way at server and database.
 
+		if($rsnew["direction"] =  "OUT"){
+
+		//$fExtension = new SplFileInfo($rsnew["document_link"]);
+		//$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."-".$rsnew["revision_no"].".".$fExtension->getExtension();
+
+		$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."-".$rsnew["revision_no"].".pdf";
+		}else{
+
+		//$fExtension = new SplFileInfo($rsnew["document_link"]);
+		$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."_".$rsnew["revision_no"].".pdf";
+		}
 		return TRUE;
 	}
 

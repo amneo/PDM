@@ -103,6 +103,16 @@ fuser_dtlsedit.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->UserLevel->caption(), $user_dtls->UserLevel->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($user_dtls_edit->history->Required) { ?>
+			elm = this.getElements("x" + infix + "_history");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->history->caption(), $user_dtls->history->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($user_dtls_edit->reports_to->Required) { ?>
+			elm = this.getElements("x" + infix + "_reports_to");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $user_dtls->reports_to->caption(), $user_dtls->reports_to->RequiredErrorMessage)) ?>");
+		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -381,6 +391,48 @@ ew.createDateTimePicker("fuser_dtlsedit", "x_last_login", {"ignoreReadonly":true
 </span>
 <?php } ?>
 <?php echo $user_dtls->UserLevel->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($user_dtls->history->Visible) { // history ?>
+<?php if ($user_dtls_edit->IsMobileOrModal) { ?>
+	<div id="r_history" class="form-group row">
+		<label id="elh_user_dtls_history" for="x_history" class="<?php echo $user_dtls_edit->LeftColumnClass ?>"><?php echo $user_dtls->history->caption() ?><?php echo ($user_dtls->history->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $user_dtls_edit->RightColumnClass ?>"><div<?php echo $user_dtls->history->cellAttributes() ?>>
+<span id="el_user_dtls_history">
+<input type="text" data-table="user_dtls" data-field="x_history" name="x_history" id="x_history" size="30" placeholder="<?php echo HtmlEncode($user_dtls->history->getPlaceHolder()) ?>" value="<?php echo $user_dtls->history->EditValue ?>"<?php echo $user_dtls->history->editAttributes() ?>>
+</span>
+<?php echo $user_dtls->history->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_history">
+		<td class="<?php echo $user_dtls_edit->TableLeftColumnClass ?>"><span id="elh_user_dtls_history"><?php echo $user_dtls->history->caption() ?><?php echo ($user_dtls->history->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $user_dtls->history->cellAttributes() ?>>
+<span id="el_user_dtls_history">
+<input type="text" data-table="user_dtls" data-field="x_history" name="x_history" id="x_history" size="30" placeholder="<?php echo HtmlEncode($user_dtls->history->getPlaceHolder()) ?>" value="<?php echo $user_dtls->history->EditValue ?>"<?php echo $user_dtls->history->editAttributes() ?>>
+</span>
+<?php echo $user_dtls->history->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
+<?php if ($user_dtls_edit->IsMobileOrModal) { ?>
+	<div id="r_reports_to" class="form-group row">
+		<label id="elh_user_dtls_reports_to" for="x_reports_to" class="<?php echo $user_dtls_edit->LeftColumnClass ?>"><?php echo $user_dtls->reports_to->caption() ?><?php echo ($user_dtls->reports_to->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $user_dtls_edit->RightColumnClass ?>"><div<?php echo $user_dtls->reports_to->cellAttributes() ?>>
+<span id="el_user_dtls_reports_to">
+<input type="text" data-table="user_dtls" data-field="x_reports_to" name="x_reports_to" id="x_reports_to" size="30" placeholder="<?php echo HtmlEncode($user_dtls->reports_to->getPlaceHolder()) ?>" value="<?php echo $user_dtls->reports_to->EditValue ?>"<?php echo $user_dtls->reports_to->editAttributes() ?>>
+</span>
+<?php echo $user_dtls->reports_to->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_reports_to">
+		<td class="<?php echo $user_dtls_edit->TableLeftColumnClass ?>"><span id="elh_user_dtls_reports_to"><?php echo $user_dtls->reports_to->caption() ?><?php echo ($user_dtls->reports_to->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $user_dtls->reports_to->cellAttributes() ?>>
+<span id="el_user_dtls_reports_to">
+<input type="text" data-table="user_dtls" data-field="x_reports_to" name="x_reports_to" id="x_reports_to" size="30" placeholder="<?php echo HtmlEncode($user_dtls->reports_to->getPlaceHolder()) ?>" value="<?php echo $user_dtls->reports_to->EditValue ?>"<?php echo $user_dtls->reports_to->editAttributes() ?>>
+</span>
+<?php echo $user_dtls->reports_to->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>

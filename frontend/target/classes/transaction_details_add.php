@@ -1116,26 +1116,14 @@ class transaction_details_add extends transaction_details
 			if ($curVal <> "") {
 				$this->approval_status->ViewValue = $this->approval_status->lookupCacheOption($curVal);
 				if ($this->approval_status->ViewValue === NULL) { // Lookup from database
-					$arwrk = explode(",", $curVal);
-					$filterWrk = "";
-					foreach ($arwrk as $wrk) {
-						if ($filterWrk <> "")
-							$filterWrk .= " OR ";
-						$filterWrk .= "\"short_code\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-					}
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->approval_status->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
-						$this->approval_status->ViewValue = new OptionValues();
-						$ari = 0;
-						while (!$rswrk->EOF) {
-							$arwrk = array();
-							$arwrk[1] = $rswrk->fields('df');
-							$arwrk[2] = $rswrk->fields('df2');
-							$this->approval_status->ViewValue->add($this->approval_status->displayValue($arwrk));
-							$rswrk->MoveNext();
-							$ari++;
-						}
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
 						$this->approval_status->ViewValue = $this->approval_status->CurrentValue;
@@ -1315,27 +1303,15 @@ class transaction_details_add extends transaction_details
 				if ($curVal == "") {
 					$filterWrk = "0=1";
 				} else {
-					$arwrk = explode(",", $curVal);
-					$filterWrk = "";
-					foreach ($arwrk as $wrk) {
-						if ($filterWrk <> "") $filterWrk .= " OR ";
-						$filterWrk .= "\"short_code\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-					}
+					$filterWrk = "\"short_code\"" . SearchString("=", $this->approval_status->CurrentValue, DATATYPE_STRING, "");
 				}
 				$sqlWrk = $this->approval_status->Lookup->getSql(TRUE, $filterWrk, '', $this);
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->approval_status->ViewValue = new OptionValues();
-					$ari = 0;
-					while (!$rswrk->EOF) {
-						$arwrk = array();
-						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$this->approval_status->ViewValue->add($this->approval_status->displayValue($arwrk));
-						$rswrk->MoveNext();
-						$ari++;
-					}
-					$rswrk->MoveFirst();
+					$arwrk = array();
+					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+					$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+					$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 				} else {
 					$this->approval_status->ViewValue = $Language->phrase("PleaseSelect");
 				}

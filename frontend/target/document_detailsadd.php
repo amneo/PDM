@@ -84,9 +84,6 @@ fdocument_detailsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->create_date->caption(), $document_details->create_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
-			elm = this.getElements("x" + infix + "_create_date");
-			if (elm && !ew.checkDateDef(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($document_details->create_date->errorMessage()) ?>");
 		<?php if ($document_details_add->planned_date->Required) { ?>
 			elm = this.getElements("x" + infix + "_planned_date");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -294,15 +291,10 @@ fdocument_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true
 <?php if ($document_details->create_date->Visible) { // create_date ?>
 <?php if ($document_details_add->IsMobileOrModal) { ?>
 	<div id="r_create_date" class="form-group row">
-		<label id="elh_document_details_create_date" for="x_create_date" class="<?php echo $document_details_add->LeftColumnClass ?>"><?php echo $document_details->create_date->caption() ?><?php echo ($document_details->create_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label id="elh_document_details_create_date" class="<?php echo $document_details_add->LeftColumnClass ?>"><?php echo $document_details->create_date->caption() ?><?php echo ($document_details->create_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_details_add->RightColumnClass ?>"><div<?php echo $document_details->create_date->cellAttributes() ?>>
 <span id="el_document_details_create_date">
 <input type="text" data-table="document_details" data-field="x_create_date" name="x_create_date" id="x_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailsadd", "x_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
 </span>
 <?php echo $document_details->create_date->CustomMsg ?></div></div>
 	</div>
@@ -312,11 +304,6 @@ ew.createDateTimePicker("fdocument_detailsadd", "x_create_date", {"ignoreReadonl
 		<td<?php echo $document_details->create_date->cellAttributes() ?>>
 <span id="el_document_details_create_date">
 <input type="text" data-table="document_details" data-field="x_create_date" name="x_create_date" id="x_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailsadd", "x_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
 </span>
 <?php echo $document_details->create_date->CustomMsg ?></td>
 	</tr>

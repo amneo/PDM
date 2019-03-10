@@ -101,6 +101,12 @@ $user_dtls_delete->showMessage();
 <?php if ($user_dtls->UserLevel->Visible) { // UserLevel ?>
 		<th class="<?php echo $user_dtls->UserLevel->headerCellClass() ?>"><span id="elh_user_dtls_UserLevel" class="user_dtls_UserLevel"><?php echo $user_dtls->UserLevel->caption() ?></span></th>
 <?php } ?>
+<?php if ($user_dtls->history->Visible) { // history ?>
+		<th class="<?php echo $user_dtls->history->headerCellClass() ?>"><span id="elh_user_dtls_history" class="user_dtls_history"><?php echo $user_dtls->history->caption() ?></span></th>
+<?php } ?>
+<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
+		<th class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><span id="elh_user_dtls_reports_to" class="user_dtls_reports_to"><?php echo $user_dtls->reports_to->caption() ?></span></th>
+<?php } ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -180,6 +186,22 @@ while (!$user_dtls_delete->Recordset->EOF) {
 <span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_UserLevel" class="user_dtls_UserLevel">
 <span<?php echo $user_dtls->UserLevel->viewAttributes() ?>>
 <?php echo $user_dtls->UserLevel->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($user_dtls->history->Visible) { // history ?>
+		<td<?php echo $user_dtls->history->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_history" class="user_dtls_history">
+<span<?php echo $user_dtls->history->viewAttributes() ?>>
+<?php echo $user_dtls->history->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
+		<td<?php echo $user_dtls->reports_to->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_reports_to" class="user_dtls_reports_to">
+<span<?php echo $user_dtls->reports_to->viewAttributes() ?>>
+<?php echo $user_dtls->reports_to->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -496,6 +496,7 @@ class changepwd extends user_dtls
 							$validPwd = $this->User_ChangePassword($rsold, $userName, $oldPassword, $newPassword);
 						if ($validPwd) {
 							$rsnew = array('password' => $newPassword); // Change Password
+							$emailAddress = $rsold['email_addreess'];
 							$rs->close();
 							$UserTableConn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
 							$validPwd = $this->update($rsnew);
@@ -515,6 +516,24 @@ class changepwd extends user_dtls
 			}
 		}
 		if ($pwdUpdated) {
+			if (@$emailAddress <> "") {
+
+				// Load Email Content
+				$email = new Email();
+				$email->load(EMAIL_CHANGEPWD_TEMPLATE);
+				$email->replaceSender(SENDER_EMAIL); // Replace Sender
+				$email->replaceRecipient($emailAddress); // Replace Recipient
+				$email->replaceContent('<!--$Password-->', @$newPassword);
+				$args = array();
+				$args["rs"] = &$rsnew;
+				$emailSent = FALSE;
+				if ($this->Email_Sending($email, $args))
+					$emailSent = $email->send();
+
+				// Send email failed
+				if (!$emailSent)
+					$this->setFailureMessage($email->SendErrDescription);
+			}
 			if ($this->getSuccessMessage() == "")
 				$this->setSuccessMessage($Language->phrase("PasswordChanged")); // Set up success message
 			if (IsPasswordReset()) {

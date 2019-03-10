@@ -474,6 +474,29 @@ class register extends user_dtls
 			$this->CurrentAction = "show"; // Display blank record
 		}
 
+		// Handle email activation
+		if (Get("action") <> "") {
+			$action = Get("action");
+			$emailAddress = Get("email");
+			$code = Get("token");
+			@list($approvalCode, $usr, $pwd) = explode(",", $code, 3);
+			$approvalCode = Decrypt($approvalCode);
+			$usr = Decrypt($usr);
+			$pwd = Decrypt($pwd);
+			if ($emailAddress == $approvalCode) {
+				if (SameText($action, "confirm")) { // Email activation
+					if ($this->activateEmail($emailAddress)) { // Activate this email
+						if ($this->getSuccessMessage() == "")
+							$this->setSuccessMessage($Language->phrase("ActivateAccount")); // Set up message acount activated
+						$this->terminate("login.php"); // Go to login page
+					}
+				}
+			}
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("ActivateFailed")); // Set activate failed message
+			$this->terminate("login.php"); // Go to login page
+		}
+
 		// Insert record
 		if ($this->isInsert()) {
 
@@ -494,8 +517,24 @@ class register extends user_dtls
 			if (!$userExists) {
 				$this->SendEmail = TRUE; // Send email on add success
 				if ($this->addRow()) { // Add record
+					$email = $this->prepareRegisterEmail();
+
+					// Get new recordset
+					$this->CurrentFilter = $this->getRecordFilter();
+					$sql = $this->getCurrentSql();
+					$rsnew = $UserTableConn->execute($sql);
+					$row = $rsnew->fields;
+					$args = array();
+					$args["rs"] = $row;
+					$emailSent = FALSE;
+					if ($this->Email_Sending($email, $args))
+						$emailSent = $email->send();
+
+					// Send email failed
+					if (!$emailSent)
+						$this->setFailureMessage($email->SendErrDescription);
 					if ($this->getSuccessMessage() == "")
-						$this->setSuccessMessage($Language->phrase("RegisterSuccess")); // Register success
+						$this->setSuccessMessage($Language->phrase("RegisterSuccessActivate")); // Activate success
 					$this->terminate("login.php"); // Return
 				} else {
 					$this->restoreFormValues(); // Restore form values
@@ -511,6 +550,36 @@ class register extends user_dtls
 		}
 		$this->resetAttributes();
 		$this->renderRow();
+	}
+
+	// Activate account based on email
+	protected function activateEmail($email)
+	{
+		global $UserTableConn, $Language;
+		$filter = str_replace("%e", AdjustSql($email, USER_TABLE_DBID), USER_EMAIL_FILTER);
+		$sql = $this->getSql($filter);
+		$UserTableConn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $UserTableConn->execute($sql);
+		$UserTableConn->raiseErrorFn = '';
+		if (!$rs)
+			return FALSE;
+		if (!$rs->EOF) {
+			$rsnew = $rs->fields;
+			$this->loadRowValues($rs); // Load row values
+			$rs->close();
+			$rsact = array('account_valid' => true); // Auto register
+			$this->CurrentFilter = $filter;
+			$res = $this->update($rsact);
+			if ($res) { // Call User Activated event
+				$rsnew['account_valid'] = true;
+				$this->User_Activated($rsnew);
+			}
+			return $res;
+		} else {
+			$this->setFailureMessage($Language->phrase("NoRecord"));
+			$rs->close();
+			return FALSE;
+		}
 	}
 
 	// Get upload files
@@ -536,6 +605,10 @@ class register extends user_dtls
 		$this->email_addreess->CurrentValue = NULL;
 		$this->email_addreess->OldValue = $this->email_addreess->CurrentValue;
 		$this->UserLevel->CurrentValue = 10;
+		$this->history->CurrentValue = NULL;
+		$this->history->OldValue = $this->history->CurrentValue;
+		$this->reports_to->CurrentValue = NULL;
+		$this->reports_to->OldValue = $this->reports_to->CurrentValue;
 	}
 
 	// Load form values
@@ -629,6 +702,8 @@ class register extends user_dtls
 		$this->last_login->setDbValue($row['last_login']);
 		$this->email_addreess->setDbValue($row['email_addreess']);
 		$this->UserLevel->setDbValue($row['UserLevel']);
+		$this->history->setDbValue($row['history']);
+		$this->reports_to->setDbValue($row['reports_to']);
 	}
 
 	// Return a row with default values
@@ -644,6 +719,8 @@ class register extends user_dtls
 		$row['last_login'] = $this->last_login->CurrentValue;
 		$row['email_addreess'] = $this->email_addreess->CurrentValue;
 		$row['UserLevel'] = $this->UserLevel->CurrentValue;
+		$row['history'] = $this->history->CurrentValue;
+		$row['reports_to'] = $this->reports_to->CurrentValue;
 		return $row;
 	}
 
@@ -666,6 +743,8 @@ class register extends user_dtls
 		// last_login
 		// email_addreess
 		// UserLevel
+		// history
+		// reports_to
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -728,6 +807,14 @@ class register extends user_dtls
 				$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
+
+			// history
+			$this->history->ViewValue = $this->history->CurrentValue;
+			$this->history->ViewCustomAttributes = "";
+
+			// reports_to
+			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$this->reports_to->ViewCustomAttributes = "";
 
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
@@ -855,6 +942,16 @@ class register extends user_dtls
 		if ($this->UserLevel->Required) {
 			if (!$this->UserLevel->IsDetailKey && $this->UserLevel->FormValue != NULL && $this->UserLevel->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->UserLevel->caption(), $this->UserLevel->RequiredErrorMessage));
+			}
+		}
+		if ($this->history->Required) {
+			if (!$this->history->IsDetailKey && $this->history->FormValue != NULL && $this->history->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->history->caption(), $this->history->RequiredErrorMessage));
+			}
+		}
+		if ($this->reports_to->Required) {
+			if (!$this->reports_to->IsDetailKey && $this->reports_to->FormValue != NULL && $this->reports_to->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->reports_to->caption(), $this->reports_to->RequiredErrorMessage));
 			}
 		}
 

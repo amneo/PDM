@@ -122,8 +122,7 @@ class document_details extends DbTable
 		$this->fields['project_system'] = &$this->project_system;
 
 		// create_date
-		$this->create_date = new DbField('document_details', 'document_details', 'x_create_date', 'create_date', '"create_date"', CastDateFieldForLike('"create_date"', 0, "DB"), 135, 0, FALSE, '"create_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->create_date->Required = TRUE; // Required field
+		$this->create_date = new DbField('document_details', 'document_details', 'x_create_date', 'create_date', '"create_date"', CastDateFieldForLike('"create_date"', 0, "DB"), 135, 0, FALSE, '"create_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->create_date->Sortable = FALSE; // Allow sort
 		$this->create_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['create_date'] = &$this->create_date;

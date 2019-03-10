@@ -777,6 +777,8 @@ class user_dtls_list extends user_dtls
 		$this->last_login->setVisibility();
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
+		$this->history->setVisibility();
+		$this->reports_to->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -796,6 +798,7 @@ class user_dtls_list extends user_dtls
 
 		// Setup other options
 		$this->setupOtherOptions();
+		$this->ListActions->add("resendregisteremail", $Language->phrase("ResendRegisterEmailBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 		$this->ListActions->add("resetconcurrentuser", $Language->phrase("ResetConcurrentUserBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 		$this->ListActions->add("resetloginretry", $Language->phrase("ResetLoginRetryBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 		$this->ListActions->add("setpasswordexpired", $Language->phrase("SetPasswordExpiredBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
@@ -1052,6 +1055,8 @@ class user_dtls_list extends user_dtls
 		$filterList = Concat($filterList, $this->last_login->AdvancedSearch->toJson(), ","); // Field last_login
 		$filterList = Concat($filterList, $this->email_addreess->AdvancedSearch->toJson(), ","); // Field email_addreess
 		$filterList = Concat($filterList, $this->UserLevel->AdvancedSearch->toJson(), ","); // Field UserLevel
+		$filterList = Concat($filterList, $this->history->AdvancedSearch->toJson(), ","); // Field history
+		$filterList = Concat($filterList, $this->reports_to->AdvancedSearch->toJson(), ","); // Field reports_to
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1153,6 +1158,22 @@ class user_dtls_list extends user_dtls
 		$this->UserLevel->AdvancedSearch->SearchValue2 = @$filter["y_UserLevel"];
 		$this->UserLevel->AdvancedSearch->SearchOperator2 = @$filter["w_UserLevel"];
 		$this->UserLevel->AdvancedSearch->save();
+
+		// Field history
+		$this->history->AdvancedSearch->SearchValue = @$filter["x_history"];
+		$this->history->AdvancedSearch->SearchOperator = @$filter["z_history"];
+		$this->history->AdvancedSearch->SearchCondition = @$filter["v_history"];
+		$this->history->AdvancedSearch->SearchValue2 = @$filter["y_history"];
+		$this->history->AdvancedSearch->SearchOperator2 = @$filter["w_history"];
+		$this->history->AdvancedSearch->save();
+
+		// Field reports_to
+		$this->reports_to->AdvancedSearch->SearchValue = @$filter["x_reports_to"];
+		$this->reports_to->AdvancedSearch->SearchOperator = @$filter["z_reports_to"];
+		$this->reports_to->AdvancedSearch->SearchCondition = @$filter["v_reports_to"];
+		$this->reports_to->AdvancedSearch->SearchValue2 = @$filter["y_reports_to"];
+		$this->reports_to->AdvancedSearch->SearchOperator2 = @$filter["w_reports_to"];
+		$this->reports_to->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1164,6 +1185,8 @@ class user_dtls_list extends user_dtls
 		$this->buildBasicSearchSql($where, $this->username, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->password, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->email_addreess, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->history, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->reports_to, $arKeywords, $type);
 		return $where;
 	}
 
@@ -1333,6 +1356,8 @@ class user_dtls_list extends user_dtls
 			$this->updateSort($this->last_login, $ctrl); // last_login
 			$this->updateSort($this->email_addreess, $ctrl); // email_addreess
 			$this->updateSort($this->UserLevel, $ctrl); // UserLevel
+			$this->updateSort($this->history, $ctrl); // history
+			$this->updateSort($this->reports_to, $ctrl); // reports_to
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1375,6 +1400,8 @@ class user_dtls_list extends user_dtls
 				$this->last_login->setSort("");
 				$this->email_addreess->setSort("");
 				$this->UserLevel->setSort("");
+				$this->history->setSort("");
+				$this->reports_to->setSort("");
 			}
 
 			// Reset start position
@@ -1640,7 +1667,7 @@ class user_dtls_list extends user_dtls
 						$userlist .= ",";
 					$userlist .= $user;
 					if ($userAction == "resendregisteremail")
-						$processed = FALSE;
+						$processed = $this->sendRegisterEmail($row);
 					elseif ($userAction == "resetconcurrentuser")
 						$processed = $UserProfile->resetConcurrentUser($user);
 					elseif ($userAction == "resetloginretry")
@@ -1655,6 +1682,8 @@ class user_dtls_list extends user_dtls
 				}
 				if ($processed) {
 					$conn->commitTrans(); // Commit the changes
+					if ($userAction == "resendregisteremail")
+						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResendRegisterEmailSuccess")));
 					if ($userAction == "resetconcurrentuser")
 						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResetConcurrentUserSuccess")));
 					if ($userAction == "resetloginretry")
@@ -1665,6 +1694,8 @@ class user_dtls_list extends user_dtls
 						$this->setSuccessMessage(str_replace('%s', $actionCaption, $Language->phrase("CustomActionCompleted"))); // Set up success message
 				} else {
 					$conn->rollbackTrans(); // Rollback changes
+					if ($userAction == "resendregisteremail")
+						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResendRegisterEmailFailure")));
 					if ($userAction == "resetconcurrentuser")
 						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResetConcurrentUserFailure")));
 					if ($userAction == "resetloginretry")
@@ -1865,6 +1896,8 @@ class user_dtls_list extends user_dtls
 		$this->last_login->setDbValue($row['last_login']);
 		$this->email_addreess->setDbValue($row['email_addreess']);
 		$this->UserLevel->setDbValue($row['UserLevel']);
+		$this->history->setDbValue($row['history']);
+		$this->reports_to->setDbValue($row['reports_to']);
 	}
 
 	// Return a row with default values
@@ -1879,6 +1912,8 @@ class user_dtls_list extends user_dtls
 		$row['last_login'] = NULL;
 		$row['email_addreess'] = NULL;
 		$row['UserLevel'] = NULL;
+		$row['history'] = NULL;
+		$row['reports_to'] = NULL;
 		return $row;
 	}
 
@@ -1930,6 +1965,8 @@ class user_dtls_list extends user_dtls
 		// last_login
 		// email_addreess
 		// UserLevel
+		// history
+		// reports_to
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1989,6 +2026,14 @@ class user_dtls_list extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
+			// history
+			$this->history->ViewValue = $this->history->CurrentValue;
+			$this->history->ViewCustomAttributes = "";
+
+			// reports_to
+			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$this->reports_to->ViewCustomAttributes = "";
+
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
 			$this->user_id->HrefValue = "";
@@ -2023,6 +2068,16 @@ class user_dtls_list extends user_dtls
 			$this->UserLevel->LinkCustomAttributes = "";
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
+
+			// history
+			$this->history->LinkCustomAttributes = "";
+			$this->history->HrefValue = "";
+			$this->history->TooltipValue = "";
+
+			// reports_to
+			$this->reports_to->LinkCustomAttributes = "";
+			$this->reports_to->HrefValue = "";
+			$this->reports_to->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

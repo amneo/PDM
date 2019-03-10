@@ -114,7 +114,7 @@ CREATE TABLE public.transaction_details (
     direction varchar NOT NULL,
     approval_status varchar DEFAULT 'Planning'::character varying NOT NULL,
     document_link varchar NOT NULL,
-    transaction_date timestamp without time zone DEFAULT '2019-03-05 00:58:06.983'::timestamp(6) without time zone,
+    transaction_date timestamp without time zone DEFAULT now(),
     document_native text NOT NULL
 )
 WITH (oids = true);
@@ -145,7 +145,9 @@ CREATE TABLE public.user_dtls (
     account_valid boolean DEFAULT false,
     last_login date,
     email_addreess varchar,
-    "UserLevel" integer DEFAULT 10
+    "UserLevel" integer DEFAULT 10,
+    history varchar,
+    reports_to varchar
 )
 WITH (oids = false);
 --
@@ -173,7 +175,7 @@ CREATE TABLE public.document_details (
     client_doc_no varchar NOT NULL,
     document_tittle varchar NOT NULL,
     project_system varchar NOT NULL,
-    create_date timestamp without time zone DEFAULT '2019-03-05 02:08:02.594354'::timestamp(6) without time zone,
+    create_date timestamp without time zone DEFAULT now(),
     planned_date date NOT NULL,
     document_type varchar NOT NULL,
     expiry_date date
@@ -205,7 +207,7 @@ CREATE TABLE public.f_version (
     frontend_version varchar,
     backend_version varchar,
     release_date date,
-    posted_date timestamp without time zone,
+    posted_date timestamp without time zone DEFAULT now(),
     remarks text
 )
 WITH (oids = false);

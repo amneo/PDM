@@ -1307,9 +1307,6 @@ class document_details_add extends document_details
 				AddMessage($FormError, str_replace("%s", $this->create_date->caption(), $this->create_date->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->create_date->FormValue)) {
-			AddMessage($FormError, $this->create_date->errorMessage());
-		}
 		if ($this->planned_date->Required) {
 			if (!$this->planned_date->IsDetailKey && $this->planned_date->FormValue != NULL && $this->planned_date->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
@@ -1391,7 +1388,7 @@ class document_details_add extends document_details
 		$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", FALSE);
 
 		// create_date
-		$this->create_date->setDbValueDef($rsnew, UnFormatDateTime($this->create_date->CurrentValue, 0), NULL, strval($this->create_date->CurrentValue) == "");
+		$this->create_date->setDbValueDef($rsnew, UnFormatDateTime($this->create_date->CurrentValue, 0), NULL, FALSE);
 
 		// planned_date
 		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 0), CurrentDate(), FALSE);

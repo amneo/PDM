@@ -140,7 +140,7 @@ ew.vars = <?php echo JsonEncode($CLIENT_VAR) ?>;
 		<!-- Left navbar links -->
 		<ul id="ew-navbar" class="navbar-nav">
 			<a class="navbar-brand d-none d-md-block" href="#">
-				<img src="<?php echo $RELATIVE_PATH ?>phpimages/firelink-logo.png" alt="" class="brand-image ew-brand-image">
+				<span class="brand-text">FireLink-PDM</span>
 			</a>
 			<li class="nav-item d-block d-md-none">
 				<a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
@@ -154,7 +154,7 @@ ew.vars = <?php echo JsonEncode($CLIENT_VAR) ?>;
 	<aside class="<?php echo $SIDEBAR_CLASS ?>">
 		<!-- Brand Logo //** Note: Only licensed users are allowed to change the logo ** -->
 		<a href="#" class="brand-link">
-			<img src="<?php echo $RELATIVE_PATH ?>phpimages/firelink-logo.png" alt="" class="brand-image ew-brand-image">
+			<span class="brand-text">FireLink-PDM</span>
 		</a>
 		<!-- Sidebar -->
 		<div class="sidebar">

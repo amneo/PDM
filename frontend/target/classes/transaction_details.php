@@ -134,7 +134,7 @@ class transaction_details extends DbTable
 		$this->fields['direction'] = &$this->direction;
 
 		// approval_status
-		$this->approval_status = new DbField('transaction_details', 'transaction_details', 'x_approval_status', 'approval_status', '"approval_status"', '"approval_status"', 200, -1, FALSE, '"approval_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'CHECKBOX');
+		$this->approval_status = new DbField('transaction_details', 'transaction_details', 'x_approval_status', 'approval_status', '"approval_status"', '"approval_status"', 200, -1, FALSE, '"approval_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
 		$this->approval_status->Nullable = FALSE; // NOT NULL field
 		$this->approval_status->Required = TRUE; // Required field
 		$this->approval_status->Sortable = TRUE; // Allow sort
@@ -967,26 +967,14 @@ class transaction_details extends DbTable
 		if ($curVal <> "") {
 			$this->approval_status->ViewValue = $this->approval_status->lookupCacheOption($curVal);
 			if ($this->approval_status->ViewValue === NULL) { // Lookup from database
-				$arwrk = explode(",", $curVal);
-				$filterWrk = "";
-				foreach ($arwrk as $wrk) {
-					if ($filterWrk <> "")
-						$filterWrk .= " OR ";
-					$filterWrk .= "\"short_code\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-				}
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 				$sqlWrk = $this->approval_status->Lookup->getSql(FALSE, $filterWrk, '', $this);
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->approval_status->ViewValue = new OptionValues();
-					$ari = 0;
-					while (!$rswrk->EOF) {
-						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
-						$this->approval_status->ViewValue->add($this->approval_status->displayValue($arwrk));
-						$rswrk->MoveNext();
-						$ari++;
-					}
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
 					$this->approval_status->ViewValue = $this->approval_status->CurrentValue;
@@ -1705,7 +1693,19 @@ class transaction_details extends DbTable
 
 		// Enter your code here
 		// To cancel, set return value to FALSE
+		//Code to change the file name to our requirement and save the same way at server and database.
 
+		if($rsnew["direction"] ==  "OUT"){
+
+		//$fExtension = new SplFileInfo($rsnew["document_link"]);
+		//$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."-".$rsnew["revision_no"].".".$fExtension->getExtension();
+
+		$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."-".$rsnew["revision_no"].".pdf";
+		}else{
+
+		//$fExtension = new SplFileInfo($rsnew["document_link"]);
+		$rsnew["document_link"] = $rsnew["firelink_doc_no"]."-".$rsnew["submit_no"]."_".$rsnew["revision_no"].".pdf";
+		}
 		return TRUE;
 	}
 

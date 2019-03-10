@@ -1036,26 +1036,14 @@ class transaction_details_update extends transaction_details
 			if ($curVal <> "") {
 				$this->approval_status->ViewValue = $this->approval_status->lookupCacheOption($curVal);
 				if ($this->approval_status->ViewValue === NULL) { // Lookup from database
-					$arwrk = explode(",", $curVal);
-					$filterWrk = "";
-					foreach ($arwrk as $wrk) {
-						if ($filterWrk <> "")
-							$filterWrk .= " OR ";
-						$filterWrk .= "\"short_code\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-					}
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->approval_status->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
-						$this->approval_status->ViewValue = new OptionValues();
-						$ari = 0;
-						while (!$rswrk->EOF) {
-							$arwrk = array();
-							$arwrk[1] = $rswrk->fields('df');
-							$arwrk[2] = $rswrk->fields('df2');
-							$this->approval_status->ViewValue->add($this->approval_status->displayValue($arwrk));
-							$rswrk->MoveNext();
-							$ari++;
-						}
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
 						$this->approval_status->ViewValue = $this->approval_status->CurrentValue;

@@ -246,6 +246,24 @@ $user_dtls_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($user_dtls->history->Visible) { // history ?>
+	<?php if ($user_dtls->sortUrl($user_dtls->history) == "") { ?>
+		<th data-name="history" class="<?php echo $user_dtls->history->headerCellClass() ?>"><div id="elh_user_dtls_history" class="user_dtls_history"><div class="ew-table-header-caption"><?php echo $user_dtls->history->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="history" class="<?php echo $user_dtls->history->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->history) ?>',2);"><div id="elh_user_dtls_history" class="user_dtls_history">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->history->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->history->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->history->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
+	<?php if ($user_dtls->sortUrl($user_dtls->reports_to) == "") { ?>
+		<th data-name="reports_to" class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><div id="elh_user_dtls_reports_to" class="user_dtls_reports_to"><div class="ew-table-header-caption"><?php echo $user_dtls->reports_to->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="reports_to" class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->reports_to) ?>',2);"><div id="elh_user_dtls_reports_to" class="user_dtls_reports_to">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->reports_to->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->reports_to->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->reports_to->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php
 
 // Render list options (header, right)
@@ -369,6 +387,22 @@ $user_dtls_list->ListOptions->render("body", "left", $user_dtls_list->RowCnt);
 <span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_UserLevel" class="user_dtls_UserLevel">
 <span<?php echo $user_dtls->UserLevel->viewAttributes() ?>>
 <?php echo $user_dtls->UserLevel->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($user_dtls->history->Visible) { // history ?>
+		<td data-name="history"<?php echo $user_dtls->history->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_history" class="user_dtls_history">
+<span<?php echo $user_dtls->history->viewAttributes() ?>>
+<?php echo $user_dtls->history->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
+		<td data-name="reports_to"<?php echo $user_dtls->reports_to->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_reports_to" class="user_dtls_reports_to">
+<span<?php echo $user_dtls->reports_to->viewAttributes() ?>>
+<?php echo $user_dtls->reports_to->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

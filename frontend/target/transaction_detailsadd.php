@@ -88,7 +88,7 @@ ftransaction_detailsadd.validate = function() {
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->direction->caption(), $transaction_details->direction->RequiredErrorMessage)) ?>");
 		<?php } ?>
 		<?php if ($transaction_details_add->approval_status->Required) { ?>
-			elm = this.getElements("x" + infix + "_approval_status[]");
+			elm = this.getElements("x" + infix + "_approval_status");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->approval_status->caption(), $transaction_details->approval_status->RequiredErrorMessage)) ?>");
 		<?php } ?>
@@ -139,8 +139,8 @@ ftransaction_detailsadd.lists["x_transmit_no"].options = <?php echo JsonEncode($
 ftransaction_detailsadd.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 ftransaction_detailsadd.lists["x_direction"] = <?php echo $transaction_details_add->direction->Lookup->toClientList() ?>;
 ftransaction_detailsadd.lists["x_direction"].options = <?php echo JsonEncode($transaction_details_add->direction->options(FALSE, TRUE)) ?>;
-ftransaction_detailsadd.lists["x_approval_status[]"] = <?php echo $transaction_details_add->approval_status->Lookup->toClientList() ?>;
-ftransaction_detailsadd.lists["x_approval_status[]"].options = <?php echo JsonEncode($transaction_details_add->approval_status->lookupOptions()) ?>;
+ftransaction_detailsadd.lists["x_approval_status"] = <?php echo $transaction_details_add->approval_status->Lookup->toClientList() ?>;
+ftransaction_detailsadd.lists["x_approval_status"].options = <?php echo JsonEncode($transaction_details_add->approval_status->lookupOptions()) ?>;
 
 // Form object for search
 </script>
@@ -480,17 +480,17 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_transmit_date", {"ignoreRe
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->ViewValue ?></button>
 		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->checkBoxListHtml(TRUE, "x_approval_status[]", 1) ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status", 1) ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status[]" id="x_approval_status[]" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
 		<i class="fa fa-times ew-icon"></i>
 	</button>
-	<?php } ?>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x_approval_status") ?>
+	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
 <?php } else { ?>
@@ -513,17 +513,17 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_transmit_date", {"ignoreRe
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->ViewValue ?></button>
 		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->checkBoxListHtml(TRUE, "x_approval_status[]", 1) ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status", 1) ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status[]" id="x_approval_status[]" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
 		<i class="fa fa-times ew-icon"></i>
 	</button>
-	<?php } ?>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x_approval_status") ?>
+	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
 <?php } else { ?>

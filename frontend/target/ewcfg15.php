@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'k0dJdct12UyJ4Mvx'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'sD2ZIn8gqPZlw4cv'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -342,7 +342,7 @@ define(PROJECT_NAMESPACE . "LOGIN_USERNAME_FIELD_NAME", "username");
 define(PROJECT_NAMESPACE . "LOGIN_PASSWORD_FIELD_NAME", "password");
 define(PROJECT_NAMESPACE . "USER_ID_FIELD_NAME", "user_id");
 define(PROJECT_NAMESPACE . "USER_LEVEL_FIELD_NAME", "UserLevel");
-define(PROJECT_NAMESPACE . "USER_PROFILE_FIELD_NAME", "username");
+define(PROJECT_NAMESPACE . "USER_PROFILE_FIELD_NAME", "history");
 define(PROJECT_NAMESPACE . "REGISTER_ACTIVATE_FIELD_NAME", "account_valid");
 define(PROJECT_NAMESPACE . "USER_EMAIL_FIELD_NAME", "email_addreess");
 
@@ -352,7 +352,7 @@ define(PROJECT_NAMESPACE . "USER_TABLE", "\"public\".\"user_dtls\"");
 define(PROJECT_NAMESPACE . "USER_NAME_FILTER", "(\"username\" = '%u')");
 define(PROJECT_NAMESPACE . "USER_ID_FILTER", "(\"user_id\" = %u)");
 define(PROJECT_NAMESPACE . "USER_EMAIL_FILTER", "(\"email_addreess\" = '%e')");
-define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "");
+define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "(\"account_valid\" = true)");
 
 // User Profile Constants
 define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_ID", "SessionID");
@@ -375,15 +375,15 @@ define(PROJECT_NAMESPACE . "AUTO_HIDE_PAGE_SIZE_SELECTOR", TRUE);
 
 // Email
 define(PROJECT_NAMESPACE . "PHPMAILER_MAILER", "smtp"); // PHPMailer mailer
-define(PROJECT_NAMESPACE . "SMTP_SERVER", "smtp.gmail.com"); // SMTP server
-define(PROJECT_NAMESPACE . "SMTP_SERVER_PORT", 587); // SMTP server port
+define(PROJECT_NAMESPACE . "SMTP_SERVER", "smtp.mailtrap.io"); // SMTP server
+define(PROJECT_NAMESPACE . "SMTP_SERVER_PORT", 25); // SMTP server port
 define(PROJECT_NAMESPACE . "SMTP_SECURE_OPTION", "tls");
-define(PROJECT_NAMESPACE . "SMTP_SERVER_USERNAME", "ajkaanabshanab@gmail.com"); // SMTP server user name
-define(PROJECT_NAMESPACE . "SMTP_SERVER_PASSWORD", "wakarewara11"); // SMTP server password
+define(PROJECT_NAMESPACE . "SMTP_SERVER_USERNAME", "85c503001f1e1a"); // SMTP server user name
+define(PROJECT_NAMESPACE . "SMTP_SERVER_PASSWORD", "6e0aa3e7091996"); // SMTP server password
 define(PROJECT_NAMESPACE . "SENDER_EMAIL", "ajkaanabshanab@gmail.com"); // Sender email address
 define(PROJECT_NAMESPACE . "RECIPIENT_EMAIL", "ajkaanabshanab@gmail.com"); // Recipient email address
-define(PROJECT_NAMESPACE . "MAX_EMAIL_RECIPIENT", 3);
-define(PROJECT_NAMESPACE . "MAX_EMAIL_SENT_COUNT", 3);
+define(PROJECT_NAMESPACE . "MAX_EMAIL_RECIPIENT", 40);
+define(PROJECT_NAMESPACE . "MAX_EMAIL_SENT_COUNT", 4);
 define(PROJECT_NAMESPACE . "EXPORT_EMAIL_COUNTER", SESSION_STATUS . "_EmailCounter");
 define(PROJECT_NAMESPACE . "EMAIL_CHANGEPWD_TEMPLATE", "changepwd.html");
 define(PROJECT_NAMESPACE . "EMAIL_FORGOTPWD_TEMPLATE", "forgotpwd.html");
@@ -912,7 +912,7 @@ define(PROJECT_NAMESPACE . "SEARCH_MULTI_VALUE_OPTION", 3);
 
 // Quick search
 $BASIC_SEARCH_IGNORE_PATTERN = "/[\?,\.\^\*\(\)\[\]\\\"]/"; // Ignore special characters
-define(PROJECT_NAMESPACE . "BASIC_SEARCH_ANY_FIELDS", FALSE); // Search "All keywords" in any selected fields
+define(PROJECT_NAMESPACE . "BASIC_SEARCH_ANY_FIELDS", TRUE); // Search "All keywords" in any selected fields
 
 // Validate option
 define(PROJECT_NAMESPACE . "CLIENT_VALIDATE", TRUE);
@@ -1077,9 +1077,6 @@ $Breadcrumb = NULL;
 
 // Login status
 $LoginStatus = [];
-
-// LDAP
-$Ldap = NULL;
 
 // API
 $Api = NULL;

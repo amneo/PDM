@@ -633,6 +633,8 @@ class user_dtls_add extends user_dtls
 		$this->last_login->setVisibility();
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
+		$this->history->setVisibility();
+		$this->reports_to->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -779,6 +781,10 @@ class user_dtls_add extends user_dtls
 		$this->email_addreess->CurrentValue = NULL;
 		$this->email_addreess->OldValue = $this->email_addreess->CurrentValue;
 		$this->UserLevel->CurrentValue = 10;
+		$this->history->CurrentValue = NULL;
+		$this->history->OldValue = $this->history->CurrentValue;
+		$this->reports_to->CurrentValue = NULL;
+		$this->reports_to->OldValue = $this->reports_to->CurrentValue;
 	}
 
 	// Load form values
@@ -843,6 +849,24 @@ class user_dtls_add extends user_dtls
 				$this->UserLevel->setFormValue($val);
 		}
 
+		// Check field name 'history' first before field var 'x_history'
+		$val = $CurrentForm->hasValue("history") ? $CurrentForm->getValue("history") : $CurrentForm->getValue("x_history");
+		if (!$this->history->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->history->Visible = FALSE; // Disable update for API request
+			else
+				$this->history->setFormValue($val);
+		}
+
+		// Check field name 'reports_to' first before field var 'x_reports_to'
+		$val = $CurrentForm->hasValue("reports_to") ? $CurrentForm->getValue("reports_to") : $CurrentForm->getValue("x_reports_to");
+		if (!$this->reports_to->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->reports_to->Visible = FALSE; // Disable update for API request
+			else
+				$this->reports_to->setFormValue($val);
+		}
+
 		// Check field name 'user_id' first before field var 'x_user_id'
 		$val = $CurrentForm->hasValue("user_id") ? $CurrentForm->getValue("user_id") : $CurrentForm->getValue("x_user_id");
 	}
@@ -858,6 +882,8 @@ class user_dtls_add extends user_dtls
 		$this->last_login->CurrentValue = UnFormatDateTime($this->last_login->CurrentValue, 0);
 		$this->email_addreess->CurrentValue = $this->email_addreess->FormValue;
 		$this->UserLevel->CurrentValue = $this->UserLevel->FormValue;
+		$this->history->CurrentValue = $this->history->FormValue;
+		$this->reports_to->CurrentValue = $this->reports_to->FormValue;
 	}
 
 	// Load row based on key values
@@ -912,6 +938,8 @@ class user_dtls_add extends user_dtls
 		$this->last_login->setDbValue($row['last_login']);
 		$this->email_addreess->setDbValue($row['email_addreess']);
 		$this->UserLevel->setDbValue($row['UserLevel']);
+		$this->history->setDbValue($row['history']);
+		$this->reports_to->setDbValue($row['reports_to']);
 	}
 
 	// Return a row with default values
@@ -927,6 +955,8 @@ class user_dtls_add extends user_dtls
 		$row['last_login'] = $this->last_login->CurrentValue;
 		$row['email_addreess'] = $this->email_addreess->CurrentValue;
 		$row['UserLevel'] = $this->UserLevel->CurrentValue;
+		$row['history'] = $this->history->CurrentValue;
+		$row['reports_to'] = $this->reports_to->CurrentValue;
 		return $row;
 	}
 
@@ -972,6 +1002,8 @@ class user_dtls_add extends user_dtls
 		// last_login
 		// email_addreess
 		// UserLevel
+		// history
+		// reports_to
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1035,6 +1067,14 @@ class user_dtls_add extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
+			// history
+			$this->history->ViewValue = $this->history->CurrentValue;
+			$this->history->ViewCustomAttributes = "";
+
+			// reports_to
+			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$this->reports_to->ViewCustomAttributes = "";
+
 			// username
 			$this->username->LinkCustomAttributes = "";
 			$this->username->HrefValue = "";
@@ -1064,6 +1104,16 @@ class user_dtls_add extends user_dtls
 			$this->UserLevel->LinkCustomAttributes = "";
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
+
+			// history
+			$this->history->LinkCustomAttributes = "";
+			$this->history->HrefValue = "";
+			$this->history->TooltipValue = "";
+
+			// reports_to
+			$this->reports_to->LinkCustomAttributes = "";
+			$this->reports_to->HrefValue = "";
+			$this->reports_to->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// username
@@ -1125,6 +1175,22 @@ class user_dtls_add extends user_dtls
 			}
 			}
 
+			// history
+			$this->history->EditAttrs["class"] = "form-control";
+			$this->history->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->history->CurrentValue = HtmlDecode($this->history->CurrentValue);
+			$this->history->EditValue = HtmlEncode($this->history->CurrentValue);
+			$this->history->PlaceHolder = RemoveHtml($this->history->caption());
+
+			// reports_to
+			$this->reports_to->EditAttrs["class"] = "form-control";
+			$this->reports_to->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->reports_to->CurrentValue = HtmlDecode($this->reports_to->CurrentValue);
+			$this->reports_to->EditValue = HtmlEncode($this->reports_to->CurrentValue);
+			$this->reports_to->PlaceHolder = RemoveHtml($this->reports_to->caption());
+
 			// Add refer script
 			// username
 
@@ -1150,6 +1216,14 @@ class user_dtls_add extends user_dtls
 			// UserLevel
 			$this->UserLevel->LinkCustomAttributes = "";
 			$this->UserLevel->HrefValue = "";
+
+			// history
+			$this->history->LinkCustomAttributes = "";
+			$this->history->HrefValue = "";
+
+			// reports_to
+			$this->reports_to->LinkCustomAttributes = "";
+			$this->reports_to->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1214,6 +1288,16 @@ class user_dtls_add extends user_dtls
 		if ($this->UserLevel->Required) {
 			if (!$this->UserLevel->IsDetailKey && $this->UserLevel->FormValue != NULL && $this->UserLevel->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->UserLevel->caption(), $this->UserLevel->RequiredErrorMessage));
+			}
+		}
+		if ($this->history->Required) {
+			if (!$this->history->IsDetailKey && $this->history->FormValue != NULL && $this->history->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->history->caption(), $this->history->RequiredErrorMessage));
+			}
+		}
+		if ($this->reports_to->Required) {
+			if (!$this->reports_to->IsDetailKey && $this->reports_to->FormValue != NULL && $this->reports_to->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->reports_to->caption(), $this->reports_to->RequiredErrorMessage));
 			}
 		}
 
@@ -1297,6 +1381,12 @@ class user_dtls_add extends user_dtls
 		if ($Security->canAdmin()) { // System admin
 			$this->UserLevel->setDbValueDef($rsnew, $this->UserLevel->CurrentValue, NULL, strval($this->UserLevel->CurrentValue) == "");
 		}
+
+		// history
+		$this->history->setDbValueDef($rsnew, $this->history->CurrentValue, NULL, FALSE);
+
+		// reports_to
+		$this->reports_to->setDbValueDef($rsnew, $this->reports_to->CurrentValue, NULL, FALSE);
 
 		// user_id
 		// Call Row Inserting event

@@ -93,7 +93,7 @@ ftransaction_detailslist.validate = function() {
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->direction->caption(), $transaction_details->direction->RequiredErrorMessage)) ?>");
 		<?php } ?>
 		<?php if ($transaction_details_list->approval_status->Required) { ?>
-			elm = this.getElements("x" + infix + "_approval_status[]");
+			elm = this.getElements("x" + infix + "_approval_status");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->approval_status->caption(), $transaction_details->approval_status->RequiredErrorMessage)) ?>");
 		<?php } ?>
@@ -125,7 +125,7 @@ ftransaction_detailslist.emptyRow = function(infix) {
 	if (ew.valueChanged(fobj, infix, "transmit_no", false)) return false;
 	if (ew.valueChanged(fobj, infix, "transmit_date", false)) return false;
 	if (ew.valueChanged(fobj, infix, "direction", false)) return false;
-	if (ew.valueChanged(fobj, infix, "approval_status[]", false)) return false;
+	if (ew.valueChanged(fobj, infix, "approval_status", false)) return false;
 	if (ew.valueChanged(fobj, infix, "document_link", false)) return false;
 	return true;
 }
@@ -149,8 +149,8 @@ ftransaction_detailslist.lists["x_transmit_no"].options = <?php echo JsonEncode(
 ftransaction_detailslist.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 ftransaction_detailslist.lists["x_direction"] = <?php echo $transaction_details_list->direction->Lookup->toClientList() ?>;
 ftransaction_detailslist.lists["x_direction"].options = <?php echo JsonEncode($transaction_details_list->direction->options(FALSE, TRUE)) ?>;
-ftransaction_detailslist.lists["x_approval_status[]"] = <?php echo $transaction_details_list->approval_status->Lookup->toClientList() ?>;
-ftransaction_detailslist.lists["x_approval_status[]"].options = <?php echo JsonEncode($transaction_details_list->approval_status->lookupOptions()) ?>;
+ftransaction_detailslist.lists["x_approval_status"] = <?php echo $transaction_details_list->approval_status->Lookup->toClientList() ?>;
+ftransaction_detailslist.lists["x_approval_status"].options = <?php echo JsonEncode($transaction_details_list->approval_status->lookupOptions()) ?>;
 
 // Form object for search
 var ftransaction_detailslistsrch = currentSearchForm = new ew.Form("ftransaction_detailslistsrch");
@@ -586,20 +586,20 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->ViewValue ?></button>
 		<div id="dsl_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->checkBoxListHtml(TRUE, "x{$transaction_details_list->RowIndex}_approval_status[]") ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x{$transaction_details_list->RowIndex}_approval_status") ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" id="x<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_approval_status" id="x<?php echo $transaction_details_list->RowIndex ?>_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
 		<i class="fa fa-times ew-icon"></i>
 	</button>
-	<?php } ?>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x" . $transaction_details_list->RowIndex . "_approval_status") ?>
+	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_approval_status" name="o<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" id="o<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" value="<?php echo HtmlEncode($transaction_details->approval_status->OldValue) ?>">
+<input type="hidden" data-table="transaction_details" data-field="x_approval_status" name="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" id="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" value="<?php echo HtmlEncode($transaction_details->approval_status->OldValue) ?>">
 <?php } ?>
 <?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_approval_status" class="transaction_details_approval_status">
@@ -773,20 +773,20 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->ViewValue ?></button>
 		<div id="dsl_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->checkBoxListHtml(TRUE, "x{$transaction_details_list->RowIndex}_approval_status[]") ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x{$transaction_details_list->RowIndex}_approval_status") ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" id="x<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_approval_status" id="x<?php echo $transaction_details_list->RowIndex ?>_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
 		<i class="fa fa-times ew-icon"></i>
 	</button>
-	<?php } ?>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x" . $transaction_details_list->RowIndex . "_approval_status") ?>
+	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_approval_status" name="o<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" id="o<?php echo $transaction_details_list->RowIndex ?>_approval_status[]" value="<?php echo HtmlEncode($transaction_details->approval_status->OldValue) ?>">
+<input type="hidden" data-table="transaction_details" data-field="x_approval_status" name="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" id="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" value="<?php echo HtmlEncode($transaction_details->approval_status->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($transaction_details->document_link->Visible) { // document_link ?>

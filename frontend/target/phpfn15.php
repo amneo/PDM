@@ -6395,84 +6395,6 @@ class SessionHandler
 <?php
 
 /**
- * LDAP class
- */
-class LdapConn
-{
-	public $Conn; // LDAP server connection
-	public $Dn = ""; // Default Distinguished Name, e.g. uid={username},ou=users,dc=demo,dc=com, "{username}" will be replaced by inputted user name
-	public $Options = [LDAP_OPT_PROTOCOL_VERSION => 3, LDAP_OPT_REFERRALS => 0];
-	public $User = "";
-	protected $Bind = FALSE;
-	protected $Auth = FALSE;
-
-	// Constructor
-	public function __construct($hostname = "gssg.com", $port = 389, $options = [])
-	{
-		if (function_exists("ldap_connect")) {
-			$this->Conn = ldap_connect($hostname, $port);
-			if (is_array($options))
-				$this->Options = $options + $this->Options;
-			if (is_array($this->Options)) {
-				foreach ($this->Options as $key => $value)
-					ldap_set_option($this->Conn, $key, $value) or die("Unable to set LDAP option: " . $key); //** side effect
-			}
-		} else {
-			die("LDAP support in PHP is not enabled. To install, see http://php.net/manual/en/ldap.installation.php."); //** side effect
-		}
-	}
-
-	// Bind an user
-	public function bind(&$user, &$password) {
-		$this->User = $user;
-		$ldaprdn = ($this->Dn) ? str_replace("{username}", $user, $this->Dn) : $user;
-		$this->Bind = @ldap_bind($this->Conn, $ldaprdn, $password);
-		if ($this->Bind) {
-			$this->Auth = $this->Ldap_Validated($user, $password);
-			return $this->Auth;
-		}
-		return FALSE;
-	}
-
-	// Is authenticated
-	public function isAuthenticated()
-	{
-		return $this->Auth;
-	}
-
-	// Get last error
-	public function getLastError()
-	{
-		return ldap_errno($this->Conn) . ": " . ldap_error($this->Conn);
-	}
-
-	// Search
-	public function search($searchDn, $filter, $attributes = [])
-	{
-		if ($this->Bind) {
-			$search = ldap_search($this->Conn, $searchDn, $filter, $attributes);
-			if (!$search)
-				return FALSE;
-			return ldap_get_entries($this->Conn, $search);
-		}
-		return FALSE;
-	}
-
-	// Close/Unbind
-	public function close()
-	{
-		ldap_close($this->Conn);
-	}
-
-	// LDAP Validated event
-	function Ldap_Validated(&$usr, &$pwd) {
-
-		// Do something (if any) after binding an user successfully
-		return TRUE; // Return TRUE/FALSE to validate the user
-	}
-}
-
-/**
  * Advanced Security class
  */
 class AdvancedSecurity
@@ -6812,7 +6734,6 @@ class AdvancedSecurity
 	{
 		global $Language, $UserProfile, $AUTH_CONFIG;
 		global $UserTable, $UserTableConn;
-		global $Ldap;
 		$valid = FALSE;
 		$customValid = FALSE;
 		$providerValid = FALSE;
@@ -6847,11 +6768,6 @@ class AdvancedSecurity
 		// Call User Custom Validate event
 		if (USE_CUSTOM_LOGIN) {
 			$customValid = $this->User_CustomValidate($usr, $pwd);
-			if (!$customValid) {
-				if (!$Ldap)
-					$Ldap = new LdapConn();
-				$customValid = $Ldap->bind($usr, $pwd); // LDAP user
-			}
 		}
 
 		// Handle provider login as custom login
@@ -6898,6 +6814,7 @@ class AdvancedSecurity
 		// Check other users
 		if (!$valid) {
 			$filter = str_replace("%u", AdjustSql($usr, USER_TABLE_DBID), USER_NAME_FILTER);
+			$filter .= " AND " . USER_ACTIVATE_FILTER;
 
 			// User table object (user_dtls)
 			if (!isset($UserTable)) {
@@ -13594,6 +13511,9 @@ function SetupLoginStatus() {
 	$LoginStatus["loginText"] = $Language->phrase("Login");
 	$LoginStatus["canLogin"] = !IsLoggedIn() && !EndsString($LoginStatus["loginUrl"], @$_SERVER["URL"]);
 	$LoginStatus["canLogout"] = IsLoggedIn();
+	$LoginStatus["changePasswordUrl"] = GetUrl("changepwd.php");
+	$LoginStatus["changePasswordText"] = $Language->phrase("ChangePwd");
+	$LoginStatus["canChangePassword"] = IsLoggedIn() && !IsSysAdmin();
 	$LoginStatus["hasPersonalData"] = IsLoggedIn() && !IsSysAdmin();
 	$LoginStatus["personalDataUrl"] = GetUrl("personaldata.php");
 	$LoginStatus["personalDataText"] = $Language->phrase("PersonalDataBtn");

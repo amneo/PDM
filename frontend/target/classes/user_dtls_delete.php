@@ -609,6 +609,8 @@ class user_dtls_delete extends user_dtls
 		$this->last_login->setVisibility();
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
+		$this->history->setVisibility();
+		$this->reports_to->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -778,6 +780,8 @@ class user_dtls_delete extends user_dtls
 		$this->last_login->setDbValue($row['last_login']);
 		$this->email_addreess->setDbValue($row['email_addreess']);
 		$this->UserLevel->setDbValue($row['UserLevel']);
+		$this->history->setDbValue($row['history']);
+		$this->reports_to->setDbValue($row['reports_to']);
 	}
 
 	// Return a row with default values
@@ -792,6 +796,8 @@ class user_dtls_delete extends user_dtls
 		$row['last_login'] = NULL;
 		$row['email_addreess'] = NULL;
 		$row['UserLevel'] = NULL;
+		$row['history'] = NULL;
+		$row['reports_to'] = NULL;
 		return $row;
 	}
 
@@ -814,6 +820,8 @@ class user_dtls_delete extends user_dtls
 		// last_login
 		// email_addreess
 		// UserLevel
+		// history
+		// reports_to
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -873,6 +881,14 @@ class user_dtls_delete extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
+			// history
+			$this->history->ViewValue = $this->history->CurrentValue;
+			$this->history->ViewCustomAttributes = "";
+
+			// reports_to
+			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$this->reports_to->ViewCustomAttributes = "";
+
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
 			$this->user_id->HrefValue = "";
@@ -907,6 +923,16 @@ class user_dtls_delete extends user_dtls
 			$this->UserLevel->LinkCustomAttributes = "";
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
+
+			// history
+			$this->history->LinkCustomAttributes = "";
+			$this->history->HrefValue = "";
+			$this->history->TooltipValue = "";
+
+			// reports_to
+			$this->reports_to->LinkCustomAttributes = "";
+			$this->reports_to->HrefValue = "";
+			$this->reports_to->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

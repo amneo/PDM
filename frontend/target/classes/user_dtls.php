@@ -41,6 +41,8 @@ class user_dtls extends DbTable
 	public $last_login;
 	public $email_addreess;
 	public $UserLevel;
+	public $history;
+	public $reports_to;
 
 	// Constructor
 	public function __construct()
@@ -130,6 +132,16 @@ class user_dtls extends DbTable
 		$this->UserLevel->Lookup = new Lookup('UserLevel', 'userlevels', FALSE, 'userlevelid', ["userlevelname","","",""], [], [], [], [], [], [], '', '');
 		$this->UserLevel->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['UserLevel'] = &$this->UserLevel;
+
+		// history
+		$this->history = new DbField('user_dtls', 'user_dtls', 'x_history', 'history', '"history"', '"history"', 200, -1, FALSE, '"history"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->history->Sortable = TRUE; // Allow sort
+		$this->fields['history'] = &$this->history;
+
+		// reports_to
+		$this->reports_to = new DbField('user_dtls', 'user_dtls', 'x_reports_to', 'reports_to', '"reports_to"', '"reports_to"', 200, -1, FALSE, '"reports_to"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->reports_to->Sortable = TRUE; // Allow sort
+		$this->fields['reports_to'] = &$this->reports_to;
 	}
 
 	// Field Visibility
@@ -517,6 +529,8 @@ class user_dtls extends DbTable
 		$this->last_login->DbValue = $row['last_login'];
 		$this->email_addreess->DbValue = $row['email_addreess'];
 		$this->UserLevel->DbValue = $row['UserLevel'];
+		$this->history->DbValue = $row['history'];
+		$this->reports_to->DbValue = $row['reports_to'];
 	}
 
 	// Delete uploaded files
@@ -750,6 +764,8 @@ class user_dtls extends DbTable
 		$this->last_login->setDbValue($rs->fields('last_login'));
 		$this->email_addreess->setDbValue($rs->fields('email_addreess'));
 		$this->UserLevel->setDbValue($rs->fields('UserLevel'));
+		$this->history->setDbValue($rs->fields('history'));
+		$this->reports_to->setDbValue($rs->fields('reports_to'));
 	}
 
 	// Render list row values
@@ -769,6 +785,8 @@ class user_dtls extends DbTable
 		// last_login
 		// email_addreess
 		// UserLevel
+		// history
+		// reports_to
 		// user_id
 
 		$this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -830,6 +848,14 @@ class user_dtls extends DbTable
 		}
 		$this->UserLevel->ViewCustomAttributes = "";
 
+		// history
+		$this->history->ViewValue = $this->history->CurrentValue;
+		$this->history->ViewCustomAttributes = "";
+
+		// reports_to
+		$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+		$this->reports_to->ViewCustomAttributes = "";
+
 		// user_id
 		$this->user_id->LinkCustomAttributes = "";
 		$this->user_id->HrefValue = "";
@@ -869,6 +895,16 @@ class user_dtls extends DbTable
 		$this->UserLevel->LinkCustomAttributes = "";
 		$this->UserLevel->HrefValue = "";
 		$this->UserLevel->TooltipValue = "";
+
+		// history
+		$this->history->LinkCustomAttributes = "";
+		$this->history->HrefValue = "";
+		$this->history->TooltipValue = "";
+
+		// reports_to
+		$this->reports_to->LinkCustomAttributes = "";
+		$this->reports_to->HrefValue = "";
+		$this->reports_to->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -937,6 +973,22 @@ class user_dtls extends DbTable
 		} else {
 		}
 
+		// history
+		$this->history->EditAttrs["class"] = "form-control";
+		$this->history->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->history->CurrentValue = HtmlDecode($this->history->CurrentValue);
+		$this->history->EditValue = $this->history->CurrentValue;
+		$this->history->PlaceHolder = RemoveHtml($this->history->caption());
+
+		// reports_to
+		$this->reports_to->EditAttrs["class"] = "form-control";
+		$this->reports_to->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->reports_to->CurrentValue = HtmlDecode($this->reports_to->CurrentValue);
+		$this->reports_to->EditValue = $this->reports_to->CurrentValue;
+		$this->reports_to->PlaceHolder = RemoveHtml($this->reports_to->caption());
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -973,6 +1025,8 @@ class user_dtls extends DbTable
 					$doc->exportCaption($this->last_login);
 					$doc->exportCaption($this->email_addreess);
 					$doc->exportCaption($this->UserLevel);
+					$doc->exportCaption($this->history);
+					$doc->exportCaption($this->reports_to);
 				} else {
 					$doc->exportCaption($this->user_id);
 					$doc->exportCaption($this->username);
@@ -981,6 +1035,8 @@ class user_dtls extends DbTable
 					$doc->exportCaption($this->last_login);
 					$doc->exportCaption($this->email_addreess);
 					$doc->exportCaption($this->UserLevel);
+					$doc->exportCaption($this->history);
+					$doc->exportCaption($this->reports_to);
 				}
 				$doc->endExportRow();
 			}
@@ -1019,6 +1075,8 @@ class user_dtls extends DbTable
 						$doc->exportField($this->last_login);
 						$doc->exportField($this->email_addreess);
 						$doc->exportField($this->UserLevel);
+						$doc->exportField($this->history);
+						$doc->exportField($this->reports_to);
 					} else {
 						$doc->exportField($this->user_id);
 						$doc->exportField($this->username);
@@ -1027,6 +1085,8 @@ class user_dtls extends DbTable
 						$doc->exportField($this->last_login);
 						$doc->exportField($this->email_addreess);
 						$doc->exportField($this->UserLevel);
+						$doc->exportField($this->history);
+						$doc->exportField($this->reports_to);
 					}
 					$doc->endExportRow($rowCnt);
 				}
@@ -1230,6 +1290,53 @@ class user_dtls extends DbTable
 		if ($userOrderBy <> "")
 			$lookup->UserOrderBy = $userOrderBy;
 		$lookup->toJson();
+	}
+
+	// Send register email
+	public function sendRegisterEmail($row)
+	{
+		$email = $this->prepareRegisterEmail($row);
+		$args = array();
+		$args["rs"] = $row;
+		$emailSent = FALSE;
+		if ($this->Email_Sending($email, $args)) // NOTE: use Email_Sending server event of user table
+			$emailSent = $email->send();
+		return $emailSent;
+	}
+
+	// Prepare register email
+	public function prepareRegisterEmail($row = NULL, $langId = "")
+	{
+		$email = new Email();
+		$email->load(EMAIL_REGISTER_TEMPLATE, $langId);
+		$receiverEmail = $row == NULL ? $this->email_addreess->CurrentValue : $row['email_addreess'];
+		if ($receiverEmail == "") { // Send to recipient directly
+			$receiverEmail = RECIPIENT_EMAIL;
+			$bccEmail = "";
+		} else { // Bcc recipient
+			$bccEmail = RECIPIENT_EMAIL;
+		}
+		$email->replaceSender(SENDER_EMAIL); // Replace Sender
+		$email->replaceRecipient($receiverEmail); // Replace Recipient
+		if ($bccEmail <> "") // Add Bcc
+			$email->addBcc($bccEmail);
+		$email->replaceContent('<!--FieldCaption_user_id-->', $this->user_id->caption());
+		$email->replaceContent('<!--user_id-->', $row == NULL ? strval($this->user_id->FormValue) : $row['user_id']);
+		$email->replaceContent('<!--FieldCaption_username-->', $this->username->caption());
+		$email->replaceContent('<!--username-->', $row == NULL ? strval($this->username->FormValue) : $row['username']);
+		$email->replaceContent('<!--FieldCaption_password-->', $this->password->caption());
+		$email->replaceContent('<!--password-->', $row == NULL ? strval($this->password->FormValue) : $row['password']);
+		$email->replaceContent('<!--FieldCaption_email_addreess-->', $this->email_addreess->caption());
+		$email->replaceContent('<!--email_addreess-->', $row == NULL ? strval($this->email_addreess->FormValue) : $row['email_addreess']);
+		$loginID = $row == NULL ? $this->username->CurrentValue : $row['username'];
+		$password = $row == NULL ? $this->password->CurrentValue : $row['password'];
+		$activateLink = FullUrl("register.php", "activate") . "?action=confirm";
+		$activateLink .= "&email=" . $receiverEmail;
+		$token = Encrypt($receiverEmail) . "," . Encrypt($loginID) . "," . Encrypt($password);
+		$activateLink .= "&token=" . $token;
+		$email->replaceContent("<!--ActivateLink-->", $activateLink);
+		$email->Content = preg_replace('/<!--\s*register_activate_link[\s\S]*?-->/i', '', $email->Content); // Remove comments
+		return $email;
 	}
 
 	// Get file data

@@ -59,8 +59,8 @@ ftransaction_detailsview.lists["x_transmit_no"].options = <?php echo JsonEncode(
 ftransaction_detailsview.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 ftransaction_detailsview.lists["x_direction"] = <?php echo $transaction_details_view->direction->Lookup->toClientList() ?>;
 ftransaction_detailsview.lists["x_direction"].options = <?php echo JsonEncode($transaction_details_view->direction->options(FALSE, TRUE)) ?>;
-ftransaction_detailsview.lists["x_approval_status[]"] = <?php echo $transaction_details_view->approval_status->Lookup->toClientList() ?>;
-ftransaction_detailsview.lists["x_approval_status[]"].options = <?php echo JsonEncode($transaction_details_view->approval_status->lookupOptions()) ?>;
+ftransaction_detailsview.lists["x_approval_status"] = <?php echo $transaction_details_view->approval_status->Lookup->toClientList() ?>;
+ftransaction_detailsview.lists["x_approval_status"].options = <?php echo JsonEncode($transaction_details_view->approval_status->lookupOptions()) ?>;
 
 // Form object for search
 </script>
