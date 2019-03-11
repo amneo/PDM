@@ -184,15 +184,6 @@ $transmit_details_list->renderListOptions();
 // Render list options (header, left)
 $transmit_details_list->ListOptions->render("header", "left");
 ?>
-<?php if ($transmit_details->transmit_id->Visible) { // transmit_id ?>
-	<?php if ($transmit_details->sortUrl($transmit_details->transmit_id) == "") { ?>
-		<th data-name="transmit_id" class="<?php echo $transmit_details->transmit_id->headerCellClass() ?>"><div id="elh_transmit_details_transmit_id" class="transmit_details_transmit_id"><div class="ew-table-header-caption"><?php echo $transmit_details->transmit_id->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_id" class="<?php echo $transmit_details->transmit_id->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transmit_details->SortUrl($transmit_details->transmit_id) ?>',2);"><div id="elh_transmit_details_transmit_id" class="transmit_details_transmit_id">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transmit_details->transmit_id->caption() ?></span><span class="ew-table-header-sort"><?php if ($transmit_details->transmit_id->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transmit_details->transmit_id->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($transmit_details->transmittal_no->Visible) { // transmittal_no ?>
 	<?php if ($transmit_details->sortUrl($transmit_details->transmittal_no) == "") { ?>
 		<th data-name="transmittal_no" class="<?php echo $transmit_details->transmittal_no->headerCellClass() ?>"><div id="elh_transmit_details_transmittal_no" class="transmit_details_transmittal_no"><div class="ew-table-header-caption"><?php echo $transmit_details->transmittal_no->caption() ?></div></div></th>
@@ -330,14 +321,6 @@ while ($transmit_details_list->RecCnt < $transmit_details_list->StopRec) {
 // Render list options (body, left)
 $transmit_details_list->ListOptions->render("body", "left", $transmit_details_list->RowCnt);
 ?>
-	<?php if ($transmit_details->transmit_id->Visible) { // transmit_id ?>
-		<td data-name="transmit_id"<?php echo $transmit_details->transmit_id->cellAttributes() ?>>
-<span id="el<?php echo $transmit_details_list->RowCnt ?>_transmit_details_transmit_id" class="transmit_details_transmit_id">
-<span<?php echo $transmit_details->transmit_id->viewAttributes() ?>>
-<?php echo $transmit_details->transmit_id->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($transmit_details->transmittal_no->Visible) { // transmittal_no ?>
 		<td data-name="transmittal_no"<?php echo $transmit_details->transmittal_no->cellAttributes() ?>>
 <span id="el<?php echo $transmit_details_list->RowCnt ?>_transmit_details_transmittal_no" class="transmit_details_transmittal_no">

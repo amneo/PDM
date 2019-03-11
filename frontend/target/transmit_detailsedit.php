@@ -54,6 +54,11 @@ ftransmit_detailsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
+		<?php if ($transmit_details_edit->project_name->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_name");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->project_name->caption(), $transmit_details->project_name->RequiredErrorMessage)) ?>");
+		<?php } ?>
 		<?php if ($transmit_details_edit->delivery_location->Required) { ?>
 			elm = this.getElements("x" + infix + "_delivery_location");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -108,6 +113,9 @@ ftransmit_detailsedit.Form_CustomValidate = function(fobj) { // DO NOT CHANGE TH
 ftransmit_detailsedit.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
+ftransmit_detailsedit.lists["x_project_name"] = <?php echo $transmit_details_edit->project_name->Lookup->toClientList() ?>;
+ftransmit_detailsedit.lists["x_project_name"].options = <?php echo JsonEncode($transmit_details_edit->project_name->lookupOptions()) ?>;
+ftransmit_detailsedit.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 ftransmit_detailsedit.lists["x_ack_rcvd"] = <?php echo $transmit_details_edit->ack_rcvd->Lookup->toClientList() ?>;
 ftransmit_detailsedit.lists["x_ack_rcvd"].options = <?php echo JsonEncode($transmit_details_edit->ack_rcvd->options(FALSE, TRUE)) ?>;
 
@@ -135,6 +143,61 @@ $transmit_details_edit->showMessage();
 <div class="ew-edit-div"><!-- page* -->
 <?php } else { ?>
 <table id="tbl_transmit_detailsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
+<?php } ?>
+<?php if ($transmit_details->project_name->Visible) { // project_name ?>
+<?php if ($transmit_details_edit->IsMobileOrModal) { ?>
+	<div id="r_project_name" class="form-group row">
+		<label id="elh_transmit_details_project_name" class="<?php echo $transmit_details_edit->LeftColumnClass ?>"><?php echo $transmit_details->project_name->caption() ?><?php echo ($transmit_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transmit_details_edit->RightColumnClass ?>"><div<?php echo $transmit_details->project_name->cellAttributes() ?>>
+<span id="el_transmit_details_project_name">
+<?php
+$wrkonchange = "" . trim(@$transmit_details->project_name->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$transmit_details->project_name->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_project_name" class="text-nowrap" style="z-index: 8970">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($transmit_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>"<?php echo $transmit_details->project_name->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$transmit_details->project_name->ReadOnly) { ?>
+<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transmit_details->project_name->caption() ?>" data-title="<?php echo $transmit_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
+	</div>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+ftransmit_detailsedit.createAutoSuggest({"id":"x_project_name","forceSelect":false});
+</script>
+<?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
+</span>
+<?php echo $transmit_details->project_name->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_project_name">
+		<td class="<?php echo $transmit_details_edit->TableLeftColumnClass ?>"><span id="elh_transmit_details_project_name"><?php echo $transmit_details->project_name->caption() ?><?php echo ($transmit_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transmit_details->project_name->cellAttributes() ?>>
+<span id="el_transmit_details_project_name">
+<?php
+$wrkonchange = "" . trim(@$transmit_details->project_name->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$transmit_details->project_name->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_project_name" class="text-nowrap" style="z-index: 8970">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($transmit_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transmit_details->project_name->getPlaceHolder()) ?>"<?php echo $transmit_details->project_name->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$transmit_details->project_name->ReadOnly) { ?>
+<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transmit_details->project_name->caption() ?>" data-title="<?php echo $transmit_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
+	</div>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+ftransmit_detailsedit.createAutoSuggest({"id":"x_project_name","forceSelect":false});
+</script>
+<?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
+</span>
+<?php echo $transmit_details->project_name->CustomMsg ?></td>
+	</tr>
+<?php } ?>
 <?php } ?>
 <?php if ($transmit_details->delivery_location->Visible) { // delivery_location ?>
 <?php if ($transmit_details_edit->IsMobileOrModal) { ?>
@@ -185,10 +248,14 @@ $transmit_details_edit->showMessage();
 <?php if ($transmit_details->remarks->Visible) { // remarks ?>
 <?php if ($transmit_details_edit->IsMobileOrModal) { ?>
 	<div id="r_remarks" class="form-group row">
-		<label id="elh_transmit_details_remarks" for="x_remarks" class="<?php echo $transmit_details_edit->LeftColumnClass ?>"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label id="elh_transmit_details_remarks" class="<?php echo $transmit_details_edit->LeftColumnClass ?>"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_edit->RightColumnClass ?>"><div<?php echo $transmit_details->remarks->cellAttributes() ?>>
 <span id="el_transmit_details_remarks">
+<?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
+<script>
+ew.createEditor("ftransmit_detailsedit", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
+</script>
 </span>
 <?php echo $transmit_details->remarks->CustomMsg ?></div></div>
 	</div>
@@ -197,7 +264,11 @@ $transmit_details_edit->showMessage();
 		<td class="<?php echo $transmit_details_edit->TableLeftColumnClass ?>"><span id="elh_transmit_details_remarks"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->remarks->cellAttributes() ?>>
 <span id="el_transmit_details_remarks">
+<?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
+<script>
+ew.createEditor("ftransmit_detailsedit", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
+</script>
 </span>
 <?php echo $transmit_details->remarks->CustomMsg ?></td>
 	</tr>

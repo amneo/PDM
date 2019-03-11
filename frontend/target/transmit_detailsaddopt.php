@@ -170,9 +170,13 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 <?php } ?>
 <?php if ($transmit_details->remarks->Visible) { // remarks ?>
 	<div class="form-group row">
-		<label class="col-sm-2 col-form-label ew-label" for="x_remarks"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label class="col-sm-2 col-form-label ew-label"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
+<?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
+<script>
+ew.createEditor("ftransmit_detailsaddopt", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
+</script>
 </div>
 	</div>
 <?php } ?>

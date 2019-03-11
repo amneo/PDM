@@ -14,11 +14,11 @@ DROP FUNCTION IF EXISTS public.om_func_01 ();
 DROP TABLE IF EXISTS public.f_version;
 DROP SEQUENCE IF EXISTS public.app_version_sequence_no_seq;
 DROP TABLE IF EXISTS public.approval_details;
-DROP TABLE IF EXISTS public.document_details;
 DROP TABLE IF EXISTS public.transmit_details;
 DROP TABLE IF EXISTS public.user_dtls;
 DROP TABLE IF EXISTS public.audittrail;
 DROP TABLE IF EXISTS public.transaction_details;
+DROP TABLE IF EXISTS public.document_details;
 DROP TABLE IF EXISTS public.inbox;
 DROP TABLE IF EXISTS public.distribution_details;
 DROP TABLE IF EXISTS public.project_details;
@@ -357,6 +357,18 @@ ALTER TABLE ONLY userlevels
 ALTER TABLE ONLY userlevelpermissions
     ADD CONSTRAINT pkuserlevelpermissions
     PRIMARY KEY (userlevelid, tablename);
+--
+-- Definition for index transaction_details_document_link_key (OID = 25808) : 
+--
+ALTER TABLE ONLY transaction_details
+    ADD CONSTRAINT transaction_details_document_link_key
+    UNIQUE (document_link);
+--
+-- Definition for index transaction_details_fk (OID = 25817) : 
+--
+ALTER TABLE ONLY transaction_details
+    ADD CONSTRAINT transaction_details_fk
+    FOREIGN KEY (firelink_doc_no) REFERENCES document_details(firelink_doc_no) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 --
 -- Comments
 --

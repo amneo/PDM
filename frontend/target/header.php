@@ -118,6 +118,8 @@ jQuery.extend(ew, {
 <?php echo $Language->toJson() ?>
 ew.vars = <?php echo JsonEncode($CLIENT_VAR) ?>;
 </script>
+<script src="<?php echo $RELATIVE_PATH ?>tinymce/tinymce.min.js"></script>
+<script src="<?php echo $RELATIVE_PATH ?>phpjs/eweditor.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo $RELATIVE_PATH ?>phpcss/bootstrap-datetimepicker.css">
 <script src="<?php echo $RELATIVE_PATH ?>phpjs/bootstrap-datetimepicker.js"></script>
 <script src="<?php echo $RELATIVE_PATH ?>phpjs/ewdatetimepicker.js"></script>

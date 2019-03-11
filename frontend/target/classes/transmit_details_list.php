@@ -760,7 +760,7 @@ class transmit_details_list extends transmit_details
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->transmit_id->setVisibility();
+		$this->transmit_id->Visible = FALSE;
 		$this->transmittal_no->setVisibility();
 		$this->project_name->setVisibility();
 		$this->delivery_location->setVisibility();
@@ -1320,7 +1320,6 @@ class transmit_details_list extends transmit_details
 		if (Get("order") !== NULL) {
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
-			$this->updateSort($this->transmit_id, $ctrl); // transmit_id
 			$this->updateSort($this->transmittal_no, $ctrl); // transmittal_no
 			$this->updateSort($this->project_name, $ctrl); // project_name
 			$this->updateSort($this->delivery_location, $ctrl); // delivery_location
@@ -1365,7 +1364,6 @@ class transmit_details_list extends transmit_details
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
 				$this->setSessionOrderByList($orderBy);
-				$this->transmit_id->setSort("");
 				$this->transmittal_no->setSort("");
 				$this->project_name->setSort("");
 				$this->delivery_location->setSort("");
@@ -1409,12 +1407,6 @@ class transmit_details_list extends transmit_details
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canAdd();
-		$item->OnLeft = FALSE;
-
-		// "delete"
-		$item = &$this->ListOptions->add("delete");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canDelete();
 		$item->OnLeft = FALSE;
 
 		// List actions
@@ -1484,13 +1476,6 @@ class transmit_details_list extends transmit_details
 		} else {
 			$opt->Body = "";
 		}
-
-		// "delete"
-		$opt = &$this->ListOptions->Items["delete"];
-		if ($Security->canDelete())
-			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-		else
-			$opt->Body = "";
 
 		// Set up list action buttons
 		$opt = &$this->ListOptions->getItem("listactions");
@@ -1992,11 +1977,6 @@ class transmit_details_list extends transmit_details
 			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
 			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
 			$this->transmital_date->ViewCustomAttributes = "";
-
-			// transmit_id
-			$this->transmit_id->LinkCustomAttributes = "";
-			$this->transmit_id->HrefValue = "";
-			$this->transmit_id->TooltipValue = "";
 
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";

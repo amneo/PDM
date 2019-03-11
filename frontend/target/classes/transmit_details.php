@@ -72,7 +72,7 @@ class transmit_details extends DbTable
 		$this->transmit_id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->transmit_id->IsPrimaryKey = TRUE; // Primary key field
 		$this->transmit_id->Nullable = FALSE; // NOT NULL field
-		$this->transmit_id->Sortable = TRUE; // Allow sort
+		$this->transmit_id->Sortable = FALSE; // Allow sort
 		$this->transmit_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['transmit_id'] = &$this->transmit_id;
 

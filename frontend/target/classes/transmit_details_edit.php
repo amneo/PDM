@@ -614,7 +614,7 @@ class transmit_details_edit extends transmit_details
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->transmit_id->Visible = FALSE;
 		$this->transmittal_no->Visible = FALSE;
-		$this->project_name->Visible = FALSE;
+		$this->project_name->setVisibility();
 		$this->delivery_location->setVisibility();
 		$this->addressed_to->setVisibility();
 		$this->remarks->setVisibility();
@@ -799,6 +799,15 @@ class transmit_details_edit extends transmit_details
 		global $CurrentForm;
 		$this->getUploadFiles(); // Get upload files
 
+		// Check field name 'project_name' first before field var 'x_project_name'
+		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
+		if (!$this->project_name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->project_name->Visible = FALSE; // Disable update for API request
+			else
+				$this->project_name->setFormValue($val);
+		}
+
 		// Check field name 'delivery_location' first before field var 'x_delivery_location'
 		$val = $CurrentForm->hasValue("delivery_location") ? $CurrentForm->getValue("delivery_location") : $CurrentForm->getValue("x_delivery_location");
 		if (!$this->delivery_location->IsDetailKey) {
@@ -846,6 +855,7 @@ class transmit_details_edit extends transmit_details
 	{
 		global $CurrentForm;
 		$this->transmit_id->CurrentValue = $this->transmit_id->FormValue;
+		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->delivery_location->CurrentValue = $this->delivery_location->FormValue;
 		$this->addressed_to->CurrentValue = $this->addressed_to->FormValue;
 		$this->remarks->CurrentValue = $this->remarks->FormValue;
@@ -1035,6 +1045,11 @@ class transmit_details_edit extends transmit_details
 			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
 			$this->transmital_date->ViewCustomAttributes = "";
 
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
+
 			// delivery_location
 			$this->delivery_location->LinkCustomAttributes = "";
 			$this->delivery_location->HrefValue = "";
@@ -1067,6 +1082,14 @@ class transmit_details_edit extends transmit_details
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
 			$this->ack_document->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
 
 			// delivery_location
 			$this->delivery_location->EditAttrs["class"] = "form-control";
@@ -1106,8 +1129,12 @@ class transmit_details_edit extends transmit_details
 				RenderUploadField($this->ack_document);
 
 			// Edit refer script
-			// delivery_location
+			// project_name
 
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// delivery_location
 			$this->delivery_location->LinkCustomAttributes = "";
 			$this->delivery_location->HrefValue = "";
 			$this->delivery_location->TooltipValue = "";
@@ -1235,6 +1262,9 @@ class transmit_details_edit extends transmit_details
 			$rsold = &$rs->fields;
 			$this->loadDbValues($rsold);
 			$rsnew = [];
+
+			// project_name
+			$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", $this->project_name->ReadOnly);
 
 			// addressed_to
 			$this->addressed_to->setDbValueDef($rsnew, $this->addressed_to->CurrentValue, NULL, $this->addressed_to->ReadOnly);

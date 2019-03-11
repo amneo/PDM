@@ -270,10 +270,14 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 <?php if ($transmit_details->remarks->Visible) { // remarks ?>
 <?php if ($transmit_details_add->IsMobileOrModal) { ?>
 	<div id="r_remarks" class="form-group row">
-		<label id="elh_transmit_details_remarks" for="x_remarks" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label id="elh_transmit_details_remarks" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->remarks->cellAttributes() ?>>
 <span id="el_transmit_details_remarks">
+<?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
+<script>
+ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
+</script>
 </span>
 <?php echo $transmit_details->remarks->CustomMsg ?></div></div>
 	</div>
@@ -282,7 +286,11 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_remarks"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->remarks->cellAttributes() ?>>
 <span id="el_transmit_details_remarks">
+<?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
+<script>
+ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
+</script>
 </span>
 <?php echo $transmit_details->remarks->CustomMsg ?></td>
 	</tr>

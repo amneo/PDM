@@ -185,9 +185,14 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_firelink_doc_no" class="text-nowrap" style="z-index: 8980">
-	<input type="text" class="form-control" name="sv_x_firelink_doc_no" id="sv_x_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x_firelink_doc_no" id="sv_x_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->firelink_doc_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_firelink_doc_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->firelink_doc_no->ReadOnly || $transaction_details->firelink_doc_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailsadd.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect":true});
 </script>
@@ -214,9 +219,14 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_firelink_doc_no" class="text-nowrap" style="z-index: 8980">
-	<input type="text" class="form-control" name="sv_x_firelink_doc_no" id="sv_x_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x_firelink_doc_no" id="sv_x_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->firelink_doc_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_firelink_doc_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->firelink_doc_no->ReadOnly || $transaction_details->firelink_doc_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailsadd.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect":true});
 </script>
@@ -320,14 +330,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_transmit_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailsadd.createAutoSuggest({"id":"x_transmit_no","forceSelect":true});
 </script>
@@ -354,14 +367,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_transmit_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_transmit_no" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $transaction_details->transmit_no->caption() ?>" data-title="<?php echo $transaction_details->transmit_no->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_transmit_no',url:'transmit_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailsadd.createAutoSuggest({"id":"x_transmit_no","forceSelect":true});
 </script>
