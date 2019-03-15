@@ -11,13 +11,21 @@ class userlevelpermissions_edit extends userlevelpermissions
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';
 
 	// Page object name
 	public $PageObjName = "userlevelpermissions_edit";
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -635,8 +643,9 @@ class userlevelpermissions_edit extends userlevelpermissions
 		$this->createToken();
 
 		// Set up lookup cache
-		// Check modal
+		$this->setupLookupOptions($this->_tablename);
 
+		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 		$this->IsMobileOrModal = IsMobile() || $this->IsModal;
@@ -932,7 +941,9 @@ class userlevelpermissions_edit extends userlevelpermissions
 			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
-			$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -966,7 +977,9 @@ class userlevelpermissions_edit extends userlevelpermissions
 			// tablename
 			$this->_tablename->EditAttrs["class"] = "form-control";
 			$this->_tablename->EditCustomAttributes = "";
-			$this->_tablename->EditValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->EditValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -1152,6 +1165,8 @@ class userlevelpermissions_edit extends userlevelpermissions
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x__tablename":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

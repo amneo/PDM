@@ -11,13 +11,21 @@ class userlevels_edit extends userlevels
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevels';
 
 	// Page object name
 	public $PageObjName = "userlevels_edit";
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -610,7 +618,7 @@ class userlevels_edit extends userlevels
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->userlevelid->setVisibility();
+		$this->userlevelid->Visible = FALSE;
 		$this->userlevelname->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -784,15 +792,6 @@ class userlevels_edit extends userlevels
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'userlevelid' first before field var 'x_userlevelid'
-		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
-		if (!$this->userlevelid->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->userlevelid->Visible = FALSE; // Disable update for API request
-			else
-				$this->userlevelid->setFormValue($val);
-		}
-
 		// Check field name 'userlevelname' first before field var 'x_userlevelname'
 		$val = $CurrentForm->hasValue("userlevelname") ? $CurrentForm->getValue("userlevelname") : $CurrentForm->getValue("x_userlevelname");
 		if (!$this->userlevelname->IsDetailKey) {
@@ -801,6 +800,11 @@ class userlevels_edit extends userlevels
 			else
 				$this->userlevelname->setFormValue($val);
 		}
+
+		// Check field name 'userlevelid' first before field var 'x_userlevelid'
+		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
+		if (!$this->userlevelid->IsDetailKey)
+			$this->userlevelid->setFormValue($val);
 	}
 
 	// Restore form values
@@ -910,23 +914,11 @@ class userlevels_edit extends userlevels
 				$this->userlevelname->ViewValue = $Security->getUserLevelName($this->userlevelid->CurrentValue);
 			$this->userlevelname->ViewCustomAttributes = "";
 
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
-
 			// userlevelname
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 			$this->userlevelname->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// userlevelid
-			$this->userlevelid->EditAttrs["class"] = "form-control";
-			$this->userlevelid->EditCustomAttributes = "";
-			$this->userlevelid->EditValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->EditValue = FormatNumber($this->userlevelid->EditValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
 
 			// userlevelname
 			$this->userlevelname->EditAttrs["class"] = "form-control";
@@ -938,12 +930,8 @@ class userlevels_edit extends userlevels
 			$this->userlevelname->PlaceHolder = RemoveHtml($this->userlevelname->caption());
 
 			// Edit refer script
-			// userlevelid
-
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-
 			// userlevelname
+
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 		}
@@ -970,9 +958,6 @@ class userlevels_edit extends userlevels
 			if (!$this->userlevelid->IsDetailKey && $this->userlevelid->FormValue != NULL && $this->userlevelid->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->userlevelid->caption(), $this->userlevelid->RequiredErrorMessage));
 			}
-		}
-		if (!CheckInteger($this->userlevelid->FormValue)) {
-			AddMessage($FormError, $this->userlevelid->errorMessage());
 		}
 		if ($this->userlevelname->Required) {
 			if (!$this->userlevelname->IsDetailKey && $this->userlevelname->FormValue != NULL && $this->userlevelname->FormValue == "") {
@@ -1016,9 +1001,7 @@ class userlevels_edit extends userlevels
 			$this->loadDbValues($rsold);
 			$rsnew = [];
 
-			// userlevelid
 			// userlevelname
-
 			$this->userlevelname->setDbValueDef($rsnew, $this->userlevelname->CurrentValue, "", $this->userlevelname->ReadOnly);
 
 			// Call Row Updating event

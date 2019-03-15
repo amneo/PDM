@@ -333,7 +333,7 @@ function CurrentLanguageID() {
 function CurrentProjectID() {
 	if (isset($GLOBALS["Page"]))
 		return $GLOBALS["Page"]->ProjectID;
-	return "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	return "vishal-pdm";
 }
 
 /**
@@ -6870,6 +6870,7 @@ class AdvancedSecurity
 						$_SESSION[SESSION_SYS_ADMIN] = 0; // Non System Administrator
 						$this->setCurrentUserName($rs->fields('username')); // Load user name
 						$this->setSessionUserID($rs->fields('user_id')); // Load User ID
+						$this->setSessionParentUserID($rs->fields('reports_to')); // Load parent User ID
 						if ($rs->fields('UserLevel') == NULL) {
 							$this->setSessionUserLevelID(0);
 						} else {
@@ -7594,6 +7595,25 @@ class AdvancedSecurity
 				}
 				$rsUser->close();
 			}
+
+			// Recurse all levels (hierarchical User ID)
+			if (USER_ID_IS_HIERARCHICAL) {
+				$curUserIDList = $this->userIDList();
+				$userIDList = "";
+				while ($userIDList <> $curUserIDList) {
+					$filter = '"reports_to" IN (' . $curUserIDList . ')';
+					$sql = $UserTable->getSql($filter);
+					if ($rsUser = $UserTableConn->execute($sql)) {
+						while (!$rsUser->EOF) {
+							$this->addUserID($rsUser->fields('user_id'));
+							$rsUser->moveNext();
+						}
+						$rsUser->close();
+					}
+					$userIDList = $curUserIDList;
+					$curUserIDList = $this->userIDList();
+				}
+			}
 		}
 	}
 
@@ -7644,6 +7664,35 @@ class AdvancedSecurity
 		for ($i = 0; $i < $len; $i++)
 			$ar[$i] = QuotedValue($ar[$i], DATATYPE_NUMBER, USER_TABLE_DBID);
 		return implode(", ", $ar);
+	}
+
+	// Parent User ID list
+	public function parentUserIDList($userId)
+	{
+		$result = "";
+
+		// Own record
+		if (SameString($userId, CurrentUserID())) {
+			if (strval(CurrentParentUserID()) <> "")
+				$result = QuotedValue(CurrentParentUserID(), DATATYPE_NUMBER, USER_TABLE_DBID);
+			return $result;
+		}
+
+		// One level only, must be CurrentUserID
+		if (!USER_ID_IS_HIERARCHICAL) {
+			return QuotedValue(CurrentUserID(), DATATYPE_NUMBER, USER_TABLE_DBID);
+		} else { // Hierarchical, all users except userid
+			$ar = $this->UserID;
+			$len = count($ar);
+			for ($i = 0; $i < $len; $i++) {
+				if (strval($ar[$i]) <> trim(strval($userId))) {
+					if ($result <> "")
+						$result .= ", ";
+					$result .= QuotedValue($ar[$i], DATATYPE_NUMBER, USER_TABLE_DBID);
+				}
+			}
+			return $result;
+		}
 	}
 
 	// List of allowed User IDs for this user

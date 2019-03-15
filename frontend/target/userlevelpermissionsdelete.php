@@ -50,8 +50,10 @@ fuserlevelpermissionsdelete.Form_CustomValidate = function(fobj) { // DO NOT CHA
 fuserlevelpermissionsdelete.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fuserlevelpermissionsdelete.lists["x__tablename"] = <?php echo $userlevelpermissions_delete->_tablename->Lookup->toClientList() ?>;
+fuserlevelpermissionsdelete.lists["x__tablename"].options = <?php echo JsonEncode($userlevelpermissions_delete->_tablename->lookupOptions()) ?>;
 
+// Form object for search
 </script>
 <script>
 

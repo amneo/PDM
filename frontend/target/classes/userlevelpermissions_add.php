@@ -11,13 +11,21 @@ class userlevelpermissions_add extends userlevelpermissions
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';
 
 	// Page object name
 	public $PageObjName = "userlevelpermissions_add";
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -639,8 +647,9 @@ class userlevelpermissions_add extends userlevelpermissions
 		$this->createToken();
 
 		// Set up lookup cache
-		// Check modal
+		$this->setupLookupOptions($this->_tablename);
 
+		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 		$this->IsMobileOrModal = IsMobile() || $this->IsModal;
@@ -909,7 +918,9 @@ class userlevelpermissions_add extends userlevelpermissions
 			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
-			$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -940,12 +951,35 @@ class userlevelpermissions_add extends userlevelpermissions
 			$this->userlevelid->PlaceHolder = RemoveHtml($this->userlevelid->caption());
 
 			// tablename
-			$this->_tablename->EditAttrs["class"] = "form-control";
 			$this->_tablename->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->_tablename->CurrentValue = HtmlDecode($this->_tablename->CurrentValue);
-			$this->_tablename->EditValue = HtmlEncode($this->_tablename->CurrentValue);
-			$this->_tablename->PlaceHolder = RemoveHtml($this->_tablename->caption());
+			$curVal = trim(strval($this->_tablename->CurrentValue));
+			if ($curVal <> "")
+				$this->_tablename->ViewValue = $this->_tablename->lookupCacheOption($curVal);
+			else
+				$this->_tablename->ViewValue = $this->_tablename->Lookup !== NULL && is_array($this->_tablename->Lookup->Options) ? $curVal : NULL;
+			if ($this->_tablename->ViewValue !== NULL) { // Load from cache
+				$this->_tablename->EditValue = array_values($this->_tablename->Lookup->Options);
+				if ($this->_tablename->ViewValue == "")
+					$this->_tablename->ViewValue = $Language->phrase("PleaseSelect");
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"tablename\"" . SearchString("=", $this->_tablename->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->_tablename->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+					$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
+				} else {
+					$this->_tablename->ViewValue = $Language->phrase("PleaseSelect");
+				}
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->_tablename->EditValue = $arwrk;
+			}
 
 			// permission
 			$this->permission->EditAttrs["class"] = "form-control";
@@ -1143,6 +1177,8 @@ class userlevelpermissions_add extends userlevelpermissions
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x__tablename":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

@@ -43,6 +43,7 @@ class user_dtls extends DbTable
 	public $UserLevel;
 	public $history;
 	public $reports_to;
+	public $name;
 
 	// Constructor
 	public function __construct()
@@ -134,14 +135,21 @@ class user_dtls extends DbTable
 		$this->fields['UserLevel'] = &$this->UserLevel;
 
 		// history
-		$this->history = new DbField('user_dtls', 'user_dtls', 'x_history', 'history', '"history"', '"history"', 200, -1, FALSE, '"history"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->history->Sortable = TRUE; // Allow sort
+		$this->history = new DbField('user_dtls', 'user_dtls', 'x_history', 'history', '"history"', '"history"', 200, -1, FALSE, '"history"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->history->Sortable = FALSE; // Allow sort
 		$this->fields['history'] = &$this->history;
 
 		// reports_to
-		$this->reports_to = new DbField('user_dtls', 'user_dtls', 'x_reports_to', 'reports_to', '"reports_to"', '"reports_to"', 200, -1, FALSE, '"reports_to"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->reports_to = new DbField('user_dtls', 'user_dtls', 'x_reports_to', 'reports_to', '"reports_to"', 'CAST("reports_to" AS varchar(255))', 3, -1, FALSE, '"EV__reports_to"', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->reports_to->Required = TRUE; // Required field
 		$this->reports_to->Sortable = TRUE; // Allow sort
+		$this->reports_to->Lookup = new Lookup('reports_to', 'user_dtls', FALSE, 'user_id', ["name","name","",""], [], [], [], [], [], [], '"user_id" ASC', '');
 		$this->fields['reports_to'] = &$this->reports_to;
+
+		// name
+		$this->name = new DbField('user_dtls', 'user_dtls', 'x_name', 'name', '"name"', '"name"', 200, -1, FALSE, '"name"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->name->Sortable = TRUE; // Allow sort
+		$this->fields['name'] = &$this->name;
 	}
 
 	// Field Visibility
@@ -187,10 +195,33 @@ class user_dtls extends DbTable
 			} else {
 				$this->setSessionOrderBy($sortField . " " . $thisSort); // Save to Session
 			}
+			$sortFieldList = ($fld->VirtualExpression <> "") ? $fld->VirtualExpression : $sortField;
+			if ($ctrl) {
+				$orderByList = $this->getSessionOrderByList();
+				if (ContainsString($orderByList, $sortFieldList . " " . $lastSort)) {
+					$orderByList = str_replace($sortFieldList . " " . $lastSort, $sortFieldList . " " . $thisSort, $orderByList);
+				} else {
+					if ($orderByList <> "") $orderByList .= ", ";
+					$orderByList .= $sortFieldList . " " . $thisSort;
+				}
+				$this->setSessionOrderByList($orderByList); // Save to Session
+			} else {
+				$this->setSessionOrderByList($sortFieldList . " " . $thisSort); // Save to Session
+			}
 		} else {
 			if (!$ctrl)
 				$fld->setSort("");
 		}
+	}
+
+	// Session ORDER BY for List page
+	public function getSessionOrderByList()
+	{
+		return @$_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . TABLE_ORDER_BY_LIST];
+	}
+	public function setSessionOrderByList($v)
+	{
+		$_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . TABLE_ORDER_BY_LIST] = $v;
 	}
 
 	// Table level SQL
@@ -217,6 +248,22 @@ class user_dtls extends DbTable
 	public function setSqlSelect($v)
 	{
 		$this->SqlSelect = $v;
+	}
+	public function getSqlSelectList() // Select for List page
+	{
+		$select = "";
+		$select = "SELECT * FROM (" .
+			"SELECT *, (SELECT \"name\" || '" . ValueSeparator(1, $this->reports_to) . "' || \"name\" FROM \"public\".\"user_dtls\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"user_id\" = \"user_dtls\".\"reports_to\" LIMIT 1) AS \"EV__reports_to\" FROM \"public\".\"user_dtls\"" .
+			") \"TMP_TABLE\"";
+		return ($this->SqlSelectList <> "") ? $this->SqlSelectList : $select;
+	}
+	public function sqlSelectList() // For backward compatibility
+	{
+		return $this->getSqlSelectList();
+	}
+	public function setSqlSelectList($v)
+	{
+		$this->SqlSelectList = $v;
 	}
 	public function getSqlWhere() // Where
 	{
@@ -334,8 +381,13 @@ class user_dtls extends DbTable
 		AddFilter($filter, $this->CurrentFilter);
 		$filter = $this->applyUserIDFilters($filter);
 		$this->Recordset_Selecting($filter);
-		$select = $this->getSqlSelect();
-		$sort = $this->UseSessionForListSql ? $this->getSessionOrderBy() : "";
+		if ($this->useVirtualFields()) {
+			$select = $this->getSqlSelectList();
+			$sort = $this->UseSessionForListSql ? $this->getSessionOrderByList() : "";
+		} else {
+			$select = $this->getSqlSelect();
+			$sort = $this->UseSessionForListSql ? $this->getSessionOrderBy() : "";
+		}
 		return BuildSelectSql($select, $this->getSqlWhere(), $this->getSqlGroupBy(),
 			$this->getSqlHaving(), $this->getSqlOrderBy(), $filter, $sort);
 	}
@@ -343,8 +395,28 @@ class user_dtls extends DbTable
 	// Get ORDER BY clause
 	public function getOrderBy()
 	{
-		$sort = $this->getSessionOrderBy();
+		$sort = ($this->useVirtualFields()) ? $this->getSessionOrderByList() : $this->getSessionOrderBy();
 		return BuildSelectSql("", "", "", "", $this->getSqlOrderBy(), "", $sort);
+	}
+
+	// Check if virtual fields is used in SQL
+	protected function useVirtualFields()
+	{
+		$where = $this->UseSessionForListSql ? $this->getSessionWhere() : $this->CurrentFilter;
+		$orderBy = $this->UseSessionForListSql ? $this->getSessionOrderByList() : "";
+		if ($where <> "")
+			$where = " " . str_replace(array("(",")"), array("",""), $where) . " ";
+		if ($orderBy <> "")
+			$orderBy = " " . str_replace(array("(",")"), array("",""), $orderBy) . " ";
+		if ($this->BasicSearch->getKeyword() <> "")
+			return TRUE;
+		if ($this->reports_to->AdvancedSearch->SearchValue <> "" ||
+			$this->reports_to->AdvancedSearch->SearchValue2 <> "" ||
+			ContainsString($where, " " . $this->reports_to->VirtualExpression . " "))
+			return TRUE;
+		if (ContainsString($orderBy, " " . $this->reports_to->VirtualExpression . " "))
+			return TRUE;
+		return FALSE;
 	}
 
 	// Get record count
@@ -405,7 +477,10 @@ class user_dtls extends DbTable
 		$select = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlSelect() : "SELECT * FROM " . $this->getSqlFrom();
 		$groupBy = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlGroupBy() : "";
 		$having = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlHaving() : "";
-		$sql = BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		if ($this->useVirtualFields())
+			$sql = BuildSelectSql($this->getSqlSelectList(), $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		else
+			$sql = BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
 		$cnt = $this->getRecordCount($sql);
 		return $cnt;
 	}
@@ -531,6 +606,7 @@ class user_dtls extends DbTable
 		$this->UserLevel->DbValue = $row['UserLevel'];
 		$this->history->DbValue = $row['history'];
 		$this->reports_to->DbValue = $row['reports_to'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Delete uploaded files
@@ -766,6 +842,7 @@ class user_dtls extends DbTable
 		$this->UserLevel->setDbValue($rs->fields('UserLevel'));
 		$this->history->setDbValue($rs->fields('history'));
 		$this->reports_to->setDbValue($rs->fields('reports_to'));
+		$this->name->setDbValue($rs->fields('name'));
 	}
 
 	// Render list row values
@@ -787,6 +864,7 @@ class user_dtls extends DbTable
 		// UserLevel
 		// history
 		// reports_to
+		// name
 		// user_id
 
 		$this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -853,8 +931,36 @@ class user_dtls extends DbTable
 		$this->history->ViewCustomAttributes = "";
 
 		// reports_to
-		$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+		if ($this->reports_to->VirtualValue <> "") {
+			$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+		} else {
+			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+		$curVal = strval($this->reports_to->CurrentValue);
+		if ($curVal <> "") {
+			$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
+			if ($this->reports_to->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+				$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+				}
+			}
+		} else {
+			$this->reports_to->ViewValue = NULL;
+		}
+		}
 		$this->reports_to->ViewCustomAttributes = "";
+
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
 		// user_id
 		$this->user_id->LinkCustomAttributes = "";
@@ -905,6 +1011,11 @@ class user_dtls extends DbTable
 		$this->reports_to->LinkCustomAttributes = "";
 		$this->reports_to->HrefValue = "";
 		$this->reports_to->TooltipValue = "";
+
+		// name
+		$this->name->LinkCustomAttributes = "";
+		$this->name->HrefValue = "";
+		$this->name->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -984,10 +1095,48 @@ class user_dtls extends DbTable
 		// reports_to
 		$this->reports_to->EditAttrs["class"] = "form-control";
 		$this->reports_to->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->reports_to->CurrentValue = HtmlDecode($this->reports_to->CurrentValue);
+		if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
+			if (SameString($this->user_id->CurrentValue, CurrentUserID())) {
+		if ($this->reports_to->VirtualValue <> "") {
+			$this->reports_to->EditValue = $this->reports_to->VirtualValue;
+		} else {
+			$this->reports_to->EditValue = $this->reports_to->CurrentValue;
+		$curVal = strval($this->reports_to->CurrentValue);
+		if ($curVal <> "") {
+			$this->reports_to->EditValue = $this->reports_to->lookupCacheOption($curVal);
+			if ($this->reports_to->EditValue === NULL) { // Lookup from database
+				$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+				$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->reports_to->EditValue = $this->reports_to->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->reports_to->EditValue = $this->reports_to->CurrentValue;
+				}
+			}
+		} else {
+			$this->reports_to->EditValue = NULL;
+		}
+		}
+		$this->reports_to->ViewCustomAttributes = "";
+			} else {
+			}
+		} else {
 		$this->reports_to->EditValue = $this->reports_to->CurrentValue;
 		$this->reports_to->PlaceHolder = RemoveHtml($this->reports_to->caption());
+		}
+
+		// name
+		$this->name->EditAttrs["class"] = "form-control";
+		$this->name->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->name->CurrentValue = HtmlDecode($this->name->CurrentValue);
+		$this->name->EditValue = $this->name->CurrentValue;
+		$this->name->PlaceHolder = RemoveHtml($this->name->caption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1020,13 +1169,11 @@ class user_dtls extends DbTable
 				if ($exportPageType == "view") {
 					$doc->exportCaption($this->user_id);
 					$doc->exportCaption($this->username);
-					$doc->exportCaption($this->password);
 					$doc->exportCaption($this->account_valid);
-					$doc->exportCaption($this->last_login);
 					$doc->exportCaption($this->email_addreess);
 					$doc->exportCaption($this->UserLevel);
-					$doc->exportCaption($this->history);
 					$doc->exportCaption($this->reports_to);
+					$doc->exportCaption($this->name);
 				} else {
 					$doc->exportCaption($this->user_id);
 					$doc->exportCaption($this->username);
@@ -1035,8 +1182,8 @@ class user_dtls extends DbTable
 					$doc->exportCaption($this->last_login);
 					$doc->exportCaption($this->email_addreess);
 					$doc->exportCaption($this->UserLevel);
-					$doc->exportCaption($this->history);
 					$doc->exportCaption($this->reports_to);
+					$doc->exportCaption($this->name);
 				}
 				$doc->endExportRow();
 			}
@@ -1070,13 +1217,11 @@ class user_dtls extends DbTable
 					if ($exportPageType == "view") {
 						$doc->exportField($this->user_id);
 						$doc->exportField($this->username);
-						$doc->exportField($this->password);
 						$doc->exportField($this->account_valid);
-						$doc->exportField($this->last_login);
 						$doc->exportField($this->email_addreess);
 						$doc->exportField($this->UserLevel);
-						$doc->exportField($this->history);
 						$doc->exportField($this->reports_to);
+						$doc->exportField($this->name);
 					} else {
 						$doc->exportField($this->user_id);
 						$doc->exportField($this->username);
@@ -1085,8 +1230,8 @@ class user_dtls extends DbTable
 						$doc->exportField($this->last_login);
 						$doc->exportField($this->email_addreess);
 						$doc->exportField($this->UserLevel);
-						$doc->exportField($this->history);
 						$doc->exportField($this->reports_to);
+						$doc->exportField($this->name);
 					}
 					$doc->endExportRow($rowCnt);
 				}
@@ -1106,6 +1251,8 @@ class user_dtls extends DbTable
 	public function getUserIDFilter($userId)
 	{
 		$userIdFilter = '"user_id" = ' . QuotedValue($userId, DATATYPE_NUMBER, USER_TABLE_DBID);
+		$parentUserIdFilter = '"user_id" IN (SELECT "user_id" FROM ' . "\"public\".\"user_dtls\"" . ' WHERE "reports_to" = ' . QuotedValue($userId, DATATYPE_NUMBER, USER_TABLE_DBID) . ')';
+		$userIdFilter = "($userIdFilter) OR ($parentUserIdFilter)";
 		return $userIdFilter;
 	}
 
@@ -1125,6 +1272,19 @@ class user_dtls extends DbTable
 		$this->UserID_Filtering($filterWrk);
 		AddFilter($filter, $filterWrk);
 		return $filter;
+	}
+
+	// Add Parent User ID filter
+	public function addParentUserIDFilter($userId)
+	{
+		global $Security;
+		if (!$Security->isAdmin()) {
+			$result = $Security->parentUserIDList($userId);
+			if ($result <> "")
+				$result = '"user_id" IN (' . $result . ')';
+			return $result;
+		}
+		return "";
 	}
 
 	// User ID subquery

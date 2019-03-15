@@ -11,13 +11,21 @@ class userlevels_delete extends userlevels
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevels';
 
 	// Page object name
 	public $PageObjName = "userlevels_delete";
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -810,6 +818,8 @@ class userlevels_delete extends userlevels
 		}
 		$rows = ($rs) ? $rs->getRows() : [];
 		$conn->beginTrans();
+		if ($this->AuditTrailOnDelete)
+			$this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
 
 		// Clone old rows
 		$rsold = $rows;
@@ -862,8 +872,12 @@ class userlevels_delete extends userlevels
 		}
 		if ($deleteRows) {
 			$conn->commitTrans(); // Commit the changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->rollbackTrans(); // Rollback changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
 		}
 
 		// Call Row Deleted event

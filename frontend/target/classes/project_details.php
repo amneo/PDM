@@ -109,6 +109,7 @@ class project_details extends DbTable
 		$this->project_sales_engg->Nullable = FALSE; // NOT NULL field
 		$this->project_sales_engg->Required = TRUE; // Required field
 		$this->project_sales_engg->Sortable = TRUE; // Allow sort
+		$this->project_sales_engg->DefaultErrorMessage = $Language->phrase("IncorrectEmail");
 		$this->fields['project_sales_engg'] = &$this->project_sales_engg;
 
 		// project_distribution
@@ -116,6 +117,7 @@ class project_details extends DbTable
 		$this->project_distribution->Nullable = FALSE; // NOT NULL field
 		$this->project_distribution->Required = TRUE; // Required field
 		$this->project_distribution->Sortable = TRUE; // Allow sort
+		$this->project_distribution->DefaultErrorMessage = $Language->phrase("IncorrectEmail");
 		$this->fields['project_distribution'] = &$this->project_distribution;
 
 		// project_transmittal
@@ -854,26 +856,20 @@ class project_details extends DbTable
 		// project_name
 		$this->project_name->EditAttrs["class"] = "form-control";
 		$this->project_name->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
 		$this->project_name->EditValue = $this->project_name->CurrentValue;
-		$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+		$this->project_name->ViewCustomAttributes = "";
 
 		// project_our_client
 		$this->project_our_client->EditAttrs["class"] = "form-control";
 		$this->project_our_client->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_our_client->CurrentValue = HtmlDecode($this->project_our_client->CurrentValue);
 		$this->project_our_client->EditValue = $this->project_our_client->CurrentValue;
-		$this->project_our_client->PlaceHolder = RemoveHtml($this->project_our_client->caption());
+		$this->project_our_client->ViewCustomAttributes = "";
 
 		// project_end_user
 		$this->project_end_user->EditAttrs["class"] = "form-control";
 		$this->project_end_user->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_end_user->CurrentValue = HtmlDecode($this->project_end_user->CurrentValue);
 		$this->project_end_user->EditValue = $this->project_end_user->CurrentValue;
-		$this->project_end_user->PlaceHolder = RemoveHtml($this->project_end_user->caption());
+		$this->project_end_user->ViewCustomAttributes = "";
 
 		// project_sales_engg
 		$this->project_sales_engg->EditAttrs["class"] = "form-control";

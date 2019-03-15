@@ -11,7 +11,7 @@ class transaction_details_list extends transaction_details
 	public $PageID = "list";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -616,6 +616,8 @@ class transaction_details_list extends transaction_details
 	{
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
 			$this->document_sequence->Visible = FALSE;
+		if ($this->isAddOrEdit())
+			$this->username->Visible = FALSE;
 	}
 
 	// Class variables
@@ -782,6 +784,7 @@ class transaction_details_list extends transaction_details
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->Visible = FALSE;
+		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -831,6 +834,9 @@ class transaction_details_list extends transaction_details
 			// Process list action first
 			if ($this->processListAction()) // Ajax request
 				$this->terminate();
+
+			// Set up records per page
+			$this->setupDisplayRecs();
 
 			// Handle reset command
 			$this->resetCmd();
@@ -904,13 +910,19 @@ class transaction_details_list extends transaction_details
 
 			// Get default search criteria
 			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
+			AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(TRUE));
 
 			// Get basic search values
 			$this->loadBasicSearchValues();
 
+			// Get and validate search values for advanced search
+			$this->loadSearchValues(); // Get search values
+
 			// Process filter list
 			if ($this->processFilterList())
 				$this->terminate();
+			if (!$this->validateSearch())
+				$this->setFailureMessage($SearchError);
 
 			// Restore search parms from Session if not searching / reset / export
 			if (($this->isExport() || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->checkSearchParms())
@@ -925,6 +937,10 @@ class transaction_details_list extends transaction_details
 			// Get basic search criteria
 			if ($SearchError == "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Get search criteria for advanced search
+			if ($SearchError == "")
+				$srchAdvanced = $this->advancedSearchWhere();
 		}
 
 		// Restore display records
@@ -945,6 +961,11 @@ class transaction_details_list extends transaction_details
 			$this->BasicSearch->loadDefault();
 			if ($this->BasicSearch->Keyword != "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Load advanced search from default
+			if ($this->loadAdvancedSearchDefault()) {
+				$srchAdvanced = $this->advancedSearchWhere();
+			}
 		}
 
 		// Build search criteria
@@ -1033,6 +1054,28 @@ class transaction_details_list extends transaction_details
 			$this->Recordset->close();
 			WriteJson(["success" => TRUE, $this->TableVar => $rows, "totalRecordCount" => $this->TotalRecs]);
 			$this->terminate(TRUE);
+		}
+	}
+
+	// Set up number of records displayed per page
+	protected function setupDisplayRecs()
+	{
+		$wrk = Get(TABLE_REC_PER_PAGE, "");
+		if ($wrk <> "") {
+			if (is_numeric($wrk)) {
+				$this->DisplayRecs = (int)$wrk;
+			} else {
+				if (SameText($wrk, "all")) { // Display all records
+					$this->DisplayRecs = -1;
+				} else {
+					$this->DisplayRecs = 50; // Non-numeric, load default
+				}
+			}
+			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
+
+			// Reset start position
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
 		}
 	}
 
@@ -1297,7 +1340,6 @@ class transaction_details_list extends transaction_details
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "ftransaction_detailslistsrch");
-		$filterList = Concat($filterList, $this->document_sequence->AdvancedSearch->toJson(), ","); // Field document_sequence
 		$filterList = Concat($filterList, $this->firelink_doc_no->AdvancedSearch->toJson(), ","); // Field firelink_doc_no
 		$filterList = Concat($filterList, $this->submit_no->AdvancedSearch->toJson(), ","); // Field submit_no
 		$filterList = Concat($filterList, $this->revision_no->AdvancedSearch->toJson(), ","); // Field revision_no
@@ -1344,14 +1386,6 @@ class transaction_details_list extends transaction_details
 			return FALSE;
 		$filter = json_decode(Post("filter"), TRUE);
 		$this->Command = "search";
-
-		// Field document_sequence
-		$this->document_sequence->AdvancedSearch->SearchValue = @$filter["x_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchOperator = @$filter["z_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchCondition = @$filter["v_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchValue2 = @$filter["y_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchOperator2 = @$filter["w_document_sequence"];
-		$this->document_sequence->AdvancedSearch->save();
 
 		// Field firelink_doc_no
 		$this->firelink_doc_no->AdvancedSearch->SearchValue = @$filter["x_firelink_doc_no"];
@@ -1426,6 +1460,93 @@ class transaction_details_list extends transaction_details
 		$this->document_native->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
+	}
+
+	// Advanced search WHERE clause based on QueryString
+	protected function advancedSearchWhere($default = FALSE)
+	{
+		global $Security;
+		$where = "";
+		if (!$Security->canSearch())
+			return "";
+		$this->buildSearchSql($where, $this->firelink_doc_no, $default, FALSE); // firelink_doc_no
+		$this->buildSearchSql($where, $this->submit_no, $default, FALSE); // submit_no
+		$this->buildSearchSql($where, $this->revision_no, $default, FALSE); // revision_no
+		$this->buildSearchSql($where, $this->transmit_no, $default, FALSE); // transmit_no
+		$this->buildSearchSql($where, $this->transmit_date, $default, FALSE); // transmit_date
+		$this->buildSearchSql($where, $this->direction, $default, FALSE); // direction
+		$this->buildSearchSql($where, $this->approval_status, $default, FALSE); // approval_status
+		$this->buildSearchSql($where, $this->document_link, $default, FALSE); // document_link
+		$this->buildSearchSql($where, $this->document_native, $default, FALSE); // document_native
+
+		// Set up search parm
+		if (!$default && $where <> "" && in_array($this->Command, array("", "reset", "resetall"))) {
+			$this->Command = "search";
+		}
+		if (!$default && $this->Command == "search") {
+			$this->firelink_doc_no->AdvancedSearch->save(); // firelink_doc_no
+			$this->submit_no->AdvancedSearch->save(); // submit_no
+			$this->revision_no->AdvancedSearch->save(); // revision_no
+			$this->transmit_no->AdvancedSearch->save(); // transmit_no
+			$this->transmit_date->AdvancedSearch->save(); // transmit_date
+			$this->direction->AdvancedSearch->save(); // direction
+			$this->approval_status->AdvancedSearch->save(); // approval_status
+			$this->document_link->AdvancedSearch->save(); // document_link
+			$this->document_native->AdvancedSearch->save(); // document_native
+		}
+		return $where;
+	}
+
+	// Build search SQL
+	protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+	{
+		$fldParm = $fld->Param;
+		$fldVal = ($default) ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+		$fldOpr = ($default) ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+		$fldCond = ($default) ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+		$fldVal2 = ($default) ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+		$fldOpr2 = ($default) ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+		$wrk = "";
+		if (is_array($fldVal))
+			$fldVal = implode(",", $fldVal);
+		if (is_array($fldVal2))
+			$fldVal2 = implode(",", $fldVal2);
+		$fldOpr = strtoupper(trim($fldOpr));
+		if ($fldOpr == "")
+			$fldOpr = "=";
+		$fldOpr2 = strtoupper(trim($fldOpr2));
+		if ($fldOpr2 == "")
+			$fldOpr2 = "=";
+		if (SEARCH_MULTI_VALUE_OPTION == 1)
+			$multiValue = FALSE;
+		if ($multiValue) {
+			$wrk1 = ($fldVal <> "") ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+			$wrk2 = ($fldVal2 <> "") ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+			$wrk = $wrk1; // Build final SQL
+			if ($wrk2 <> "")
+				$wrk = ($wrk <> "") ? "($wrk) $fldCond ($wrk2)" : $wrk2;
+		} else {
+			$fldVal = $this->convertSearchValue($fld, $fldVal);
+			$fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+			$wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+		}
+		AddFilter($where, $wrk);
+	}
+
+	// Convert search value
+	protected function convertSearchValue(&$fld, $fldVal)
+	{
+		if ($fldVal == NULL_VALUE || $fldVal == NOT_NULL_VALUE)
+			return $fldVal;
+		$value = $fldVal;
+		if ($fld->DataType == DATATYPE_BOOLEAN) {
+			if ($fldVal <> "")
+				$value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+		} elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+			if ($fldVal <> "")
+				$value = UnFormatDateTime($fldVal, $fld->DateTimeFormat);
+		}
+		return $value;
 	}
 
 	// Return basic search SQL
@@ -1555,6 +1676,24 @@ class transaction_details_list extends transaction_details
 		// Check basic search
 		if ($this->BasicSearch->issetSession())
 			return TRUE;
+		if ($this->firelink_doc_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->submit_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->revision_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->transmit_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->transmit_date->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->direction->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->approval_status->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_link->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_native->AdvancedSearch->issetSession())
+			return TRUE;
 		return FALSE;
 	}
 
@@ -1568,6 +1707,9 @@ class transaction_details_list extends transaction_details
 
 		// Clear basic search parameters
 		$this->resetBasicSearchParms();
+
+		// Clear advanced search parameters
+		$this->resetAdvancedSearchParms();
 	}
 
 	// Load advanced search default values
@@ -1582,6 +1724,20 @@ class transaction_details_list extends transaction_details
 		$this->BasicSearch->unsetSession();
 	}
 
+	// Clear all advanced search parameters
+	protected function resetAdvancedSearchParms()
+	{
+		$this->firelink_doc_no->AdvancedSearch->unsetSession();
+		$this->submit_no->AdvancedSearch->unsetSession();
+		$this->revision_no->AdvancedSearch->unsetSession();
+		$this->transmit_no->AdvancedSearch->unsetSession();
+		$this->transmit_date->AdvancedSearch->unsetSession();
+		$this->direction->AdvancedSearch->unsetSession();
+		$this->approval_status->AdvancedSearch->unsetSession();
+		$this->document_link->AdvancedSearch->unsetSession();
+		$this->document_native->AdvancedSearch->unsetSession();
+	}
+
 	// Restore all search parameters
 	protected function restoreSearchParms()
 	{
@@ -1589,6 +1745,17 @@ class transaction_details_list extends transaction_details
 
 		// Restore basic search values
 		$this->BasicSearch->load();
+
+		// Restore advanced search values
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->submit_no->AdvancedSearch->load();
+		$this->revision_no->AdvancedSearch->load();
+		$this->transmit_no->AdvancedSearch->load();
+		$this->transmit_date->AdvancedSearch->load();
+		$this->direction->AdvancedSearch->load();
+		$this->approval_status->AdvancedSearch->load();
+		$this->document_link->AdvancedSearch->load();
+		$this->document_native->AdvancedSearch->load();
 	}
 
 	// Set up sort parameters
@@ -1775,7 +1942,10 @@ class transaction_details_list extends transaction_details
 		$opt = &$this->ListOptions->Items["view"];
 		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
 		if ($Security->canView()) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
+			if (IsMobile())
+				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
+			else
+				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"transaction_details\" data-caption=\"" . $viewcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->ViewUrl) . "',btn:null});\">" . $Language->phrase("ViewLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -2045,6 +2215,16 @@ class transaction_details_list extends transaction_details
 		$item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $this->pageUrl() . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
 		$item->Visible = ($this->SearchWhere <> $this->DefaultSearchWhere && $this->SearchWhere <> "0=101");
 
+		// Advanced search button
+		$item = &$this->SearchOptions->add("advancedsearch");
+		$item->Body = "<a class=\"btn btn-default ew-advanced-aearch\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"transaction_detailssrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+		$item->Visible = TRUE;
+
+		// Search highlight button
+		$item = &$this->SearchOptions->add("searchhighlight");
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ew-highlight active\" title=\"" . $Language->phrase("Highlight") . "\" data-caption=\"" . $Language->phrase("Highlight") . "\" data-toggle=\"button\" data-form=\"ftransaction_detailslistsrch\" data-name=\"" . $this->highlightName() . "\">" . $Language->phrase("HighlightBtn") . "</button>";
+		$item->Visible = ($this->SearchWhere <> "" && $this->TotalRecs > 0);
+
 		// Button group for search
 		$this->SearchOptions->UseDropDownButton = FALSE;
 		$this->SearchOptions->UseButtonGroup = TRUE;
@@ -2144,6 +2324,8 @@ class transaction_details_list extends transaction_details
 		$this->transaction_date->OldValue = $this->transaction_date->CurrentValue;
 		$this->document_native->CurrentValue = NULL;
 		$this->document_native->OldValue = $this->document_native->CurrentValue;
+		$this->username->CurrentValue = NULL;
+		$this->username->OldValue = $this->username->CurrentValue;
 	}
 
 	// Load basic search values
@@ -2153,6 +2335,82 @@ class transaction_details_list extends transaction_details
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load search values for validation
+	protected function loadSearchValues()
+	{
+		global $CurrentForm;
+
+		// Load search values
+		// firelink_doc_no
+
+		if (!$this->isAddOrEdit())
+			$this->firelink_doc_no->AdvancedSearch->setSearchValue(Get("x_firelink_doc_no", Get("firelink_doc_no", "")));
+		if ($this->firelink_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator(Get("z_firelink_doc_no", ""));
+		$this->firelink_doc_no->AdvancedSearch->setSearchCondition(Get("v_firelink_doc_no", ""));
+		$this->firelink_doc_no->AdvancedSearch->setSearchValue2(Get("y_firelink_doc_no", ""));
+		if ($this->firelink_doc_no->AdvancedSearch->SearchValue2 <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator2(Get("w_firelink_doc_no", ""));
+
+		// submit_no
+		if (!$this->isAddOrEdit())
+			$this->submit_no->AdvancedSearch->setSearchValue(Get("x_submit_no", Get("submit_no", "")));
+		if ($this->submit_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->submit_no->AdvancedSearch->setSearchOperator(Get("z_submit_no", ""));
+
+		// revision_no
+		if (!$this->isAddOrEdit())
+			$this->revision_no->AdvancedSearch->setSearchValue(Get("x_revision_no", Get("revision_no", "")));
+		if ($this->revision_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->revision_no->AdvancedSearch->setSearchOperator(Get("z_revision_no", ""));
+
+		// transmit_no
+		if (!$this->isAddOrEdit())
+			$this->transmit_no->AdvancedSearch->setSearchValue(Get("x_transmit_no", Get("transmit_no", "")));
+		if ($this->transmit_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->transmit_no->AdvancedSearch->setSearchOperator(Get("z_transmit_no", ""));
+
+		// transmit_date
+		if (!$this->isAddOrEdit())
+			$this->transmit_date->AdvancedSearch->setSearchValue(Get("x_transmit_date", Get("transmit_date", "")));
+		if ($this->transmit_date->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->transmit_date->AdvancedSearch->setSearchOperator(Get("z_transmit_date", ""));
+
+		// direction
+		if (!$this->isAddOrEdit())
+			$this->direction->AdvancedSearch->setSearchValue(Get("x_direction", Get("direction", "")));
+		if ($this->direction->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->direction->AdvancedSearch->setSearchOperator(Get("z_direction", ""));
+
+		// approval_status
+		if (!$this->isAddOrEdit())
+			$this->approval_status->AdvancedSearch->setSearchValue(Get("x_approval_status", Get("approval_status", "")));
+		if ($this->approval_status->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->approval_status->AdvancedSearch->setSearchOperator(Get("z_approval_status", ""));
+
+		// document_link
+		if (!$this->isAddOrEdit())
+			$this->document_link->AdvancedSearch->setSearchValue(Get("x_document_link", Get("document_link", "")));
+		if ($this->document_link->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_link->AdvancedSearch->setSearchOperator(Get("z_document_link", ""));
+
+		// document_native
+		if (!$this->isAddOrEdit())
+			$this->document_native->AdvancedSearch->setSearchValue(Get("x_document_native", Get("document_native", "")));
+		if ($this->document_native->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_native->AdvancedSearch->setSearchOperator(Get("z_document_native", ""));
 	}
 
 	// Load form values
@@ -2340,6 +2598,7 @@ class transaction_details_list extends transaction_details
 		$this->document_link->setDbValue($this->document_link->Upload->DbValue);
 		$this->transaction_date->setDbValue($row['transaction_date']);
 		$this->document_native->setDbValue($row['document_native']);
+		$this->username->setDbValue($row['username']);
 	}
 
 	// Return a row with default values
@@ -2358,6 +2617,7 @@ class transaction_details_list extends transaction_details
 		$row['document_link'] = $this->document_link->Upload->DbValue;
 		$row['transaction_date'] = $this->transaction_date->CurrentValue;
 		$row['document_native'] = $this->document_native->CurrentValue;
+		$row['username'] = $this->username->CurrentValue;
 		return $row;
 	}
 
@@ -2415,7 +2675,9 @@ class transaction_details_list extends transaction_details
 		// document_link
 		// transaction_date
 		// document_native
+		// username
 
+		$this->username->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// document_sequence
@@ -2543,21 +2805,29 @@ class transaction_details_list extends transaction_details
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->firelink_doc_no->ViewValue = $this->highlightValue($this->firelink_doc_no);
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
 			$this->submit_no->HrefValue = "";
 			$this->submit_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->submit_no->ViewValue = $this->highlightValue($this->submit_no);
 
 			// revision_no
 			$this->revision_no->LinkCustomAttributes = "";
 			$this->revision_no->HrefValue = "";
 			$this->revision_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no->ViewValue = $this->highlightValue($this->revision_no);
 
 			// transmit_no
 			$this->transmit_no->LinkCustomAttributes = "";
 			$this->transmit_no->HrefValue = "";
 			$this->transmit_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no->ViewValue = $this->highlightValue($this->transmit_no);
 
 			// transmit_date
 			$this->transmit_date->LinkCustomAttributes = "";
@@ -2767,6 +3037,30 @@ class transaction_details_list extends transaction_details
 			$this->Row_Rendered();
 	}
 
+	// Validate search
+	protected function validateSearch()
+	{
+		global $SearchError;
+
+		// Initialize
+		$SearchError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return TRUE;
+
+		// Return validate result
+		$validateSearch = ($SearchError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateSearch = $validateSearch && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($SearchError, $formCustomError);
+		}
+		return $validateSearch;
+	}
+
 	// Validate form
 	protected function validateForm()
 	{
@@ -2834,6 +3128,11 @@ class transaction_details_list extends transaction_details
 		if ($this->document_native->Required) {
 			if (!$this->document_native->IsDetailKey && $this->document_native->FormValue != NULL && $this->document_native->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->document_native->caption(), $this->document_native->RequiredErrorMessage));
+			}
+		}
+		if ($this->username->Required) {
+			if (!$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->username->caption(), $this->username->RequiredErrorMessage));
 			}
 		}
 
@@ -3085,6 +3384,20 @@ class transaction_details_list extends transaction_details
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $addRow;
+	}
+
+	// Load advanced search
+	public function loadAdvancedSearch()
+	{
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->submit_no->AdvancedSearch->load();
+		$this->revision_no->AdvancedSearch->load();
+		$this->transmit_no->AdvancedSearch->load();
+		$this->transmit_date->AdvancedSearch->load();
+		$this->direction->AdvancedSearch->load();
+		$this->approval_status->AdvancedSearch->load();
+		$this->document_link->AdvancedSearch->load();
+		$this->document_native->AdvancedSearch->load();
 	}
 
 	// Get export HTML tag

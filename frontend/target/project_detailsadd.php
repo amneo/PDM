@@ -74,11 +74,17 @@ fproject_detailsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_sales_engg->caption(), $project_details->project_sales_engg->RequiredErrorMessage)) ?>");
 		<?php } ?>
+			elm = this.getElements("x" + infix + "_project_sales_engg");
+			if (elm && !ew.checkEmail(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($project_details->project_sales_engg->errorMessage()) ?>");
 		<?php if ($project_details_add->project_distribution->Required) { ?>
 			elm = this.getElements("x" + infix + "_project_distribution");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_distribution->caption(), $project_details->project_distribution->RequiredErrorMessage)) ?>");
 		<?php } ?>
+			elm = this.getElements("x" + infix + "_project_distribution");
+			if (elm && !ew.checkEmail(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($project_details->project_distribution->errorMessage()) ?>");
 		<?php if ($project_details_add->project_transmittal->Required) { ?>
 			elm = this.getElements("x" + infix + "_project_transmittal");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))

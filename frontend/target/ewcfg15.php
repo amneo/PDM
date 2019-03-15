@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", '3c4zZLb5y1c0mHch'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'WmTfrVK9qnoVXeE3'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -46,7 +46,7 @@ define(PROJECT_NAMESPACE . "EMAIL_CHARSET", PROJECT_CHARSET); // Email charset
 define(PROJECT_NAMESPACE . "HIGHLIGHT_COMPARE", TRUE); // Highlight compare mode, TRUE(case-insensitive)|FALSE(case-sensitive)
 define(PROJECT_NAMESPACE . "FONT_SIZE", 14);
 define(PROJECT_NAMESPACE . "TEMP_IMAGE_FONT", "DejaVuSans"); // Font for temp files
-$PROJECT_ID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}"; // Project ID (GUID)
+$PROJECT_ID = "vishal-pdm"; // Project ID (GUID)
 $RELATED_PROJECT_ID = "";
 $RELATED_LANGUAGE_FOLDER = "";
 $COMPOSITE_KEY_SEPARATOR = ","; // Composite key separator
@@ -410,7 +410,7 @@ define(PROJECT_NAMESPACE . "UPLOAD_ALLOWED_FILE_EXT", "gif,jpg,jpeg,bmp,png,doc,
 define(PROJECT_NAMESPACE . "IMAGE_ALLOWED_FILE_EXT", "gif,jpe,jpeg,jpg,png,bmp"); // Allowed file extensions for images
 define(PROJECT_NAMESPACE . "DOWNLOAD_ALLOWED_FILE_EXT", "csv,pdf,xls,doc,xlsx,docx"); // Allowed file extensions for download (non-image)
 define(PROJECT_NAMESPACE . "ENCRYPT_FILE_PATH", TRUE); // Encrypt file path
-define(PROJECT_NAMESPACE . "MAX_FILE_SIZE", 200000000); // Max file size
+define(PROJECT_NAMESPACE . "MAX_FILE_SIZE", 1000000000); // Max file size
 define(PROJECT_NAMESPACE . "MAX_FILE_COUNT", 0); // Max file count
 define(PROJECT_NAMESPACE . "THUMBNAIL_DEFAULT_WIDTH", 0); // Thumbnail default width
 define(PROJECT_NAMESPACE . "THUMBNAIL_DEFAULT_HEIGHT", 0); // Thumbnail default height

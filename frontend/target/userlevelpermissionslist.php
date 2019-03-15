@@ -52,8 +52,10 @@ fuserlevelpermissionslist.Form_CustomValidate = function(fobj) { // DO NOT CHANG
 fuserlevelpermissionslist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fuserlevelpermissionslist.lists["x__tablename"] = <?php echo $userlevelpermissions_list->_tablename->Lookup->toClientList() ?>;
+fuserlevelpermissionslist.lists["x__tablename"].options = <?php echo JsonEncode($userlevelpermissions_list->_tablename->lookupOptions()) ?>;
 
+// Form object for search
 var fuserlevelpermissionslistsrch = currentSearchForm = new ew.Form("fuserlevelpermissionslistsrch");
 
 // Filters
@@ -150,6 +152,17 @@ $userlevelpermissions_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
+<?php if ($userlevelpermissions_list->TotalRecs > 0 && (!$userlevelpermissions_list->AutoHidePageSizeSelector || $userlevelpermissions_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="userlevelpermissions">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($userlevelpermissions_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
+</div>
+<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -193,7 +206,7 @@ $userlevelpermissions_list->ListOptions->render("header", "left");
 		<th data-name="_tablename" class="<?php echo $userlevelpermissions->_tablename->headerCellClass() ?>"><div id="elh_userlevelpermissions__tablename" class="userlevelpermissions__tablename"><div class="ew-table-header-caption"><?php echo $userlevelpermissions->_tablename->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="_tablename" class="<?php echo $userlevelpermissions->_tablename->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $userlevelpermissions->SortUrl($userlevelpermissions->_tablename) ?>',2);"><div id="elh_userlevelpermissions__tablename" class="userlevelpermissions__tablename">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $userlevelpermissions->_tablename->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($userlevelpermissions->_tablename->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($userlevelpermissions->_tablename->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $userlevelpermissions->_tablename->caption() ?></span><span class="ew-table-header-sort"><?php if ($userlevelpermissions->_tablename->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($userlevelpermissions->_tablename->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -350,6 +363,17 @@ if ($userlevelpermissions_list->Recordset)
 <?php if ($userlevelpermissions_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+<?php if ($userlevelpermissions_list->TotalRecs > 0 && (!$userlevelpermissions_list->AutoHidePageSizeSelector || $userlevelpermissions_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="userlevelpermissions">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($userlevelpermissions_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
 </div>
 <?php } ?>
 </form>

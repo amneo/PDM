@@ -11,7 +11,7 @@ class transaction_details_add extends transaction_details
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -635,6 +635,7 @@ class transaction_details_add extends transaction_details
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
+		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -798,6 +799,8 @@ class transaction_details_add extends transaction_details
 		$this->transaction_date->OldValue = $this->transaction_date->CurrentValue;
 		$this->document_native->CurrentValue = NULL;
 		$this->document_native->OldValue = $this->document_native->CurrentValue;
+		$this->username->CurrentValue = NULL;
+		$this->username->OldValue = $this->username->CurrentValue;
 	}
 
 	// Load form values
@@ -957,6 +960,7 @@ class transaction_details_add extends transaction_details
 		$this->document_link->setDbValue($this->document_link->Upload->DbValue);
 		$this->transaction_date->setDbValue($row['transaction_date']);
 		$this->document_native->setDbValue($row['document_native']);
+		$this->username->setDbValue($row['username']);
 	}
 
 	// Return a row with default values
@@ -975,6 +979,7 @@ class transaction_details_add extends transaction_details
 		$row['document_link'] = $this->document_link->Upload->DbValue;
 		$row['transaction_date'] = $this->transaction_date->CurrentValue;
 		$row['document_native'] = $this->document_native->CurrentValue;
+		$row['username'] = $this->username->CurrentValue;
 		return $row;
 	}
 
@@ -1023,6 +1028,7 @@ class transaction_details_add extends transaction_details
 		// document_link
 		// transaction_date
 		// document_native
+		// username
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1459,6 +1465,11 @@ class transaction_details_add extends transaction_details
 		if ($this->document_native->Required) {
 			if (!$this->document_native->IsDetailKey && $this->document_native->FormValue != NULL && $this->document_native->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->document_native->caption(), $this->document_native->RequiredErrorMessage));
+			}
+		}
+		if ($this->username->Required) {
+			if (!$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->username->caption(), $this->username->RequiredErrorMessage));
 			}
 		}
 

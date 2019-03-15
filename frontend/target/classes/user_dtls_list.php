@@ -11,7 +11,7 @@ class user_dtls_list extends user_dtls
 	public $PageID = "list";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'user_dtls';
@@ -774,11 +774,12 @@ class user_dtls_list extends user_dtls
 		$this->password->Visible = FALSE;
 		$this->create_login->setVisibility();
 		$this->account_valid->setVisibility();
-		$this->last_login->setVisibility();
+		$this->last_login->Visible = FALSE;
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
-		$this->history->setVisibility();
+		$this->history->Visible = FALSE;
 		$this->reports_to->setVisibility();
+		$this->name->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -817,6 +818,7 @@ class user_dtls_list extends user_dtls
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->UserLevel);
+		$this->setupLookupOptions($this->reports_to);
 
 		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
@@ -830,6 +832,9 @@ class user_dtls_list extends user_dtls
 			// Process list action first
 			if ($this->processListAction()) // Ajax request
 				$this->terminate();
+
+			// Set up records per page
+			$this->setupDisplayRecs();
 
 			// Handle reset command
 			$this->resetCmd();
@@ -994,6 +999,28 @@ class user_dtls_list extends user_dtls
 		}
 	}
 
+	// Set up number of records displayed per page
+	protected function setupDisplayRecs()
+	{
+		$wrk = Get(TABLE_REC_PER_PAGE, "");
+		if ($wrk <> "") {
+			if (is_numeric($wrk)) {
+				$this->DisplayRecs = (int)$wrk;
+			} else {
+				if (SameText($wrk, "all")) { // Display all records
+					$this->DisplayRecs = -1;
+				} else {
+					$this->DisplayRecs = 50; // Non-numeric, load default
+				}
+			}
+			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
+
+			// Reset start position
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+		}
+	}
+
 	// Build filter for all keys
 	protected function buildKeyFilter()
 	{
@@ -1055,8 +1082,8 @@ class user_dtls_list extends user_dtls
 		$filterList = Concat($filterList, $this->last_login->AdvancedSearch->toJson(), ","); // Field last_login
 		$filterList = Concat($filterList, $this->email_addreess->AdvancedSearch->toJson(), ","); // Field email_addreess
 		$filterList = Concat($filterList, $this->UserLevel->AdvancedSearch->toJson(), ","); // Field UserLevel
-		$filterList = Concat($filterList, $this->history->AdvancedSearch->toJson(), ","); // Field history
 		$filterList = Concat($filterList, $this->reports_to->AdvancedSearch->toJson(), ","); // Field reports_to
+		$filterList = Concat($filterList, $this->name->AdvancedSearch->toJson(), ","); // Field name
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1159,14 +1186,6 @@ class user_dtls_list extends user_dtls
 		$this->UserLevel->AdvancedSearch->SearchOperator2 = @$filter["w_UserLevel"];
 		$this->UserLevel->AdvancedSearch->save();
 
-		// Field history
-		$this->history->AdvancedSearch->SearchValue = @$filter["x_history"];
-		$this->history->AdvancedSearch->SearchOperator = @$filter["z_history"];
-		$this->history->AdvancedSearch->SearchCondition = @$filter["v_history"];
-		$this->history->AdvancedSearch->SearchValue2 = @$filter["y_history"];
-		$this->history->AdvancedSearch->SearchOperator2 = @$filter["w_history"];
-		$this->history->AdvancedSearch->save();
-
 		// Field reports_to
 		$this->reports_to->AdvancedSearch->SearchValue = @$filter["x_reports_to"];
 		$this->reports_to->AdvancedSearch->SearchOperator = @$filter["z_reports_to"];
@@ -1174,6 +1193,14 @@ class user_dtls_list extends user_dtls
 		$this->reports_to->AdvancedSearch->SearchValue2 = @$filter["y_reports_to"];
 		$this->reports_to->AdvancedSearch->SearchOperator2 = @$filter["w_reports_to"];
 		$this->reports_to->AdvancedSearch->save();
+
+		// Field name
+		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
+		$this->name->AdvancedSearch->SearchOperator = @$filter["z_name"];
+		$this->name->AdvancedSearch->SearchCondition = @$filter["v_name"];
+		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
+		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
+		$this->name->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1187,6 +1214,7 @@ class user_dtls_list extends user_dtls
 		$this->buildBasicSearchSql($where, $this->email_addreess, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->history, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->reports_to, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->name, $arKeywords, $type);
 		return $where;
 	}
 
@@ -1353,11 +1381,10 @@ class user_dtls_list extends user_dtls
 			$this->updateSort($this->username, $ctrl); // username
 			$this->updateSort($this->create_login, $ctrl); // create_login
 			$this->updateSort($this->account_valid, $ctrl); // account_valid
-			$this->updateSort($this->last_login, $ctrl); // last_login
 			$this->updateSort($this->email_addreess, $ctrl); // email_addreess
 			$this->updateSort($this->UserLevel, $ctrl); // UserLevel
-			$this->updateSort($this->history, $ctrl); // history
 			$this->updateSort($this->reports_to, $ctrl); // reports_to
+			$this->updateSort($this->name, $ctrl); // name
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1393,15 +1420,15 @@ class user_dtls_list extends user_dtls
 			if ($this->Command == "resetsort") {
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
+				$this->setSessionOrderByList($orderBy);
 				$this->user_id->setSort("");
 				$this->username->setSort("");
 				$this->create_login->setSort("");
 				$this->account_valid->setSort("");
-				$this->last_login->setSort("");
 				$this->email_addreess->setSort("");
 				$this->UserLevel->setSort("");
-				$this->history->setSort("");
 				$this->reports_to->setSort("");
+				$this->name->setSort("");
 			}
 
 			// Reset start position
@@ -1839,7 +1866,7 @@ class user_dtls_list extends user_dtls
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())]);
+				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())]);
 			} else {
 				$rs = $conn->selectLimit($sql, $rowcnt, $offset);
 			}
@@ -1898,6 +1925,12 @@ class user_dtls_list extends user_dtls
 		$this->UserLevel->setDbValue($row['UserLevel']);
 		$this->history->setDbValue($row['history']);
 		$this->reports_to->setDbValue($row['reports_to']);
+		if (array_key_exists('EV__reports_to', $rs->fields)) {
+			$this->reports_to->VirtualValue = $rs->fields('EV__reports_to'); // Set up virtual field value
+		} else {
+			$this->reports_to->VirtualValue = ""; // Clear value
+		}
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
@@ -1914,6 +1947,7 @@ class user_dtls_list extends user_dtls
 		$row['UserLevel'] = NULL;
 		$row['history'] = NULL;
 		$row['reports_to'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -1967,6 +2001,7 @@ class user_dtls_list extends user_dtls
 		// UserLevel
 		// history
 		// reports_to
+		// name
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -2026,13 +2061,37 @@ class user_dtls_list extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
-			// history
-			$this->history->ViewValue = $this->history->CurrentValue;
-			$this->history->ViewCustomAttributes = "";
-
 			// reports_to
-			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			if ($this->reports_to->VirtualValue <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+			} else {
+				$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+					}
+				}
+			} else {
+				$this->reports_to->ViewValue = NULL;
+			}
+			}
 			$this->reports_to->ViewCustomAttributes = "";
+
+			// name
+			$this->name->ViewValue = $this->name->CurrentValue;
+			$this->name->ViewCustomAttributes = "";
 
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
@@ -2054,11 +2113,6 @@ class user_dtls_list extends user_dtls
 			$this->account_valid->HrefValue = "";
 			$this->account_valid->TooltipValue = "";
 
-			// last_login
-			$this->last_login->LinkCustomAttributes = "";
-			$this->last_login->HrefValue = "";
-			$this->last_login->TooltipValue = "";
-
 			// email_addreess
 			$this->email_addreess->LinkCustomAttributes = "";
 			$this->email_addreess->HrefValue = "";
@@ -2069,15 +2123,15 @@ class user_dtls_list extends user_dtls
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
 
-			// history
-			$this->history->LinkCustomAttributes = "";
-			$this->history->HrefValue = "";
-			$this->history->TooltipValue = "";
-
 			// reports_to
 			$this->reports_to->LinkCustomAttributes = "";
 			$this->reports_to->HrefValue = "";
 			$this->reports_to->TooltipValue = "";
+
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -2328,6 +2382,8 @@ class user_dtls_list extends user_dtls
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_UserLevel":
+							break;
+						case "x_reports_to":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

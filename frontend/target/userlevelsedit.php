@@ -54,14 +54,6 @@ fuserlevelsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($userlevels_edit->userlevelid->Required) { ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $userlevels->userlevelid->caption(), $userlevels->userlevelid->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.checkInteger(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($userlevels->userlevelid->errorMessage()) ?>");
 		<?php if ($userlevels_edit->userlevelname->Required) { ?>
 			elm = this.getElements("x" + infix + "_userlevelname");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -141,31 +133,6 @@ $userlevels_edit->showMessage();
 <?php } else { ?>
 <table id="tbl_userlevelsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
 <?php } ?>
-<?php if ($userlevels->userlevelid->Visible) { // userlevelid ?>
-<?php if ($userlevels_edit->IsMobileOrModal) { ?>
-	<div id="r_userlevelid" class="form-group row">
-		<label id="elh_userlevels_userlevelid" for="x_userlevelid" class="<?php echo $userlevels_edit->LeftColumnClass ?>"><?php echo $userlevels->userlevelid->caption() ?><?php echo ($userlevels->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $userlevels_edit->RightColumnClass ?>"><div<?php echo $userlevels->userlevelid->cellAttributes() ?>>
-<span id="el_userlevels_userlevelid">
-<span<?php echo $userlevels->userlevelid->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($userlevels->userlevelid->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="userlevels" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevels->userlevelid->CurrentValue) ?>">
-<?php echo $userlevels->userlevelid->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_userlevelid">
-		<td class="<?php echo $userlevels_edit->TableLeftColumnClass ?>"><span id="elh_userlevels_userlevelid"><?php echo $userlevels->userlevelid->caption() ?><?php echo ($userlevels->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $userlevels->userlevelid->cellAttributes() ?>>
-<span id="el_userlevels_userlevelid">
-<span<?php echo $userlevels->userlevelid->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($userlevels->userlevelid->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="userlevels" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevels->userlevelid->CurrentValue) ?>">
-<?php echo $userlevels->userlevelid->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($userlevels->userlevelname->Visible) { // userlevelname ?>
 <?php if ($userlevels_edit->IsMobileOrModal) { ?>
 	<div id="r_userlevelname" class="form-group row">
@@ -192,6 +159,7 @@ $userlevels_edit->showMessage();
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="userlevels" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevels->userlevelid->CurrentValue) ?>">
 <?php if (!$userlevels_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $userlevels_edit->OffsetColumnClass ?>"><!-- buttons offset -->

@@ -103,8 +103,10 @@ fuserlevelpermissionsedit.Form_CustomValidate = function(fobj) { // DO NOT CHANG
 fuserlevelpermissionsedit.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fuserlevelpermissionsedit.lists["x__tablename"] = <?php echo $userlevelpermissions_edit->_tablename->Lookup->toClientList() ?>;
+fuserlevelpermissionsedit.lists["x__tablename"].options = <?php echo JsonEncode($userlevelpermissions_edit->_tablename->lookupOptions()) ?>;
 
+// Form object for search
 </script>
 <script>
 

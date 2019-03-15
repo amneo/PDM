@@ -11,7 +11,7 @@ class distribution_details_delete extends distribution_details
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'distribution_details';

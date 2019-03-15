@@ -11,7 +11,7 @@ class user_dtls_edit extends user_dtls
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'user_dtls';
@@ -624,13 +624,14 @@ class user_dtls_edit extends user_dtls
 		$this->user_id->setVisibility();
 		$this->username->setVisibility();
 		$this->password->setVisibility();
-		$this->create_login->setVisibility();
+		$this->create_login->Visible = FALSE;
 		$this->account_valid->setVisibility();
-		$this->last_login->setVisibility();
+		$this->last_login->Visible = FALSE;
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
-		$this->history->setVisibility();
+		$this->history->Visible = FALSE;
 		$this->reports_to->setVisibility();
+		$this->name->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -653,6 +654,7 @@ class user_dtls_edit extends user_dtls
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->UserLevel);
+		$this->setupLookupOptions($this->reports_to);
 
 		// Check modal
 		if ($this->IsModal)
@@ -827,16 +829,6 @@ class user_dtls_edit extends user_dtls
 				$this->password->setFormValue($val);
 		}
 
-		// Check field name 'create_login' first before field var 'x_create_login'
-		$val = $CurrentForm->hasValue("create_login") ? $CurrentForm->getValue("create_login") : $CurrentForm->getValue("x_create_login");
-		if (!$this->create_login->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->create_login->Visible = FALSE; // Disable update for API request
-			else
-				$this->create_login->setFormValue($val);
-			$this->create_login->CurrentValue = UnFormatDateTime($this->create_login->CurrentValue, 0);
-		}
-
 		// Check field name 'account_valid' first before field var 'x_account_valid'
 		$val = $CurrentForm->hasValue("account_valid") ? $CurrentForm->getValue("account_valid") : $CurrentForm->getValue("x_account_valid");
 		if (!$this->account_valid->IsDetailKey) {
@@ -844,16 +836,6 @@ class user_dtls_edit extends user_dtls
 				$this->account_valid->Visible = FALSE; // Disable update for API request
 			else
 				$this->account_valid->setFormValue($val);
-		}
-
-		// Check field name 'last_login' first before field var 'x_last_login'
-		$val = $CurrentForm->hasValue("last_login") ? $CurrentForm->getValue("last_login") : $CurrentForm->getValue("x_last_login");
-		if (!$this->last_login->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->last_login->Visible = FALSE; // Disable update for API request
-			else
-				$this->last_login->setFormValue($val);
-			$this->last_login->CurrentValue = UnFormatDateTime($this->last_login->CurrentValue, 0);
 		}
 
 		// Check field name 'email_addreess' first before field var 'x_email_addreess'
@@ -874,15 +856,6 @@ class user_dtls_edit extends user_dtls
 				$this->UserLevel->setFormValue($val);
 		}
 
-		// Check field name 'history' first before field var 'x_history'
-		$val = $CurrentForm->hasValue("history") ? $CurrentForm->getValue("history") : $CurrentForm->getValue("x_history");
-		if (!$this->history->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->history->Visible = FALSE; // Disable update for API request
-			else
-				$this->history->setFormValue($val);
-		}
-
 		// Check field name 'reports_to' first before field var 'x_reports_to'
 		$val = $CurrentForm->hasValue("reports_to") ? $CurrentForm->getValue("reports_to") : $CurrentForm->getValue("x_reports_to");
 		if (!$this->reports_to->IsDetailKey) {
@@ -890,6 +863,15 @@ class user_dtls_edit extends user_dtls
 				$this->reports_to->Visible = FALSE; // Disable update for API request
 			else
 				$this->reports_to->setFormValue($val);
+		}
+
+		// Check field name 'name' first before field var 'x_name'
+		$val = $CurrentForm->hasValue("name") ? $CurrentForm->getValue("name") : $CurrentForm->getValue("x_name");
+		if (!$this->name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->name->Visible = FALSE; // Disable update for API request
+			else
+				$this->name->setFormValue($val);
 		}
 	}
 
@@ -900,15 +882,11 @@ class user_dtls_edit extends user_dtls
 		$this->user_id->CurrentValue = $this->user_id->FormValue;
 		$this->username->CurrentValue = $this->username->FormValue;
 		$this->password->CurrentValue = $this->password->FormValue;
-		$this->create_login->CurrentValue = $this->create_login->FormValue;
-		$this->create_login->CurrentValue = UnFormatDateTime($this->create_login->CurrentValue, 0);
 		$this->account_valid->CurrentValue = $this->account_valid->FormValue;
-		$this->last_login->CurrentValue = $this->last_login->FormValue;
-		$this->last_login->CurrentValue = UnFormatDateTime($this->last_login->CurrentValue, 0);
 		$this->email_addreess->CurrentValue = $this->email_addreess->FormValue;
 		$this->UserLevel->CurrentValue = $this->UserLevel->FormValue;
-		$this->history->CurrentValue = $this->history->FormValue;
 		$this->reports_to->CurrentValue = $this->reports_to->FormValue;
+		$this->name->CurrentValue = $this->name->FormValue;
 	}
 
 	// Load row based on key values
@@ -965,6 +943,12 @@ class user_dtls_edit extends user_dtls
 		$this->UserLevel->setDbValue($row['UserLevel']);
 		$this->history->setDbValue($row['history']);
 		$this->reports_to->setDbValue($row['reports_to']);
+		if (array_key_exists('EV__reports_to', $rs->fields)) {
+			$this->reports_to->VirtualValue = $rs->fields('EV__reports_to'); // Set up virtual field value
+		} else {
+			$this->reports_to->VirtualValue = ""; // Clear value
+		}
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
@@ -981,6 +965,7 @@ class user_dtls_edit extends user_dtls
 		$row['UserLevel'] = NULL;
 		$row['history'] = NULL;
 		$row['reports_to'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -1028,6 +1013,7 @@ class user_dtls_edit extends user_dtls
 		// UserLevel
 		// history
 		// reports_to
+		// name
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1091,13 +1077,37 @@ class user_dtls_edit extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
-			// history
-			$this->history->ViewValue = $this->history->CurrentValue;
-			$this->history->ViewCustomAttributes = "";
-
 			// reports_to
-			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			if ($this->reports_to->VirtualValue <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+			} else {
+				$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+					}
+				}
+			} else {
+				$this->reports_to->ViewValue = NULL;
+			}
+			}
 			$this->reports_to->ViewCustomAttributes = "";
+
+			// name
+			$this->name->ViewValue = $this->name->CurrentValue;
+			$this->name->ViewCustomAttributes = "";
 
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
@@ -1114,20 +1124,10 @@ class user_dtls_edit extends user_dtls
 			$this->password->HrefValue = "";
 			$this->password->TooltipValue = "";
 
-			// create_login
-			$this->create_login->LinkCustomAttributes = "";
-			$this->create_login->HrefValue = "";
-			$this->create_login->TooltipValue = "";
-
 			// account_valid
 			$this->account_valid->LinkCustomAttributes = "";
 			$this->account_valid->HrefValue = "";
 			$this->account_valid->TooltipValue = "";
-
-			// last_login
-			$this->last_login->LinkCustomAttributes = "";
-			$this->last_login->HrefValue = "";
-			$this->last_login->TooltipValue = "";
 
 			// email_addreess
 			$this->email_addreess->LinkCustomAttributes = "";
@@ -1139,15 +1139,15 @@ class user_dtls_edit extends user_dtls
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
 
-			// history
-			$this->history->LinkCustomAttributes = "";
-			$this->history->HrefValue = "";
-			$this->history->TooltipValue = "";
-
 			// reports_to
 			$this->reports_to->LinkCustomAttributes = "";
 			$this->reports_to->HrefValue = "";
 			$this->reports_to->TooltipValue = "";
+
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// user_id
@@ -1170,21 +1170,9 @@ class user_dtls_edit extends user_dtls
 			$this->password->EditValue = HtmlEncode($this->password->CurrentValue);
 			$this->password->PlaceHolder = RemoveHtml($this->password->caption());
 
-			// create_login
-			$this->create_login->EditAttrs["class"] = "form-control";
-			$this->create_login->EditCustomAttributes = "";
-			$this->create_login->EditValue = HtmlEncode(FormatDateTime($this->create_login->CurrentValue, 8));
-			$this->create_login->PlaceHolder = RemoveHtml($this->create_login->caption());
-
 			// account_valid
 			$this->account_valid->EditCustomAttributes = "";
 			$this->account_valid->EditValue = $this->account_valid->options(FALSE);
-
-			// last_login
-			$this->last_login->EditAttrs["class"] = "form-control";
-			$this->last_login->EditCustomAttributes = "";
-			$this->last_login->EditValue = HtmlEncode(FormatDateTime($this->last_login->CurrentValue, 8));
-			$this->last_login->PlaceHolder = RemoveHtml($this->last_login->caption());
 
 			// email_addreess
 			$this->email_addreess->EditAttrs["class"] = "form-control";
@@ -1221,21 +1209,88 @@ class user_dtls_edit extends user_dtls
 			}
 			}
 
-			// history
-			$this->history->EditAttrs["class"] = "form-control";
-			$this->history->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->history->CurrentValue = HtmlDecode($this->history->CurrentValue);
-			$this->history->EditValue = HtmlEncode($this->history->CurrentValue);
-			$this->history->PlaceHolder = RemoveHtml($this->history->caption());
-
 			// reports_to
 			$this->reports_to->EditAttrs["class"] = "form-control";
 			$this->reports_to->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->reports_to->CurrentValue = HtmlDecode($this->reports_to->CurrentValue);
+			if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
+				if (SameString($this->user_id->CurrentValue, CurrentUserID())) {
+			if ($this->reports_to->VirtualValue <> "") {
+				$this->reports_to->EditValue = $this->reports_to->VirtualValue;
+			} else {
+				$this->reports_to->EditValue = $this->reports_to->CurrentValue;
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->EditValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->reports_to->EditValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->EditValue = $this->reports_to->CurrentValue;
+					}
+				}
+			} else {
+				$this->reports_to->EditValue = NULL;
+			}
+			}
+			$this->reports_to->ViewCustomAttributes = "";
+				} else {
+			if (trim(strval($this->reports_to->CurrentValue)) == "") {
+				$filterWrk = "0=1";
+			} else {
+				$filterWrk = "\"user_id\"" . SearchString("=", $this->reports_to->CurrentValue, DATATYPE_NUMBER, "");
+			}
+			AddFilter($filterWrk, $GLOBALS["user_dtls"]->addParentUserIDFilter($this->user_id->CurrentValue));
+			$sqlWrk = $this->reports_to->Lookup->getSql(TRUE, $filterWrk, '', $this);
+			$rswrk = Conn()->execute($sqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+				$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+				$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+			}
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->reports_to->EditValue = $this->reports_to->ViewValue;
+				}
+			} else {
 			$this->reports_to->EditValue = HtmlEncode($this->reports_to->CurrentValue);
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->EditValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->reports_to->EditValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->EditValue = HtmlEncode($this->reports_to->CurrentValue);
+					}
+				}
+			} else {
+				$this->reports_to->EditValue = NULL;
+			}
 			$this->reports_to->PlaceHolder = RemoveHtml($this->reports_to->caption());
+			}
+
+			// name
+			$this->name->EditAttrs["class"] = "form-control";
+			$this->name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->name->CurrentValue = HtmlDecode($this->name->CurrentValue);
+			$this->name->EditValue = HtmlEncode($this->name->CurrentValue);
+			$this->name->PlaceHolder = RemoveHtml($this->name->caption());
 
 			// Edit refer script
 			// user_id
@@ -1251,17 +1306,9 @@ class user_dtls_edit extends user_dtls
 			$this->password->LinkCustomAttributes = "";
 			$this->password->HrefValue = "";
 
-			// create_login
-			$this->create_login->LinkCustomAttributes = "";
-			$this->create_login->HrefValue = "";
-
 			// account_valid
 			$this->account_valid->LinkCustomAttributes = "";
 			$this->account_valid->HrefValue = "";
-
-			// last_login
-			$this->last_login->LinkCustomAttributes = "";
-			$this->last_login->HrefValue = "";
 
 			// email_addreess
 			$this->email_addreess->LinkCustomAttributes = "";
@@ -1271,13 +1318,13 @@ class user_dtls_edit extends user_dtls
 			$this->UserLevel->LinkCustomAttributes = "";
 			$this->UserLevel->HrefValue = "";
 
-			// history
-			$this->history->LinkCustomAttributes = "";
-			$this->history->HrefValue = "";
-
 			// reports_to
 			$this->reports_to->LinkCustomAttributes = "";
 			$this->reports_to->HrefValue = "";
+
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1318,9 +1365,6 @@ class user_dtls_edit extends user_dtls
 				AddMessage($FormError, str_replace("%s", $this->create_login->caption(), $this->create_login->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->create_login->FormValue)) {
-			AddMessage($FormError, $this->create_login->errorMessage());
-		}
 		if ($this->account_valid->Required) {
 			if ($this->account_valid->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->account_valid->caption(), $this->account_valid->RequiredErrorMessage));
@@ -1330,9 +1374,6 @@ class user_dtls_edit extends user_dtls
 			if (!$this->last_login->IsDetailKey && $this->last_login->FormValue != NULL && $this->last_login->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->last_login->caption(), $this->last_login->RequiredErrorMessage));
 			}
-		}
-		if (!CheckDate($this->last_login->FormValue)) {
-			AddMessage($FormError, $this->last_login->errorMessage());
 		}
 		if ($this->email_addreess->Required) {
 			if (!$this->email_addreess->IsDetailKey && $this->email_addreess->FormValue != NULL && $this->email_addreess->FormValue == "") {
@@ -1355,6 +1396,11 @@ class user_dtls_edit extends user_dtls
 		if ($this->reports_to->Required) {
 			if (!$this->reports_to->IsDetailKey && $this->reports_to->FormValue != NULL && $this->reports_to->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->reports_to->caption(), $this->reports_to->RequiredErrorMessage));
+			}
+		}
+		if ($this->name->Required) {
+			if (!$this->name->IsDetailKey && $this->name->FormValue != NULL && $this->name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->name->caption(), $this->name->RequiredErrorMessage));
 			}
 		}
 
@@ -1438,17 +1484,11 @@ class user_dtls_edit extends user_dtls
 			// password
 			$this->password->setDbValueDef($rsnew, $this->password->CurrentValue, NULL, $this->password->ReadOnly || ENCRYPTED_PASSWORD && $rs->fields('password') == $this->password->CurrentValue);
 
-			// create_login
-			$this->create_login->setDbValueDef($rsnew, UnFormatDateTime($this->create_login->CurrentValue, 0), NULL, $this->create_login->ReadOnly);
-
 			// account_valid
 			$tmpBool = $this->account_valid->CurrentValue;
 			if ($tmpBool <> "1" && $tmpBool <> "0")
 				$tmpBool = !empty($tmpBool) ? "1" : "0";
 			$this->account_valid->setDbValueDef($rsnew, $tmpBool, NULL, $this->account_valid->ReadOnly);
-
-			// last_login
-			$this->last_login->setDbValueDef($rsnew, UnFormatDateTime($this->last_login->CurrentValue, 0), NULL, $this->last_login->ReadOnly);
 
 			// email_addreess
 			$this->email_addreess->setDbValueDef($rsnew, $this->email_addreess->CurrentValue, NULL, $this->email_addreess->ReadOnly);
@@ -1458,11 +1498,11 @@ class user_dtls_edit extends user_dtls
 				$this->UserLevel->setDbValueDef($rsnew, $this->UserLevel->CurrentValue, NULL, $this->UserLevel->ReadOnly);
 			}
 
-			// history
-			$this->history->setDbValueDef($rsnew, $this->history->CurrentValue, NULL, $this->history->ReadOnly);
-
 			// reports_to
 			$this->reports_to->setDbValueDef($rsnew, $this->reports_to->CurrentValue, NULL, $this->reports_to->ReadOnly);
+
+			// name
+			$this->name->setDbValueDef($rsnew, $this->name->CurrentValue, NULL, $this->name->ReadOnly);
 
 			// Call Row Updating event
 			$updateRow = $this->Row_Updating($rsold, $rsnew);
@@ -1554,6 +1594,8 @@ class user_dtls_edit extends user_dtls
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_UserLevel":
+							break;
+						case "x_reports_to":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

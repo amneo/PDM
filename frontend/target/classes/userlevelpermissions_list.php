@@ -11,7 +11,7 @@ class userlevelpermissions_list extends userlevelpermissions
 	public $PageID = "list";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';
@@ -59,6 +59,14 @@ class userlevelpermissions_list extends userlevelpermissions
 	public $GridEditUrl;
 	public $MultiDeleteUrl;
 	public $MultiUpdateUrl;
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -795,8 +803,9 @@ class userlevelpermissions_list extends userlevelpermissions
 		}
 
 		// Set up lookup cache
-		// Search filters
+		$this->setupLookupOptions($this->_tablename);
 
+		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
 		$srchBasic = ""; // Basic search filter
 		$filter = "";
@@ -808,6 +817,9 @@ class userlevelpermissions_list extends userlevelpermissions
 			// Process list action first
 			if ($this->processListAction()) // Ajax request
 				$this->terminate();
+
+			// Set up records per page
+			$this->setupDisplayRecs();
 
 			// Handle reset command
 			$this->resetCmd();
@@ -951,6 +963,13 @@ class userlevelpermissions_list extends userlevelpermissions
 				else
 					$this->setWarningMessage($Language->phrase("NoRecord"));
 			}
+
+			// Audit trail on search
+			if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+				$searchParm = ServerVar("QUERY_STRING");
+				$searchSql = $this->getSessionWhere();
+				$this->writeAuditTrailOnSearch($searchParm, $searchSql);
+			}
 		}
 
 		// Search options
@@ -962,6 +981,28 @@ class userlevelpermissions_list extends userlevelpermissions
 			$this->Recordset->close();
 			WriteJson(["success" => TRUE, $this->TableVar => $rows, "totalRecordCount" => $this->TotalRecs]);
 			$this->terminate(TRUE);
+		}
+	}
+
+	// Set up number of records displayed per page
+	protected function setupDisplayRecs()
+	{
+		$wrk = Get(TABLE_REC_PER_PAGE, "");
+		if ($wrk <> "") {
+			if (is_numeric($wrk)) {
+				$this->DisplayRecs = (int)$wrk;
+			} else {
+				if (SameText($wrk, "all")) { // Display all records
+					$this->DisplayRecs = -1;
+				} else {
+					$this->DisplayRecs = 50; // Non-numeric, load default
+				}
+			}
+			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
+
+			// Reset start position
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
 		}
 	}
 
@@ -1831,7 +1872,9 @@ class userlevelpermissions_list extends userlevelpermissions
 			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
-			$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -2093,6 +2136,8 @@ class userlevelpermissions_list extends userlevelpermissions
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x__tablename":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

@@ -11,7 +11,7 @@ class register extends user_dtls
 	public $PageID = "register";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Page object name
 	public $PageObjName = "register";
@@ -609,6 +609,8 @@ class register extends user_dtls
 		$this->history->OldValue = $this->history->CurrentValue;
 		$this->reports_to->CurrentValue = NULL;
 		$this->reports_to->OldValue = $this->reports_to->CurrentValue;
+		$this->name->CurrentValue = NULL;
+		$this->name->OldValue = $this->name->CurrentValue;
 	}
 
 	// Load form values
@@ -704,6 +706,12 @@ class register extends user_dtls
 		$this->UserLevel->setDbValue($row['UserLevel']);
 		$this->history->setDbValue($row['history']);
 		$this->reports_to->setDbValue($row['reports_to']);
+		if (array_key_exists('EV__reports_to', $rs->fields)) {
+			$this->reports_to->VirtualValue = $rs->fields('EV__reports_to'); // Set up virtual field value
+		} else {
+			$this->reports_to->VirtualValue = ""; // Clear value
+		}
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
@@ -721,6 +729,7 @@ class register extends user_dtls
 		$row['UserLevel'] = $this->UserLevel->CurrentValue;
 		$row['history'] = $this->history->CurrentValue;
 		$row['reports_to'] = $this->reports_to->CurrentValue;
+		$row['name'] = $this->name->CurrentValue;
 		return $row;
 	}
 
@@ -745,6 +754,7 @@ class register extends user_dtls
 		// UserLevel
 		// history
 		// reports_to
+		// name
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -808,13 +818,37 @@ class register extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
-			// history
-			$this->history->ViewValue = $this->history->CurrentValue;
-			$this->history->ViewCustomAttributes = "";
-
 			// reports_to
-			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			if ($this->reports_to->VirtualValue <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+			} else {
+				$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+					}
+				}
+			} else {
+				$this->reports_to->ViewValue = NULL;
+			}
+			}
 			$this->reports_to->ViewCustomAttributes = "";
+
+			// name
+			$this->name->ViewValue = $this->name->CurrentValue;
+			$this->name->ViewCustomAttributes = "";
 
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
@@ -954,6 +988,11 @@ class register extends user_dtls
 				AddMessage($FormError, str_replace("%s", $this->reports_to->caption(), $this->reports_to->RequiredErrorMessage));
 			}
 		}
+		if ($this->name->Required) {
+			if (!$this->name->IsDetailKey && $this->name->FormValue != NULL && $this->name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->name->caption(), $this->name->RequiredErrorMessage));
+			}
+		}
 
 		// Return validate result
 		$validateForm = ($FormError == "");
@@ -980,6 +1019,18 @@ class register extends user_dtls
 				$userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
 				$userIdMsg = str_replace("%u", $this->user_id->CurrentValue, $userIdMsg);
 				$this->setFailureMessage($userIdMsg);
+				return FALSE;
+			}
+		}
+
+		// Check if valid Parent User ID
+		$validParentUser = FALSE;
+		if ($Security->currentUserID() <> "" && !EmptyValue($this->reports_to->CurrentValue) && !$Security->isAdmin()) { // Non system admin
+			$validParentUser = $Security->isValidUserID($this->reports_to->CurrentValue);
+			if (!$validParentUser) {
+				$parentUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedParentUserID"));
+				$parentUserIdMsg = str_replace("%p", $this->reports_to->CurrentValue, $parentUserIdMsg);
+				$this->setFailureMessage($parentUserIdMsg);
 				return FALSE;
 			}
 		}
@@ -1022,7 +1073,9 @@ class register extends user_dtls
 		// email_addreess
 		$this->email_addreess->setDbValueDef($rsnew, $this->email_addreess->CurrentValue, NULL, FALSE);
 
+		// reports_to
 		// Call Row Inserting event
+
 		$rs = ($rsold) ? $rsold->fields : NULL;
 		$insertRow = $this->Row_Inserting($rs, $rsnew);
 		if ($insertRow) {
@@ -1100,6 +1153,8 @@ class register extends user_dtls
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_UserLevel":
+							break;
+						case "x_reports_to":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

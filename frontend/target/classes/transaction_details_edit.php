@@ -11,7 +11,7 @@ class transaction_details_edit extends transaction_details
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -631,6 +631,7 @@ class transaction_details_edit extends transaction_details
 		$this->document_link->Visible = FALSE;
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
+		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -890,6 +891,7 @@ class transaction_details_edit extends transaction_details
 		$this->document_link->setDbValue($this->document_link->Upload->DbValue);
 		$this->transaction_date->setDbValue($row['transaction_date']);
 		$this->document_native->setDbValue($row['document_native']);
+		$this->username->setDbValue($row['username']);
 	}
 
 	// Return a row with default values
@@ -907,6 +909,7 @@ class transaction_details_edit extends transaction_details
 		$row['document_link'] = NULL;
 		$row['transaction_date'] = NULL;
 		$row['document_native'] = NULL;
+		$row['username'] = NULL;
 		return $row;
 	}
 
@@ -955,6 +958,7 @@ class transaction_details_edit extends transaction_details
 		// document_link
 		// transaction_date
 		// document_native
+		// username
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1174,6 +1178,11 @@ class transaction_details_edit extends transaction_details
 		if ($this->document_native->Required) {
 			if (!$this->document_native->IsDetailKey && $this->document_native->FormValue != NULL && $this->document_native->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->document_native->caption(), $this->document_native->RequiredErrorMessage));
+			}
+		}
+		if ($this->username->Required) {
+			if (!$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->username->caption(), $this->username->RequiredErrorMessage));
 			}
 		}
 

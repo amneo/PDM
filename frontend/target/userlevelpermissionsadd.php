@@ -103,8 +103,10 @@ fuserlevelpermissionsadd.Form_CustomValidate = function(fobj) { // DO NOT CHANGE
 fuserlevelpermissionsadd.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fuserlevelpermissionsadd.lists["x__tablename"] = <?php echo $userlevelpermissions_add->_tablename->Lookup->toClientList() ?>;
+fuserlevelpermissionsadd.lists["x__tablename"].options = <?php echo JsonEncode($userlevelpermissions_add->_tablename->lookupOptions()) ?>;
 
+// Form object for search
 </script>
 <script>
 
@@ -156,7 +158,23 @@ $userlevelpermissions_add->showMessage();
 		<label id="elh_userlevelpermissions__tablename" for="x__tablename" class="<?php echo $userlevelpermissions_add->LeftColumnClass ?>"><?php echo $userlevelpermissions->_tablename->caption() ?><?php echo ($userlevelpermissions->_tablename->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $userlevelpermissions_add->RightColumnClass ?>"><div<?php echo $userlevelpermissions->_tablename->cellAttributes() ?>>
 <span id="el_userlevelpermissions__tablename">
-<input type="text" data-table="userlevelpermissions" data-field="x__tablename" name="x__tablename" id="x__tablename" size="30" maxlength="255" placeholder="<?php echo HtmlEncode($userlevelpermissions->_tablename->getPlaceHolder()) ?>" value="<?php echo $userlevelpermissions->_tablename->EditValue ?>"<?php echo $userlevelpermissions->_tablename->editAttributes() ?>>
+<div class="btn-group ew-dropdown-list" role="group">
+	<div class="btn-group" role="group">
+		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($userlevelpermissions->_tablename->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $userlevelpermissions->_tablename->ViewValue ?></button>
+		<div id="dsl_x__tablename" data-repeatcolumn="1" class="dropdown-menu">
+			<div class="ew-items" style="overflow-x: hidden; min-width: 100px;">
+<?php echo $userlevelpermissions->_tablename->radioButtonListHtml(TRUE, "x__tablename") ?>
+			</div><!-- /.ew-items ##-->
+		</div><!-- /.dropdown-menu ##-->
+		<div id="tp_x__tablename" class="ew-template"><input type="radio" class="form-check-input" data-table="userlevelpermissions" data-field="x__tablename" data-value-separator="<?php echo $userlevelpermissions->_tablename->displayValueSeparatorAttribute() ?>" name="x__tablename" id="x__tablename" value="{value}"<?php echo $userlevelpermissions->_tablename->editAttributes() ?>></div>
+	</div><!-- /.btn-group ##-->
+	<?php if (!$userlevelpermissions->_tablename->ReadOnly) { ?>
+	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
+		<i class="fa fa-times ew-icon"></i>
+	</button>
+<?php echo $userlevelpermissions->_tablename->Lookup->getParamTag("p_x__tablename") ?>
+	<?php } ?>
+</div><!-- /.ew-dropdown-list ##-->
 </span>
 <?php echo $userlevelpermissions->_tablename->CustomMsg ?></div></div>
 	</div>
@@ -165,7 +183,23 @@ $userlevelpermissions_add->showMessage();
 		<td class="<?php echo $userlevelpermissions_add->TableLeftColumnClass ?>"><span id="elh_userlevelpermissions__tablename"><?php echo $userlevelpermissions->_tablename->caption() ?><?php echo ($userlevelpermissions->_tablename->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $userlevelpermissions->_tablename->cellAttributes() ?>>
 <span id="el_userlevelpermissions__tablename">
-<input type="text" data-table="userlevelpermissions" data-field="x__tablename" name="x__tablename" id="x__tablename" size="30" maxlength="255" placeholder="<?php echo HtmlEncode($userlevelpermissions->_tablename->getPlaceHolder()) ?>" value="<?php echo $userlevelpermissions->_tablename->EditValue ?>"<?php echo $userlevelpermissions->_tablename->editAttributes() ?>>
+<div class="btn-group ew-dropdown-list" role="group">
+	<div class="btn-group" role="group">
+		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($userlevelpermissions->_tablename->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $userlevelpermissions->_tablename->ViewValue ?></button>
+		<div id="dsl_x__tablename" data-repeatcolumn="1" class="dropdown-menu">
+			<div class="ew-items" style="overflow-x: hidden; min-width: 100px;">
+<?php echo $userlevelpermissions->_tablename->radioButtonListHtml(TRUE, "x__tablename") ?>
+			</div><!-- /.ew-items ##-->
+		</div><!-- /.dropdown-menu ##-->
+		<div id="tp_x__tablename" class="ew-template"><input type="radio" class="form-check-input" data-table="userlevelpermissions" data-field="x__tablename" data-value-separator="<?php echo $userlevelpermissions->_tablename->displayValueSeparatorAttribute() ?>" name="x__tablename" id="x__tablename" value="{value}"<?php echo $userlevelpermissions->_tablename->editAttributes() ?>></div>
+	</div><!-- /.btn-group ##-->
+	<?php if (!$userlevelpermissions->_tablename->ReadOnly) { ?>
+	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
+		<i class="fa fa-times ew-icon"></i>
+	</button>
+<?php echo $userlevelpermissions->_tablename->Lookup->getParamTag("p_x__tablename") ?>
+	<?php } ?>
+</div><!-- /.ew-dropdown-list ##-->
 </span>
 <?php echo $userlevelpermissions->_tablename->CustomMsg ?></td>
 	</tr>

@@ -44,6 +44,7 @@ class transaction_details extends DbTable
 	public $document_link;
 	public $transaction_date;
 	public $document_native;
+	public $username;
 
 	// Constructor
 	public function __construct()
@@ -76,6 +77,7 @@ class transaction_details extends DbTable
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
 		$this->UserIDAllowSecurity = 104; // User ID Allow
 		$this->BasicSearch = new BasicSearch($this->TableVar);
+		$this->BasicSearch->TypeDefault = "OR";
 
 		// document_sequence
 		$this->document_sequence = new DbField('transaction_details', 'transaction_details', 'x_document_sequence', 'document_sequence', '"document_sequence"', 'CAST("document_sequence" AS varchar(255))', 3, -1, FALSE, '"document_sequence"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
@@ -160,6 +162,11 @@ class transaction_details extends DbTable
 		$this->document_native->Required = TRUE; // Required field
 		$this->document_native->Sortable = TRUE; // Allow sort
 		$this->fields['document_native'] = &$this->document_native;
+
+		// username
+		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->username->Sortable = FALSE; // Allow sort
+		$this->fields['username'] = &$this->username;
 	}
 
 	// Field Visibility
@@ -610,6 +617,7 @@ class transaction_details extends DbTable
 		$this->document_link->Upload->DbValue = $row['document_link'];
 		$this->transaction_date->DbValue = $row['transaction_date'];
 		$this->document_native->DbValue = $row['document_native'];
+		$this->username->DbValue = $row['username'];
 	}
 
 	// Delete uploaded files
@@ -851,6 +859,7 @@ class transaction_details extends DbTable
 		$this->document_link->Upload->DbValue = $rs->fields('document_link');
 		$this->transaction_date->setDbValue($rs->fields('transaction_date'));
 		$this->document_native->setDbValue($rs->fields('document_native'));
+		$this->username->setDbValue($rs->fields('username'));
 	}
 
 	// Render list row values
@@ -876,8 +885,11 @@ class transaction_details extends DbTable
 		// document_link
 		// transaction_date
 		// document_native
-		// document_sequence
+		// username
 
+		$this->username->CellCssStyle = "white-space: nowrap;";
+
+		// document_sequence
 		$this->document_sequence->ViewValue = $this->document_sequence->CurrentValue;
 		$this->document_sequence->CellCssStyle .= "text-align: left;";
 		$this->document_sequence->ViewCustomAttributes = "";
@@ -1003,6 +1015,10 @@ class transaction_details extends DbTable
 		$this->document_native->CellCssStyle .= "text-align: left;";
 		$this->document_native->ViewCustomAttributes = "";
 
+		// username
+		$this->username->ViewValue = $this->username->CurrentValue;
+		$this->username->ViewCustomAttributes = "";
+
 		// document_sequence
 		$this->document_sequence->LinkCustomAttributes = "";
 		$this->document_sequence->HrefValue = "";
@@ -1064,6 +1080,11 @@ class transaction_details extends DbTable
 		$this->document_native->LinkCustomAttributes = "";
 		$this->document_native->HrefValue = "";
 		$this->document_native->TooltipValue = "";
+
+		// username
+		$this->username->LinkCustomAttributes = "";
+		$this->username->HrefValue = "";
+		$this->username->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1177,7 +1198,9 @@ class transaction_details extends DbTable
 		$this->document_native->EditValue = $this->document_native->CurrentValue;
 		$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
+		// username
 		// Call Row Rendered event
+
 		$this->Row_Rendered();
 	}
 

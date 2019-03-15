@@ -4,11 +4,11 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class transaction_details_update extends transaction_details
+class transaction_details_search extends transaction_details
 {
 
 	// Page ID
-	public $PageID = "update";
+	public $PageID = "search";
 
 	// Project ID
 	public $ProjectID = "vishal-pdm";
@@ -17,7 +17,7 @@ class transaction_details_update extends transaction_details
 	public $TableName = 'transaction_details';
 
 	// Page object name
-	public $PageObjName = "transaction_details_update";
+	public $PageObjName = "transaction_details_search";
 
 	// Audit Trail
 	public $AuditTrailOnAdd = TRUE;
@@ -364,7 +364,7 @@ class transaction_details_update extends transaction_details
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
-			define(PROJECT_NAMESPACE . "PAGE_ID", 'update');
+			define(PROJECT_NAMESPACE . "PAGE_ID", 'search');
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
@@ -542,12 +542,9 @@ class transaction_details_update extends transaction_details
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
 			$this->document_sequence->Visible = FALSE;
 	}
-	public $FormClassName = "ew-horizontal ew-form ew-update-form";
+	public $FormClassName = "ew-horizontal ew-form ew-search-form";
 	public $IsModal = FALSE;
 	public $IsMobileOrModal = FALSE;
-	public $RecKeys;
-	public $Disabled;
-	public $UpdateCount = 0;
 
 	//
 	// Page run
@@ -556,7 +553,7 @@ class transaction_details_update extends transaction_details
 	public function run()
 	{
 		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm,
-			$FormError, $SkipHeaderFooter;
+			$SearchError, $SkipHeaderFooter;
 
 		// Init Session data for API request if token found
 		if (IsApi() && session_status() !== PHP_SESSION_ACTIVE) {
@@ -595,7 +592,7 @@ class transaction_details_update extends transaction_details
 			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
 			if ($Security->isLoggedIn())
 				$Security->TablePermission_Loaded();
-			if (!$Security->canEdit()) {
+			if (!$Security->canSearch()) {
 				$Security->saveLastUrl();
 				$this->setFailureMessage(DeniedMessage()); // Set no permission
 				if ($Security->canList())
@@ -622,14 +619,14 @@ class transaction_details_update extends transaction_details
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
-		$this->firelink_doc_no->Visible = FALSE;
-		$this->submit_no->Visible = FALSE;
-		$this->revision_no->Visible = FALSE;
-		$this->transmit_no->Visible = FALSE;
-		$this->transmit_date->Visible = FALSE;
-		$this->direction->Visible = FALSE;
-		$this->approval_status->Visible = FALSE;
-		$this->document_link->Visible = FALSE;
+		$this->firelink_doc_no->setVisibility();
+		$this->submit_no->setVisibility();
+		$this->revision_no->setVisibility();
+		$this->transmit_no->setVisibility();
+		$this->transmit_date->setVisibility();
+		$this->direction->setVisibility();
+		$this->approval_status->setVisibility();
+		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
@@ -658,270 +655,179 @@ class transaction_details_update extends transaction_details
 		$this->setupLookupOptions($this->transmit_no);
 		$this->setupLookupOptions($this->approval_status);
 
+		// Set up Breadcrumb
+		$this->setupBreadcrumb();
+
 		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 		$this->IsMobileOrModal = IsMobile() || $this->IsModal;
-		$this->FormClassName = "ew-form ew-update-form ew-horizontal";
-
-		// Set up Breadcrumb
-		$this->setupBreadcrumb();
-
-		// Try to load keys from list form
-		$this->RecKeys = $this->getRecordKeys(); // Load record keys
-		if (Post("action") !== NULL && Post("action") !== "") {
+		$this->FormClassName = "ew-form ew-search-form ew-horizontal";
+		if ($this->isPageRequest()) { // Validate request
 
 			// Get action
 			$this->CurrentAction = Post("action");
-			$this->loadFormValues(); // Get form values
+			if ($this->isSearch()) {
 
-			// Validate form
-			if (!$this->validateForm()) {
-				$this->CurrentAction = "show"; // Form error, reset action
-				$this->setFailureMessage($FormError);
-			}
-		} else {
-			$this->loadMultiUpdateValues(); // Load initial values to form
-		}
-		if (count($this->RecKeys) <= 0)
-			$this->terminate("transaction_detailslist.php"); // No records selected, return to list
-		if ($this->isUpdate()) {
-				if ($this->updateRows()) { // Update Records based on key
-					if ($this->getSuccessMessage() == "")
-						$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
-					$this->terminate($this->getReturnUrl()); // Return to caller
+				// Build search string for advanced search, remove blank field
+				$this->loadSearchValues(); // Get search values
+				if ($this->validateSearch()) {
+					$srchStr = $this->buildAdvancedSearch();
 				} else {
-					$this->restoreFormValues(); // Restore form values
+					$srchStr = "";
+					$this->setFailureMessage($SearchError);
 				}
+				if ($srchStr <> "") {
+					$srchStr = $this->getUrlParm($srchStr);
+					$srchStr = "transaction_detailslist.php" . "?" . $srchStr;
+					$this->terminate($srchStr); // Go to list page
+				}
+			}
 		}
 
-		// Render row
-		$this->RowType = ROWTYPE_EDIT; // Render edit
+		// Restore search settings from Session
+		if ($SearchError == "")
+			$this->loadAdvancedSearch();
+
+		// Render row for search
+		$this->RowType = ROWTYPE_SEARCH;
 		$this->resetAttributes();
 		$this->renderRow();
 	}
 
-	// Load initial values to form if field values are identical in all selected records
-	protected function loadMultiUpdateValues()
+	// Build advanced search
+	protected function buildAdvancedSearch()
 	{
-		$this->CurrentFilter = $this->getFilterFromRecordKeys();
-
-		// Load recordset
-		if ($this->Recordset = $this->loadRecordset()) {
-			$i = 1;
-			while (!$this->Recordset->EOF) {
-				if ($i == 1) {
-					$this->document_native->setDbValue($this->Recordset->fields('document_native'));
-				} else {
-					if (!CompareValue($this->document_native->DbValue, $this->Recordset->fields('document_native')))
-						$this->document_native->CurrentValue = NULL;
-				}
-				$i++;
-				$this->Recordset->moveNext();
-			}
-			$this->Recordset->close();
-		}
+		$srchUrl = "";
+		$this->buildSearchUrl($srchUrl, $this->firelink_doc_no); // firelink_doc_no
+		$this->buildSearchUrl($srchUrl, $this->submit_no); // submit_no
+		$this->buildSearchUrl($srchUrl, $this->revision_no); // revision_no
+		$this->buildSearchUrl($srchUrl, $this->transmit_no); // transmit_no
+		$this->buildSearchUrl($srchUrl, $this->transmit_date); // transmit_date
+		$this->buildSearchUrl($srchUrl, $this->direction); // direction
+		$this->buildSearchUrl($srchUrl, $this->approval_status); // approval_status
+		$this->buildSearchUrl($srchUrl, $this->document_link); // document_link
+		$this->buildSearchUrl($srchUrl, $this->document_native); // document_native
+		if ($srchUrl <> "")
+			$srchUrl .= "&";
+		$srchUrl .= "cmd=search";
+		return $srchUrl;
 	}
 
-	// Set up key value
-	protected function setupKeyValues($key)
-	{
-		$keyFld = $key;
-		if (!is_numeric($keyFld))
-			return FALSE;
-		$this->document_sequence->CurrentValue = $keyFld;
-		return TRUE;
-	}
-
-	// Update all selected rows
-	protected function updateRows()
-	{
-		global $Language;
-		$conn = &$this->getConnection();
-		$conn->beginTrans();
-		if ($this->AuditTrailOnEdit)
-			$this->writeAuditTrailDummy($Language->phrase("BatchUpdateBegin")); // Batch update begin
-
-		// Get old recordset
-		$this->CurrentFilter = $this->getFilterFromRecordKeys();
-		$sql = $this->getCurrentSql();
-		$rsold = $conn->execute($sql);
-
-		// Update all rows
-		$key = "";
-		foreach ($this->RecKeys as $reckey) {
-			if ($this->setupKeyValues($reckey)) {
-				$thisKey = $reckey;
-				$this->SendEmail = FALSE; // Do not send email on update success
-				$this->UpdateCount += 1; // Update record count for records being updated
-				$updateRows = $this->editRow(); // Update this row
-			} else {
-				$updateRows = FALSE;
-			}
-			if (!$updateRows)
-				break; // Update failed
-			if ($key <> "")
-				$key .= ", ";
-			$key .= $thisKey;
-		}
-
-		// Check if all rows updated
-		if ($updateRows) {
-			$conn->commitTrans(); // Commit transaction
-
-			// Get new recordset
-			$rsnew = $conn->execute($sql);
-			if ($this->AuditTrailOnEdit)
-				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateSuccess")); // Batch update success
-		} else {
-			$conn->rollbackTrans(); // Rollback transaction
-			if ($this->AuditTrailOnEdit)
-				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateRollback")); // Batch update rollback
-		}
-		return $updateRows;
-	}
-
-	// Get upload files
-	protected function getUploadFiles()
-	{
-		global $CurrentForm, $Language;
-	}
-
-	// Load form values
-	protected function loadFormValues()
-	{
-
-		// Load from form
-		global $CurrentForm;
-
-		// Check field name 'document_native' first before field var 'x_document_native'
-		$val = $CurrentForm->hasValue("document_native") ? $CurrentForm->getValue("document_native") : $CurrentForm->getValue("x_document_native");
-		if (!$this->document_native->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->document_native->Visible = FALSE; // Disable update for API request
-			else
-				$this->document_native->setFormValue($val);
-		}
-		$this->document_native->MultiUpdate = $CurrentForm->getValue("u_document_native");
-
-		// Check field name 'document_sequence' first before field var 'x_document_sequence'
-		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
-		if (!$this->document_sequence->IsDetailKey)
-			$this->document_sequence->setFormValue($val);
-	}
-
-	// Restore form values
-	public function restoreFormValues()
+	// Build search URL
+	protected function buildSearchUrl(&$url, &$fld, $oprOnly = FALSE)
 	{
 		global $CurrentForm;
-		$this->document_sequence->CurrentValue = $this->document_sequence->FormValue;
-		$this->document_native->CurrentValue = $this->document_native->FormValue;
-	}
-
-	// Load recordset
-	public function loadRecordset($offset = -1, $rowcnt = -1)
-	{
-
-		// Load List page SQL
-		$sql = $this->getListSql();
-		$conn = &$this->getConnection();
-
-		// Load recordset
-		$dbtype = GetConnectionType($this->Dbid);
-		if ($this->UseSelectLimit) {
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			if ($dbtype == "MSSQL") {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())]);
-			} else {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset);
+		$wrk = "";
+		$fldParm = $fld->Param;
+		$fldVal = $CurrentForm->getValue("x_$fldParm");
+		$fldOpr = $CurrentForm->getValue("z_$fldParm");
+		$fldCond = $CurrentForm->getValue("v_$fldParm");
+		$fldVal2 = $CurrentForm->getValue("y_$fldParm");
+		$fldOpr2 = $CurrentForm->getValue("w_$fldParm");
+		if (is_array($fldVal))
+			$fldVal = implode(",", $fldVal);
+		if (is_array($fldVal2))
+			$fldVal2 = implode(",", $fldVal2);
+		$fldOpr = strtoupper(trim($fldOpr));
+		$fldDataType = ($fld->IsVirtual) ? DATATYPE_STRING : $fld->DataType;
+		if ($fldOpr == "BETWEEN") {
+			$isValidValue = ($fldDataType <> DATATYPE_NUMBER) ||
+				($fldDataType == DATATYPE_NUMBER && $this->searchValueIsNumeric($fld, $fldVal) && $this->searchValueIsNumeric($fld, $fldVal2));
+			if ($fldVal <> "" && $fldVal2 <> "" && $isValidValue) {
+				$wrk = "x_" . $fldParm . "=" . urlencode($fldVal) .
+					"&y_" . $fldParm . "=" . urlencode($fldVal2) .
+					"&z_" . $fldParm . "=" . urlencode($fldOpr);
 			}
-			$conn->raiseErrorFn = '';
 		} else {
-			$rs = LoadRecordset($sql, $conn);
+			$isValidValue = ($fldDataType <> DATATYPE_NUMBER) ||
+				($fldDataType == DATATYPE_NUMBER && $this->searchValueIsNumeric($fld, $fldVal));
+			if ($fldVal <> "" && $isValidValue && IsValidOpr($fldOpr, $fldDataType)) {
+				$wrk = "x_" . $fldParm . "=" . urlencode($fldVal) .
+					"&z_" . $fldParm . "=" . urlencode($fldOpr);
+			} elseif ($fldOpr == "IS NULL" || $fldOpr == "IS NOT NULL" || ($fldOpr <> "" && $oprOnly && IsValidOpr($fldOpr, $fldDataType))) {
+				$wrk = "z_" . $fldParm . "=" . urlencode($fldOpr);
+			}
+			$isValidValue = ($fldDataType <> DATATYPE_NUMBER) ||
+				($fldDataType == DATATYPE_NUMBER && $this->searchValueIsNumeric($fld, $fldVal2));
+			if ($fldVal2 <> "" && $isValidValue && IsValidOpr($fldOpr2, $fldDataType)) {
+				if ($wrk <> "")
+					$wrk .= "&v_" . $fldParm . "=" . urlencode($fldCond) . "&";
+				$wrk .= "y_" . $fldParm . "=" . urlencode($fldVal2) .
+					"&w_" . $fldParm . "=" . urlencode($fldOpr2);
+			} elseif ($fldOpr2 == "IS NULL" || $fldOpr2 == "IS NOT NULL" || ($fldOpr2 <> "" && $oprOnly && IsValidOpr($fldOpr2, $fldDataType))) {
+				if ($wrk <> "")
+					$wrk .= "&v_" . $fldParm . "=" . urlencode($fldCond) . "&";
+				$wrk .= "w_" . $fldParm . "=" . urlencode($fldOpr2);
+			}
 		}
-
-		// Call Recordset Selected event
-		$this->Recordset_Selected($rs);
-		return $rs;
+		if ($wrk <> "") {
+			if ($url <> "")
+				$url .= "&";
+			$url .= $wrk;
+		}
+	}
+	protected function searchValueIsNumeric($fld, $value)
+	{
+		if (IsFloatFormat($fld->Type))
+			$value = ConvertToFloatString($value);
+		return is_numeric($value);
 	}
 
-	// Load row based on key values
-	public function loadRow()
+	// Load search values for validation
+	protected function loadSearchValues()
 	{
-		global $Security, $Language;
-		$filter = $this->getRecordFilter();
+		global $CurrentForm;
 
-		// Call Row Selecting event
-		$this->Row_Selecting($filter);
+		// Load search values
+		// firelink_doc_no
 
-		// Load SQL based on filter
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn = &$this->getConnection();
-		$res = FALSE;
-		$rs = LoadRecordset($sql, $conn);
-		if ($rs && !$rs->EOF) {
-			$res = TRUE;
-			$this->loadRowValues($rs); // Load row values
-			$rs->close();
-		}
-		return $res;
-	}
+		if (!$this->isAddOrEdit())
+			$this->firelink_doc_no->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_firelink_doc_no"));
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_firelink_doc_no"));
+		$this->firelink_doc_no->AdvancedSearch->setSearchCondition($CurrentForm->getValue("v_firelink_doc_no"));
+		$this->firelink_doc_no->AdvancedSearch->setSearchValue2($CurrentForm->getValue("y_firelink_doc_no"));
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator2($CurrentForm->getValue("w_firelink_doc_no"));
 
-	// Load row values from recordset
-	public function loadRowValues($rs = NULL)
-	{
-		if ($rs && !$rs->EOF)
-			$row = $rs->fields;
-		else
-			$row = $this->newRow();
+		// submit_no
+		if (!$this->isAddOrEdit())
+			$this->submit_no->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_submit_no"));
+		$this->submit_no->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_submit_no"));
 
-		// Call Row Selected event
-		$this->Row_Selected($row);
-		if (!$rs || $rs->EOF)
-			return;
-		$this->document_sequence->setDbValue($row['document_sequence']);
-		$this->firelink_doc_no->setDbValue($row['firelink_doc_no']);
-		if (array_key_exists('EV__firelink_doc_no', $rs->fields)) {
-			$this->firelink_doc_no->VirtualValue = $rs->fields('EV__firelink_doc_no'); // Set up virtual field value
-		} else {
-			$this->firelink_doc_no->VirtualValue = ""; // Clear value
-		}
-		$this->submit_no->setDbValue($row['submit_no']);
-		$this->revision_no->setDbValue($row['revision_no']);
-		$this->transmit_no->setDbValue($row['transmit_no']);
-		if (array_key_exists('EV__transmit_no', $rs->fields)) {
-			$this->transmit_no->VirtualValue = $rs->fields('EV__transmit_no'); // Set up virtual field value
-		} else {
-			$this->transmit_no->VirtualValue = ""; // Clear value
-		}
-		$this->transmit_date->setDbValue($row['transmit_date']);
-		$this->direction->setDbValue($row['direction']);
-		$this->approval_status->setDbValue($row['approval_status']);
-		$this->document_link->Upload->DbValue = $row['document_link'];
-		$this->document_link->setDbValue($this->document_link->Upload->DbValue);
-		$this->transaction_date->setDbValue($row['transaction_date']);
-		$this->document_native->setDbValue($row['document_native']);
-		$this->username->setDbValue($row['username']);
-	}
+		// revision_no
+		if (!$this->isAddOrEdit())
+			$this->revision_no->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_revision_no"));
+		$this->revision_no->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_revision_no"));
 
-	// Return a row with default values
-	protected function newRow()
-	{
-		$row = [];
-		$row['document_sequence'] = NULL;
-		$row['firelink_doc_no'] = NULL;
-		$row['submit_no'] = NULL;
-		$row['revision_no'] = NULL;
-		$row['transmit_no'] = NULL;
-		$row['transmit_date'] = NULL;
-		$row['direction'] = NULL;
-		$row['approval_status'] = NULL;
-		$row['document_link'] = NULL;
-		$row['transaction_date'] = NULL;
-		$row['document_native'] = NULL;
-		$row['username'] = NULL;
-		return $row;
+		// transmit_no
+		if (!$this->isAddOrEdit())
+			$this->transmit_no->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_transmit_no"));
+		$this->transmit_no->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_transmit_no"));
+
+		// transmit_date
+		if (!$this->isAddOrEdit())
+			$this->transmit_date->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_transmit_date"));
+		$this->transmit_date->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_transmit_date"));
+
+		// direction
+		if (!$this->isAddOrEdit())
+			$this->direction->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_direction"));
+		$this->direction->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_direction"));
+
+		// approval_status
+		if (!$this->isAddOrEdit())
+			$this->approval_status->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_approval_status"));
+		$this->approval_status->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_approval_status"));
+
+		// document_link
+		if (!$this->isAddOrEdit())
+			$this->document_link->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_document_link"));
+		$this->document_link->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_document_link"));
+
+		// document_native
+		if (!$this->isAddOrEdit())
+			$this->document_native->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_document_native"));
+		$this->document_native->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_document_native"));
 	}
 
 	// Render row values based on field settings
@@ -1076,23 +982,152 @@ class transaction_details_update extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
+			// firelink_doc_no
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+			$this->firelink_doc_no->TooltipValue = "";
+
+			// submit_no
+			$this->submit_no->LinkCustomAttributes = "";
+			$this->submit_no->HrefValue = "";
+			$this->submit_no->TooltipValue = "";
+
+			// revision_no
+			$this->revision_no->LinkCustomAttributes = "";
+			$this->revision_no->HrefValue = "";
+			$this->revision_no->TooltipValue = "";
+
+			// transmit_no
+			$this->transmit_no->LinkCustomAttributes = "";
+			$this->transmit_no->HrefValue = "";
+			$this->transmit_no->TooltipValue = "";
+
+			// transmit_date
+			$this->transmit_date->LinkCustomAttributes = "";
+			$this->transmit_date->HrefValue = "";
+			$this->transmit_date->TooltipValue = "";
+
+			// direction
+			$this->direction->LinkCustomAttributes = "";
+			$this->direction->HrefValue = "";
+			$this->direction->TooltipValue = "";
+
+			// approval_status
+			$this->approval_status->LinkCustomAttributes = "";
+			$this->approval_status->HrefValue = "";
+			$this->approval_status->TooltipValue = "";
+
+			// document_link
+			$this->document_link->LinkCustomAttributes = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->document_link->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->document_link->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->document_link->HrefValue = FullUrl($this->document_link->HrefValue, "href");
+			} else {
+				$this->document_link->HrefValue = "";
+			}
+			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
+			$this->document_link->TooltipValue = "";
+
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 			$this->document_native->TooltipValue = "";
-		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->AdvancedSearch->SearchValue = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->AdvancedSearch->SearchValue2 = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue2);
+			$this->firelink_doc_no->EditValue2 = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue2);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// submit_no
+			$this->submit_no->EditAttrs["class"] = "form-control";
+			$this->submit_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->submit_no->AdvancedSearch->SearchValue = HtmlDecode($this->submit_no->AdvancedSearch->SearchValue);
+			$this->submit_no->EditValue = HtmlEncode($this->submit_no->AdvancedSearch->SearchValue);
+			$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
+
+			// revision_no
+			$this->revision_no->EditAttrs["class"] = "form-control";
+			$this->revision_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no->AdvancedSearch->SearchValue);
+			$this->revision_no->EditValue = HtmlEncode($this->revision_no->AdvancedSearch->SearchValue);
+			$this->revision_no->PlaceHolder = RemoveHtml($this->revision_no->caption());
+
+			// transmit_no
+			$this->transmit_no->EditAttrs["class"] = "form-control";
+			$this->transmit_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no->AdvancedSearch->SearchValue);
+			$this->transmit_no->EditValue = HtmlEncode($this->transmit_no->AdvancedSearch->SearchValue);
+			$this->transmit_no->PlaceHolder = RemoveHtml($this->transmit_no->caption());
+
+			// transmit_date
+			$this->transmit_date->EditAttrs["class"] = "form-control";
+			$this->transmit_date->EditCustomAttributes = "";
+			$this->transmit_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date->AdvancedSearch->SearchValue, 0), 8));
+			$this->transmit_date->PlaceHolder = RemoveHtml($this->transmit_date->caption());
+
+			// direction
+			$this->direction->EditCustomAttributes = "";
+			$this->direction->EditValue = $this->direction->options(FALSE);
+
+			// approval_status
+			$this->approval_status->EditCustomAttributes = "";
+			$curVal = trim(strval($this->approval_status->AdvancedSearch->SearchValue));
+			if ($curVal <> "")
+				$this->approval_status->AdvancedSearch->ViewValue = $this->approval_status->lookupCacheOption($curVal);
+			else
+				$this->approval_status->AdvancedSearch->ViewValue = $this->approval_status->Lookup !== NULL && is_array($this->approval_status->Lookup->Options) ? $curVal : NULL;
+			if ($this->approval_status->AdvancedSearch->ViewValue !== NULL) { // Load from cache
+				$this->approval_status->EditValue = array_values($this->approval_status->Lookup->Options);
+				if ($this->approval_status->AdvancedSearch->ViewValue == "")
+					$this->approval_status->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"short_code\"" . SearchString("=", $this->approval_status->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->approval_status->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+					$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+					$this->approval_status->AdvancedSearch->ViewValue = $this->approval_status->displayValue($arwrk);
+				} else {
+					$this->approval_status->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
+				}
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->approval_status->EditValue = $arwrk;
+			}
+
+			// document_link
+			$this->document_link->EditAttrs["class"] = "form-control";
+			$this->document_link->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_link->AdvancedSearch->SearchValue = HtmlDecode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->EditValue = HtmlEncode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->PlaceHolder = RemoveHtml($this->document_link->caption());
 
 			// document_native
 			$this->document_native->EditAttrs["class"] = "form-control";
 			$this->document_native->EditCustomAttributes = "";
-			$this->document_native->EditValue = HtmlEncode($this->document_native->CurrentValue);
+			$this->document_native->EditValue = HtmlEncode($this->document_native->AdvancedSearch->SearchValue);
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
-
-			// Edit refer script
-			// document_native
-
-			$this->document_native->LinkCustomAttributes = "";
-			$this->document_native->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1102,160 +1137,45 @@ class transaction_details_update extends transaction_details
 			$this->Row_Rendered();
 	}
 
-	// Validate form
-	protected function validateForm()
+	// Validate search
+	protected function validateSearch()
 	{
-		global $Language, $FormError;
+		global $SearchError;
 
-		// Initialize form error message
-		$FormError = "";
-		$updateCnt = 0;
-		if ($this->document_native->MultiUpdate == "1")
-			$updateCnt++;
-		if ($updateCnt == 0) {
-			$FormError = $Language->phrase("NoFieldSelected");
-			return FALSE;
-		}
+		// Initialize
+		$SearchError = "";
 
 		// Check if validation required
 		if (!SERVER_VALIDATE)
-			return ($FormError == "");
-		if ($this->document_sequence->Required) {
-			if ($this->document_sequence->MultiUpdate <> "" && !$this->document_sequence->IsDetailKey && $this->document_sequence->FormValue != NULL && $this->document_sequence->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->document_sequence->caption(), $this->document_sequence->RequiredErrorMessage));
-			}
-		}
-		if ($this->firelink_doc_no->Required) {
-			if ($this->firelink_doc_no->MultiUpdate <> "" && !$this->firelink_doc_no->IsDetailKey && $this->firelink_doc_no->FormValue != NULL && $this->firelink_doc_no->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->firelink_doc_no->caption(), $this->firelink_doc_no->RequiredErrorMessage));
-			}
-		}
-		if ($this->submit_no->Required) {
-			if ($this->submit_no->MultiUpdate <> "" && !$this->submit_no->IsDetailKey && $this->submit_no->FormValue != NULL && $this->submit_no->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->submit_no->caption(), $this->submit_no->RequiredErrorMessage));
-			}
-		}
-		if ($this->revision_no->Required) {
-			if ($this->revision_no->MultiUpdate <> "" && !$this->revision_no->IsDetailKey && $this->revision_no->FormValue != NULL && $this->revision_no->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->revision_no->caption(), $this->revision_no->RequiredErrorMessage));
-			}
-		}
-		if ($this->transmit_no->Required) {
-			if ($this->transmit_no->MultiUpdate <> "" && !$this->transmit_no->IsDetailKey && $this->transmit_no->FormValue != NULL && $this->transmit_no->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->transmit_no->caption(), $this->transmit_no->RequiredErrorMessage));
-			}
-		}
-		if ($this->transmit_date->Required) {
-			if ($this->transmit_date->MultiUpdate <> "" && !$this->transmit_date->IsDetailKey && $this->transmit_date->FormValue != NULL && $this->transmit_date->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->transmit_date->caption(), $this->transmit_date->RequiredErrorMessage));
-			}
-		}
-		if ($this->direction->Required) {
-			if ($this->direction->MultiUpdate <> "" && $this->direction->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->direction->caption(), $this->direction->RequiredErrorMessage));
-			}
-		}
-		if ($this->approval_status->Required) {
-			if ($this->approval_status->MultiUpdate <> "" && $this->approval_status->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->approval_status->caption(), $this->approval_status->RequiredErrorMessage));
-			}
-		}
-		if ($this->document_link->Required) {
-			if ($this->document_link->MultiUpdate <> "" && $this->document_link->Upload->FileName == "" && !$this->document_link->Upload->KeepFile) {
-				AddMessage($FormError, str_replace("%s", $this->document_link->caption(), $this->document_link->RequiredErrorMessage));
-			}
-		}
-		if ($this->transaction_date->Required) {
-			if ($this->transaction_date->MultiUpdate <> "" && !$this->transaction_date->IsDetailKey && $this->transaction_date->FormValue != NULL && $this->transaction_date->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->transaction_date->caption(), $this->transaction_date->RequiredErrorMessage));
-			}
-		}
-		if ($this->document_native->Required) {
-			if ($this->document_native->MultiUpdate <> "" && !$this->document_native->IsDetailKey && $this->document_native->FormValue != NULL && $this->document_native->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->document_native->caption(), $this->document_native->RequiredErrorMessage));
-			}
-		}
-		if ($this->username->Required) {
-			if ($this->username->MultiUpdate <> "" && !$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->username->caption(), $this->username->RequiredErrorMessage));
-			}
+			return TRUE;
+		if (!CheckDate($this->transmit_date->AdvancedSearch->SearchValue)) {
+			AddMessage($SearchError, $this->transmit_date->errorMessage());
 		}
 
 		// Return validate result
-		$validateForm = ($FormError == "");
+		$validateSearch = ($SearchError == "");
 
 		// Call Form_CustomValidate event
 		$formCustomError = "";
-		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		$validateSearch = $validateSearch && $this->Form_CustomValidate($formCustomError);
 		if ($formCustomError <> "") {
-			AddMessage($FormError, $formCustomError);
+			AddMessage($SearchError, $formCustomError);
 		}
-		return $validateForm;
+		return $validateSearch;
 	}
 
-	// Update record based on key values
-	protected function editRow()
+	// Load advanced search
+	public function loadAdvancedSearch()
 	{
-		global $Security, $Language;
-		$filter = $this->getRecordFilter();
-		$filter = $this->applyUserIDFilters($filter);
-		$conn = &$this->getConnection();
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-		$rs = $conn->execute($sql);
-		$conn->raiseErrorFn = '';
-		if ($rs === FALSE)
-			return FALSE;
-		if ($rs->EOF) {
-			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-			$editRow = FALSE; // Update Failed
-		} else {
-
-			// Save old values
-			$rsold = &$rs->fields;
-			$this->loadDbValues($rsold);
-			$rsnew = [];
-
-			// document_native
-			$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", $this->document_native->ReadOnly || $this->document_native->MultiUpdate <> "1");
-
-			// Call Row Updating event
-			$updateRow = $this->Row_Updating($rsold, $rsnew);
-			if ($updateRow) {
-				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-				if (count($rsnew) > 0)
-					$editRow = $this->update($rsnew, "", $rsold);
-				else
-					$editRow = TRUE; // No field to update
-				$conn->raiseErrorFn = '';
-				if ($editRow) {
-				}
-			} else {
-				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
-
-					// Use the message, do nothing
-				} elseif ($this->CancelMessage <> "") {
-					$this->setFailureMessage($this->CancelMessage);
-					$this->CancelMessage = "";
-				} else {
-					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
-				}
-				$editRow = FALSE;
-			}
-		}
-
-		// Call Row_Updated event
-		if ($editRow)
-			$this->Row_Updated($rsold, $rsnew);
-		$rs->close();
-
-		// Write JSON for API request
-		if (IsApi() && $editRow) {
-			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
-			WriteJson(["success" => TRUE, $this->TableVar => $row]);
-		}
-		return $editRow;
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->submit_no->AdvancedSearch->load();
+		$this->revision_no->AdvancedSearch->load();
+		$this->transmit_no->AdvancedSearch->load();
+		$this->transmit_date->AdvancedSearch->load();
+		$this->direction->AdvancedSearch->load();
+		$this->approval_status->AdvancedSearch->load();
+		$this->document_link->AdvancedSearch->load();
+		$this->document_native->AdvancedSearch->load();
 	}
 
 	// Set up Breadcrumb
@@ -1265,8 +1185,8 @@ class transaction_details_update extends transaction_details
 		$Breadcrumb = new Breadcrumb();
 		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
 		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("transaction_detailslist.php"), "", $this->TableVar, TRUE);
-		$pageId = "update";
-		$Breadcrumb->add("update", $pageId, $url);
+		$pageId = "search";
+		$Breadcrumb->add("search", $pageId, $url);
 	}
 
 	// Setup lookup options

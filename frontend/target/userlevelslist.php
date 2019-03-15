@@ -150,6 +150,17 @@ $userlevels_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevels_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevels_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevels_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
+<?php if ($userlevels_list->TotalRecs > 0 && (!$userlevels_list->AutoHidePageSizeSelector || $userlevels_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="userlevels">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($userlevels_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($userlevels_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($userlevels_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($userlevels->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
+</div>
+<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -333,6 +344,17 @@ if ($userlevels_list->Recordset)
 <?php if ($userlevels_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevels_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevels_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevels_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+<?php if ($userlevels_list->TotalRecs > 0 && (!$userlevels_list->AutoHidePageSizeSelector || $userlevels_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="userlevels">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($userlevels_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($userlevels_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($userlevels_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($userlevels->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
 </div>
 <?php } ?>
 </form>

@@ -11,7 +11,7 @@ class userlevelpermissions_view extends userlevelpermissions
 	public $PageID = "view";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';
@@ -51,6 +51,14 @@ class userlevelpermissions_view extends userlevelpermissions
 	public $GridEditUrl;
 	public $MultiDeleteUrl;
 	public $MultiUpdateUrl;
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -752,8 +760,9 @@ class userlevelpermissions_view extends userlevelpermissions
 		$this->createToken();
 
 		// Set up lookup cache
-		// Check modal
+		$this->setupLookupOptions($this->_tablename);
 
+		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 
@@ -998,6 +1007,8 @@ class userlevelpermissions_view extends userlevelpermissions
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
+		if ($this->AuditTrailOnView)
+			$this->writeAuditTrailOnView($row);
 		$this->userlevelid->setDbValue($row['userlevelid']);
 		$this->_tablename->setDbValue($row['tablename']);
 		$this->permission->setDbValue($row['permission']);
@@ -1042,7 +1053,9 @@ class userlevelpermissions_view extends userlevelpermissions
 			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
-			$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -1299,6 +1312,8 @@ class userlevelpermissions_view extends userlevelpermissions
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x__tablename":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

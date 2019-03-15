@@ -11,7 +11,7 @@ class changepwd extends user_dtls
 	public $PageID = "changepwd";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Page object name
 	public $PageObjName = "changepwd";

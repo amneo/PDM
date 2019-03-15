@@ -56,6 +56,9 @@ fuser_dtlslist.lists["x_account_valid[]"] = <?php echo $user_dtls_list->account_
 fuser_dtlslist.lists["x_account_valid[]"].options = <?php echo JsonEncode($user_dtls_list->account_valid->options(FALSE, TRUE)) ?>;
 fuser_dtlslist.lists["x_UserLevel"] = <?php echo $user_dtls_list->UserLevel->Lookup->toClientList() ?>;
 fuser_dtlslist.lists["x_UserLevel"].options = <?php echo JsonEncode($user_dtls_list->UserLevel->lookupOptions()) ?>;
+fuser_dtlslist.lists["x_reports_to"] = <?php echo $user_dtls_list->reports_to->Lookup->toClientList() ?>;
+fuser_dtlslist.lists["x_reports_to"].options = <?php echo JsonEncode($user_dtls_list->reports_to->lookupOptions()) ?>;
+fuser_dtlslist.autoSuggests["x_reports_to"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Form object for search
 var fuser_dtlslistsrch = currentSearchForm = new ew.Form("fuser_dtlslistsrch");
@@ -154,6 +157,17 @@ $user_dtls_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $user_dtls_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $user_dtls_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $user_dtls_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
+<?php if ($user_dtls_list->TotalRecs > 0 && (!$user_dtls_list->AutoHidePageSizeSelector || $user_dtls_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="user_dtls">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($user_dtls_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($user_dtls_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($user_dtls_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($user_dtls->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
+</div>
+<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -219,15 +233,6 @@ $user_dtls_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($user_dtls->last_login->Visible) { // last_login ?>
-	<?php if ($user_dtls->sortUrl($user_dtls->last_login) == "") { ?>
-		<th data-name="last_login" class="<?php echo $user_dtls->last_login->headerCellClass() ?>"><div id="elh_user_dtls_last_login" class="user_dtls_last_login"><div class="ew-table-header-caption"><?php echo $user_dtls->last_login->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="last_login" class="<?php echo $user_dtls->last_login->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->last_login) ?>',2);"><div id="elh_user_dtls_last_login" class="user_dtls_last_login">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->last_login->caption() ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->last_login->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->last_login->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($user_dtls->email_addreess->Visible) { // email_addreess ?>
 	<?php if ($user_dtls->sortUrl($user_dtls->email_addreess) == "") { ?>
 		<th data-name="email_addreess" class="<?php echo $user_dtls->email_addreess->headerCellClass() ?>"><div id="elh_user_dtls_email_addreess" class="user_dtls_email_addreess"><div class="ew-table-header-caption"><?php echo $user_dtls->email_addreess->caption() ?></div></div></th>
@@ -246,21 +251,21 @@ $user_dtls_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($user_dtls->history->Visible) { // history ?>
-	<?php if ($user_dtls->sortUrl($user_dtls->history) == "") { ?>
-		<th data-name="history" class="<?php echo $user_dtls->history->headerCellClass() ?>"><div id="elh_user_dtls_history" class="user_dtls_history"><div class="ew-table-header-caption"><?php echo $user_dtls->history->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="history" class="<?php echo $user_dtls->history->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->history) ?>',2);"><div id="elh_user_dtls_history" class="user_dtls_history">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->history->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->history->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->history->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
 	<?php if ($user_dtls->sortUrl($user_dtls->reports_to) == "") { ?>
 		<th data-name="reports_to" class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><div id="elh_user_dtls_reports_to" class="user_dtls_reports_to"><div class="ew-table-header-caption"><?php echo $user_dtls->reports_to->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="reports_to" class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->reports_to) ?>',2);"><div id="elh_user_dtls_reports_to" class="user_dtls_reports_to">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->reports_to->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->reports_to->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->reports_to->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($user_dtls->name->Visible) { // name ?>
+	<?php if ($user_dtls->sortUrl($user_dtls->name) == "") { ?>
+		<th data-name="name" class="<?php echo $user_dtls->name->headerCellClass() ?>"><div id="elh_user_dtls_name" class="user_dtls_name"><div class="ew-table-header-caption"><?php echo $user_dtls->name->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="name" class="<?php echo $user_dtls->name->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $user_dtls->SortUrl($user_dtls->name) ?>',2);"><div id="elh_user_dtls_name" class="user_dtls_name">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $user_dtls->name->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($user_dtls->name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($user_dtls->name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -366,14 +371,6 @@ $user_dtls_list->ListOptions->render("body", "left", $user_dtls_list->RowCnt);
 </span>
 </td>
 	<?php } ?>
-	<?php if ($user_dtls->last_login->Visible) { // last_login ?>
-		<td data-name="last_login"<?php echo $user_dtls->last_login->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_last_login" class="user_dtls_last_login">
-<span<?php echo $user_dtls->last_login->viewAttributes() ?>>
-<?php echo $user_dtls->last_login->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($user_dtls->email_addreess->Visible) { // email_addreess ?>
 		<td data-name="email_addreess"<?php echo $user_dtls->email_addreess->cellAttributes() ?>>
 <span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_email_addreess" class="user_dtls_email_addreess">
@@ -390,19 +387,19 @@ $user_dtls_list->ListOptions->render("body", "left", $user_dtls_list->RowCnt);
 </span>
 </td>
 	<?php } ?>
-	<?php if ($user_dtls->history->Visible) { // history ?>
-		<td data-name="history"<?php echo $user_dtls->history->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_history" class="user_dtls_history">
-<span<?php echo $user_dtls->history->viewAttributes() ?>>
-<?php echo $user_dtls->history->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
 		<td data-name="reports_to"<?php echo $user_dtls->reports_to->cellAttributes() ?>>
 <span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_reports_to" class="user_dtls_reports_to">
 <span<?php echo $user_dtls->reports_to->viewAttributes() ?>>
 <?php echo $user_dtls->reports_to->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($user_dtls->name->Visible) { // name ?>
+		<td data-name="name"<?php echo $user_dtls->name->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_list->RowCnt ?>_user_dtls_name" class="user_dtls_name">
+<span<?php echo $user_dtls->name->viewAttributes() ?>>
+<?php echo $user_dtls->name->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
@@ -461,6 +458,17 @@ if ($user_dtls_list->Recordset)
 <?php if ($user_dtls_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $user_dtls_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $user_dtls_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $user_dtls_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+<?php if ($user_dtls_list->TotalRecs > 0 && (!$user_dtls_list->AutoHidePageSizeSelector || $user_dtls_list->Pager->Visible)) { ?>
+<div class="ew-pager">
+<input type="hidden" name="t" value="user_dtls">
+<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($user_dtls_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($user_dtls_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="150"<?php if ($user_dtls_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
+<option value="ALL"<?php if ($user_dtls->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
 </div>
 <?php } ?>
 </form>

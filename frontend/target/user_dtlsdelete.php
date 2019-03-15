@@ -54,6 +54,9 @@ fuser_dtlsdelete.lists["x_account_valid[]"] = <?php echo $user_dtls_delete->acco
 fuser_dtlsdelete.lists["x_account_valid[]"].options = <?php echo JsonEncode($user_dtls_delete->account_valid->options(FALSE, TRUE)) ?>;
 fuser_dtlsdelete.lists["x_UserLevel"] = <?php echo $user_dtls_delete->UserLevel->Lookup->toClientList() ?>;
 fuser_dtlsdelete.lists["x_UserLevel"].options = <?php echo JsonEncode($user_dtls_delete->UserLevel->lookupOptions()) ?>;
+fuser_dtlsdelete.lists["x_reports_to"] = <?php echo $user_dtls_delete->reports_to->Lookup->toClientList() ?>;
+fuser_dtlsdelete.lists["x_reports_to"].options = <?php echo JsonEncode($user_dtls_delete->reports_to->lookupOptions()) ?>;
+fuser_dtlsdelete.autoSuggests["x_reports_to"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Form object for search
 </script>
@@ -92,20 +95,17 @@ $user_dtls_delete->showMessage();
 <?php if ($user_dtls->account_valid->Visible) { // account_valid ?>
 		<th class="<?php echo $user_dtls->account_valid->headerCellClass() ?>"><span id="elh_user_dtls_account_valid" class="user_dtls_account_valid"><?php echo $user_dtls->account_valid->caption() ?></span></th>
 <?php } ?>
-<?php if ($user_dtls->last_login->Visible) { // last_login ?>
-		<th class="<?php echo $user_dtls->last_login->headerCellClass() ?>"><span id="elh_user_dtls_last_login" class="user_dtls_last_login"><?php echo $user_dtls->last_login->caption() ?></span></th>
-<?php } ?>
 <?php if ($user_dtls->email_addreess->Visible) { // email_addreess ?>
 		<th class="<?php echo $user_dtls->email_addreess->headerCellClass() ?>"><span id="elh_user_dtls_email_addreess" class="user_dtls_email_addreess"><?php echo $user_dtls->email_addreess->caption() ?></span></th>
 <?php } ?>
 <?php if ($user_dtls->UserLevel->Visible) { // UserLevel ?>
 		<th class="<?php echo $user_dtls->UserLevel->headerCellClass() ?>"><span id="elh_user_dtls_UserLevel" class="user_dtls_UserLevel"><?php echo $user_dtls->UserLevel->caption() ?></span></th>
 <?php } ?>
-<?php if ($user_dtls->history->Visible) { // history ?>
-		<th class="<?php echo $user_dtls->history->headerCellClass() ?>"><span id="elh_user_dtls_history" class="user_dtls_history"><?php echo $user_dtls->history->caption() ?></span></th>
-<?php } ?>
 <?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
 		<th class="<?php echo $user_dtls->reports_to->headerCellClass() ?>"><span id="elh_user_dtls_reports_to" class="user_dtls_reports_to"><?php echo $user_dtls->reports_to->caption() ?></span></th>
+<?php } ?>
+<?php if ($user_dtls->name->Visible) { // name ?>
+		<th class="<?php echo $user_dtls->name->headerCellClass() ?>"><span id="elh_user_dtls_name" class="user_dtls_name"><?php echo $user_dtls->name->caption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -165,14 +165,6 @@ while (!$user_dtls_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($user_dtls->last_login->Visible) { // last_login ?>
-		<td<?php echo $user_dtls->last_login->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_last_login" class="user_dtls_last_login">
-<span<?php echo $user_dtls->last_login->viewAttributes() ?>>
-<?php echo $user_dtls->last_login->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($user_dtls->email_addreess->Visible) { // email_addreess ?>
 		<td<?php echo $user_dtls->email_addreess->cellAttributes() ?>>
 <span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_email_addreess" class="user_dtls_email_addreess">
@@ -189,19 +181,19 @@ while (!$user_dtls_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($user_dtls->history->Visible) { // history ?>
-		<td<?php echo $user_dtls->history->cellAttributes() ?>>
-<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_history" class="user_dtls_history">
-<span<?php echo $user_dtls->history->viewAttributes() ?>>
-<?php echo $user_dtls->history->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($user_dtls->reports_to->Visible) { // reports_to ?>
 		<td<?php echo $user_dtls->reports_to->cellAttributes() ?>>
 <span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_reports_to" class="user_dtls_reports_to">
 <span<?php echo $user_dtls->reports_to->viewAttributes() ?>>
 <?php echo $user_dtls->reports_to->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($user_dtls->name->Visible) { // name ?>
+		<td<?php echo $user_dtls->name->cellAttributes() ?>>
+<span id="el<?php echo $user_dtls_delete->RowCnt ?>_user_dtls_name" class="user_dtls_name">
+<span<?php echo $user_dtls->name->viewAttributes() ?>>
+<?php echo $user_dtls->name->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

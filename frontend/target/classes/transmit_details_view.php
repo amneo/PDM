@@ -11,7 +11,7 @@ class transmit_details_view extends transmit_details
 	public $PageID = "view";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'transmit_details';

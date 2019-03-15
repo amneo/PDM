@@ -11,7 +11,7 @@ class project_details_add extends project_details
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'project_details';
@@ -1172,10 +1172,16 @@ class project_details_add extends project_details
 				AddMessage($FormError, str_replace("%s", $this->project_sales_engg->caption(), $this->project_sales_engg->RequiredErrorMessage));
 			}
 		}
+		if (!CheckEmail($this->project_sales_engg->FormValue)) {
+			AddMessage($FormError, $this->project_sales_engg->errorMessage());
+		}
 		if ($this->project_distribution->Required) {
 			if (!$this->project_distribution->IsDetailKey && $this->project_distribution->FormValue != NULL && $this->project_distribution->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->project_distribution->caption(), $this->project_distribution->RequiredErrorMessage));
 			}
+		}
+		if (!CheckEmail($this->project_distribution->FormValue)) {
+			AddMessage($FormError, $this->project_distribution->errorMessage());
 		}
 		if ($this->project_transmittal->Required) {
 			if (!$this->project_transmittal->IsDetailKey && $this->project_transmittal->FormValue != NULL && $this->project_transmittal->FormValue == "") {

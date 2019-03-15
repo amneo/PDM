@@ -11,13 +11,21 @@ class userlevelpermissions_delete extends userlevelpermissions
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';
 
 	// Page object name
 	public $PageObjName = "userlevelpermissions_delete";
+
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
 
 	// Page headings
 	public $Heading = "";
@@ -615,8 +623,9 @@ class userlevelpermissions_delete extends userlevelpermissions
 		$this->createToken();
 
 		// Set up lookup cache
-		// Set up Breadcrumb
+		$this->setupLookupOptions($this->_tablename);
 
+		// Set up Breadcrumb
 		$this->setupBreadcrumb();
 
 		// Load key parameters
@@ -770,7 +779,9 @@ class userlevelpermissions_delete extends userlevelpermissions
 			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
-			$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
+			$arwrk = array();
+			$arwrk[1] = $this->_tablename->CurrentValue;
+			$this->_tablename->ViewValue = $this->_tablename->displayValue($arwrk);
 			$this->_tablename->ViewCustomAttributes = "";
 
 			// permission
@@ -822,6 +833,8 @@ class userlevelpermissions_delete extends userlevelpermissions
 		}
 		$rows = ($rs) ? $rs->getRows() : [];
 		$conn->beginTrans();
+		if ($this->AuditTrailOnDelete)
+			$this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
 
 		// Clone old rows
 		$rsold = $rows;
@@ -873,8 +886,12 @@ class userlevelpermissions_delete extends userlevelpermissions
 		}
 		if ($deleteRows) {
 			$conn->commitTrans(); // Commit the changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->rollbackTrans(); // Rollback changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
 		}
 
 		// Call Row Deleted event
@@ -934,6 +951,8 @@ class userlevelpermissions_delete extends userlevelpermissions
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x__tablename":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

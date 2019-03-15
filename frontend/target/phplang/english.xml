@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/3/11" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/3/15" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -698,12 +698,12 @@
   </global>
   <project>
     <phrase id="bodytitle" value="Project Document Management-FireLink" />
-    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team" />
+    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal" />
     <menu id="18">
       <phrase id="menutext" value="Workplace" />
     </menu>
     <menu id="1">
-      <phrase id="menutext" value="Transactions" />
+      <phrase id="menutext" value="Document Log" />
     </menu>
     <menu id="7">
       <phrase id="menutext" value="Transmittals" />
@@ -727,7 +727,7 @@
       <phrase id="menutext" value="User Level Permission" />
     </menu>
     <menu id="21">
-      <phrase id="menutext" value="User Level" />
+      <phrase id="menutext" value="User Levels" />
     </menu>
     <menu id="3">
       <phrase id="menutext" value="Inbox" />
@@ -742,7 +742,7 @@
       <phrase id="menutext" value="Approval Details" />
     </menu>
     <table id="transaction_details">
-      <phrase id="tblcaption" value="Transactions" />
+      <phrase id="tblcaption" value="Document Log" />
       <phrase id="tblpagecaption1" value="Add" />
       <field id="document_sequence">
         <phrase id="fldcaption" value="Sequence Number" />
@@ -781,6 +781,9 @@
       <field id="document_native">
         <phrase id="fldcaption" value="Dcument Native File Location" />
       </field>
+      <field id="username">
+        <phrase id="fldcaption" value="username" />
+      </field>
     </table>
     <table id="distribution_details">
       <phrase id="tblcaption" value="Distribution" />
@@ -788,7 +791,7 @@
         <phrase id="fldcaption" value="distribution id" />
       </field>
       <field id="to_name">
-        <phrase id="fldcaption" value="Names" />
+        <phrase id="fldcaption" value="List Name" />
       </field>
       <field id="email_address">
         <phrase id="fldcaption" value="Email Addresses" />
@@ -879,10 +882,12 @@
         <phrase id="fldcaption" value="End User" />
       </field>
       <field id="project_sales_engg">
-        <phrase id="fldcaption" value="Sale Engineer" />
+        <phrase id="fldcaption" value="Sale Engineer Email" />
+        <phrase id="flderrmsg" value="Provide Sales Engineer Email address" />
       </field>
       <field id="project_distribution">
-        <phrase id="fldcaption" value="Distribution" />
+        <phrase id="fldcaption" value="Client Email Address" />
+        <phrase id="flderrmsg" value="Provide Email address of Client who needs to be send the notification" />
       </field>
       <field id="project_transmittal">
         <phrase id="fldcaption" value="Transmittal Addressed to" />
@@ -1013,7 +1018,10 @@
         <phrase id="fldcaption" value="history" />
       </field>
       <field id="reports_to">
-        <phrase id="fldcaption" value="reports to" />
+        <phrase id="fldcaption" value="Reports To" />
+      </field>
+      <field id="name">
+        <phrase id="fldcaption" value="Name" />
       </field>
     </table>
     <table id="approval_details">
@@ -1029,7 +1037,7 @@
       </field>
     </table>
     <table id="userlevels">
-      <phrase id="tblcaption" value="userlevels" />
+      <phrase id="tblcaption" value="User Levels" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="User Level ID" />
       </field>
@@ -1038,7 +1046,7 @@
       </field>
     </table>
     <table id="userlevelpermissions">
-      <phrase id="tblcaption" value="userlevelpermissions" />
+      <phrase id="tblcaption" value="User Level Permission" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="User Level ID" />
       </field>

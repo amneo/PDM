@@ -11,7 +11,7 @@ class user_dtls_delete extends user_dtls
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "{37CEA32F-BBE5-43A7-9AC0-4A3946EEAB80}";
+	public $ProjectID = "vishal-pdm";
 
 	// Table name
 	public $TableName = 'user_dtls';
@@ -606,11 +606,12 @@ class user_dtls_delete extends user_dtls
 		$this->password->Visible = FALSE;
 		$this->create_login->setVisibility();
 		$this->account_valid->setVisibility();
-		$this->last_login->setVisibility();
+		$this->last_login->Visible = FALSE;
 		$this->email_addreess->setVisibility();
 		$this->UserLevel->setVisibility();
-		$this->history->setVisibility();
+		$this->history->Visible = FALSE;
 		$this->reports_to->setVisibility();
+		$this->name->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -633,6 +634,7 @@ class user_dtls_delete extends user_dtls
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->UserLevel);
+		$this->setupLookupOptions($this->reports_to);
 
 		// Set up Breadcrumb
 		$this->setupBreadcrumb();
@@ -723,7 +725,7 @@ class user_dtls_delete extends user_dtls
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())]);
+				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())]);
 			} else {
 				$rs = $conn->selectLimit($sql, $rowcnt, $offset);
 			}
@@ -782,6 +784,12 @@ class user_dtls_delete extends user_dtls
 		$this->UserLevel->setDbValue($row['UserLevel']);
 		$this->history->setDbValue($row['history']);
 		$this->reports_to->setDbValue($row['reports_to']);
+		if (array_key_exists('EV__reports_to', $rs->fields)) {
+			$this->reports_to->VirtualValue = $rs->fields('EV__reports_to'); // Set up virtual field value
+		} else {
+			$this->reports_to->VirtualValue = ""; // Clear value
+		}
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
@@ -798,6 +806,7 @@ class user_dtls_delete extends user_dtls
 		$row['UserLevel'] = NULL;
 		$row['history'] = NULL;
 		$row['reports_to'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -822,6 +831,7 @@ class user_dtls_delete extends user_dtls
 		// UserLevel
 		// history
 		// reports_to
+		// name
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -881,13 +891,37 @@ class user_dtls_delete extends user_dtls
 			}
 			$this->UserLevel->ViewCustomAttributes = "";
 
-			// history
-			$this->history->ViewValue = $this->history->CurrentValue;
-			$this->history->ViewCustomAttributes = "";
-
 			// reports_to
-			$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			if ($this->reports_to->VirtualValue <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+			} else {
+				$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+			$curVal = strval($this->reports_to->CurrentValue);
+			if ($curVal <> "") {
+				$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
+				if ($this->reports_to->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+					}
+				}
+			} else {
+				$this->reports_to->ViewValue = NULL;
+			}
+			}
 			$this->reports_to->ViewCustomAttributes = "";
+
+			// name
+			$this->name->ViewValue = $this->name->CurrentValue;
+			$this->name->ViewCustomAttributes = "";
 
 			// user_id
 			$this->user_id->LinkCustomAttributes = "";
@@ -909,11 +943,6 @@ class user_dtls_delete extends user_dtls
 			$this->account_valid->HrefValue = "";
 			$this->account_valid->TooltipValue = "";
 
-			// last_login
-			$this->last_login->LinkCustomAttributes = "";
-			$this->last_login->HrefValue = "";
-			$this->last_login->TooltipValue = "";
-
 			// email_addreess
 			$this->email_addreess->LinkCustomAttributes = "";
 			$this->email_addreess->HrefValue = "";
@@ -924,15 +953,15 @@ class user_dtls_delete extends user_dtls
 			$this->UserLevel->HrefValue = "";
 			$this->UserLevel->TooltipValue = "";
 
-			// history
-			$this->history->LinkCustomAttributes = "";
-			$this->history->HrefValue = "";
-			$this->history->TooltipValue = "";
-
 			// reports_to
 			$this->reports_to->LinkCustomAttributes = "";
 			$this->reports_to->HrefValue = "";
 			$this->reports_to->TooltipValue = "";
+
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1088,6 +1117,8 @@ class user_dtls_delete extends user_dtls
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_UserLevel":
+							break;
+						case "x_reports_to":
 							break;
 					}
 					$ar[strval($row[0])] = $row;
