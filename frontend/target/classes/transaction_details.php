@@ -148,6 +148,7 @@ class transaction_details extends DbTable
 		$this->document_link->Nullable = FALSE; // NOT NULL field
 		$this->document_link->Required = TRUE; // Required field
 		$this->document_link->Sortable = TRUE; // Allow sort
+		$this->document_link->UploadAllowedFileExt = "pdf";
 		$this->fields['document_link'] = &$this->document_link;
 
 		// transaction_date
@@ -872,10 +873,10 @@ class transaction_details extends DbTable
 
 		// Common render codes
 		// document_sequence
+
+		$this->document_sequence->CellCssStyle = "white-space: nowrap;";
+
 		// firelink_doc_no
-
-		$this->firelink_doc_no->CellCssStyle = "white-space: nowrap;";
-
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -1111,26 +1112,47 @@ class transaction_details extends DbTable
 		// firelink_doc_no
 		$this->firelink_doc_no->EditAttrs["class"] = "form-control";
 		$this->firelink_doc_no->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->firelink_doc_no->CurrentValue = HtmlDecode($this->firelink_doc_no->CurrentValue);
-		$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
-		$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+		if ($this->firelink_doc_no->VirtualValue <> "") {
+			$this->firelink_doc_no->EditValue = $this->firelink_doc_no->VirtualValue;
+		} else {
+			$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
+		$curVal = strval($this->firelink_doc_no->CurrentValue);
+		if ($curVal <> "") {
+			$this->firelink_doc_no->EditValue = $this->firelink_doc_no->lookupCacheOption($curVal);
+			if ($this->firelink_doc_no->EditValue === NULL) { // Lookup from database
+				$filterWrk = "\"firelink_doc_no\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->firelink_doc_no->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[3] = $rswrk->fields('df3');
+					$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
+				}
+			}
+		} else {
+			$this->firelink_doc_no->EditValue = NULL;
+		}
+		}
+		$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
+		$this->firelink_doc_no->ViewCustomAttributes = "";
 
 		// submit_no
 		$this->submit_no->EditAttrs["class"] = "form-control";
 		$this->submit_no->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->submit_no->CurrentValue = HtmlDecode($this->submit_no->CurrentValue);
 		$this->submit_no->EditValue = $this->submit_no->CurrentValue;
-		$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
+		$this->submit_no->CellCssStyle .= "text-align: left;";
+		$this->submit_no->ViewCustomAttributes = "";
 
 		// revision_no
 		$this->revision_no->EditAttrs["class"] = "form-control";
 		$this->revision_no->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->revision_no->CurrentValue = HtmlDecode($this->revision_no->CurrentValue);
 		$this->revision_no->EditValue = $this->revision_no->CurrentValue;
-		$this->revision_no->PlaceHolder = RemoveHtml($this->revision_no->caption());
+		$this->revision_no->ViewCustomAttributes = "";
 
 		// transmit_no
 		$this->transmit_no->EditAttrs["class"] = "form-control";
@@ -1165,8 +1187,9 @@ class transaction_details extends DbTable
 		// transmit_date
 		$this->transmit_date->EditAttrs["class"] = "form-control";
 		$this->transmit_date->EditCustomAttributes = "";
-		$this->transmit_date->EditValue = FormatDateTime($this->transmit_date->CurrentValue, 8);
-		$this->transmit_date->PlaceHolder = RemoveHtml($this->transmit_date->caption());
+		$this->transmit_date->EditValue = $this->transmit_date->CurrentValue;
+		$this->transmit_date->EditValue = FormatDateTime($this->transmit_date->EditValue, 0);
+		$this->transmit_date->ViewCustomAttributes = "";
 
 		// direction
 		$this->direction->EditCustomAttributes = "";
@@ -1247,7 +1270,6 @@ class transaction_details extends DbTable
 					$doc->exportCaption($this->transmit_date);
 					$doc->exportCaption($this->direction);
 					$doc->exportCaption($this->approval_status);
-					$doc->exportCaption($this->document_link);
 					$doc->exportCaption($this->transaction_date);
 				}
 				$doc->endExportRow();
@@ -1298,7 +1320,6 @@ class transaction_details extends DbTable
 						$doc->exportField($this->transmit_date);
 						$doc->exportField($this->direction);
 						$doc->exportField($this->approval_status);
-						$doc->exportField($this->document_link);
 						$doc->exportField($this->transaction_date);
 					}
 					$doc->endExportRow($rowCnt);
@@ -1717,7 +1738,16 @@ class transaction_details extends DbTable
 		// Enter your code here
 		// To cancel, set return value to FALSE
 		//Code to change the file name to our requirement and save the same way at server and database.
+		// Code to determine submit numberis less than 2 digits if so pad them with number this is to ensure that the file names are consistant
 
+		if($rsnew["submit_no"] < 10)
+		{
+		$rsnew["submit_no"] = str_pad($rsnew["submit_no"],2,"0",STR_PAD_LEFT);
+		}
+		if($rsnew["revision_no"] < 10)
+		{
+		$rsnew["revision_no"] = str_pad($rsnew["revision_no"],2,"0",STR_PAD_LEFT);
+		}
 		if($rsnew["direction"] ==  "OUT"){
 
 		//$fExtension = new SplFileInfo($rsnew["document_link"]);

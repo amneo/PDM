@@ -1018,10 +1018,6 @@ class document_details_add extends document_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// document_sequence
-			$this->document_sequence->ViewValue = $this->document_sequence->CurrentValue;
-			$this->document_sequence->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
@@ -1082,6 +1078,7 @@ class document_details_add extends document_details
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
+			$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
 			$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
 			$this->expiry_date->ViewCustomAttributes = "";
 
@@ -1213,7 +1210,10 @@ class document_details_add extends document_details
 			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
 			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime($this->expiry_date->CurrentValue, 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
 
 			// Add refer script
 			// firelink_doc_no
@@ -1324,6 +1324,9 @@ class document_details_add extends document_details
 			if (!$this->expiry_date->IsDetailKey && $this->expiry_date->FormValue != NULL && $this->expiry_date->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->expiry_date->caption(), $this->expiry_date->RequiredErrorMessage));
 			}
+		}
+		if (!CheckDate($this->expiry_date->FormValue)) {
+			AddMessage($FormError, $this->expiry_date->errorMessage());
 		}
 
 		// Return validate result

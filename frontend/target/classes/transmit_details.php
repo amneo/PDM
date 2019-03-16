@@ -281,7 +281,7 @@ class transmit_details extends DbTable
 	}
 	public function getSqlOrderBy() // Order By
 	{
-		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "";
+		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "\"transmit_id\" DESC";
 	}
 	public function sqlOrderBy() // For backward compatibility
 	{

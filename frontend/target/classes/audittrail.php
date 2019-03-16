@@ -241,7 +241,7 @@ class audittrail extends DbTable
 	}
 	public function getSqlOrderBy() // Order By
 	{
-		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "";
+		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "\"id\" DESC";
 	}
 	public function sqlOrderBy() // For backward compatibility
 	{

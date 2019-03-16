@@ -853,6 +853,15 @@ class project_details_view extends project_details
 			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 
+		// Edit
+		$item = &$option->add("edit");
+		$editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
+		if ($this->IsModal) // Modal
+			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->EditUrl) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
+		$item->Visible = ($this->EditUrl <> "" && $Security->canEdit());
+
 		// Copy
 		$item = &$option->add("copy");
 		$copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));

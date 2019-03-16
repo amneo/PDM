@@ -418,14 +418,22 @@ class index
 			$this->terminate("transaction_detailslist.php"); // Exit and go to default page
 		if ($Security->allowList(CurrentProjectID() . 'distribution_details'))
 			$this->terminate("distribution_detailslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'inbox'))
+			$this->terminate("inboxlist.php");
 		if ($Security->allowList(CurrentProjectID() . 'document_details'))
 			$this->terminate("document_detailslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'project_details'))
 			$this->terminate("project_detailslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'app_version'))
+			$this->terminate("app_versionlist.php");
+		if ($Security->allowList(CurrentProjectID() . 'audittrail'))
+			$this->terminate("audittraillist.php");
 		if ($Security->allowList(CurrentProjectID() . 'transmit_details'))
 			$this->terminate("transmit_detailslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'user_dtls'))
 			$this->terminate("user_dtlslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'approval_details'))
+			$this->terminate("approval_detailslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'userlevels'))
 			$this->terminate("userlevelslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'userlevelpermissions'))

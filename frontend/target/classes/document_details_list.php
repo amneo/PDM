@@ -904,13 +904,19 @@ class document_details_list extends document_details
 
 			// Get default search criteria
 			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
+			AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(TRUE));
 
 			// Get basic search values
 			$this->loadBasicSearchValues();
 
+			// Get and validate search values for advanced search
+			$this->loadSearchValues(); // Get search values
+
 			// Process filter list
 			if ($this->processFilterList())
 				$this->terminate();
+			if (!$this->validateSearch())
+				$this->setFailureMessage($SearchError);
 
 			// Restore search parms from Session if not searching / reset / export
 			if (($this->isExport() || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->checkSearchParms())
@@ -925,6 +931,10 @@ class document_details_list extends document_details
 			// Get basic search criteria
 			if ($SearchError == "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Get search criteria for advanced search
+			if ($SearchError == "")
+				$srchAdvanced = $this->advancedSearchWhere();
 		}
 
 		// Restore display records
@@ -945,6 +955,11 @@ class document_details_list extends document_details
 			$this->BasicSearch->loadDefault();
 			if ($this->BasicSearch->Keyword != "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Load advanced search from default
+			if ($this->loadAdvancedSearchDefault()) {
+				$srchAdvanced = $this->advancedSearchWhere();
+			}
 		}
 
 		// Build search criteria
@@ -1319,7 +1334,6 @@ class document_details_list extends document_details
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fdocument_detailslistsrch");
-		$filterList = Concat($filterList, $this->document_sequence->AdvancedSearch->toJson(), ","); // Field document_sequence
 		$filterList = Concat($filterList, $this->firelink_doc_no->AdvancedSearch->toJson(), ","); // Field firelink_doc_no
 		$filterList = Concat($filterList, $this->client_doc_no->AdvancedSearch->toJson(), ","); // Field client_doc_no
 		$filterList = Concat($filterList, $this->document_tittle->AdvancedSearch->toJson(), ","); // Field document_tittle
@@ -1366,14 +1380,6 @@ class document_details_list extends document_details
 			return FALSE;
 		$filter = json_decode(Post("filter"), TRUE);
 		$this->Command = "search";
-
-		// Field document_sequence
-		$this->document_sequence->AdvancedSearch->SearchValue = @$filter["x_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchOperator = @$filter["z_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchCondition = @$filter["v_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchValue2 = @$filter["y_document_sequence"];
-		$this->document_sequence->AdvancedSearch->SearchOperator2 = @$filter["w_document_sequence"];
-		$this->document_sequence->AdvancedSearch->save();
 
 		// Field firelink_doc_no
 		$this->firelink_doc_no->AdvancedSearch->SearchValue = @$filter["x_firelink_doc_no"];
@@ -1448,6 +1454,93 @@ class document_details_list extends document_details
 		$this->expiry_date->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
+	}
+
+	// Advanced search WHERE clause based on QueryString
+	protected function advancedSearchWhere($default = FALSE)
+	{
+		global $Security;
+		$where = "";
+		if (!$Security->canSearch())
+			return "";
+		$this->buildSearchSql($where, $this->firelink_doc_no, $default, FALSE); // firelink_doc_no
+		$this->buildSearchSql($where, $this->client_doc_no, $default, FALSE); // client_doc_no
+		$this->buildSearchSql($where, $this->document_tittle, $default, FALSE); // document_tittle
+		$this->buildSearchSql($where, $this->project_name, $default, FALSE); // project_name
+		$this->buildSearchSql($where, $this->project_system, $default, FALSE); // project_system
+		$this->buildSearchSql($where, $this->create_date, $default, FALSE); // create_date
+		$this->buildSearchSql($where, $this->planned_date, $default, FALSE); // planned_date
+		$this->buildSearchSql($where, $this->document_type, $default, FALSE); // document_type
+		$this->buildSearchSql($where, $this->expiry_date, $default, FALSE); // expiry_date
+
+		// Set up search parm
+		if (!$default && $where <> "" && in_array($this->Command, array("", "reset", "resetall"))) {
+			$this->Command = "search";
+		}
+		if (!$default && $this->Command == "search") {
+			$this->firelink_doc_no->AdvancedSearch->save(); // firelink_doc_no
+			$this->client_doc_no->AdvancedSearch->save(); // client_doc_no
+			$this->document_tittle->AdvancedSearch->save(); // document_tittle
+			$this->project_name->AdvancedSearch->save(); // project_name
+			$this->project_system->AdvancedSearch->save(); // project_system
+			$this->create_date->AdvancedSearch->save(); // create_date
+			$this->planned_date->AdvancedSearch->save(); // planned_date
+			$this->document_type->AdvancedSearch->save(); // document_type
+			$this->expiry_date->AdvancedSearch->save(); // expiry_date
+		}
+		return $where;
+	}
+
+	// Build search SQL
+	protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+	{
+		$fldParm = $fld->Param;
+		$fldVal = ($default) ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+		$fldOpr = ($default) ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+		$fldCond = ($default) ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+		$fldVal2 = ($default) ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+		$fldOpr2 = ($default) ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+		$wrk = "";
+		if (is_array($fldVal))
+			$fldVal = implode(",", $fldVal);
+		if (is_array($fldVal2))
+			$fldVal2 = implode(",", $fldVal2);
+		$fldOpr = strtoupper(trim($fldOpr));
+		if ($fldOpr == "")
+			$fldOpr = "=";
+		$fldOpr2 = strtoupper(trim($fldOpr2));
+		if ($fldOpr2 == "")
+			$fldOpr2 = "=";
+		if (SEARCH_MULTI_VALUE_OPTION == 1)
+			$multiValue = FALSE;
+		if ($multiValue) {
+			$wrk1 = ($fldVal <> "") ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+			$wrk2 = ($fldVal2 <> "") ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+			$wrk = $wrk1; // Build final SQL
+			if ($wrk2 <> "")
+				$wrk = ($wrk <> "") ? "($wrk) $fldCond ($wrk2)" : $wrk2;
+		} else {
+			$fldVal = $this->convertSearchValue($fld, $fldVal);
+			$fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+			$wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+		}
+		AddFilter($where, $wrk);
+	}
+
+	// Convert search value
+	protected function convertSearchValue(&$fld, $fldVal)
+	{
+		if ($fldVal == NULL_VALUE || $fldVal == NOT_NULL_VALUE)
+			return $fldVal;
+		$value = $fldVal;
+		if ($fld->DataType == DATATYPE_BOOLEAN) {
+			if ($fldVal <> "")
+				$value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+		} elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+			if ($fldVal <> "")
+				$value = UnFormatDateTime($fldVal, $fld->DateTimeFormat);
+		}
+		return $value;
 	}
 
 	// Return basic search SQL
@@ -1575,6 +1668,24 @@ class document_details_list extends document_details
 		// Check basic search
 		if ($this->BasicSearch->issetSession())
 			return TRUE;
+		if ($this->firelink_doc_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->client_doc_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_tittle->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->project_name->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->project_system->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->create_date->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->planned_date->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_type->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->expiry_date->AdvancedSearch->issetSession())
+			return TRUE;
 		return FALSE;
 	}
 
@@ -1588,6 +1699,9 @@ class document_details_list extends document_details
 
 		// Clear basic search parameters
 		$this->resetBasicSearchParms();
+
+		// Clear advanced search parameters
+		$this->resetAdvancedSearchParms();
 	}
 
 	// Load advanced search default values
@@ -1602,6 +1716,20 @@ class document_details_list extends document_details
 		$this->BasicSearch->unsetSession();
 	}
 
+	// Clear all advanced search parameters
+	protected function resetAdvancedSearchParms()
+	{
+		$this->firelink_doc_no->AdvancedSearch->unsetSession();
+		$this->client_doc_no->AdvancedSearch->unsetSession();
+		$this->document_tittle->AdvancedSearch->unsetSession();
+		$this->project_name->AdvancedSearch->unsetSession();
+		$this->project_system->AdvancedSearch->unsetSession();
+		$this->create_date->AdvancedSearch->unsetSession();
+		$this->planned_date->AdvancedSearch->unsetSession();
+		$this->document_type->AdvancedSearch->unsetSession();
+		$this->expiry_date->AdvancedSearch->unsetSession();
+	}
+
 	// Restore all search parameters
 	protected function restoreSearchParms()
 	{
@@ -1609,6 +1737,17 @@ class document_details_list extends document_details
 
 		// Restore basic search values
 		$this->BasicSearch->load();
+
+		// Restore advanced search values
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->client_doc_no->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->project_system->AdvancedSearch->load();
+		$this->create_date->AdvancedSearch->load();
+		$this->planned_date->AdvancedSearch->load();
+		$this->document_type->AdvancedSearch->load();
+		$this->expiry_date->AdvancedSearch->load();
 	}
 
 	// Set up sort parameters
@@ -1831,7 +1970,10 @@ class document_details_list extends document_details
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
-			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			if (IsMobile())
+				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			else
+				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"document_details\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->CopyUrl) . "'});\">" . $Language->phrase("CopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1891,7 +2033,10 @@ class document_details_list extends document_details
 		// Add
 		$item = &$option->add("add");
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
-		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
+		if (IsMobile())
+			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"document_details\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 		$item = &$option->add("gridadd");
 		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
@@ -2085,6 +2230,14 @@ class document_details_list extends document_details
 		$item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $this->pageUrl() . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
 		$item->Visible = ($this->SearchWhere <> $this->DefaultSearchWhere && $this->SearchWhere <> "0=101");
 
+		// Advanced search button
+		$item = &$this->SearchOptions->add("advancedsearch");
+		if (IsMobile())
+			$item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"document_detailssrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+		else
+			$item->Body = "<button type=\"button\" class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-table=\"document_details\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" onclick=\"ew.modalDialogShow({lnk:this,btn:'SearchBtn',url:'document_detailssrch.php'});\">" . $Language->phrase("AdvancedSearchBtn") . "</button>";
+		$item->Visible = TRUE;
+
 		// Button group for search
 		$this->SearchOptions->UseDropDownButton = FALSE;
 		$this->SearchOptions->UseButtonGroup = TRUE;
@@ -2182,6 +2335,77 @@ class document_details_list extends document_details
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load search values for validation
+	protected function loadSearchValues()
+	{
+		global $CurrentForm;
+
+		// Load search values
+		// firelink_doc_no
+
+		if (!$this->isAddOrEdit())
+			$this->firelink_doc_no->AdvancedSearch->setSearchValue(Get("x_firelink_doc_no", Get("firelink_doc_no", "")));
+		if ($this->firelink_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator(Get("z_firelink_doc_no", ""));
+
+		// client_doc_no
+		if (!$this->isAddOrEdit())
+			$this->client_doc_no->AdvancedSearch->setSearchValue(Get("x_client_doc_no", Get("client_doc_no", "")));
+		if ($this->client_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->client_doc_no->AdvancedSearch->setSearchOperator(Get("z_client_doc_no", ""));
+
+		// document_tittle
+		if (!$this->isAddOrEdit())
+			$this->document_tittle->AdvancedSearch->setSearchValue(Get("x_document_tittle", Get("document_tittle", "")));
+		if ($this->document_tittle->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_tittle->AdvancedSearch->setSearchOperator(Get("z_document_tittle", ""));
+
+		// project_name
+		if (!$this->isAddOrEdit())
+			$this->project_name->AdvancedSearch->setSearchValue(Get("x_project_name", Get("project_name", "")));
+		if ($this->project_name->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->project_name->AdvancedSearch->setSearchOperator(Get("z_project_name", ""));
+
+		// project_system
+		if (!$this->isAddOrEdit())
+			$this->project_system->AdvancedSearch->setSearchValue(Get("x_project_system", Get("project_system", "")));
+		if ($this->project_system->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->project_system->AdvancedSearch->setSearchOperator(Get("z_project_system", ""));
+
+		// create_date
+		if (!$this->isAddOrEdit())
+			$this->create_date->AdvancedSearch->setSearchValue(Get("x_create_date", Get("create_date", "")));
+		if ($this->create_date->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->create_date->AdvancedSearch->setSearchOperator(Get("z_create_date", ""));
+
+		// planned_date
+		if (!$this->isAddOrEdit())
+			$this->planned_date->AdvancedSearch->setSearchValue(Get("x_planned_date", Get("planned_date", "")));
+		if ($this->planned_date->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->planned_date->AdvancedSearch->setSearchOperator(Get("z_planned_date", ""));
+
+		// document_type
+		if (!$this->isAddOrEdit())
+			$this->document_type->AdvancedSearch->setSearchValue(Get("x_document_type", Get("document_type", "")));
+		if ($this->document_type->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_type->AdvancedSearch->setSearchOperator(Get("z_document_type", ""));
+
+		// expiry_date
+		if (!$this->isAddOrEdit())
+			$this->expiry_date->AdvancedSearch->setSearchValue(Get("x_expiry_date", Get("expiry_date", "")));
+		if ($this->expiry_date->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->expiry_date->AdvancedSearch->setSearchOperator(Get("z_expiry_date", ""));
 	}
 
 	// Load form values
@@ -2450,10 +2674,6 @@ class document_details_list extends document_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// document_sequence
-			$this->document_sequence->ViewValue = $this->document_sequence->CurrentValue;
-			$this->document_sequence->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
@@ -2514,6 +2734,7 @@ class document_details_list extends document_details
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
+			$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
 			$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
 			$this->expiry_date->ViewCustomAttributes = "";
 
@@ -2634,7 +2855,10 @@ class document_details_list extends document_details
 			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
 			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime($this->expiry_date->CurrentValue, 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
 
 			// Add refer script
 			// firelink_doc_no
@@ -2676,6 +2900,30 @@ class document_details_list extends document_details
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate search
+	protected function validateSearch()
+	{
+		global $SearchError;
+
+		// Initialize
+		$SearchError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return TRUE;
+
+		// Return validate result
+		$validateSearch = ($SearchError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateSearch = $validateSearch && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($SearchError, $formCustomError);
+		}
+		return $validateSearch;
 	}
 
 	// Validate form
@@ -2741,6 +2989,9 @@ class document_details_list extends document_details
 			if (!$this->expiry_date->IsDetailKey && $this->expiry_date->FormValue != NULL && $this->expiry_date->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->expiry_date->caption(), $this->expiry_date->RequiredErrorMessage));
 			}
+		}
+		if (!CheckDate($this->expiry_date->FormValue)) {
+			AddMessage($FormError, $this->expiry_date->errorMessage());
 		}
 
 		// Return validate result
@@ -2933,6 +3184,20 @@ class document_details_list extends document_details
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $addRow;
+	}
+
+	// Load advanced search
+	public function loadAdvancedSearch()
+	{
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->client_doc_no->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->project_system->AdvancedSearch->load();
+		$this->create_date->AdvancedSearch->load();
+		$this->planned_date->AdvancedSearch->load();
+		$this->document_type->AdvancedSearch->load();
+		$this->expiry_date->AdvancedSearch->load();
 	}
 
 	// Get export HTML tag

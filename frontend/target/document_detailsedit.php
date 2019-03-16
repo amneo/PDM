@@ -97,6 +97,9 @@ fdocument_detailsedit.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->expiry_date->caption(), $document_details->expiry_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
+			elm = this.getElements("x" + infix + "_expiry_date");
+			if (elm && !ew.checkDateDef(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($document_details->expiry_date->errorMessage()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -341,22 +344,12 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 		<label id="elh_document_details_expiry_date" for="x_expiry_date" class="<?php echo $document_details_edit->LeftColumnClass ?>"><?php echo $document_details->expiry_date->caption() ?><?php echo ($document_details->expiry_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_details_edit->RightColumnClass ?>"><div<?php echo $document_details->expiry_date->cellAttributes() ?>>
 <span id="el_document_details_expiry_date">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($document_details->expiry_date->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $document_details->expiry_date->ViewValue ?></button>
-		<div id="dsl_x_expiry_date" data-repeatcolumn="1" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $document_details->expiry_date->radioButtonListHtml(TRUE, "x_expiry_date") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_expiry_date" class="ew-template"><input type="radio" class="form-check-input" data-table="document_details" data-field="x_expiry_date" data-value-separator="<?php echo $document_details->expiry_date->displayValueSeparatorAttribute() ?>" name="x_expiry_date" id="x_expiry_date" value="{value}"<?php echo $document_details->expiry_date->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$document_details->expiry_date->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
+<input type="text" data-table="document_details" data-field="x_expiry_date" name="x_expiry_date" id="x_expiry_date" placeholder="<?php echo HtmlEncode($document_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $document_details->expiry_date->EditValue ?>"<?php echo $document_details->expiry_date->editAttributes() ?>>
+<?php if (!$document_details->expiry_date->ReadOnly && !$document_details->expiry_date->Disabled && !isset($document_details->expiry_date->EditAttrs["readonly"]) && !isset($document_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailsedit", "x_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
 </span>
 <?php echo $document_details->expiry_date->CustomMsg ?></div></div>
 	</div>
@@ -365,22 +358,12 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 		<td class="<?php echo $document_details_edit->TableLeftColumnClass ?>"><span id="elh_document_details_expiry_date"><?php echo $document_details->expiry_date->caption() ?><?php echo ($document_details->expiry_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_details->expiry_date->cellAttributes() ?>>
 <span id="el_document_details_expiry_date">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($document_details->expiry_date->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $document_details->expiry_date->ViewValue ?></button>
-		<div id="dsl_x_expiry_date" data-repeatcolumn="1" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $document_details->expiry_date->radioButtonListHtml(TRUE, "x_expiry_date") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_expiry_date" class="ew-template"><input type="radio" class="form-check-input" data-table="document_details" data-field="x_expiry_date" data-value-separator="<?php echo $document_details->expiry_date->displayValueSeparatorAttribute() ?>" name="x_expiry_date" id="x_expiry_date" value="{value}"<?php echo $document_details->expiry_date->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$document_details->expiry_date->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
+<input type="text" data-table="document_details" data-field="x_expiry_date" name="x_expiry_date" id="x_expiry_date" placeholder="<?php echo HtmlEncode($document_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $document_details->expiry_date->EditValue ?>"<?php echo $document_details->expiry_date->editAttributes() ?>>
+<?php if (!$document_details->expiry_date->ReadOnly && !$document_details->expiry_date->Disabled && !isset($document_details->expiry_date->EditAttrs["readonly"]) && !isset($document_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailsedit", "x_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
 </span>
 <?php echo $document_details->expiry_date->CustomMsg ?></td>
 	</tr>

@@ -84,9 +84,6 @@ ftransaction_detailslist.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->transmit_date->caption(), $transaction_details->transmit_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
-			elm = this.getElements("x" + infix + "_transmit_date");
-			if (elm && !ew.checkDateDef(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($transaction_details->transmit_date->errorMessage()) ?>");
 		<?php if ($transaction_details_list->direction->Required) { ?>
 			elm = this.getElements("x" + infix + "_direction");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -291,9 +288,9 @@ $transaction_details_list->ListOptions->render("header", "left");
 ?>
 <?php if ($transaction_details->firelink_doc_no->Visible) { // firelink_doc_no ?>
 	<?php if ($transaction_details->sortUrl($transaction_details->firelink_doc_no) == "") { ?>
-		<th data-name="firelink_doc_no" class="<?php echo $transaction_details->firelink_doc_no->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no"><div class="ew-table-header-caption"><?php echo $transaction_details->firelink_doc_no->caption() ?></div></div></th>
+		<th data-name="firelink_doc_no" class="<?php echo $transaction_details->firelink_doc_no->headerCellClass() ?>"><div id="elh_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no"><div class="ew-table-header-caption"><?php echo $transaction_details->firelink_doc_no->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="firelink_doc_no" class="<?php echo $transaction_details->firelink_doc_no->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->firelink_doc_no) ?>',2);"><div id="elh_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no">
+		<th data-name="firelink_doc_no" class="<?php echo $transaction_details->firelink_doc_no->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->firelink_doc_no) ?>',2);"><div id="elh_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->firelink_doc_no->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->firelink_doc_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->firelink_doc_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>

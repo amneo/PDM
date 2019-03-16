@@ -143,10 +143,9 @@ class document_details extends DbTable
 		$this->fields['document_type'] = &$this->document_type;
 
 		// expiry_date
-		$this->expiry_date = new DbField('document_details', 'document_details', 'x_expiry_date', 'expiry_date', '"expiry_date"', CastDateFieldForLike('"expiry_date"', 0, "DB"), 133, 0, FALSE, '"expiry_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->expiry_date = new DbField('document_details', 'document_details', 'x_expiry_date', 'expiry_date', '"expiry_date"', CastDateFieldForLike('"expiry_date"', 0, "DB"), 133, 0, FALSE, '"expiry_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->expiry_date->Required = TRUE; // Required field
 		$this->expiry_date->Sortable = TRUE; // Allow sort
-		$this->expiry_date->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->expiry_date->PleaseSelectText = $Language->phrase("PleaseSelect"); // PleaseSelect text
 		$this->expiry_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['expiry_date'] = &$this->expiry_date;
 	}
@@ -916,6 +915,7 @@ class document_details extends DbTable
 		$this->document_type->ViewCustomAttributes = "";
 
 		// expiry_date
+		$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
 		$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
 		$this->expiry_date->ViewCustomAttributes = "";
 
@@ -1051,7 +1051,10 @@ class document_details extends DbTable
 		$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 		// expiry_date
+		$this->expiry_date->EditAttrs["class"] = "form-control";
 		$this->expiry_date->EditCustomAttributes = "";
+		$this->expiry_date->EditValue = FormatDateTime($this->expiry_date->CurrentValue, 8);
+		$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1091,7 +1094,6 @@ class document_details extends DbTable
 					$doc->exportCaption($this->document_type);
 					$doc->exportCaption($this->expiry_date);
 				} else {
-					$doc->exportCaption($this->document_sequence);
 					$doc->exportCaption($this->firelink_doc_no);
 					$doc->exportCaption($this->client_doc_no);
 					$doc->exportCaption($this->document_tittle);
@@ -1141,7 +1143,6 @@ class document_details extends DbTable
 						$doc->exportField($this->document_type);
 						$doc->exportField($this->expiry_date);
 					} else {
-						$doc->exportField($this->document_sequence);
 						$doc->exportField($this->firelink_doc_no);
 						$doc->exportField($this->client_doc_no);
 						$doc->exportField($this->document_tittle);

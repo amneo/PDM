@@ -250,7 +250,7 @@ class project_details extends DbTable
 	}
 	public function getSqlOrderBy() // Order By
 	{
-		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "";
+		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "\"project_id\" DESC";
 	}
 	public function sqlOrderBy() // For backward compatibility
 	{

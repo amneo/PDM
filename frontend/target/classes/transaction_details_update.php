@@ -1058,14 +1058,6 @@ class transaction_details_update extends transaction_details
 			}
 			$this->approval_status->ViewCustomAttributes = "";
 
-			// document_link
-			if (!EmptyValue($this->document_link->Upload->DbValue)) {
-				$this->document_link->ViewValue = $this->document_link->Upload->DbValue;
-			} else {
-				$this->document_link->ViewValue = "";
-			}
-			$this->document_link->ViewCustomAttributes = "";
-
 			// transaction_date
 			$this->transaction_date->ViewValue = $this->transaction_date->CurrentValue;
 			$this->transaction_date->ViewValue = FormatDateTime($this->transaction_date->ViewValue, 0);

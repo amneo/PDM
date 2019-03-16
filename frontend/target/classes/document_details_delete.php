@@ -810,10 +810,6 @@ class document_details_delete extends document_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// document_sequence
-			$this->document_sequence->ViewValue = $this->document_sequence->CurrentValue;
-			$this->document_sequence->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
@@ -874,6 +870,7 @@ class document_details_delete extends document_details
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
+			$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
 			$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
 			$this->expiry_date->ViewCustomAttributes = "";
 

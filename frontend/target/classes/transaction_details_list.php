@@ -2217,7 +2217,10 @@ class transaction_details_list extends transaction_details
 
 		// Advanced search button
 		$item = &$this->SearchOptions->add("advancedsearch");
-		$item->Body = "<a class=\"btn btn-default ew-advanced-aearch\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"transaction_detailssrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+		if (IsMobile())
+			$item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"transaction_detailssrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+		else
+			$item->Body = "<button type=\"button\" class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-table=\"transaction_details\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" onclick=\"ew.modalDialogShow({lnk:this,btn:'SearchBtn',url:'transaction_detailssrch.php'});\">" . $Language->phrase("AdvancedSearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Search highlight button
@@ -2662,10 +2665,10 @@ class transaction_details_list extends transaction_details
 
 		// Common render codes for all row types
 		// document_sequence
+
+		$this->document_sequence->CellCssStyle = "white-space: nowrap;";
+
 		// firelink_doc_no
-
-		$this->firelink_doc_no->CellCssStyle = "white-space: nowrap;";
-
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -2812,15 +2815,11 @@ class transaction_details_list extends transaction_details
 			$this->submit_no->LinkCustomAttributes = "";
 			$this->submit_no->HrefValue = "";
 			$this->submit_no->TooltipValue = "";
-			if (!$this->isExport())
-				$this->submit_no->ViewValue = $this->highlightValue($this->submit_no);
 
 			// revision_no
 			$this->revision_no->LinkCustomAttributes = "";
 			$this->revision_no->HrefValue = "";
 			$this->revision_no->TooltipValue = "";
-			if (!$this->isExport())
-				$this->revision_no->ViewValue = $this->highlightValue($this->revision_no);
 
 			// transmit_no
 			$this->transmit_no->LinkCustomAttributes = "";
@@ -3101,9 +3100,6 @@ class transaction_details_list extends transaction_details
 			if (!$this->transmit_date->IsDetailKey && $this->transmit_date->FormValue != NULL && $this->transmit_date->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->transmit_date->caption(), $this->transmit_date->RequiredErrorMessage));
 			}
-		}
-		if (!CheckDate($this->transmit_date->FormValue)) {
-			AddMessage($FormError, $this->transmit_date->errorMessage());
 		}
 		if ($this->direction->Required) {
 			if ($this->direction->FormValue == "") {

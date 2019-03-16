@@ -81,7 +81,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_name">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_name"><?php echo $project_details->project_name->caption() ?></span></td>
 		<td data-name="project_name"<?php echo $project_details->project_name->cellAttributes() ?>>
-<span id="el_project_details_project_name">
+<span id="el_project_details_project_name" data-page="1">
 <span<?php echo $project_details->project_name->viewAttributes() ?>>
 <?php echo $project_details->project_name->getViewValue() ?></span>
 </span>
@@ -92,7 +92,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_our_client">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_our_client"><?php echo $project_details->project_our_client->caption() ?></span></td>
 		<td data-name="project_our_client"<?php echo $project_details->project_our_client->cellAttributes() ?>>
-<span id="el_project_details_project_our_client">
+<span id="el_project_details_project_our_client" data-page="1">
 <span<?php echo $project_details->project_our_client->viewAttributes() ?>>
 <?php echo $project_details->project_our_client->getViewValue() ?></span>
 </span>
@@ -103,7 +103,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_end_user">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_end_user"><?php echo $project_details->project_end_user->caption() ?></span></td>
 		<td data-name="project_end_user"<?php echo $project_details->project_end_user->cellAttributes() ?>>
-<span id="el_project_details_project_end_user">
+<span id="el_project_details_project_end_user" data-page="1">
 <span<?php echo $project_details->project_end_user->viewAttributes() ?>>
 <?php echo $project_details->project_end_user->getViewValue() ?></span>
 </span>
@@ -114,7 +114,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_sales_engg">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_sales_engg"><?php echo $project_details->project_sales_engg->caption() ?></span></td>
 		<td data-name="project_sales_engg"<?php echo $project_details->project_sales_engg->cellAttributes() ?>>
-<span id="el_project_details_project_sales_engg">
+<span id="el_project_details_project_sales_engg" data-page="1">
 <span<?php echo $project_details->project_sales_engg->viewAttributes() ?>>
 <?php echo $project_details->project_sales_engg->getViewValue() ?></span>
 </span>
@@ -125,7 +125,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_distribution">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_distribution"><?php echo $project_details->project_distribution->caption() ?></span></td>
 		<td data-name="project_distribution"<?php echo $project_details->project_distribution->cellAttributes() ?>>
-<span id="el_project_details_project_distribution">
+<span id="el_project_details_project_distribution" data-page="1">
 <span<?php echo $project_details->project_distribution->viewAttributes() ?>>
 <?php echo $project_details->project_distribution->getViewValue() ?></span>
 </span>
@@ -136,7 +136,7 @@ $project_details_view->showMessage();
 	<tr id="r_project_transmittal">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_project_transmittal"><?php echo $project_details->project_transmittal->caption() ?></span></td>
 		<td data-name="project_transmittal"<?php echo $project_details->project_transmittal->cellAttributes() ?>>
-<span id="el_project_details_project_transmittal">
+<span id="el_project_details_project_transmittal" data-page="1">
 <span<?php echo $project_details->project_transmittal->viewAttributes() ?>>
 <?php echo $project_details->project_transmittal->getViewValue() ?></span>
 </span>
@@ -147,7 +147,7 @@ $project_details_view->showMessage();
 	<tr id="r_order_number">
 		<td class="<?php echo $project_details_view->TableLeftColumnClass ?>"><span id="elh_project_details_order_number"><?php echo $project_details->order_number->caption() ?></span></td>
 		<td data-name="order_number"<?php echo $project_details->order_number->cellAttributes() ?>>
-<span id="el_project_details_order_number">
+<span id="el_project_details_order_number" data-page="1">
 <span<?php echo $project_details->order_number->viewAttributes() ?>>
 <?php echo $project_details->order_number->getViewValue() ?></span>
 </span>

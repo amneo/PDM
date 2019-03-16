@@ -621,11 +621,11 @@ class transaction_details_edit extends transaction_details
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
-		$this->firelink_doc_no->Visible = FALSE;
-		$this->submit_no->Visible = FALSE;
-		$this->revision_no->Visible = FALSE;
-		$this->transmit_no->Visible = FALSE;
-		$this->transmit_date->Visible = FALSE;
+		$this->firelink_doc_no->setVisibility();
+		$this->submit_no->setVisibility();
+		$this->revision_no->setVisibility();
+		$this->transmit_no->setVisibility();
+		$this->transmit_date->setVisibility();
 		$this->direction->Visible = FALSE;
 		$this->approval_status->Visible = FALSE;
 		$this->document_link->Visible = FALSE;
@@ -633,6 +633,11 @@ class transaction_details_edit extends transaction_details
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
+		$this->firelink_doc_no->Required = FALSE;
+		$this->submit_no->Required = FALSE;
+		$this->revision_no->Required = FALSE;
+		$this->transmit_no->Required = FALSE;
+		$this->transmit_date->Required = FALSE;
 
 		// Do not use lookup cache
 		$this->setUseLookupCache(FALSE);
@@ -811,6 +816,52 @@ class transaction_details_edit extends transaction_details
 		// Load from form
 		global $CurrentForm;
 
+		// Check field name 'firelink_doc_no' first before field var 'x_firelink_doc_no'
+		$val = $CurrentForm->hasValue("firelink_doc_no") ? $CurrentForm->getValue("firelink_doc_no") : $CurrentForm->getValue("x_firelink_doc_no");
+		if (!$this->firelink_doc_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->firelink_doc_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->firelink_doc_no->setFormValue($val);
+		}
+
+		// Check field name 'submit_no' first before field var 'x_submit_no'
+		$val = $CurrentForm->hasValue("submit_no") ? $CurrentForm->getValue("submit_no") : $CurrentForm->getValue("x_submit_no");
+		if (!$this->submit_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->submit_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->submit_no->setFormValue($val);
+		}
+
+		// Check field name 'revision_no' first before field var 'x_revision_no'
+		$val = $CurrentForm->hasValue("revision_no") ? $CurrentForm->getValue("revision_no") : $CurrentForm->getValue("x_revision_no");
+		if (!$this->revision_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->revision_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->revision_no->setFormValue($val);
+		}
+
+		// Check field name 'transmit_no' first before field var 'x_transmit_no'
+		$val = $CurrentForm->hasValue("transmit_no") ? $CurrentForm->getValue("transmit_no") : $CurrentForm->getValue("x_transmit_no");
+		if (!$this->transmit_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmit_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmit_no->setFormValue($val);
+		}
+
+		// Check field name 'transmit_date' first before field var 'x_transmit_date'
+		$val = $CurrentForm->hasValue("transmit_date") ? $CurrentForm->getValue("transmit_date") : $CurrentForm->getValue("x_transmit_date");
+		if (!$this->transmit_date->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmit_date->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmit_date->setFormValue($val);
+			$this->transmit_date->CurrentValue = UnFormatDateTime($this->transmit_date->CurrentValue, 0);
+		}
+
 		// Check field name 'document_native' first before field var 'x_document_native'
 		$val = $CurrentForm->hasValue("document_native") ? $CurrentForm->getValue("document_native") : $CurrentForm->getValue("x_document_native");
 		if (!$this->document_native->IsDetailKey) {
@@ -831,6 +882,12 @@ class transaction_details_edit extends transaction_details
 	{
 		global $CurrentForm;
 		$this->document_sequence->CurrentValue = $this->document_sequence->FormValue;
+		$this->firelink_doc_no->CurrentValue = $this->firelink_doc_no->FormValue;
+		$this->submit_no->CurrentValue = $this->submit_no->FormValue;
+		$this->revision_no->CurrentValue = $this->revision_no->FormValue;
+		$this->transmit_no->CurrentValue = $this->transmit_no->FormValue;
+		$this->transmit_date->CurrentValue = $this->transmit_date->FormValue;
+		$this->transmit_date->CurrentValue = UnFormatDateTime($this->transmit_date->CurrentValue, 0);
 		$this->document_native->CurrentValue = $this->document_native->FormValue;
 	}
 
@@ -1070,14 +1127,6 @@ class transaction_details_edit extends transaction_details
 			}
 			$this->approval_status->ViewCustomAttributes = "";
 
-			// document_link
-			if (!EmptyValue($this->document_link->Upload->DbValue)) {
-				$this->document_link->ViewValue = $this->document_link->Upload->DbValue;
-			} else {
-				$this->document_link->ViewValue = "";
-			}
-			$this->document_link->ViewCustomAttributes = "";
-
 			// transaction_date
 			$this->transaction_date->ViewValue = $this->transaction_date->CurrentValue;
 			$this->transaction_date->ViewValue = FormatDateTime($this->transaction_date->ViewValue, 0);
@@ -1088,11 +1137,118 @@ class transaction_details_edit extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
+			// firelink_doc_no
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+			$this->firelink_doc_no->TooltipValue = "";
+
+			// submit_no
+			$this->submit_no->LinkCustomAttributes = "";
+			$this->submit_no->HrefValue = "";
+			$this->submit_no->TooltipValue = "";
+
+			// revision_no
+			$this->revision_no->LinkCustomAttributes = "";
+			$this->revision_no->HrefValue = "";
+			$this->revision_no->TooltipValue = "";
+
+			// transmit_no
+			$this->transmit_no->LinkCustomAttributes = "";
+			$this->transmit_no->HrefValue = "";
+			$this->transmit_no->TooltipValue = "";
+
+			// transmit_date
+			$this->transmit_date->LinkCustomAttributes = "";
+			$this->transmit_date->HrefValue = "";
+			$this->transmit_date->TooltipValue = "";
+
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 			$this->document_native->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if ($this->firelink_doc_no->VirtualValue <> "") {
+				$this->firelink_doc_no->EditValue = $this->firelink_doc_no->VirtualValue;
+			} else {
+				$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
+			$curVal = strval($this->firelink_doc_no->CurrentValue);
+			if ($curVal <> "") {
+				$this->firelink_doc_no->EditValue = $this->firelink_doc_no->lookupCacheOption($curVal);
+				if ($this->firelink_doc_no->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"firelink_doc_no\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->firelink_doc_no->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[3] = $rswrk->fields('df3');
+						$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
+					}
+				}
+			} else {
+				$this->firelink_doc_no->EditValue = NULL;
+			}
+			}
+			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
+			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// submit_no
+			$this->submit_no->EditAttrs["class"] = "form-control";
+			$this->submit_no->EditCustomAttributes = "";
+			$this->submit_no->EditValue = $this->submit_no->CurrentValue;
+			$this->submit_no->CellCssStyle .= "text-align: left;";
+			$this->submit_no->ViewCustomAttributes = "";
+
+			// revision_no
+			$this->revision_no->EditAttrs["class"] = "form-control";
+			$this->revision_no->EditCustomAttributes = "";
+			$this->revision_no->EditValue = $this->revision_no->CurrentValue;
+			$this->revision_no->ViewCustomAttributes = "";
+
+			// transmit_no
+			$this->transmit_no->EditAttrs["class"] = "form-control";
+			$this->transmit_no->EditCustomAttributes = "";
+			if ($this->transmit_no->VirtualValue <> "") {
+				$this->transmit_no->EditValue = $this->transmit_no->VirtualValue;
+			} else {
+				$this->transmit_no->EditValue = $this->transmit_no->CurrentValue;
+			$curVal = strval($this->transmit_no->CurrentValue);
+			if ($curVal <> "") {
+				$this->transmit_no->EditValue = $this->transmit_no->lookupCacheOption($curVal);
+				if ($this->transmit_no->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"transmittal_no\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->transmit_no->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->transmit_no->EditValue = $this->transmit_no->CurrentValue;
+					}
+				}
+			} else {
+				$this->transmit_no->EditValue = NULL;
+			}
+			}
+			$this->transmit_no->ViewCustomAttributes = "";
+
+			// transmit_date
+			$this->transmit_date->EditAttrs["class"] = "form-control";
+			$this->transmit_date->EditCustomAttributes = "";
+			$this->transmit_date->EditValue = $this->transmit_date->CurrentValue;
+			$this->transmit_date->EditValue = FormatDateTime($this->transmit_date->EditValue, 0);
+			$this->transmit_date->ViewCustomAttributes = "";
 
 			// document_native
 			$this->document_native->EditAttrs["class"] = "form-control";
@@ -1101,8 +1257,33 @@ class transaction_details_edit extends transaction_details
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
 			// Edit refer script
-			// document_native
+			// firelink_doc_no
 
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+			$this->firelink_doc_no->TooltipValue = "";
+
+			// submit_no
+			$this->submit_no->LinkCustomAttributes = "";
+			$this->submit_no->HrefValue = "";
+			$this->submit_no->TooltipValue = "";
+
+			// revision_no
+			$this->revision_no->LinkCustomAttributes = "";
+			$this->revision_no->HrefValue = "";
+			$this->revision_no->TooltipValue = "";
+
+			// transmit_no
+			$this->transmit_no->LinkCustomAttributes = "";
+			$this->transmit_no->HrefValue = "";
+			$this->transmit_no->TooltipValue = "";
+
+			// transmit_date
+			$this->transmit_date->LinkCustomAttributes = "";
+			$this->transmit_date->HrefValue = "";
+			$this->transmit_date->TooltipValue = "";
+
+			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 		}

@@ -1424,6 +1424,12 @@ class project_details_list extends project_details
 		$item->Visible = $Security->canView();
 		$item->OnLeft = FALSE;
 
+		// "edit"
+		$item = &$this->ListOptions->add("edit");
+		$item->CssClass = "text-nowrap";
+		$item->Visible = $Security->canEdit();
+		$item->OnLeft = FALSE;
+
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
@@ -1476,6 +1482,15 @@ class project_details_list extends project_details
 		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
 		if ($Security->canView()) {
 			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
+		} else {
+			$opt->Body = "";
+		}
+
+		// "edit"
+		$opt = &$this->ListOptions->Items["edit"];
+		$editcaption = HtmlTitle($Language->phrase("EditLink"));
+		if ($Security->canEdit()) {
+			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}

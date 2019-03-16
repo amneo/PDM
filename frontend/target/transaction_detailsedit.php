@@ -54,6 +54,31 @@ ftransaction_detailsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
+		<?php if ($transaction_details_edit->firelink_doc_no->Required) { ?>
+			elm = this.getElements("x" + infix + "_firelink_doc_no");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->firelink_doc_no->caption(), $transaction_details->firelink_doc_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($transaction_details_edit->submit_no->Required) { ?>
+			elm = this.getElements("x" + infix + "_submit_no");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->submit_no->caption(), $transaction_details->submit_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($transaction_details_edit->revision_no->Required) { ?>
+			elm = this.getElements("x" + infix + "_revision_no");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->revision_no->caption(), $transaction_details->revision_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($transaction_details_edit->transmit_no->Required) { ?>
+			elm = this.getElements("x" + infix + "_transmit_no");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->transmit_no->caption(), $transaction_details->transmit_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($transaction_details_edit->transmit_date->Required) { ?>
+			elm = this.getElements("x" + infix + "_transmit_date");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->transmit_date->caption(), $transaction_details->transmit_date->RequiredErrorMessage)) ?>");
+		<?php } ?>
 		<?php if ($transaction_details_edit->document_native->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_native");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -87,8 +112,14 @@ ftransaction_detailsedit.Form_CustomValidate = function(fobj) { // DO NOT CHANGE
 ftransaction_detailsedit.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+ftransaction_detailsedit.lists["x_firelink_doc_no"] = <?php echo $transaction_details_edit->firelink_doc_no->Lookup->toClientList() ?>;
+ftransaction_detailsedit.lists["x_firelink_doc_no"].options = <?php echo JsonEncode($transaction_details_edit->firelink_doc_no->lookupOptions()) ?>;
+ftransaction_detailsedit.autoSuggests["x_firelink_doc_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+ftransaction_detailsedit.lists["x_transmit_no"] = <?php echo $transaction_details_edit->transmit_no->Lookup->toClientList() ?>;
+ftransaction_detailsedit.lists["x_transmit_no"].options = <?php echo JsonEncode($transaction_details_edit->transmit_no->lookupOptions()) ?>;
+ftransaction_detailsedit.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
+// Form object for search
 </script>
 <script>
 
@@ -117,6 +148,211 @@ $transaction_details_edit->showMessage();
 <div class="ew-edit-div"><!-- page* -->
 <?php } else { ?>
 <table id="tbl_transaction_detailsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
+<?php } ?>
+<?php if ($transaction_details->firelink_doc_no->Visible) { // firelink_doc_no ?>
+<?php if ($transaction_details_edit->IsMobileOrModal) { ?>
+	<div id="r_firelink_doc_no" class="form-group row">
+		<label id="elh_transaction_details_firelink_doc_no" class="<?php echo $transaction_details_edit->LeftColumnClass ?>"><?php echo $transaction_details->firelink_doc_no->caption() ?><?php echo ($transaction_details->firelink_doc_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->firelink_doc_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_firelink_doc_no">
+<span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_firelink_doc_no">
+<span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->firelink_doc_no->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_firelink_doc_no">
+		<td class="<?php echo $transaction_details_edit->TableLeftColumnClass ?>"><span id="elh_transaction_details_firelink_doc_no"><?php echo $transaction_details->firelink_doc_no->caption() ?><?php echo ($transaction_details->firelink_doc_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->firelink_doc_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_firelink_doc_no">
+<span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_firelink_doc_no">
+<span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->firelink_doc_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->submit_no->Visible) { // submit_no ?>
+<?php if ($transaction_details_edit->IsMobileOrModal) { ?>
+	<div id="r_submit_no" class="form-group row">
+		<label id="elh_transaction_details_submit_no" for="x_submit_no" class="<?php echo $transaction_details_edit->LeftColumnClass ?>"><?php echo $transaction_details->submit_no->caption() ?><?php echo ($transaction_details->submit_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->submit_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_submit_no">
+<span<?php echo $transaction_details->submit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->submit_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" value="<?php echo HtmlEncode($transaction_details->submit_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_submit_no">
+<span<?php echo $transaction_details->submit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->submit_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" value="<?php echo HtmlEncode($transaction_details->submit_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->submit_no->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_submit_no">
+		<td class="<?php echo $transaction_details_edit->TableLeftColumnClass ?>"><span id="elh_transaction_details_submit_no"><?php echo $transaction_details->submit_no->caption() ?><?php echo ($transaction_details->submit_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->submit_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_submit_no">
+<span<?php echo $transaction_details->submit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->submit_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" value="<?php echo HtmlEncode($transaction_details->submit_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_submit_no">
+<span<?php echo $transaction_details->submit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->submit_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" value="<?php echo HtmlEncode($transaction_details->submit_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->submit_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->revision_no->Visible) { // revision_no ?>
+<?php if ($transaction_details_edit->IsMobileOrModal) { ?>
+	<div id="r_revision_no" class="form-group row">
+		<label id="elh_transaction_details_revision_no" for="x_revision_no" class="<?php echo $transaction_details_edit->LeftColumnClass ?>"><?php echo $transaction_details->revision_no->caption() ?><?php echo ($transaction_details->revision_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->revision_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_revision_no">
+<span<?php echo $transaction_details->revision_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->revision_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" value="<?php echo HtmlEncode($transaction_details->revision_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_revision_no">
+<span<?php echo $transaction_details->revision_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->revision_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" value="<?php echo HtmlEncode($transaction_details->revision_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->revision_no->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_revision_no">
+		<td class="<?php echo $transaction_details_edit->TableLeftColumnClass ?>"><span id="elh_transaction_details_revision_no"><?php echo $transaction_details->revision_no->caption() ?><?php echo ($transaction_details->revision_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->revision_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_revision_no">
+<span<?php echo $transaction_details->revision_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->revision_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" value="<?php echo HtmlEncode($transaction_details->revision_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_revision_no">
+<span<?php echo $transaction_details->revision_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->revision_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" value="<?php echo HtmlEncode($transaction_details->revision_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->revision_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->transmit_no->Visible) { // transmit_no ?>
+<?php if ($transaction_details_edit->IsMobileOrModal) { ?>
+	<div id="r_transmit_no" class="form-group row">
+		<label id="elh_transaction_details_transmit_no" class="<?php echo $transaction_details_edit->LeftColumnClass ?>"><?php echo $transaction_details->transmit_no->caption() ?><?php echo ($transaction_details->transmit_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->transmit_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_transmit_no">
+<span<?php echo $transaction_details->transmit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_transmit_no">
+<span<?php echo $transaction_details->transmit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->transmit_no->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_transmit_no">
+		<td class="<?php echo $transaction_details_edit->TableLeftColumnClass ?>"><span id="elh_transaction_details_transmit_no"><?php echo $transaction_details->transmit_no->caption() ?><?php echo ($transaction_details->transmit_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->transmit_no->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_transmit_no">
+<span<?php echo $transaction_details->transmit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_transmit_no">
+<span<?php echo $transaction_details->transmit_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->transmit_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->transmit_date->Visible) { // transmit_date ?>
+<?php if ($transaction_details_edit->IsMobileOrModal) { ?>
+	<div id="r_transmit_date" class="form-group row">
+		<label id="elh_transaction_details_transmit_date" for="x_transmit_date" class="<?php echo $transaction_details_edit->LeftColumnClass ?>"><?php echo $transaction_details->transmit_date->caption() ?><?php echo ($transaction_details->transmit_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->transmit_date->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_transmit_date">
+<span<?php echo $transaction_details->transmit_date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_date->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" value="<?php echo HtmlEncode($transaction_details->transmit_date->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_transmit_date">
+<span<?php echo $transaction_details->transmit_date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_date->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" value="<?php echo HtmlEncode($transaction_details->transmit_date->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->transmit_date->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_transmit_date">
+		<td class="<?php echo $transaction_details_edit->TableLeftColumnClass ?>"><span id="elh_transaction_details_transmit_date"><?php echo $transaction_details->transmit_date->caption() ?><?php echo ($transaction_details->transmit_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->transmit_date->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_transmit_date">
+<span<?php echo $transaction_details->transmit_date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_date->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" value="<?php echo HtmlEncode($transaction_details->transmit_date->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_transaction_details_transmit_date">
+<span<?php echo $transaction_details->transmit_date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->transmit_date->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" value="<?php echo HtmlEncode($transaction_details->transmit_date->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->transmit_date->CustomMsg ?></td>
+	</tr>
+<?php } ?>
 <?php } ?>
 <?php if ($transaction_details->document_native->Visible) { // document_native ?>
 <?php if ($transaction_details_edit->IsMobileOrModal) { ?>
