@@ -7,22 +7,47 @@
 
 
 SET search_path = public, pg_catalog;
-DROP TABLE IF EXISTS public.userlevelpermissions;
-DROP TABLE IF EXISTS public.userlevels;
-DROP TABLE IF EXISTS public.document_system;
-DROP FUNCTION IF EXISTS public.om_func_01 ();
-DROP TABLE IF EXISTS public.f_version;
-DROP SEQUENCE IF EXISTS public.app_version_sequence_no_seq;
-DROP TABLE IF EXISTS public.approval_details;
-DROP TABLE IF EXISTS public.transmit_details;
-DROP TABLE IF EXISTS public.user_dtls;
-DROP TABLE IF EXISTS public.audittrail;
-DROP TABLE IF EXISTS public.transaction_details;
-DROP TABLE IF EXISTS public.document_details;
-DROP TABLE IF EXISTS public.inbox;
-DROP TABLE IF EXISTS public.distribution_details;
-DROP TABLE IF EXISTS public.project_details;
-DROP TABLE IF EXISTS public.app_version;
+ALTER TABLE ONLY public.xmittal_mode DROP CONSTRAINT xmittal_mode_mode_name_key;
+ALTER TABLE ONLY public.xmittal_mode DROP CONSTRAINT xmittal_mode_pkey;
+ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_username_key;
+ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_email_addreess_key;
+ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_pkey;
+ALTER TABLE ONLY public.transaction_details DROP CONSTRAINT transaction_details_fk;
+ALTER TABLE ONLY public.transaction_details DROP CONSTRAINT transaction_details_document_link_key;
+ALTER TABLE ONLY public.userlevelpermissions DROP CONSTRAINT pkuserlevelpermissions;
+ALTER TABLE ONLY public.userlevels DROP CONSTRAINT pkuserlevels;
+ALTER TABLE ONLY public.document_system DROP CONSTRAINT document_system_system_name_key;
+ALTER TABLE ONLY public.document_system DROP CONSTRAINT document_system_pkey;
+ALTER TABLE ONLY public.app_version DROP CONSTRAINT app_version_pkey;
+ALTER TABLE ONLY public.approval_details DROP CONSTRAINT approval_details_pkey;
+ALTER TABLE ONLY public.document_details DROP CONSTRAINT document_details_firelink_doc_no_key;
+ALTER TABLE ONLY public.document_details DROP CONSTRAINT document_details_client_doc_no_key;
+ALTER TABLE ONLY public.document_details DROP CONSTRAINT document_details_pk;
+ALTER TABLE ONLY public.transmit_details DROP CONSTRAINT transmit_details_transmittal_no_key;
+ALTER TABLE ONLY public.transmit_details DROP CONSTRAINT transmit_details_pkey;
+ALTER TABLE ONLY public.audittrail DROP CONSTRAINT pkaudittrail;
+ALTER TABLE ONLY public.transaction_details DROP CONSTRAINT transaction_details_pk;
+ALTER TABLE ONLY public.inbox DROP CONSTRAINT inbox_pk;
+ALTER TABLE ONLY public.distribution_details DROP CONSTRAINT distribution_details_pk;
+ALTER TABLE ONLY public.project_details DROP CONSTRAINT project_details_project_name_key;
+ALTER TABLE ONLY public.project_details DROP CONSTRAINT project_details_pk;
+DROP TABLE public.xmittal_mode;
+DROP TABLE public.user_dtls;
+DROP TABLE public.userlevelpermissions;
+DROP TABLE public.userlevels;
+DROP TABLE public.document_system;
+DROP FUNCTION public.om_func_01 ();
+DROP TABLE public.f_version;
+DROP SEQUENCE public.app_version_sequence_no_seq;
+DROP TABLE public.approval_details;
+DROP TABLE public.document_details;
+DROP TABLE public.transmit_details;
+DROP TABLE public.audittrail;
+DROP TABLE public.transaction_details;
+DROP TABLE public.inbox;
+DROP TABLE public.distribution_details;
+DROP TABLE public.project_details;
+DROP TABLE public.app_version;
 SET check_function_bodies = false;
 --
 -- Definition for function om_func_01 (OID = 25697) : 
@@ -115,7 +140,8 @@ CREATE TABLE public.transaction_details (
     approval_status varchar DEFAULT 'Planning'::character varying NOT NULL,
     document_link varchar NOT NULL,
     transaction_date timestamp without time zone DEFAULT now(),
-    document_native text NOT NULL
+    document_native text NOT NULL,
+    username varchar
 )
 WITH (oids = true);
 --
@@ -132,22 +158,6 @@ CREATE TABLE public.audittrail (
     keyvalue text,
     oldvalue text,
     newvalue text
-)
-WITH (oids = false);
---
--- Structure for table user_dtls (OID = 25534) : 
---
-CREATE TABLE public.user_dtls (
-    user_id serial NOT NULL,
-    username varchar,
-    password varchar,
-    create_login timestamp(0) without time zone DEFAULT now(),
-    account_valid boolean DEFAULT false,
-    last_login date,
-    email_addreess varchar,
-    "UserLevel" integer DEFAULT 10,
-    history varchar,
-    reports_to varchar
 )
 WITH (oids = false);
 --
@@ -238,6 +248,31 @@ CREATE TABLE public.userlevelpermissions (
 )
 WITH (oids = false);
 --
+-- Structure for table user_dtls (OID = 33912) : 
+--
+CREATE TABLE public.user_dtls (
+    user_id serial NOT NULL,
+    name varchar,
+    username varchar,
+    password varchar,
+    create_login timestamp(0) without time zone DEFAULT now(),
+    account_valid boolean DEFAULT false,
+    last_login date,
+    email_addreess varchar,
+    "UserLevel" integer DEFAULT 10,
+    history varchar,
+    reports_to integer
+)
+WITH (oids = false);
+--
+-- Structure for table xmittal_mode (OID = 53102) : 
+--
+CREATE TABLE public.xmittal_mode (
+    mode_id bigserial NOT NULL,
+    mode_name varchar NOT NULL
+)
+WITH (oids = false);
+--
 -- Definition for index project_details_pk (OID = 25434) : 
 --
 ALTER TABLE ONLY project_details
@@ -273,18 +308,6 @@ ALTER TABLE ONLY transaction_details
 ALTER TABLE ONLY audittrail
     ADD CONSTRAINT pkaudittrail
     PRIMARY KEY (id);
---
--- Definition for index user_dtls_pkey (OID = 25542) : 
---
-ALTER TABLE ONLY user_dtls
-    ADD CONSTRAINT user_dtls_pkey
-    PRIMARY KEY (user_id);
---
--- Definition for index user_dtls_username_key (OID = 25544) : 
---
-ALTER TABLE ONLY user_dtls
-    ADD CONSTRAINT user_dtls_username_key
-    UNIQUE (username);
 --
 -- Definition for index transmit_details_pkey (OID = 25568) : 
 --
@@ -328,12 +351,6 @@ ALTER TABLE ONLY app_version
     ADD CONSTRAINT app_version_pkey
     PRIMARY KEY (sequence_no);
 --
--- Definition for index user_dtls_email_addreess_key (OID = 25699) : 
---
-ALTER TABLE ONLY user_dtls
-    ADD CONSTRAINT user_dtls_email_addreess_key
-    UNIQUE (email_addreess);
---
 -- Definition for index document_system_pkey (OID = 25748) : 
 --
 ALTER TABLE ONLY document_system
@@ -370,10 +387,42 @@ ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_fk
     FOREIGN KEY (firelink_doc_no) REFERENCES document_details(firelink_doc_no) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 --
+-- Definition for index user_dtls_pkey (OID = 33922) : 
+--
+ALTER TABLE ONLY user_dtls
+    ADD CONSTRAINT user_dtls_pkey
+    PRIMARY KEY (user_id);
+--
+-- Definition for index user_dtls_email_addreess_key (OID = 33924) : 
+--
+ALTER TABLE ONLY user_dtls
+    ADD CONSTRAINT user_dtls_email_addreess_key
+    UNIQUE (email_addreess);
+--
+-- Definition for index user_dtls_username_key (OID = 33926) : 
+--
+ALTER TABLE ONLY user_dtls
+    ADD CONSTRAINT user_dtls_username_key
+    UNIQUE (username);
+--
+-- Definition for index xmittal_mode_pkey (OID = 53109) : 
+--
+ALTER TABLE ONLY xmittal_mode
+    ADD CONSTRAINT xmittal_mode_pkey
+    PRIMARY KEY (mode_id);
+--
+-- Definition for index xmittal_mode_mode_name_key (OID = 53111) : 
+--
+ALTER TABLE ONLY xmittal_mode
+    ADD CONSTRAINT xmittal_mode_mode_name_key
+    UNIQUE (mode_name);
+--
 -- Comments
 --
 COMMENT ON SCHEMA public IS 'standard public schema';
 COMMENT ON COLUMN public.transaction_details.document_native IS 'SMB url of the native file';
+COMMENT ON COLUMN public.transaction_details.username IS 'frontend user who made the entry';
 COMMENT ON COLUMN public.transmit_details.ack_rcvd IS 'Aknowledgement Received';
 COMMENT ON COLUMN public.transmit_details.ack_document IS 'SMB file location of the acknolwdgement received';
 COMMENT ON COLUMN public.transmit_details.transmital_date IS 'Time stamp for transmittal creation';
+COMMENT ON COLUMN public.user_dtls.reports_to IS 'The User ID this guy reports to';
