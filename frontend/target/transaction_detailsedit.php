@@ -361,7 +361,7 @@ $transaction_details_edit->showMessage();
 		<div class="<?php echo $transaction_details_edit->RightColumnClass ?>"><div<?php echo $transaction_details->document_native->cellAttributes() ?>>
 <?php if (!$transaction_details->isConfirm()) { ?>
 <span id="el_transaction_details_document_native">
-<textarea data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
+<textarea data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" cols="30" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
 </span>
 <?php } else { ?>
 <span id="el_transaction_details_document_native">
@@ -378,7 +378,7 @@ $transaction_details_edit->showMessage();
 		<td<?php echo $transaction_details->document_native->cellAttributes() ?>>
 <?php if (!$transaction_details->isConfirm()) { ?>
 <span id="el_transaction_details_document_native">
-<textarea data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
+<textarea data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" cols="30" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
 </span>
 <?php } else { ?>
 <span id="el_transaction_details_document_native">

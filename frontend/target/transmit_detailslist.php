@@ -161,7 +161,6 @@ $transmit_details_list->showMessage();
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($transmit_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($transmit_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($transmit_details_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($transmit_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
@@ -255,15 +254,6 @@ $transmit_details_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="ack_document" class="<?php echo $transmit_details->ack_document->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transmit_details->SortUrl($transmit_details->ack_document) ?>',2);"><div id="elh_transmit_details_ack_document" class="transmit_details_ack_document">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transmit_details->ack_document->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transmit_details->ack_document->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transmit_details->ack_document->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($transmit_details->transmital_date->Visible) { // transmital_date ?>
-	<?php if ($transmit_details->sortUrl($transmit_details->transmital_date) == "") { ?>
-		<th data-name="transmital_date" class="<?php echo $transmit_details->transmital_date->headerCellClass() ?>"><div id="elh_transmit_details_transmital_date" class="transmit_details_transmital_date"><div class="ew-table-header-caption"><?php echo $transmit_details->transmital_date->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmital_date" class="<?php echo $transmit_details->transmital_date->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transmit_details->SortUrl($transmit_details->transmital_date) ?>',2);"><div id="elh_transmit_details_transmital_date" class="transmit_details_transmital_date">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transmit_details->transmital_date->caption() ?></span><span class="ew-table-header-sort"><?php if ($transmit_details->transmital_date->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transmit_details->transmital_date->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -389,14 +379,6 @@ $transmit_details_list->ListOptions->render("body", "left", $transmit_details_li
 </span>
 </td>
 	<?php } ?>
-	<?php if ($transmit_details->transmital_date->Visible) { // transmital_date ?>
-		<td data-name="transmital_date"<?php echo $transmit_details->transmital_date->cellAttributes() ?>>
-<span id="el<?php echo $transmit_details_list->RowCnt ?>_transmit_details_transmital_date" class="transmit_details_transmital_date">
-<span<?php echo $transmit_details->transmital_date->viewAttributes() ?>>
-<?php echo $transmit_details->transmital_date->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -460,7 +442,6 @@ if ($transmit_details_list->Recordset)
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($transmit_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($transmit_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($transmit_details_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($transmit_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>

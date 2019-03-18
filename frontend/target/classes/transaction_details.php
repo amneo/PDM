@@ -115,7 +115,7 @@ class transaction_details extends DbTable
 		$this->transmit_no->Nullable = FALSE; // NOT NULL field
 		$this->transmit_no->Required = TRUE; // Required field
 		$this->transmit_no->Sortable = TRUE; // Allow sort
-		$this->transmit_no->Lookup = new Lookup('transmit_no', 'transmit_details', FALSE, 'transmittal_no', ["transmittal_no","project_name","",""], [], [], [], [], [], [], '"transmit_id" DESC', '');
+		$this->transmit_no->Lookup = new Lookup('transmit_no', 'transmit_details', FALSE, 'transmittal_no', ["transmittal_no","project_name","",""], [], [], [], [], ["transmital_date"], ["x_transmit_date"], '"transmit_id" DESC', '');
 		$this->fields['transmit_no'] = &$this->transmit_no;
 
 		// transmit_date
@@ -165,7 +165,7 @@ class transaction_details extends DbTable
 		$this->fields['document_native'] = &$this->document_native;
 
 		// username
-		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'HIDDEN');
 		$this->username->Sortable = FALSE; // Allow sort
 		$this->fields['username'] = &$this->username;
 	}
@@ -960,6 +960,7 @@ class transaction_details extends DbTable
 			$this->transmit_no->ViewValue = NULL;
 		}
 		}
+		$this->transmit_no->CellCssStyle .= "text-align: left;";
 		$this->transmit_no->ViewCustomAttributes = "";
 
 		// transmit_date
@@ -1182,6 +1183,7 @@ class transaction_details extends DbTable
 			$this->transmit_no->EditValue = NULL;
 		}
 		}
+		$this->transmit_no->CellCssStyle .= "text-align: left;";
 		$this->transmit_no->ViewCustomAttributes = "";
 
 		// transmit_date
@@ -1261,6 +1263,7 @@ class transaction_details extends DbTable
 					$doc->exportCaption($this->approval_status);
 					$doc->exportCaption($this->document_link);
 					$doc->exportCaption($this->document_native);
+					$doc->exportCaption($this->username);
 				} else {
 					$doc->exportCaption($this->document_sequence);
 					$doc->exportCaption($this->firelink_doc_no);
@@ -1311,6 +1314,7 @@ class transaction_details extends DbTable
 						$doc->exportField($this->approval_status);
 						$doc->exportField($this->document_link);
 						$doc->exportField($this->document_native);
+						$doc->exportField($this->username);
 					} else {
 						$doc->exportField($this->document_sequence);
 						$doc->exportField($this->firelink_doc_no);

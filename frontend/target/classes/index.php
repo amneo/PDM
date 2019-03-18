@@ -434,10 +434,14 @@ class index
 			$this->terminate("user_dtlslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'approval_details'))
 			$this->terminate("approval_detailslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'document_system'))
+			$this->terminate("document_systemlist.php");
 		if ($Security->allowList(CurrentProjectID() . 'userlevels'))
 			$this->terminate("userlevelslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'userlevelpermissions'))
 			$this->terminate("userlevelpermissionslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'xmit_details'))
+			$this->terminate("xmit_detailslist.php");
 		if ($Security->isLoggedIn()) {
 			$this->setFailureMessage(DeniedMessage() . "<br><br><a href=\"logout.php\">" . $Language->phrase("BackToLogin") . "</a>");
 		} else {

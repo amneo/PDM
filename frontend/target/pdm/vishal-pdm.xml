@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2019/03/16" author="e.World Technology Ltd.">
-  <project id="vishal-pdm" file="E:\pdm\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/03/16 23:43:00" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2019/03/19" author="e.World Technology Ltd.">
+  <project id="vishal-pdm" file="E:\PDM\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/03/19 00:59:16" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="transaction_details" name="transaction_details" caption="Document Log" userlevel="-2,&quot;Anonymous&quot;,104;0,&quot;Default&quot;,0" priv="1" />
     <table id="distribution_details" name="distribution_details" caption="Distribution" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="inbox" name="inbox" caption="Inbox" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -11,7 +11,9 @@
     <table id="transmit_details" name="transmit_details" caption="Transmittal Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="user_dtls" name="user_dtls" caption="User Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="approval_details" name="approval_details" caption="Approval Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="document_system" name="document_system" caption="Document System" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="userlevels" name="userlevels" caption="User Levels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="userlevelpermissions" name="userlevelpermissions" caption="User Level Permission" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="xmit_details" name="xmit_details" caption="Tramit Modes" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

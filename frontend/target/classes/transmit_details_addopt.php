@@ -19,6 +19,14 @@ class transmit_details_addopt extends transmit_details
 	// Page object name
 	public $PageObjName = "transmit_details_addopt";
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -596,7 +604,7 @@ class transmit_details_addopt extends transmit_details
 		$this->remarks->setVisibility();
 		$this->ack_rcvd->Visible = FALSE;
 		$this->ack_document->Visible = FALSE;
-		$this->transmital_date->setVisibility();
+		$this->transmital_date->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -699,13 +707,6 @@ class transmit_details_addopt extends transmit_details
 			$this->remarks->setFormValue(ConvertFromUtf8($val));
 		}
 
-		// Check field name 'transmital_date' first before field var 'x_transmital_date'
-		$val = $CurrentForm->hasValue("transmital_date") ? $CurrentForm->getValue("transmital_date") : $CurrentForm->getValue("x_transmital_date");
-		if (!$this->transmital_date->IsDetailKey) {
-			$this->transmital_date->setFormValue(ConvertFromUtf8($val));
-			$this->transmital_date->CurrentValue = UnFormatDateTime($this->transmital_date->CurrentValue, 0);
-		}
-
 		// Check field name 'transmit_id' first before field var 'x_transmit_id'
 		$val = $CurrentForm->hasValue("transmit_id") ? $CurrentForm->getValue("transmit_id") : $CurrentForm->getValue("x_transmit_id");
 	}
@@ -719,8 +720,6 @@ class transmit_details_addopt extends transmit_details
 		$this->delivery_location->CurrentValue = ConvertToUtf8($this->delivery_location->FormValue);
 		$this->addressed_to->CurrentValue = ConvertToUtf8($this->addressed_to->FormValue);
 		$this->remarks->CurrentValue = ConvertToUtf8($this->remarks->FormValue);
-		$this->transmital_date->CurrentValue = ConvertToUtf8($this->transmital_date->FormValue);
-		$this->transmital_date->CurrentValue = UnFormatDateTime($this->transmital_date->CurrentValue, 0);
 	}
 
 	// Load row based on key values
@@ -879,11 +878,6 @@ class transmit_details_addopt extends transmit_details
 			}
 			$this->ack_document->ViewCustomAttributes = "";
 
-			// transmital_date
-			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
-			$this->transmital_date->ViewCustomAttributes = "";
-
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";
 			$this->transmittal_no->HrefValue = "";
@@ -908,11 +902,6 @@ class transmit_details_addopt extends transmit_details
 			$this->remarks->LinkCustomAttributes = "";
 			$this->remarks->HrefValue = "";
 			$this->remarks->TooltipValue = "";
-
-			// transmital_date
-			$this->transmital_date->LinkCustomAttributes = "";
-			$this->transmital_date->HrefValue = "";
-			$this->transmital_date->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// transmittal_no
@@ -953,12 +942,6 @@ class transmit_details_addopt extends transmit_details
 			$this->remarks->EditValue = HtmlEncode($this->remarks->CurrentValue);
 			$this->remarks->PlaceHolder = RemoveHtml($this->remarks->caption());
 
-			// transmital_date
-			$this->transmital_date->EditAttrs["class"] = "form-control";
-			$this->transmital_date->EditCustomAttributes = "";
-			$this->transmital_date->EditValue = HtmlEncode(FormatDateTime($this->transmital_date->CurrentValue, 8));
-			$this->transmital_date->PlaceHolder = RemoveHtml($this->transmital_date->caption());
-
 			// Add refer script
 			// transmittal_no
 
@@ -980,10 +963,6 @@ class transmit_details_addopt extends transmit_details
 			// remarks
 			$this->remarks->LinkCustomAttributes = "";
 			$this->remarks->HrefValue = "";
-
-			// transmital_date
-			$this->transmital_date->LinkCustomAttributes = "";
-			$this->transmital_date->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1099,9 +1078,6 @@ class transmit_details_addopt extends transmit_details
 
 		// remarks
 		$this->remarks->setDbValueDef($rsnew, $this->remarks->CurrentValue, NULL, FALSE);
-
-		// transmital_date
-		$this->transmital_date->setDbValueDef($rsnew, UnFormatDateTime($this->transmital_date->CurrentValue, 0), NULL, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;

@@ -19,6 +19,14 @@ class transmit_details_add extends transmit_details
 	// Page object name
 	public $PageObjName = "transmit_details_add";
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -741,7 +749,11 @@ class transmit_details_add extends transmit_details
 		$this->setupBreadcrumb();
 
 		// Render row based on row type
-		$this->RowType = ROWTYPE_ADD; // Render add type
+		if ($this->isConfirm()) { // Confirm page
+			$this->RowType = ROWTYPE_VIEW; // Render view type
+		} else {
+			$this->RowType = ROWTYPE_ADD; // Render add type
+		}
 
 		// Render row
 		$this->resetAttributes();
@@ -1037,11 +1049,6 @@ class transmit_details_add extends transmit_details
 				$this->ack_document->ViewValue = "";
 			}
 			$this->ack_document->ViewCustomAttributes = "";
-
-			// transmital_date
-			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
-			$this->transmital_date->ViewCustomAttributes = "";
 
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";

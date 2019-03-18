@@ -100,6 +100,11 @@ ftransaction_detailslist.validate = function() {
 			if (felm && elm && !ew.hasValue(elm))
 				return this.onError(felm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_link->caption(), $transaction_details->document_link->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transaction_details_list->document_native->Required) { ?>
+			elm = this.getElements("x" + infix + "_document_native");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_native->caption(), $transaction_details->document_native->RequiredErrorMessage)) ?>");
+		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -124,6 +129,7 @@ ftransaction_detailslist.emptyRow = function(infix) {
 	if (ew.valueChanged(fobj, infix, "direction", false)) return false;
 	if (ew.valueChanged(fobj, infix, "approval_status", false)) return false;
 	if (ew.valueChanged(fobj, infix, "document_link", false)) return false;
+	if (ew.valueChanged(fobj, infix, "document_native", false)) return false;
 	return true;
 }
 
@@ -252,7 +258,6 @@ $transaction_details_list->showMessage();
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($transaction_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($transaction_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($transaction_details_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($transaction_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
@@ -355,6 +360,15 @@ $transaction_details_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="document_link" class="<?php echo $transaction_details->document_link->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->document_link) ?>',2);"><div id="elh_transaction_details_document_link" class="transaction_details_document_link">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->document_link->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->document_link->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->document_link->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->document_native->Visible) { // document_native ?>
+	<?php if ($transaction_details->sortUrl($transaction_details->document_native) == "") { ?>
+		<th data-name="document_native" class="<?php echo $transaction_details->document_native->headerCellClass() ?>"><div id="elh_transaction_details_document_native" class="transaction_details_document_native"><div class="ew-table-header-caption"><?php echo $transaction_details->document_native->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="document_native" class="<?php echo $transaction_details->document_native->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->document_native) ?>',2);"><div id="elh_transaction_details_document_native" class="transaction_details_document_native">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->document_native->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->document_native->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->document_native->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -528,7 +542,7 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" class="text-nowrap" style="z-index: <?php echo (9000 - $transaction_details_list->RowCnt * 10) ?>">
 	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">
 			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $transaction_details_list->RowIndex ?>_transmit_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
@@ -653,6 +667,22 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($transaction_details->document_native->Visible) { // document_native ?>
+		<td data-name="document_native"<?php echo $transaction_details->document_native->cellAttributes() ?>>
+<?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_native" class="form-group transaction_details_document_native">
+<textarea data-table="transaction_details" data-field="x_document_native" name="x<?php echo $transaction_details_list->RowIndex ?>_document_native" id="x<?php echo $transaction_details_list->RowIndex ?>_document_native" cols="30" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_document_native" name="o<?php echo $transaction_details_list->RowIndex ?>_document_native" id="o<?php echo $transaction_details_list->RowIndex ?>_document_native" value="<?php echo HtmlEncode($transaction_details->document_native->OldValue) ?>">
+<?php } ?>
+<?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_native" class="transaction_details_document_native">
+<span<?php echo $transaction_details->document_native->viewAttributes() ?>>
+<?php echo $transaction_details->document_native->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -747,7 +777,7 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" class="text-nowrap" style="z-index: <?php echo (9000 - $transaction_details_list->RowCnt * 10) ?>">
 	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<input type="text" class="form-control" name="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" id="sv_x<?php echo $transaction_details_list->RowIndex ?>_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">
 			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $transaction_details_list->RowIndex ?>_transmit_no',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "transmit_details") && !$transaction_details->transmit_no->ReadOnly) { ?>
@@ -832,6 +862,14 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <input type="hidden" data-table="transaction_details" data-field="x_document_link" name="o<?php echo $transaction_details_list->RowIndex ?>_document_link" id="o<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo HtmlEncode($transaction_details->document_link->OldValue) ?>">
 </td>
 	<?php } ?>
+	<?php if ($transaction_details->document_native->Visible) { // document_native ?>
+		<td data-name="document_native">
+<span id="el$rowindex$_transaction_details_document_native" class="form-group transaction_details_document_native">
+<textarea data-table="transaction_details" data-field="x_document_native" name="x<?php echo $transaction_details_list->RowIndex ?>_document_native" id="x<?php echo $transaction_details_list->RowIndex ?>_document_native" cols="30" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_document_native" name="o<?php echo $transaction_details_list->RowIndex ?>_document_native" id="o<?php echo $transaction_details_list->RowIndex ?>_document_native" value="<?php echo HtmlEncode($transaction_details->document_native->OldValue) ?>">
+</td>
+	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -900,7 +938,6 @@ if ($transaction_details_list->Recordset)
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($transaction_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($transaction_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($transaction_details_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($transaction_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>

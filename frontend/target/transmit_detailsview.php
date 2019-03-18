@@ -160,17 +160,6 @@ $transmit_details_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
-<?php if ($transmit_details->transmital_date->Visible) { // transmital_date ?>
-	<tr id="r_transmital_date">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_transmital_date"><?php echo $transmit_details->transmital_date->caption() ?></span></td>
-		<td data-name="transmital_date"<?php echo $transmit_details->transmital_date->cellAttributes() ?>>
-<span id="el_transmit_details_transmital_date">
-<span<?php echo $transmit_details->transmital_date->viewAttributes() ?>>
-<?php echo $transmit_details->transmital_date->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 </table>
 </form>
 <?php

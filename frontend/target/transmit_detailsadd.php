@@ -139,7 +139,12 @@ $transmit_details_add->showMessage();
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $transmit_details_add->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="transmit_details">
+<?php if ($transmit_details->isConfirm()) { // Confirm page ?>
 <input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="confirm" id="confirm" value="confirm">
+<?php } else { ?>
+<input type="hidden" name="action" id="action" value="confirm">
+<?php } ?>
 <input type="hidden" name="modal" value="<?php echo (int)$transmit_details_add->IsModal ?>">
 <?php if (!$transmit_details_add->IsMobileOrModal) { ?>
 <div class="ew-desktop"><!-- desktop -->
@@ -154,18 +159,34 @@ $transmit_details_add->showMessage();
 	<div id="r_transmittal_no" class="form-group row">
 		<label id="elh_transmit_details_transmittal_no" for="x_transmittal_no" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->transmittal_no->caption() ?><?php echo ($transmit_details->transmittal_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->transmittal_no->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_transmittal_no">
 <input type="text" data-table="transmit_details" data-field="x_transmittal_no" name="x_transmittal_no" id="x_transmittal_no" size="30" placeholder="<?php echo HtmlEncode($transmit_details->transmittal_no->getPlaceHolder()) ?>" value="<?php echo $transmit_details->transmittal_no->EditValue ?>"<?php echo $transmit_details->transmittal_no->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_transmittal_no">
+<span<?php echo $transmit_details->transmittal_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->transmittal_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_transmittal_no" name="x_transmittal_no" id="x_transmittal_no" value="<?php echo HtmlEncode($transmit_details->transmittal_no->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->transmittal_no->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_transmittal_no">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_transmittal_no"><?php echo $transmit_details->transmittal_no->caption() ?><?php echo ($transmit_details->transmittal_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->transmittal_no->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_transmittal_no">
 <input type="text" data-table="transmit_details" data-field="x_transmittal_no" name="x_transmittal_no" id="x_transmittal_no" size="30" placeholder="<?php echo HtmlEncode($transmit_details->transmittal_no->getPlaceHolder()) ?>" value="<?php echo $transmit_details->transmittal_no->EditValue ?>"<?php echo $transmit_details->transmittal_no->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_transmittal_no">
+<span<?php echo $transmit_details->transmittal_no->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->transmittal_no->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_transmittal_no" name="x_transmittal_no" id="x_transmittal_no" value="<?php echo HtmlEncode($transmit_details->transmittal_no->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->transmittal_no->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -175,6 +196,7 @@ $transmit_details_add->showMessage();
 	<div id="r_project_name" class="form-group row">
 		<label id="elh_transmit_details_project_name" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->project_name->caption() ?><?php echo ($transmit_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->project_name->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_project_name">
 <?php
 $wrkonchange = "" . trim(@$transmit_details->project_name->EditAttrs["onchange"]);
@@ -195,12 +217,20 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_project_name">
+<span<?php echo $transmit_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->project_name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_name">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_project_name"><?php echo $transmit_details->project_name->caption() ?><?php echo ($transmit_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->project_name->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_project_name">
 <?php
 $wrkonchange = "" . trim(@$transmit_details->project_name->EditAttrs["onchange"]);
@@ -221,6 +251,13 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_project_name">
+<span<?php echo $transmit_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->project_name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -230,18 +267,34 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 	<div id="r_delivery_location" class="form-group row">
 		<label id="elh_transmit_details_delivery_location" for="x_delivery_location" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->delivery_location->caption() ?><?php echo ($transmit_details->delivery_location->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->delivery_location->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_delivery_location">
 <input type="text" data-table="transmit_details" data-field="x_delivery_location" name="x_delivery_location" id="x_delivery_location" size="30" placeholder="<?php echo HtmlEncode($transmit_details->delivery_location->getPlaceHolder()) ?>" value="<?php echo $transmit_details->delivery_location->EditValue ?>"<?php echo $transmit_details->delivery_location->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_delivery_location">
+<span<?php echo $transmit_details->delivery_location->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->delivery_location->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_delivery_location" name="x_delivery_location" id="x_delivery_location" value="<?php echo HtmlEncode($transmit_details->delivery_location->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->delivery_location->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_delivery_location">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_delivery_location"><?php echo $transmit_details->delivery_location->caption() ?><?php echo ($transmit_details->delivery_location->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->delivery_location->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_delivery_location">
 <input type="text" data-table="transmit_details" data-field="x_delivery_location" name="x_delivery_location" id="x_delivery_location" size="30" placeholder="<?php echo HtmlEncode($transmit_details->delivery_location->getPlaceHolder()) ?>" value="<?php echo $transmit_details->delivery_location->EditValue ?>"<?php echo $transmit_details->delivery_location->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_delivery_location">
+<span<?php echo $transmit_details->delivery_location->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->delivery_location->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_delivery_location" name="x_delivery_location" id="x_delivery_location" value="<?php echo HtmlEncode($transmit_details->delivery_location->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->delivery_location->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -251,18 +304,34 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 	<div id="r_addressed_to" class="form-group row">
 		<label id="elh_transmit_details_addressed_to" for="x_addressed_to" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->addressed_to->caption() ?><?php echo ($transmit_details->addressed_to->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->addressed_to->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_addressed_to">
 <input type="text" data-table="transmit_details" data-field="x_addressed_to" name="x_addressed_to" id="x_addressed_to" size="30" placeholder="<?php echo HtmlEncode($transmit_details->addressed_to->getPlaceHolder()) ?>" value="<?php echo $transmit_details->addressed_to->EditValue ?>"<?php echo $transmit_details->addressed_to->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_addressed_to">
+<span<?php echo $transmit_details->addressed_to->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->addressed_to->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_addressed_to" name="x_addressed_to" id="x_addressed_to" value="<?php echo HtmlEncode($transmit_details->addressed_to->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->addressed_to->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_addressed_to">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_addressed_to"><?php echo $transmit_details->addressed_to->caption() ?><?php echo ($transmit_details->addressed_to->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->addressed_to->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_addressed_to">
 <input type="text" data-table="transmit_details" data-field="x_addressed_to" name="x_addressed_to" id="x_addressed_to" size="30" placeholder="<?php echo HtmlEncode($transmit_details->addressed_to->getPlaceHolder()) ?>" value="<?php echo $transmit_details->addressed_to->EditValue ?>"<?php echo $transmit_details->addressed_to->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_addressed_to">
+<span<?php echo $transmit_details->addressed_to->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->addressed_to->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_addressed_to" name="x_addressed_to" id="x_addressed_to" value="<?php echo HtmlEncode($transmit_details->addressed_to->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->addressed_to->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -272,6 +341,7 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 	<div id="r_remarks" class="form-group row">
 		<label id="elh_transmit_details_remarks" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->remarks->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_remarks">
 <?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
@@ -279,12 +349,20 @@ ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":fals
 ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
 </script>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_remarks">
+<span<?php echo $transmit_details->remarks->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->remarks->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" value="<?php echo HtmlEncode($transmit_details->remarks->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->remarks->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_remarks">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_remarks"><?php echo $transmit_details->remarks->caption() ?><?php echo ($transmit_details->remarks->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->remarks->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_remarks">
 <?php AppendClass($transmit_details->remarks->EditAttrs["class"], "editor"); ?>
 <textarea data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" cols="35" rows="4" placeholder="<?php echo HtmlEncode($transmit_details->remarks->getPlaceHolder()) ?>"<?php echo $transmit_details->remarks->editAttributes() ?>><?php echo $transmit_details->remarks->EditValue ?></textarea>
@@ -292,6 +370,13 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
 </script>
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_remarks">
+<span<?php echo $transmit_details->remarks->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->remarks->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" value="<?php echo HtmlEncode($transmit_details->remarks->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->remarks->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -301,6 +386,7 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 	<div id="r_ack_rcvd" class="form-group row">
 		<label id="elh_transmit_details_ack_rcvd" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->ack_rcvd->caption() ?><?php echo ($transmit_details->ack_rcvd->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->ack_rcvd->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_ack_rcvd">
 <div class="btn-group ew-dropdown-list" role="group">
 	<div class="btn-group" role="group">
@@ -319,12 +405,20 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_ack_rcvd">
+<span<?php echo $transmit_details->ack_rcvd->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->ack_rcvd->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_ack_rcvd" name="x_ack_rcvd" id="x_ack_rcvd" value="<?php echo HtmlEncode($transmit_details->ack_rcvd->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->ack_rcvd->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_ack_rcvd">
 		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_ack_rcvd"><?php echo $transmit_details->ack_rcvd->caption() ?><?php echo ($transmit_details->ack_rcvd->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $transmit_details->ack_rcvd->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_ack_rcvd">
 <div class="btn-group ew-dropdown-list" role="group">
 	<div class="btn-group" role="group">
@@ -343,6 +437,13 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 	<?php } ?>
 </div><!-- /.ew-dropdown-list ##-->
 </span>
+<?php } else { ?>
+<span id="el_transmit_details_ack_rcvd">
+<span<?php echo $transmit_details->ack_rcvd->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->ack_rcvd->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_ack_rcvd" name="x_ack_rcvd" id="x_ack_rcvd" value="<?php echo HtmlEncode($transmit_details->ack_rcvd->FormValue) ?>">
+<?php } ?>
 <?php echo $transmit_details->ack_rcvd->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -398,8 +499,13 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 <?php if (!$transmit_details_add->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $transmit_details_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("AddBtn") ?></button>
+<?php if (!$transmit_details->isConfirm()) { // Confirm page ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" onclick="this.form.action.value='confirm';"><?php echo $Language->phrase("AddBtn") ?></button>
 <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?php echo $transmit_details_add->getReturnUrl() ?>"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("ConfirmBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="submit" onclick="this.form.action.value='cancel';"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } ?>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>

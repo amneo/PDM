@@ -1089,6 +1089,7 @@ class transaction_details_edit extends transaction_details
 				$this->transmit_no->ViewValue = NULL;
 			}
 			}
+			$this->transmit_no->CellCssStyle .= "text-align: left;";
 			$this->transmit_no->ViewCustomAttributes = "";
 
 			// transmit_date
@@ -1241,6 +1242,7 @@ class transaction_details_edit extends transaction_details
 				$this->transmit_no->EditValue = NULL;
 			}
 			}
+			$this->transmit_no->CellCssStyle .= "text-align: left;";
 			$this->transmit_no->ViewCustomAttributes = "";
 
 			// transmit_date

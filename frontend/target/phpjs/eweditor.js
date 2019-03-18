@@ -1,6 +1,6 @@
 /**
  * HTML Editor for PHPMaker 2019
- * @license (C) 2018 e.World Technology Ltd.
+ * @license (C) 2019 e.World Technology Ltd.
  */
 // Override tinyMCE.DOM.get method
 
@@ -84,11 +84,9 @@ ew.createEditor = function(formid, name, cols, rows, readonly) {
 		instance: null,
 		create: function() { // create
 			var ed = this.instance = tinymce.EditorManager.createEditor(longname, args.settings);
-			$(function() {
-				ed.render(true);
-			});
+			ed.render(true);
+			ed.on("init", ew.fixLayoutHeight);
 			this.active = true;
-			ew.fixLayoutHeight();
 		},
 		set: function() { // update value from textarea to editor
 			if (this.instance) this.instance.setContent(el.value);

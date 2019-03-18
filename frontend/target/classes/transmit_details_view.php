@@ -52,6 +52,14 @@ class transmit_details_view extends transmit_details
 	public $MultiDeleteUrl;
 	public $MultiUpdateUrl;
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -728,7 +736,7 @@ class transmit_details_view extends transmit_details
 		$this->remarks->setVisibility();
 		$this->ack_rcvd->setVisibility();
 		$this->ack_document->setVisibility();
-		$this->transmital_date->setVisibility();
+		$this->transmital_date->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -974,6 +982,8 @@ class transmit_details_view extends transmit_details
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
+		if ($this->AuditTrailOnView)
+			$this->writeAuditTrailOnView($row);
 		$this->transmit_id->setDbValue($row['transmit_id']);
 		$this->transmittal_no->setDbValue($row['transmittal_no']);
 		$this->project_name->setDbValue($row['project_name']);
@@ -1100,11 +1110,6 @@ class transmit_details_view extends transmit_details
 			}
 			$this->ack_document->ViewCustomAttributes = "";
 
-			// transmital_date
-			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
-			$this->transmital_date->ViewCustomAttributes = "";
-
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";
 			$this->transmittal_no->HrefValue = "";
@@ -1146,11 +1151,6 @@ class transmit_details_view extends transmit_details
 			}
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
 			$this->ack_document->TooltipValue = "";
-
-			// transmital_date
-			$this->transmital_date->LinkCustomAttributes = "";
-			$this->transmital_date->HrefValue = "";
-			$this->transmital_date->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

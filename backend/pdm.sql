@@ -7,8 +7,7 @@
 
 
 SET search_path = public, pg_catalog;
-ALTER TABLE ONLY public.xmittal_mode DROP CONSTRAINT xmittal_mode_mode_name_key;
-ALTER TABLE ONLY public.xmittal_mode DROP CONSTRAINT xmittal_mode_pkey;
+ALTER TABLE ONLY public.xmit_details DROP CONSTRAINT xmit_details_pkey;
 ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_username_key;
 ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_email_addreess_key;
 ALTER TABLE ONLY public.user_dtls DROP CONSTRAINT user_dtls_pkey;
@@ -31,7 +30,7 @@ ALTER TABLE ONLY public.inbox DROP CONSTRAINT inbox_pk;
 ALTER TABLE ONLY public.distribution_details DROP CONSTRAINT distribution_details_pk;
 ALTER TABLE ONLY public.project_details DROP CONSTRAINT project_details_project_name_key;
 ALTER TABLE ONLY public.project_details DROP CONSTRAINT project_details_pk;
-DROP TABLE public.xmittal_mode;
+DROP TABLE public.xmit_details;
 DROP TABLE public.user_dtls;
 DROP TABLE public.userlevelpermissions;
 DROP TABLE public.userlevels;
@@ -172,7 +171,7 @@ CREATE TABLE public.transmit_details (
     remarks varchar,
     ack_rcvd boolean DEFAULT false,
     ack_document varchar DEFAULT 'AWAITED'::character varying,
-    transmital_date timestamp(6) without time zone
+    transmital_date timestamp(6) without time zone DEFAULT now()
 )
 WITH (oids = false);
 --
@@ -265,11 +264,11 @@ CREATE TABLE public.user_dtls (
 )
 WITH (oids = false);
 --
--- Structure for table xmittal_mode (OID = 53102) : 
+-- Structure for table xmit_details (OID = 53124) : 
 --
-CREATE TABLE public.xmittal_mode (
-    mode_id bigserial NOT NULL,
-    mode_name varchar NOT NULL
+CREATE TABLE public.xmit_details (
+    xmit_id bigserial NOT NULL,
+    xmit_mode varchar
 )
 WITH (oids = false);
 --
@@ -405,17 +404,11 @@ ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_username_key
     UNIQUE (username);
 --
--- Definition for index xmittal_mode_pkey (OID = 53109) : 
+-- Definition for index xmit_details_pkey (OID = 53131) : 
 --
-ALTER TABLE ONLY xmittal_mode
-    ADD CONSTRAINT xmittal_mode_pkey
-    PRIMARY KEY (mode_id);
---
--- Definition for index xmittal_mode_mode_name_key (OID = 53111) : 
---
-ALTER TABLE ONLY xmittal_mode
-    ADD CONSTRAINT xmittal_mode_mode_name_key
-    UNIQUE (mode_name);
+ALTER TABLE ONLY xmit_details
+    ADD CONSTRAINT xmit_details_pkey
+    PRIMARY KEY (xmit_id);
 --
 -- Comments
 --

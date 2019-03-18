@@ -78,11 +78,6 @@ ftransmit_detailsaddopt.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->remarks->caption(), $transmit_details->remarks->RequiredErrorMessage)) ?>");
 		<?php } ?>
-		<?php if ($transmit_details_addopt->transmital_date->Required) { ?>
-			elm = this.getElements("x" + infix + "_transmital_date");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->transmital_date->caption(), $transmit_details->transmital_date->RequiredErrorMessage)) ?>");
-		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -177,14 +172,6 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 <script>
 ew.createEditor("ftransmit_detailsaddopt", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
 </script>
-</div>
-	</div>
-<?php } ?>
-<?php if ($transmit_details->transmital_date->Visible) { // transmital_date ?>
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label ew-label"><?php echo $transmit_details->transmital_date->caption() ?><?php echo ($transmit_details->transmital_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="col-sm-10">
-<input type="text" data-table="transmit_details" data-field="x_transmital_date" name="x_transmital_date" id="x_transmital_date" placeholder="<?php echo HtmlEncode($transmit_details->transmital_date->getPlaceHolder()) ?>" value="<?php echo $transmit_details->transmital_date->EditValue ?>"<?php echo $transmit_details->transmital_date->editAttributes() ?>>
 </div>
 	</div>
 <?php } ?>

@@ -5203,9 +5203,9 @@ class SubPage
 <?php
 $EXPORT['word'] = 'ExportPhpWord'; // Replace the default ExportWord class
 
-//
-// Class for export to Word by PHPWord
-//
+/**
+ * Class for export to Word by PHPWord
+ */
 class ExportPhpWord extends ExportBase
 {
 	protected $PhpWord;
@@ -5225,14 +5225,17 @@ class ExportPhpWord extends ExportBase
 		$this->Section = $this->PhpWord->createSection(array("orientation" => $tbl->ExportWordPageOrientation));
 		$this->CellWidth = $tbl->ExportWordColumnWidth;
 		$this->StyleTable = array("borderSize" => 6, "borderColor" => "A9A9A9", "cellMargin" => 60); // Customize table cell styles here
-		$this->PhpWord->addTableStyle("ewPHPWord", $this->StyleTable);
-		$this->PhpWordTbl = $this->Section->addTable("ewPHPWord");
+		$this->PhpWord->addTableStyle("phpWord", $this->StyleTable);
+		$this->PhpWordTbl = $this->Section->addTable("phpWord");
 	}
 
 	// Convert to UTF-8
 	protected function convertToUtf8($value)
 	{
-		return ConvertToUtf8(html_entity_decode($value));
+		$value = RemoveHtml($value);
+		$value = HtmlDecode($value);
+		$value = HtmlEncode($value);
+		return ConvertToUtf8($value);
 	}
 
 	// Table header
@@ -5241,6 +5244,8 @@ class ExportPhpWord extends ExportBase
 	// Field aggregate
 	public function exportAggregate(&$fld, $type)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		if ($this->Horizontal) {
 			global $Language;
@@ -5248,7 +5253,7 @@ class ExportPhpWord extends ExportBase
 				$this->PhpWordTbl->addRow(0);
 			$val = "";
 			if (in_array($type, array("TOTAL", "COUNT", "AVERAGE")))
-				$val = $Language->Phrase($type) . ": " . $this->convertToUtf8($fld->exportValue());
+				$val = $Language->phrase($type) . ": " . $this->convertToUtf8($fld->exportValue());
 			$this->PhpWordTbl->addCell($this->CellWidth, array("gridSpan" => 1))->addText(trim($val));
 		}
 	}
@@ -5256,6 +5261,8 @@ class ExportPhpWord extends ExportBase
 	// Field caption
 	public function exportCaption(&$fld)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		$this->exportCaptionBy($fld, $this->FldCnt - 1, $this->RowCnt);
 	}
@@ -5351,6 +5358,8 @@ class ExportPhpWord extends ExportBase
 	// Export a field
 	public function exportField(&$fld)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		if ($this->Horizontal) {
 			$this->exportValueBy($fld, $this->FldCnt - 1, $this->RowCnt);
@@ -5393,9 +5402,9 @@ class ExportPhpWord extends ExportBase
 $EXPORT['excel'] = 'ExportExcel5'; // Replace the default ExportExcel class
 $EXPORT['excel2007'] = 'ExportExcel2007';
 
-//
-// Class for export to Excel5 by PhpSpreadsheet
-//
+/**
+ * Class for export to Excel5 by PhpSpreadsheet
+ */
 class ExportExcel5 extends ExportBase
 {
 	protected $PhpSpreadsheet;
@@ -5422,6 +5431,16 @@ class ExportExcel5 extends ExportBase
 			PhpSpreadsheet_Rendering($this->PhpSpreadsheet->getActiveSheet());
 	}
 
+	// Convert to UTF-8
+	protected function convertToUtf8($value)
+	{
+		$value = RemoveHtml($value);
+		$value = HtmlDecode($value);
+
+		//$value = HtmlEncode($value); // No need to encode (unlike PHPWord)
+		return ConvertToUtf8($value);
+	}
+
 	// Set value by column and row
 	public function setCellValueByColumnAndRow($col, $row, $val)
 	{
@@ -5439,12 +5458,14 @@ class ExportExcel5 extends ExportBase
 	// Field aggregate
 	public function exportAggregate(&$fld, $type)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		if ($this->Horizontal) {
 			global $Language;
 			$val = "";
 			if (in_array($type, array("TOTAL", "COUNT", "AVERAGE")))
-				$val = $Language->Phrase($type) . ": " . ConvertToUtf8($fld->exportValue());
+				$val = $Language->phrase($type) . ": " . $this->convertToUtf8($fld->exportValue());
 			$this->setCellValueByColumnAndRow($this->FldCnt - 1, $this->RowCnt, $val);
 		}
 	}
@@ -5452,6 +5473,8 @@ class ExportExcel5 extends ExportBase
 	// Field caption
 	public function exportCaption(&$fld)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		$this->exportCaptionBy($fld, $this->FldCnt, $this->RowCnt);
 	}
@@ -5459,7 +5482,7 @@ class ExportExcel5 extends ExportBase
 	// Field caption by column and row
 	public function exportCaptionBy(&$fld, $col, $row)
 	{
-		$val = ConvertToUtf8($fld->exportCaption());
+		$val = $this->convertToUtf8($fld->exportCaption());
 		$this->setCellValueByColumnAndRow($col, $row, $val); // Plain text
 	}
 
@@ -5528,10 +5551,10 @@ class ExportExcel5 extends ExportBase
 					$sheet->getRowDimension($row)->setRowHeight($size[1] * self::$HeightMultiplier); // Set row height
 			}
 		} else { // Formatted Text
-			$val = ConvertToUtf8($fld->exportValue());
+			$val = $this->convertToUtf8($fld->exportValue());
 			if ($this->RowType > 0) { // Not table header/footer
 				if (in_array($fld->Type, array(4, 5, 6, 14, 131))) // If float or currency
-					$val = ConvertToUtf8($fld->CurrentValue); // Use original value instead of formatted value
+					$val = $this->convertToUtf8($fld->CurrentValue); // Use original value instead of formatted value
 			}
 			$this->setCellValueByColumnAndRow($col, $row, $val);
 			if ($this->Horizontal)
@@ -5562,6 +5585,8 @@ class ExportExcel5 extends ExportBase
 	// Export a field
 	public function exportField(&$fld)
 	{
+		if (!$fld->Exportable)
+			return;
 		$this->FldCnt++;
 		if ($this->Horizontal) {
 			$this->exportValueBy($fld, $this->FldCnt, $this->RowCnt);
@@ -5600,16 +5625,16 @@ class ExportExcel5 extends ExportBase
 	}
 }
 
-//
-// Class for export to Excel2007 by PhpSpreadsheet
-//
+/**
+ * Class for export to Excel2007 by PhpSpreadsheet
+ */
 class ExportExcel2007 extends ExportExcel5
 {
 
 	// Field caption by column and row
 	public function exportCaptionBy(&$fld, $col, $row)
 	{
-		$val = ConvertToUtf8($fld->exportCaption());
+		$val = $this->convertToUtf8($fld->exportCaption());
 
 		// Example: Use rich text for caption
 		$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText(); // Rich Text

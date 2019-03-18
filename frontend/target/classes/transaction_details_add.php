@@ -635,7 +635,7 @@ class transaction_details_add extends transaction_details
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
-		$this->username->Visible = FALSE;
+		$this->username->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -884,6 +884,15 @@ class transaction_details_add extends transaction_details
 				$this->document_native->setFormValue($val);
 		}
 
+		// Check field name 'username' first before field var 'x_username'
+		$val = $CurrentForm->hasValue("username") ? $CurrentForm->getValue("username") : $CurrentForm->getValue("x_username");
+		if (!$this->username->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->username->Visible = FALSE; // Disable update for API request
+			else
+				$this->username->setFormValue($val);
+		}
+
 		// Check field name 'document_sequence' first before field var 'x_document_sequence'
 		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
 	}
@@ -901,6 +910,7 @@ class transaction_details_add extends transaction_details
 		$this->direction->CurrentValue = $this->direction->FormValue;
 		$this->approval_status->CurrentValue = $this->approval_status->FormValue;
 		$this->document_native->CurrentValue = $this->document_native->FormValue;
+		$this->username->CurrentValue = $this->username->FormValue;
 	}
 
 	// Load row based on key values
@@ -1102,6 +1112,7 @@ class transaction_details_add extends transaction_details
 				$this->transmit_no->ViewValue = NULL;
 			}
 			}
+			$this->transmit_no->CellCssStyle .= "text-align: left;";
 			$this->transmit_no->ViewCustomAttributes = "";
 
 			// transmit_date
@@ -1158,6 +1169,10 @@ class transaction_details_add extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
+			// username
+			$this->username->ViewValue = $this->username->CurrentValue;
+			$this->username->ViewCustomAttributes = "";
+
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
@@ -1209,6 +1224,11 @@ class transaction_details_add extends transaction_details
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 			$this->document_native->TooltipValue = "";
+
+			// username
+			$this->username->LinkCustomAttributes = "";
+			$this->username->HrefValue = "";
+			$this->username->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// firelink_doc_no
@@ -1345,6 +1365,7 @@ class transaction_details_add extends transaction_details
 			$this->document_native->EditValue = HtmlEncode($this->document_native->CurrentValue);
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
+			// username
 			// Add refer script
 			// firelink_doc_no
 
@@ -1389,6 +1410,10 @@ class transaction_details_add extends transaction_details
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
+
+			// username
+			$this->username->LinkCustomAttributes = "";
+			$this->username->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1530,6 +1555,10 @@ class transaction_details_add extends transaction_details
 
 		// document_native
 		$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", FALSE);
+
+		// username
+		$this->username->setDbValueDef($rsnew, CurrentUserName(), NULL);
+		$rsnew['username'] = &$this->username->DbValue;
 		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
 			if (!EmptyValue($this->document_link->Upload->FileName)) {

@@ -19,6 +19,14 @@ class transmit_details_edit extends transmit_details
 	// Page object name
 	public $PageObjName = "transmit_details_edit";
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -1039,11 +1047,6 @@ class transmit_details_edit extends transmit_details
 				$this->ack_document->ViewValue = "";
 			}
 			$this->ack_document->ViewCustomAttributes = "";
-
-			// transmital_date
-			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
-			$this->transmital_date->ViewCustomAttributes = "";
 
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";

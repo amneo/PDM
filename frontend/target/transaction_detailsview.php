@@ -187,6 +187,17 @@ $transaction_details_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
+<?php if ($transaction_details->username->Visible) { // username ?>
+	<tr id="r_username">
+		<td class="<?php echo $transaction_details_view->TableLeftColumnClass ?>"><span id="elh_transaction_details_username"><?php echo $transaction_details->username->caption() ?></span></td>
+		<td data-name="username"<?php echo $transaction_details->username->cellAttributes() ?>>
+<span id="el_transaction_details_username">
+<span<?php echo $transaction_details->username->viewAttributes() ?>>
+<?php echo $transaction_details->username->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
 </table>
 </form>
 <?php

@@ -783,7 +783,7 @@ class transaction_details_list extends transaction_details
 		$this->approval_status->setVisibility();
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
-		$this->document_native->Visible = FALSE;
+		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
@@ -1253,6 +1253,8 @@ class transaction_details_list extends transaction_details
 		if ($CurrentForm->hasValue("x_approval_status") && $CurrentForm->hasValue("o_approval_status") && $this->approval_status->CurrentValue <> $this->approval_status->OldValue)
 			return FALSE;
 		if (!EmptyValue($this->document_link->Upload->Value))
+			return FALSE;
+		if ($CurrentForm->hasValue("x_document_native") && $CurrentForm->hasValue("o_document_native") && $this->document_native->CurrentValue <> $this->document_native->OldValue)
 			return FALSE;
 		return TRUE;
 	}
@@ -1777,6 +1779,7 @@ class transaction_details_list extends transaction_details
 			$this->updateSort($this->direction, $ctrl); // direction
 			$this->updateSort($this->approval_status, $ctrl); // approval_status
 			$this->updateSort($this->document_link, $ctrl); // document_link
+			$this->updateSort($this->document_native, $ctrl); // document_native
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1821,6 +1824,7 @@ class transaction_details_list extends transaction_details
 				$this->direction->setSort("");
 				$this->approval_status->setSort("");
 				$this->document_link->setSort("");
+				$this->document_native->setSort("");
 			}
 
 			// Reset start position
@@ -1876,7 +1880,7 @@ class transaction_details_list extends transaction_details
 
 		// "checkbox"
 		$item = &$this->ListOptions->add("checkbox");
-		$item->Visible = $Security->canEdit();
+		$item->Visible = FALSE;
 		$item->OnLeft = FALSE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew.selectAllKey(this);\">";
 		$item->ShowInDropDown = FALSE;
@@ -1885,7 +1889,7 @@ class transaction_details_list extends transaction_details
 		// Drop down button for ListOptions
 		$this->ListOptions->UseDropDownButton = FALSE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
-		$this->ListOptions->UseButtonGroup = FALSE;
+		$this->ListOptions->UseButtonGroup = TRUE;
 		if ($this->ListOptions->UseButtonGroup && IsMobile())
 			$this->ListOptions->UseDropDownButton = TRUE;
 
@@ -2022,11 +2026,6 @@ class transaction_details_list extends transaction_details
 		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
 		$item->Visible = ($this->GridAddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
-
-		// Add multi update
-		$item = &$option->add("multiupdate");
-		$item->Body = "<a class=\"ew-action ew-multi-update\" title=\"" . HtmlTitle($Language->phrase("UpdateSelectedLink")) . "\" data-table=\"transaction_details\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateSelectedLink")) . "\" href=\"\" onclick=\"ew.submitAction(event,{f:document.ftransaction_detailslist,url:'" . $this->MultiUpdateUrl . "'});return false;\">" . $Language->phrase("UpdateSelectedLink") . "</a>";
-		$item->Visible = ($Security->canEdit());
 
 		// Set up options default
 		foreach ($options as &$option) {
@@ -2495,6 +2494,16 @@ class transaction_details_list extends transaction_details
 		}
 		$this->approval_status->setOldValue($CurrentForm->getValue("o_approval_status"));
 
+		// Check field name 'document_native' first before field var 'x_document_native'
+		$val = $CurrentForm->hasValue("document_native") ? $CurrentForm->getValue("document_native") : $CurrentForm->getValue("x_document_native");
+		if (!$this->document_native->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_native->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_native->setFormValue($val);
+		}
+		$this->document_native->setOldValue($CurrentForm->getValue("o_document_native"));
+
 		// Check field name 'document_sequence' first before field var 'x_document_sequence'
 		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
 		if (!$this->document_sequence->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
@@ -2515,6 +2524,7 @@ class transaction_details_list extends transaction_details
 		$this->transmit_date->CurrentValue = UnFormatDateTime($this->transmit_date->CurrentValue, 0);
 		$this->direction->CurrentValue = $this->direction->FormValue;
 		$this->approval_status->CurrentValue = $this->approval_status->FormValue;
+		$this->document_native->CurrentValue = $this->document_native->FormValue;
 	}
 
 	// Load recordset
@@ -2753,6 +2763,7 @@ class transaction_details_list extends transaction_details
 				$this->transmit_no->ViewValue = NULL;
 			}
 			}
+			$this->transmit_no->CellCssStyle .= "text-align: left;";
 			$this->transmit_no->ViewCustomAttributes = "";
 
 			// transmit_date
@@ -2804,6 +2815,11 @@ class transaction_details_list extends transaction_details
 			$this->transaction_date->ViewValue = FormatDateTime($this->transaction_date->ViewValue, 0);
 			$this->transaction_date->ViewCustomAttributes = "";
 
+			// document_native
+			$this->document_native->ViewValue = $this->document_native->CurrentValue;
+			$this->document_native->CellCssStyle .= "text-align: left;";
+			$this->document_native->ViewCustomAttributes = "";
+
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
@@ -2854,6 +2870,13 @@ class transaction_details_list extends transaction_details
 			}
 			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
 			$this->document_link->TooltipValue = "";
+
+			// document_native
+			$this->document_native->LinkCustomAttributes = "";
+			$this->document_native->HrefValue = "";
+			$this->document_native->TooltipValue = "";
+			if (!$this->isExport())
+				$this->document_native->ViewValue = $this->highlightValue($this->document_native);
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// firelink_doc_no
@@ -2987,6 +3010,12 @@ class transaction_details_list extends transaction_details
 			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
 				RenderUploadField($this->document_link, $this->RowIndex);
 
+			// document_native
+			$this->document_native->EditAttrs["class"] = "form-control";
+			$this->document_native->EditCustomAttributes = "";
+			$this->document_native->EditValue = HtmlEncode($this->document_native->CurrentValue);
+			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
+
 			// Add refer script
 			// firelink_doc_no
 
@@ -3027,6 +3056,10 @@ class transaction_details_list extends transaction_details
 				$this->document_link->HrefValue = "";
 			}
 			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
+
+			// document_native
+			$this->document_native->LinkCustomAttributes = "";
+			$this->document_native->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -3272,6 +3305,9 @@ class transaction_details_list extends transaction_details
 				$rsnew['document_link'] = $this->document_link->Upload->FileName;
 			}
 		}
+
+		// document_native
+		$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", FALSE);
 		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
 			if (!EmptyValue($this->document_link->Upload->FileName)) {

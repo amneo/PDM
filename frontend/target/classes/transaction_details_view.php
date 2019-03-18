@@ -739,7 +739,7 @@ class transaction_details_view extends transaction_details
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
-		$this->username->Visible = FALSE;
+		$this->username->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1135,6 +1135,7 @@ class transaction_details_view extends transaction_details
 				$this->transmit_no->ViewValue = NULL;
 			}
 			}
+			$this->transmit_no->CellCssStyle .= "text-align: left;";
 			$this->transmit_no->ViewCustomAttributes = "";
 
 			// transmit_date
@@ -1191,6 +1192,10 @@ class transaction_details_view extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
+			// username
+			$this->username->ViewValue = $this->username->CurrentValue;
+			$this->username->ViewCustomAttributes = "";
+
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
@@ -1242,6 +1247,11 @@ class transaction_details_view extends transaction_details
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 			$this->document_native->TooltipValue = "";
+
+			// username
+			$this->username->LinkCustomAttributes = "";
+			$this->username->HrefValue = "";
+			$this->username->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

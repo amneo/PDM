@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", '41aQiGMNgX8Qt000'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", '4c7TKU5mgejmfkm9'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -54,7 +54,7 @@ $LAZY_LOAD = TRUE; // Lazy loading of images
 $RELATED_PROJECT_ID = "";
 $BODY_CLASS = "hold-transition sidebar-collapse";
 $SIDEBAR_CLASS = "main-sidebar sidebar-light-primary";
-$NAVBAR_CLASS = "main-header navbar navbar-expand navbar-light bg-white border-bottom";
+$NAVBAR_CLASS = "main-header navbar navbar-expand navbar-light bg-white";
 $RESET_HEIGHT = TRUE; // Reset layout height
 
 // Class path
@@ -97,6 +97,8 @@ if (!isset($GLOBALS["ADODB_OUTP"]))
 // Database connection info
 $CONNECTIONS["DB"] = array("conn" => NULL, "id" => "DB", "type" => "POSTGRESQL", "host" => "192.168.100.70", "port" => 5432, "user" => "webuser", "pass" => "webuser", "db" => "pdm", "schema" => "public", "qs" => "\"", "qe" => "\"");
 $CONNECTIONS[0] = &$CONNECTIONS["DB"];
+$CONNECTIONS["pdm1"] = array("conn" => NULL, "id" => "pdm1", "type" => "POSTGRESQL", "host" => "192.168.100.70", "port" => 5432, "user" => "webuser", "pass" => "webuser", "db" => "pdm", "schema" => "public", "qs" => "\"", "qe" => "\"");
+$CONNECTIONS[1] = &$CONNECTIONS["pdm1"];
 
 // Database error function
 $ERROR_FUNC = PROJECT_NAMESPACE . 'ErrorFunc';
@@ -925,10 +927,10 @@ define(PROJECT_NAMESPACE . "BLOB_FIELD_BYTE_COUNT", 200);
 define(PROJECT_NAMESPACE . "AUTO_SUGGEST_MAX_ENTRIES", 10);
 
 // Auto suggest for all display fields
-define(PROJECT_NAMESPACE . "AUTO_SUGGEST_FOR_ALL_FIELDS", FALSE);
+define(PROJECT_NAMESPACE . "AUTO_SUGGEST_FOR_ALL_FIELDS", TRUE);
 
 // Auto fill original value
-define(PROJECT_NAMESPACE . "AUTO_FILL_ORIGINAL_VALUE", FALSE);
+define(PROJECT_NAMESPACE . "AUTO_FILL_ORIGINAL_VALUE", TRUE);
 
 // Lookup filter value separator
 define(PROJECT_NAMESPACE . "LOOKUP_FILTER_VALUE_SEPARATOR", "  || ");

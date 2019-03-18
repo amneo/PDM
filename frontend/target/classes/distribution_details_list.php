@@ -1423,7 +1423,7 @@ class distribution_details_list extends distribution_details
 		// Drop down button for ListOptions
 		$this->ListOptions->UseDropDownButton = FALSE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
-		$this->ListOptions->UseButtonGroup = FALSE;
+		$this->ListOptions->UseButtonGroup = TRUE;
 		if ($this->ListOptions->UseButtonGroup && IsMobile())
 			$this->ListOptions->UseDropDownButton = TRUE;
 

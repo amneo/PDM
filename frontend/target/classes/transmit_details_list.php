@@ -60,6 +60,14 @@ class transmit_details_list extends transmit_details
 	public $MultiDeleteUrl;
 	public $MultiUpdateUrl;
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -768,7 +776,7 @@ class transmit_details_list extends transmit_details
 		$this->remarks->setVisibility();
 		$this->ack_rcvd->setVisibility();
 		$this->ack_document->setVisibility();
-		$this->transmital_date->setVisibility();
+		$this->transmital_date->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -962,6 +970,13 @@ class transmit_details_list extends transmit_details
 				else
 					$this->setWarningMessage($Language->phrase("NoRecord"));
 			}
+
+			// Audit trail on search
+			if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+				$searchParm = ServerVar("QUERY_STRING");
+				$searchSql = $this->getSessionWhere();
+				$this->writeAuditTrailOnSearch($searchParm, $searchSql);
+			}
 		}
 
 		// Search options
@@ -1059,7 +1074,6 @@ class transmit_details_list extends transmit_details
 		$filterList = Concat($filterList, $this->remarks->AdvancedSearch->toJson(), ","); // Field remarks
 		$filterList = Concat($filterList, $this->ack_rcvd->AdvancedSearch->toJson(), ","); // Field ack_rcvd
 		$filterList = Concat($filterList, $this->ack_document->AdvancedSearch->toJson(), ","); // Field ack_document
-		$filterList = Concat($filterList, $this->transmital_date->AdvancedSearch->toJson(), ","); // Field transmital_date
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1161,14 +1175,6 @@ class transmit_details_list extends transmit_details
 		$this->ack_document->AdvancedSearch->SearchValue2 = @$filter["y_ack_document"];
 		$this->ack_document->AdvancedSearch->SearchOperator2 = @$filter["w_ack_document"];
 		$this->ack_document->AdvancedSearch->save();
-
-		// Field transmital_date
-		$this->transmital_date->AdvancedSearch->SearchValue = @$filter["x_transmital_date"];
-		$this->transmital_date->AdvancedSearch->SearchOperator = @$filter["z_transmital_date"];
-		$this->transmital_date->AdvancedSearch->SearchCondition = @$filter["v_transmital_date"];
-		$this->transmital_date->AdvancedSearch->SearchValue2 = @$filter["y_transmital_date"];
-		$this->transmital_date->AdvancedSearch->SearchOperator2 = @$filter["w_transmital_date"];
-		$this->transmital_date->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1352,7 +1358,6 @@ class transmit_details_list extends transmit_details
 			$this->updateSort($this->remarks, $ctrl); // remarks
 			$this->updateSort($this->ack_rcvd, $ctrl); // ack_rcvd
 			$this->updateSort($this->ack_document, $ctrl); // ack_document
-			$this->updateSort($this->transmital_date, $ctrl); // transmital_date
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1396,7 +1401,6 @@ class transmit_details_list extends transmit_details
 				$this->remarks->setSort("");
 				$this->ack_rcvd->setSort("");
 				$this->ack_document->setSort("");
-				$this->transmital_date->setSort("");
 			}
 
 			// Reset start position
@@ -1453,7 +1457,7 @@ class transmit_details_list extends transmit_details
 		// Drop down button for ListOptions
 		$this->ListOptions->UseDropDownButton = FALSE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
-		$this->ListOptions->UseButtonGroup = FALSE;
+		$this->ListOptions->UseButtonGroup = TRUE;
 		if ($this->ListOptions->UseButtonGroup && IsMobile())
 			$this->ListOptions->UseDropDownButton = TRUE;
 
@@ -1479,7 +1483,10 @@ class transmit_details_list extends transmit_details
 		$opt = &$this->ListOptions->Items["view"];
 		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
 		if ($Security->canView()) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
+			if (IsMobile())
+				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
+			else
+				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"transmit_details\" data-caption=\"" . $viewcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->ViewUrl) . "',btn:null});\">" . $Language->phrase("ViewLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1497,7 +1504,10 @@ class transmit_details_list extends transmit_details
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
-			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			if (IsMobile())
+				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			else
+				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"transmit_details\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->CopyUrl) . "'});\">" . $Language->phrase("CopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1550,7 +1560,10 @@ class transmit_details_list extends transmit_details
 		// Add
 		$item = &$option->add("add");
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
-		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
+		if (IsMobile())
+			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"transmit_details\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
 
@@ -1932,6 +1945,7 @@ class transmit_details_list extends transmit_details
 		// ack_document
 		// transmital_date
 
+		$this->transmital_date->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// transmit_id
@@ -1998,11 +2012,6 @@ class transmit_details_list extends transmit_details
 			}
 			$this->ack_document->ViewCustomAttributes = "";
 
-			// transmital_date
-			$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-			$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
-			$this->transmital_date->ViewCustomAttributes = "";
-
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";
 			$this->transmittal_no->HrefValue = "";
@@ -2044,11 +2053,6 @@ class transmit_details_list extends transmit_details
 			}
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
 			$this->ack_document->TooltipValue = "";
-
-			// transmital_date
-			$this->transmital_date->LinkCustomAttributes = "";
-			$this->transmital_date->HrefValue = "";
-			$this->transmital_date->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

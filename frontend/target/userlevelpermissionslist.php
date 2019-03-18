@@ -158,7 +158,6 @@ $userlevelpermissions_list->showMessage();
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($userlevelpermissions_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
@@ -371,7 +370,6 @@ if ($userlevelpermissions_list->Recordset)
 <select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
 <option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
 <option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="150"<?php if ($userlevelpermissions_list->DisplayRecs == 150) { ?> selected<?php } ?>>150</option>
 <option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>

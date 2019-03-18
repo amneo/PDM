@@ -21,6 +21,14 @@ class transmit_details extends DbTable
 	public $OffsetColumnClass = "col-sm-10 offset-sm-2";
 	public $TableLeftColumnClass = "w-col-2";
 
+	// Audit trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Export
 	public $ExportDoc;
 
@@ -121,8 +129,8 @@ class transmit_details extends DbTable
 		$this->fields['ack_document'] = &$this->ack_document;
 
 		// transmital_date
-		$this->transmital_date = new DbField('transmit_details', 'transmit_details', 'x_transmital_date', 'transmital_date', '"transmital_date"', CastDateFieldForLike('"transmital_date"', 0, "DB"), 135, 0, FALSE, '"transmital_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->transmital_date->Sortable = TRUE; // Allow sort
+		$this->transmital_date = new DbField('transmit_details', 'transmit_details', 'x_transmital_date', 'transmital_date', '"transmital_date"', CastDateFieldForLike('"transmital_date"', 0, "DB"), 135, -1, FALSE, '"transmital_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->transmital_date->Sortable = FALSE; // Allow sort
 		$this->transmital_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['transmital_date'] = &$this->transmital_date;
 	}
@@ -480,6 +488,8 @@ class transmit_details extends DbTable
 			// Get insert id if necessary
 			$this->transmit_id->setDbValue($conn->getOne("SELECT currval('transmit_details_transmit_id_seq'::regclass)"));
 			$rs['transmit_id'] = $this->transmit_id->DbValue;
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailOnAdd($rs);
 		}
 		return $success;
 	}
@@ -509,6 +519,13 @@ class transmit_details extends DbTable
 	{
 		$conn = &$this->getConnection();
 		$success = $conn->execute($this->updateSql($rs, $where, $curfilter));
+		if ($success && $this->AuditTrailOnEdit && $rsold) {
+			$rsaudit = $rs;
+			$fldname = 'transmit_id';
+			if (!array_key_exists($fldname, $rsaudit))
+				$rsaudit[$fldname] = $rsold[$fldname];
+			$this->writeAuditTrailOnEdit($rsold, $rsaudit);
+		}
 		return $success;
 	}
 
@@ -538,6 +555,8 @@ class transmit_details extends DbTable
 		$conn = &$this->getConnection();
 		if ($success)
 			$success = $conn->execute($this->deleteSql($rs, $where, $curfilter));
+		if ($success && $this->AuditTrailOnDelete)
+			$this->writeAuditTrailOnDelete($rs);
 		return $success;
 	}
 
@@ -815,8 +834,10 @@ class transmit_details extends DbTable
 		// ack_rcvd
 		// ack_document
 		// transmital_date
-		// transmit_id
 
+		$this->transmital_date->CellCssStyle = "white-space: nowrap;";
+
+		// transmit_id
 		$this->transmit_id->ViewValue = $this->transmit_id->CurrentValue;
 		$this->transmit_id->ViewValue = FormatNumber($this->transmit_id->ViewValue, 0, -2, -2, -2);
 		$this->transmit_id->ViewCustomAttributes = "";
@@ -882,7 +903,6 @@ class transmit_details extends DbTable
 
 		// transmital_date
 		$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
-		$this->transmital_date->ViewValue = FormatDateTime($this->transmital_date->ViewValue, 0);
 		$this->transmital_date->ViewCustomAttributes = "";
 
 		// transmit_id
@@ -1014,8 +1034,7 @@ class transmit_details extends DbTable
 		$this->transmital_date->EditAttrs["class"] = "form-control";
 		$this->transmital_date->EditCustomAttributes = "";
 		$this->transmital_date->EditValue = $this->transmital_date->CurrentValue;
-		$this->transmital_date->EditValue = FormatDateTime($this->transmital_date->EditValue, 0);
-		$this->transmital_date->ViewCustomAttributes = "";
+		$this->transmital_date->PlaceHolder = RemoveHtml($this->transmital_date->caption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1053,7 +1072,6 @@ class transmit_details extends DbTable
 					$doc->exportCaption($this->remarks);
 					$doc->exportCaption($this->ack_rcvd);
 					$doc->exportCaption($this->ack_document);
-					$doc->exportCaption($this->transmital_date);
 				} else {
 					$doc->exportCaption($this->transmit_id);
 					$doc->exportCaption($this->transmittal_no);
@@ -1063,7 +1081,6 @@ class transmit_details extends DbTable
 					$doc->exportCaption($this->remarks);
 					$doc->exportCaption($this->ack_rcvd);
 					$doc->exportCaption($this->ack_document);
-					$doc->exportCaption($this->transmital_date);
 				}
 				$doc->endExportRow();
 			}
@@ -1102,7 +1119,6 @@ class transmit_details extends DbTable
 						$doc->exportField($this->remarks);
 						$doc->exportField($this->ack_rcvd);
 						$doc->exportField($this->ack_document);
-						$doc->exportField($this->transmital_date);
 					} else {
 						$doc->exportField($this->transmit_id);
 						$doc->exportField($this->transmittal_no);
@@ -1112,7 +1128,6 @@ class transmit_details extends DbTable
 						$doc->exportField($this->remarks);
 						$doc->exportField($this->ack_rcvd);
 						$doc->exportField($this->ack_document);
-						$doc->exportField($this->transmital_date);
 					}
 					$doc->endExportRow($rowCnt);
 				}
@@ -1351,6 +1366,138 @@ class transmit_details extends DbTable
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	// Write Audit Trail start/end for grid update
+	public function writeAuditTrailDummy($typ)
+	{
+		$table = 'transmit_details';
+		$usr = CurrentUserID();
+		WriteAuditTrail("log", DbCurrentDateTime(), ScriptName(), $usr, $typ, $table, "", "", "", "");
+	}
+
+	// Write Audit Trail (add page)
+	public function writeAuditTrailOnAdd(&$rs)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnAdd)
+			return;
+		$table = 'transmit_details';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['transmit_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
+					$newvalue = $Language->phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
+					if (AUDIT_TRAIL_TO_DATABASE)
+						$newvalue = $rs[$fldname];
+					else
+						$newvalue = "[MEMO]"; // Memo Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
+					$newvalue = "[XML]"; // XML Field
+				} else {
+					$newvalue = $rs[$fldname];
+				}
+				WriteAuditTrail("log", $dt, $id, $usr, "A", $table, $fldname, $key, "", $newvalue);
+			}
+		}
+	}
+
+	// Write Audit Trail (edit page)
+	public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnEdit)
+			return;
+		$table = 'transmit_details';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rsold['transmit_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rsnew) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && array_key_exists($fldname, $rsold) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
+					$modified = (FormatDateTime($rsold[$fldname], 0) <> FormatDateTime($rsnew[$fldname], 0));
+				} else {
+					$modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+				}
+				if ($modified) {
+					if ($this->fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+						$oldvalue = $Language->phrase("PasswordMask");
+						$newvalue = $Language->phrase("PasswordMask");
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) { // Memo field
+						if (AUDIT_TRAIL_TO_DATABASE) {
+							$oldvalue = $rsold[$fldname];
+							$newvalue = $rsnew[$fldname];
+						} else {
+							$oldvalue = "[MEMO]";
+							$newvalue = "[MEMO]";
+						}
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) { // XML field
+						$oldvalue = "[XML]";
+						$newvalue = "[XML]";
+					} else {
+						$oldvalue = $rsold[$fldname];
+						$newvalue = $rsnew[$fldname];
+					}
+					WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
+				}
+			}
+		}
+	}
+
+	// Write Audit Trail (delete page)
+	public function writeAuditTrailOnDelete(&$rs)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnDelete)
+			return;
+		$table = 'transmit_details';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['transmit_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$curUser = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
+					$oldvalue = $Language->phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
+					if (AUDIT_TRAIL_TO_DATABASE)
+						$oldvalue = $rs[$fldname];
+					else
+						$oldvalue = "[MEMO]"; // Memo field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
+					$oldvalue = "[XML]"; // XML field
+				} else {
+					$oldvalue = $rs[$fldname];
+				}
+				WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
+			}
+		}
 	}
 
 	// Table level events

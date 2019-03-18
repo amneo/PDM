@@ -127,7 +127,7 @@ $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect":false});
 </script>
@@ -149,7 +149,7 @@ $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSelect":false});
 </script>
@@ -177,7 +177,7 @@ $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect":false});
 </script>
@@ -199,7 +199,7 @@ $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSelect":false});
 </script>
@@ -218,7 +218,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSel
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->submit_no->cellAttributes() ?>>
 			<span id="el_transaction_details_submit_no">
-<input type="text" data-table="transaction_details" data-field="x_submit_no" data-page="1" name="x_submit_no" id="x_submit_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->submit_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->submit_no->EditValue ?>"<?php echo $transaction_details->submit_no->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->submit_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->submit_no->EditValue ?>"<?php echo $transaction_details->submit_no->editAttributes() ?>>
 </span>
 		</div></div>
 	</div>
@@ -229,7 +229,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSel
 		<td<?php echo $transaction_details->submit_no->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_submit_no">
-<input type="text" data-table="transaction_details" data-field="x_submit_no" data-page="1" name="x_submit_no" id="x_submit_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->submit_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->submit_no->EditValue ?>"<?php echo $transaction_details->submit_no->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_submit_no" name="x_submit_no" id="x_submit_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->submit_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->submit_no->EditValue ?>"<?php echo $transaction_details->submit_no->editAttributes() ?>>
 </span>
 			</div>
 		</td>
@@ -244,7 +244,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSel
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->revision_no->cellAttributes() ?>>
 			<span id="el_transaction_details_revision_no">
-<input type="text" data-table="transaction_details" data-field="x_revision_no" data-page="1" name="x_revision_no" id="x_revision_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->revision_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->revision_no->EditValue ?>"<?php echo $transaction_details->revision_no->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->revision_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->revision_no->EditValue ?>"<?php echo $transaction_details->revision_no->editAttributes() ?>>
 </span>
 		</div></div>
 	</div>
@@ -255,7 +255,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSel
 		<td<?php echo $transaction_details->revision_no->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_revision_no">
-<input type="text" data-table="transaction_details" data-field="x_revision_no" data-page="1" name="x_revision_no" id="x_revision_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->revision_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->revision_no->EditValue ?>"<?php echo $transaction_details->revision_no->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_revision_no" name="x_revision_no" id="x_revision_no" size="30" placeholder="<?php echo HtmlEncode($transaction_details->revision_no->getPlaceHolder()) ?>" value="<?php echo $transaction_details->revision_no->EditValue ?>"<?php echo $transaction_details->revision_no->editAttributes() ?>>
 </span>
 			</div>
 		</td>
@@ -277,13 +277,13 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
 	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">
 			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_transmit_no',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"x_transmit_no","forceSelect":false});
 </script>
@@ -305,13 +305,13 @@ $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
 	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
+		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">
 			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->transmit_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_transmit_no',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->transmit_no->ReadOnly || $transaction_details->transmit_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 		</div>
 	</div>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-page="1" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="transaction_details" data-field="x_transmit_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->transmit_no->displayValueSeparatorAttribute() ?>" name="x_transmit_no" id="x_transmit_no" value="<?php echo HtmlEncode($transaction_details->transmit_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 ftransaction_detailssearch.createAutoSuggest({"id":"x_transmit_no","forceSelect":false});
 </script>
@@ -330,7 +330,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"x_transmit_no","forceSelect"
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->transmit_date->cellAttributes() ?>>
 			<span id="el_transaction_details_transmit_date">
-<input type="text" data-table="transaction_details" data-field="x_transmit_date" data-page="1" name="x_transmit_date" id="x_transmit_date" placeholder="<?php echo HtmlEncode($transaction_details->transmit_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->transmit_date->EditValue ?>"<?php echo $transaction_details->transmit_date->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" placeholder="<?php echo HtmlEncode($transaction_details->transmit_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->transmit_date->EditValue ?>"<?php echo $transaction_details->transmit_date->editAttributes() ?>>
 <?php if (!$transaction_details->transmit_date->ReadOnly && !$transaction_details->transmit_date->Disabled && !isset($transaction_details->transmit_date->EditAttrs["readonly"]) && !isset($transaction_details->transmit_date->EditAttrs["disabled"])) { ?>
 <script>
 ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
@@ -346,7 +346,7 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<td<?php echo $transaction_details->transmit_date->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_transmit_date">
-<input type="text" data-table="transaction_details" data-field="x_transmit_date" data-page="1" name="x_transmit_date" id="x_transmit_date" placeholder="<?php echo HtmlEncode($transaction_details->transmit_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->transmit_date->EditValue ?>"<?php echo $transaction_details->transmit_date->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_transmit_date" name="x_transmit_date" id="x_transmit_date" placeholder="<?php echo HtmlEncode($transaction_details->transmit_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->transmit_date->EditValue ?>"<?php echo $transaction_details->transmit_date->editAttributes() ?>>
 <?php if (!$transaction_details->transmit_date->ReadOnly && !$transaction_details->transmit_date->Disabled && !isset($transaction_details->transmit_date->EditAttrs["readonly"]) && !isset($transaction_details->transmit_date->EditAttrs["disabled"])) { ?>
 <script>
 ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
@@ -366,9 +366,9 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->direction->cellAttributes() ?>>
 			<span id="el_transaction_details_direction">
-<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-page="1" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
+<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
 <div id="dsl_x_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction", 1) ?>
+<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction") ?>
 </div></div>
 </span>
 		</div></div>
@@ -380,9 +380,9 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<td<?php echo $transaction_details->direction->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_direction">
-<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-page="1" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
+<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
 <div id="dsl_x_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction", 1) ?>
+<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction") ?>
 </div></div>
 </span>
 			</div>
@@ -403,10 +403,10 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->AdvancedSearch->ViewValue ?></button>
 		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status", 1) ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status") ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
@@ -430,10 +430,10 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->AdvancedSearch->ViewValue ?></button>
 		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
 			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status", 1) ?>
+<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status") ?>
 			</div><!-- /.ew-items ##-->
 		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-page="1" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
+		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
 	</div><!-- /.btn-group ##-->
 	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
 	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
@@ -456,7 +456,7 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->document_link->cellAttributes() ?>>
 			<span id="el_transaction_details_document_link">
-<input type="text" data-table="transaction_details" data-field="x_document_link" data-page="1" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_document_link" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
 </span>
 		</div></div>
 	</div>
@@ -467,7 +467,7 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<td<?php echo $transaction_details->document_link->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_document_link">
-<input type="text" data-table="transaction_details" data-field="x_document_link" data-page="1" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_document_link" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
 </span>
 			</div>
 		</td>
@@ -482,7 +482,7 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->document_native->cellAttributes() ?>>
 			<span id="el_transaction_details_document_native">
-<input type="text" data-table="transaction_details" data-field="x_document_native" data-page="1" name="x_document_native" id="x_document_native" size="35" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_native->EditValue ?>"<?php echo $transaction_details->document_native->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_native->EditValue ?>"<?php echo $transaction_details->document_native->editAttributes() ?>>
 </span>
 		</div></div>
 	</div>
@@ -493,7 +493,7 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<td<?php echo $transaction_details->document_native->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_document_native">
-<input type="text" data-table="transaction_details" data-field="x_document_native" data-page="1" name="x_document_native" id="x_document_native" size="35" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_native->EditValue ?>"<?php echo $transaction_details->document_native->editAttributes() ?>>
+<input type="text" data-table="transaction_details" data-field="x_document_native" name="x_document_native" id="x_document_native" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_native->EditValue ?>"<?php echo $transaction_details->document_native->editAttributes() ?>>
 </span>
 			</div>
 		</td>
