@@ -775,6 +775,8 @@ class transaction_details_list extends transaction_details
 		$this->setupExportOptions();
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->project_name->setVisibility();
+		$this->document_tittle->setVisibility();
 		$this->submit_no->setVisibility();
 		$this->revision_no->setVisibility();
 		$this->transmit_no->setVisibility();
@@ -834,9 +836,6 @@ class transaction_details_list extends transaction_details
 			// Process list action first
 			if ($this->processListAction()) // Ajax request
 				$this->terminate();
-
-			// Set up records per page
-			$this->setupDisplayRecs();
 
 			// Handle reset command
 			$this->resetCmd();
@@ -1057,28 +1056,6 @@ class transaction_details_list extends transaction_details
 		}
 	}
 
-	// Set up number of records displayed per page
-	protected function setupDisplayRecs()
-	{
-		$wrk = Get(TABLE_REC_PER_PAGE, "");
-		if ($wrk <> "") {
-			if (is_numeric($wrk)) {
-				$this->DisplayRecs = (int)$wrk;
-			} else {
-				if (SameText($wrk, "all")) { // Display all records
-					$this->DisplayRecs = -1;
-				} else {
-					$this->DisplayRecs = 50; // Non-numeric, load default
-				}
-			}
-			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
-
-			// Reset start position
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
-		}
-	}
-
 	// Exit inline mode
 	protected function clearInlineMode()
 	{
@@ -1240,6 +1217,10 @@ class transaction_details_list extends transaction_details
 		global $CurrentForm;
 		if ($CurrentForm->hasValue("x_firelink_doc_no") && $CurrentForm->hasValue("o_firelink_doc_no") && $this->firelink_doc_no->CurrentValue <> $this->firelink_doc_no->OldValue)
 			return FALSE;
+		if ($CurrentForm->hasValue("x_project_name") && $CurrentForm->hasValue("o_project_name") && $this->project_name->CurrentValue <> $this->project_name->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_document_tittle") && $CurrentForm->hasValue("o_document_tittle") && $this->document_tittle->CurrentValue <> $this->document_tittle->OldValue)
+			return FALSE;
 		if ($CurrentForm->hasValue("x_submit_no") && $CurrentForm->hasValue("o_submit_no") && $this->submit_no->CurrentValue <> $this->submit_no->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_revision_no") && $CurrentForm->hasValue("o_revision_no") && $this->revision_no->CurrentValue <> $this->revision_no->OldValue)
@@ -1343,6 +1324,8 @@ class transaction_details_list extends transaction_details
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "ftransaction_detailslistsrch");
 		$filterList = Concat($filterList, $this->firelink_doc_no->AdvancedSearch->toJson(), ","); // Field firelink_doc_no
+		$filterList = Concat($filterList, $this->project_name->AdvancedSearch->toJson(), ","); // Field project_name
+		$filterList = Concat($filterList, $this->document_tittle->AdvancedSearch->toJson(), ","); // Field document_tittle
 		$filterList = Concat($filterList, $this->submit_no->AdvancedSearch->toJson(), ","); // Field submit_no
 		$filterList = Concat($filterList, $this->revision_no->AdvancedSearch->toJson(), ","); // Field revision_no
 		$filterList = Concat($filterList, $this->transmit_no->AdvancedSearch->toJson(), ","); // Field transmit_no
@@ -1396,6 +1379,22 @@ class transaction_details_list extends transaction_details
 		$this->firelink_doc_no->AdvancedSearch->SearchValue2 = @$filter["y_firelink_doc_no"];
 		$this->firelink_doc_no->AdvancedSearch->SearchOperator2 = @$filter["w_firelink_doc_no"];
 		$this->firelink_doc_no->AdvancedSearch->save();
+
+		// Field project_name
+		$this->project_name->AdvancedSearch->SearchValue = @$filter["x_project_name"];
+		$this->project_name->AdvancedSearch->SearchOperator = @$filter["z_project_name"];
+		$this->project_name->AdvancedSearch->SearchCondition = @$filter["v_project_name"];
+		$this->project_name->AdvancedSearch->SearchValue2 = @$filter["y_project_name"];
+		$this->project_name->AdvancedSearch->SearchOperator2 = @$filter["w_project_name"];
+		$this->project_name->AdvancedSearch->save();
+
+		// Field document_tittle
+		$this->document_tittle->AdvancedSearch->SearchValue = @$filter["x_document_tittle"];
+		$this->document_tittle->AdvancedSearch->SearchOperator = @$filter["z_document_tittle"];
+		$this->document_tittle->AdvancedSearch->SearchCondition = @$filter["v_document_tittle"];
+		$this->document_tittle->AdvancedSearch->SearchValue2 = @$filter["y_document_tittle"];
+		$this->document_tittle->AdvancedSearch->SearchOperator2 = @$filter["w_document_tittle"];
+		$this->document_tittle->AdvancedSearch->save();
 
 		// Field submit_no
 		$this->submit_no->AdvancedSearch->SearchValue = @$filter["x_submit_no"];
@@ -1472,6 +1471,8 @@ class transaction_details_list extends transaction_details
 		if (!$Security->canSearch())
 			return "";
 		$this->buildSearchSql($where, $this->firelink_doc_no, $default, FALSE); // firelink_doc_no
+		$this->buildSearchSql($where, $this->project_name, $default, FALSE); // project_name
+		$this->buildSearchSql($where, $this->document_tittle, $default, FALSE); // document_tittle
 		$this->buildSearchSql($where, $this->submit_no, $default, FALSE); // submit_no
 		$this->buildSearchSql($where, $this->revision_no, $default, FALSE); // revision_no
 		$this->buildSearchSql($where, $this->transmit_no, $default, FALSE); // transmit_no
@@ -1487,6 +1488,8 @@ class transaction_details_list extends transaction_details
 		}
 		if (!$default && $this->Command == "search") {
 			$this->firelink_doc_no->AdvancedSearch->save(); // firelink_doc_no
+			$this->project_name->AdvancedSearch->save(); // project_name
+			$this->document_tittle->AdvancedSearch->save(); // document_tittle
 			$this->submit_no->AdvancedSearch->save(); // submit_no
 			$this->revision_no->AdvancedSearch->save(); // revision_no
 			$this->transmit_no->AdvancedSearch->save(); // transmit_no
@@ -1556,8 +1559,8 @@ class transaction_details_list extends transaction_details
 	{
 		$where = "";
 		$this->buildBasicSearchSql($where, $this->firelink_doc_no, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->submit_no, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->revision_no, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->project_name, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->document_tittle, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->transmit_no, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->direction, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->approval_status, $arKeywords, $type);
@@ -1680,6 +1683,10 @@ class transaction_details_list extends transaction_details
 			return TRUE;
 		if ($this->firelink_doc_no->AdvancedSearch->issetSession())
 			return TRUE;
+		if ($this->project_name->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_tittle->AdvancedSearch->issetSession())
+			return TRUE;
 		if ($this->submit_no->AdvancedSearch->issetSession())
 			return TRUE;
 		if ($this->revision_no->AdvancedSearch->issetSession())
@@ -1730,6 +1737,8 @@ class transaction_details_list extends transaction_details
 	protected function resetAdvancedSearchParms()
 	{
 		$this->firelink_doc_no->AdvancedSearch->unsetSession();
+		$this->project_name->AdvancedSearch->unsetSession();
+		$this->document_tittle->AdvancedSearch->unsetSession();
 		$this->submit_no->AdvancedSearch->unsetSession();
 		$this->revision_no->AdvancedSearch->unsetSession();
 		$this->transmit_no->AdvancedSearch->unsetSession();
@@ -1750,6 +1759,8 @@ class transaction_details_list extends transaction_details
 
 		// Restore advanced search values
 		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
 		$this->submit_no->AdvancedSearch->load();
 		$this->revision_no->AdvancedSearch->load();
 		$this->transmit_no->AdvancedSearch->load();
@@ -1772,6 +1783,8 @@ class transaction_details_list extends transaction_details
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
 			$this->updateSort($this->firelink_doc_no, $ctrl); // firelink_doc_no
+			$this->updateSort($this->project_name, $ctrl); // project_name
+			$this->updateSort($this->document_tittle, $ctrl); // document_tittle
 			$this->updateSort($this->submit_no, $ctrl); // submit_no
 			$this->updateSort($this->revision_no, $ctrl); // revision_no
 			$this->updateSort($this->transmit_no, $ctrl); // transmit_no
@@ -1817,6 +1830,8 @@ class transaction_details_list extends transaction_details
 				$this->setSessionOrderBy($orderBy);
 				$this->setSessionOrderByList($orderBy);
 				$this->firelink_doc_no->setSort("");
+				$this->project_name->setSort("");
+				$this->document_tittle->setSort("");
 				$this->submit_no->setSort("");
 				$this->revision_no->setSort("");
 				$this->transmit_no->setSort("");
@@ -1842,38 +1857,32 @@ class transaction_details_list extends transaction_details
 		if ($this->AllowAddDeleteRow) {
 			$item = &$this->ListOptions->add("griddelete");
 			$item->CssClass = "text-nowrap";
-			$item->OnLeft = FALSE;
+			$item->OnLeft = TRUE;
 			$item->Visible = FALSE; // Default hidden
 		}
 
 		// Add group option item
 		$item = &$this->ListOptions->add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
-
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = FALSE;
 
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canEdit();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canAdd();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// List actions
 		$item = &$this->ListOptions->add("listactions");
 		$item->CssClass = "text-nowrap";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 		$item->ShowInDropDown = FALSE;
@@ -1881,8 +1890,9 @@ class transaction_details_list extends transaction_details
 		// "checkbox"
 		$item = &$this->ListOptions->add("checkbox");
 		$item->Visible = FALSE;
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew.selectAllKey(this);\">";
+		$item->moveTo(0);
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
@@ -1940,18 +1950,6 @@ class transaction_details_list extends transaction_details
 					$opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
 				}
 			}
-		}
-
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView()) {
-			if (IsMobile())
-				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-			else
-				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"transaction_details\" data-caption=\"" . $viewcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->ViewUrl) . "',btn:null});\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
 		}
 
 		// "edit"
@@ -2308,6 +2306,10 @@ class transaction_details_list extends transaction_details
 		$this->document_sequence->OldValue = $this->document_sequence->CurrentValue;
 		$this->firelink_doc_no->CurrentValue = NULL;
 		$this->firelink_doc_no->OldValue = $this->firelink_doc_no->CurrentValue;
+		$this->project_name->CurrentValue = NULL;
+		$this->project_name->OldValue = $this->project_name->CurrentValue;
+		$this->document_tittle->CurrentValue = NULL;
+		$this->document_tittle->OldValue = $this->document_tittle->CurrentValue;
 		$this->submit_no->CurrentValue = NULL;
 		$this->submit_no->OldValue = $this->submit_no->CurrentValue;
 		$this->revision_no->CurrentValue = NULL;
@@ -2352,11 +2354,20 @@ class transaction_details_list extends transaction_details
 		if ($this->firelink_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->firelink_doc_no->AdvancedSearch->setSearchOperator(Get("z_firelink_doc_no", ""));
-		$this->firelink_doc_no->AdvancedSearch->setSearchCondition(Get("v_firelink_doc_no", ""));
-		$this->firelink_doc_no->AdvancedSearch->setSearchValue2(Get("y_firelink_doc_no", ""));
-		if ($this->firelink_doc_no->AdvancedSearch->SearchValue2 <> "" && $this->Command == "")
+
+		// project_name
+		if (!$this->isAddOrEdit())
+			$this->project_name->AdvancedSearch->setSearchValue(Get("x_project_name", Get("project_name", "")));
+		if ($this->project_name->AdvancedSearch->SearchValue <> "" && $this->Command == "")
 			$this->Command = "search";
-		$this->firelink_doc_no->AdvancedSearch->setSearchOperator2(Get("w_firelink_doc_no", ""));
+		$this->project_name->AdvancedSearch->setSearchOperator(Get("z_project_name", ""));
+
+		// document_tittle
+		if (!$this->isAddOrEdit())
+			$this->document_tittle->AdvancedSearch->setSearchValue(Get("x_document_tittle", Get("document_tittle", "")));
+		if ($this->document_tittle->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_tittle->AdvancedSearch->setSearchOperator(Get("z_document_tittle", ""));
 
 		// submit_no
 		if (!$this->isAddOrEdit())
@@ -2432,6 +2443,26 @@ class transaction_details_list extends transaction_details
 				$this->firelink_doc_no->setFormValue($val);
 		}
 		$this->firelink_doc_no->setOldValue($CurrentForm->getValue("o_firelink_doc_no"));
+
+		// Check field name 'project_name' first before field var 'x_project_name'
+		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
+		if (!$this->project_name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->project_name->Visible = FALSE; // Disable update for API request
+			else
+				$this->project_name->setFormValue($val);
+		}
+		$this->project_name->setOldValue($CurrentForm->getValue("o_project_name"));
+
+		// Check field name 'document_tittle' first before field var 'x_document_tittle'
+		$val = $CurrentForm->hasValue("document_tittle") ? $CurrentForm->getValue("document_tittle") : $CurrentForm->getValue("x_document_tittle");
+		if (!$this->document_tittle->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_tittle->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_tittle->setFormValue($val);
+		}
+		$this->document_tittle->setOldValue($CurrentForm->getValue("o_document_tittle"));
 
 		// Check field name 'submit_no' first before field var 'x_submit_no'
 		$val = $CurrentForm->hasValue("submit_no") ? $CurrentForm->getValue("submit_no") : $CurrentForm->getValue("x_submit_no");
@@ -2517,6 +2548,8 @@ class transaction_details_list extends transaction_details
 		if (!$this->isGridAdd() && !$this->isAdd())
 			$this->document_sequence->CurrentValue = $this->document_sequence->FormValue;
 		$this->firelink_doc_no->CurrentValue = $this->firelink_doc_no->FormValue;
+		$this->project_name->CurrentValue = $this->project_name->FormValue;
+		$this->document_tittle->CurrentValue = $this->document_tittle->FormValue;
 		$this->submit_no->CurrentValue = $this->submit_no->FormValue;
 		$this->revision_no->CurrentValue = $this->revision_no->FormValue;
 		$this->transmit_no->CurrentValue = $this->transmit_no->FormValue;
@@ -2596,6 +2629,8 @@ class transaction_details_list extends transaction_details
 		} else {
 			$this->firelink_doc_no->VirtualValue = ""; // Clear value
 		}
+		$this->project_name->setDbValue($row['project_name']);
+		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->submit_no->setDbValue($row['submit_no']);
 		$this->revision_no->setDbValue($row['revision_no']);
 		$this->transmit_no->setDbValue($row['transmit_no']);
@@ -2621,6 +2656,8 @@ class transaction_details_list extends transaction_details
 		$row = [];
 		$row['document_sequence'] = $this->document_sequence->CurrentValue;
 		$row['firelink_doc_no'] = $this->firelink_doc_no->CurrentValue;
+		$row['project_name'] = $this->project_name->CurrentValue;
+		$row['document_tittle'] = $this->document_tittle->CurrentValue;
 		$row['submit_no'] = $this->submit_no->CurrentValue;
 		$row['revision_no'] = $this->revision_no->CurrentValue;
 		$row['transmit_no'] = $this->transmit_no->CurrentValue;
@@ -2679,6 +2716,8 @@ class transaction_details_list extends transaction_details
 		$this->document_sequence->CellCssStyle = "white-space: nowrap;";
 
 		// firelink_doc_no
+		// project_name
+		// document_tittle
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -2714,7 +2753,6 @@ class transaction_details_list extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2727,6 +2765,14 @@ class transaction_details_list extends transaction_details
 			}
 			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// project_name
+			$this->project_name->ViewValue = $this->project_name->CurrentValue;
+			$this->project_name->ViewCustomAttributes = "";
+
+			// document_tittle
+			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewCustomAttributes = "";
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
@@ -2752,7 +2798,6 @@ class transaction_details_list extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2827,6 +2872,20 @@ class transaction_details_list extends transaction_details
 			if (!$this->isExport())
 				$this->firelink_doc_no->ViewValue = $this->highlightValue($this->firelink_doc_no);
 
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
+			if (!$this->isExport())
+				$this->project_name->ViewValue = $this->highlightValue($this->project_name);
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+			$this->document_tittle->TooltipValue = "";
+			if (!$this->isExport())
+				$this->document_tittle->ViewValue = $this->highlightValue($this->document_tittle);
+
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
 			$this->submit_no->HrefValue = "";
@@ -2896,7 +2955,6 @@ class transaction_details_list extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2907,6 +2965,22 @@ class transaction_details_list extends transaction_details
 				$this->firelink_doc_no->EditValue = NULL;
 			}
 			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->CurrentValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
 
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
@@ -2940,7 +3014,6 @@ class transaction_details_list extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
 						$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3022,6 +3095,14 @@ class transaction_details_list extends transaction_details
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
 			$this->submit_no->HrefValue = "";
@@ -3060,6 +3141,82 @@ class transaction_details_list extends transaction_details
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
+		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->AdvancedSearch->SearchValue = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->AdvancedSearch->SearchValue = HtmlDecode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->AdvancedSearch->SearchValue = HtmlDecode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
+
+			// submit_no
+			$this->submit_no->EditAttrs["class"] = "form-control";
+			$this->submit_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->submit_no->AdvancedSearch->SearchValue = HtmlDecode($this->submit_no->AdvancedSearch->SearchValue);
+			$this->submit_no->EditValue = HtmlEncode($this->submit_no->AdvancedSearch->SearchValue);
+			$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
+
+			// revision_no
+			$this->revision_no->EditAttrs["class"] = "form-control";
+			$this->revision_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no->AdvancedSearch->SearchValue);
+			$this->revision_no->EditValue = HtmlEncode($this->revision_no->AdvancedSearch->SearchValue);
+			$this->revision_no->PlaceHolder = RemoveHtml($this->revision_no->caption());
+
+			// transmit_no
+			$this->transmit_no->EditAttrs["class"] = "form-control";
+			$this->transmit_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no->AdvancedSearch->SearchValue);
+			$this->transmit_no->EditValue = HtmlEncode($this->transmit_no->AdvancedSearch->SearchValue);
+			$this->transmit_no->PlaceHolder = RemoveHtml($this->transmit_no->caption());
+
+			// transmit_date
+			$this->transmit_date->EditAttrs["class"] = "form-control";
+			$this->transmit_date->EditCustomAttributes = "";
+			$this->transmit_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date->AdvancedSearch->SearchValue, 0), 8));
+			$this->transmit_date->PlaceHolder = RemoveHtml($this->transmit_date->caption());
+
+			// direction
+			$this->direction->EditCustomAttributes = "";
+			$this->direction->EditValue = $this->direction->options(FALSE);
+
+			// approval_status
+			$this->approval_status->EditCustomAttributes = "";
+
+			// document_link
+			$this->document_link->EditAttrs["class"] = "form-control";
+			$this->document_link->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_link->AdvancedSearch->SearchValue = HtmlDecode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->EditValue = HtmlEncode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->PlaceHolder = RemoveHtml($this->document_link->caption());
+
+			// document_native
+			$this->document_native->EditAttrs["class"] = "form-control";
+			$this->document_native->EditCustomAttributes = "";
+			$this->document_native->EditValue = HtmlEncode($this->document_native->AdvancedSearch->SearchValue);
+			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -3112,6 +3269,16 @@ class transaction_details_list extends transaction_details
 		if ($this->firelink_doc_no->Required) {
 			if (!$this->firelink_doc_no->IsDetailKey && $this->firelink_doc_no->FormValue != NULL && $this->firelink_doc_no->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->firelink_doc_no->caption(), $this->firelink_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->project_name->Required) {
+			if (!$this->project_name->IsDetailKey && $this->project_name->FormValue != NULL && $this->project_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_name->caption(), $this->project_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_tittle->Required) {
+			if (!$this->document_tittle->IsDetailKey && $this->document_tittle->FormValue != NULL && $this->document_tittle->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_tittle->caption(), $this->document_tittle->RequiredErrorMessage));
 			}
 		}
 		if ($this->submit_no->Required) {
@@ -3278,6 +3445,12 @@ class transaction_details_list extends transaction_details
 		// firelink_doc_no
 		$this->firelink_doc_no->setDbValueDef($rsnew, $this->firelink_doc_no->CurrentValue, "", FALSE);
 
+		// project_name
+		$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, NULL, FALSE);
+
+		// document_tittle
+		$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, NULL, FALSE);
+
 		// submit_no
 		$this->submit_no->setDbValueDef($rsnew, $this->submit_no->CurrentValue, "", FALSE);
 
@@ -3422,6 +3595,8 @@ class transaction_details_list extends transaction_details
 	public function loadAdvancedSearch()
 	{
 		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
 		$this->submit_no->AdvancedSearch->load();
 		$this->revision_no->AdvancedSearch->load();
 		$this->transmit_no->AdvancedSearch->load();
@@ -3653,7 +3828,7 @@ class transaction_details_list extends transaction_details
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

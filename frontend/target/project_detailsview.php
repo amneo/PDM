@@ -70,6 +70,35 @@ fproject_detailsview.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) 
 <?php
 $project_details_view->showMessage();
 ?>
+<?php if (!$project_details_view->IsModal) { ?>
+<?php if (!$project_details->isExport()) { ?>
+<form name="ew-pager-form" class="form-inline ew-form ew-pager-form" action="<?php echo CurrentPageName() ?>">
+<?php if (!isset($project_details_view->Pager)) $project_details_view->Pager = new NumericPager($project_details_view->StartRec, $project_details_view->DisplayRecs, $project_details_view->TotalRecs, $project_details_view->RecRange, $project_details_view->AutoHidePager) ?>
+<?php if ($project_details_view->Pager->RecordCount > 0 && $project_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($project_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($project_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $project_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="fproject_detailsview" id="fproject_detailsview" class="form-inline ew-form ew-view-form" action="<?php echo CurrentPageName() ?>" method="post">
 <?php if ($project_details_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $project_details_view->Token ?>">
@@ -155,6 +184,33 @@ $project_details_view->showMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$project_details_view->IsModal) { ?>
+<?php if (!$project_details->isExport()) { ?>
+<?php if (!isset($project_details_view->Pager)) $project_details_view->Pager = new NumericPager($project_details_view->StartRec, $project_details_view->DisplayRecs, $project_details_view->TotalRecs, $project_details_view->RecRange, $project_details_view->AutoHidePager) ?>
+<?php if ($project_details_view->Pager->RecordCount > 0 && $project_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($project_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($project_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $project_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($project_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $project_details_view->pageUrl() ?>start=<?php echo $project_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php
 $project_details_view->showPageFooter();

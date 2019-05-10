@@ -70,6 +70,35 @@ finboxview.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 <?php
 $inbox_view->showMessage();
 ?>
+<?php if (!$inbox_view->IsModal) { ?>
+<?php if (!$inbox->isExport()) { ?>
+<form name="ew-pager-form" class="form-inline ew-form ew-pager-form" action="<?php echo CurrentPageName() ?>">
+<?php if (!isset($inbox_view->Pager)) $inbox_view->Pager = new NumericPager($inbox_view->StartRec, $inbox_view->DisplayRecs, $inbox_view->TotalRecs, $inbox_view->RecRange, $inbox_view->AutoHidePager) ?>
+<?php if ($inbox_view->Pager->RecordCount > 0 && $inbox_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($inbox_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($inbox_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $inbox_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="finboxview" id="finboxview" class="form-inline ew-form ew-view-form" action="<?php echo CurrentPageName() ?>" method="post">
 <?php if ($inbox_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $inbox_view->Token ?>">
@@ -156,6 +185,33 @@ $inbox_view->showMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$inbox_view->IsModal) { ?>
+<?php if (!$inbox->isExport()) { ?>
+<?php if (!isset($inbox_view->Pager)) $inbox_view->Pager = new NumericPager($inbox_view->StartRec, $inbox_view->DisplayRecs, $inbox_view->TotalRecs, $inbox_view->RecRange, $inbox_view->AutoHidePager) ?>
+<?php if ($inbox_view->Pager->RecordCount > 0 && $inbox_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($inbox_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($inbox_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $inbox_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($inbox_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $inbox_view->pageUrl() ?>start=<?php echo $inbox_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php
 $inbox_view->showPageFooter();

@@ -157,16 +157,6 @@ $user_dtls_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $user_dtls_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $user_dtls_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $user_dtls_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($user_dtls_list->TotalRecs > 0 && (!$user_dtls_list->AutoHidePageSizeSelector || $user_dtls_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="user_dtls">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($user_dtls_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($user_dtls_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($user_dtls->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
-</div>
-<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -457,16 +447,6 @@ if ($user_dtls_list->Recordset)
 <?php if ($user_dtls_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $user_dtls_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $user_dtls_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $user_dtls_list->Pager->RecordCount ?></span>
-</div>
-<?php } ?>
-<?php if ($user_dtls_list->TotalRecs > 0 && (!$user_dtls_list->AutoHidePageSizeSelector || $user_dtls_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="user_dtls">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($user_dtls_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($user_dtls_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($user_dtls->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
 </div>
 <?php } ?>
 </form>

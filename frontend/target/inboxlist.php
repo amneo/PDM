@@ -150,16 +150,6 @@ $inbox_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $inbox_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $inbox_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $inbox_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($inbox_list->TotalRecs > 0 && (!$inbox_list->AutoHidePageSizeSelector || $inbox_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="inbox">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($inbox_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($inbox_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($inbox->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
-</div>
-<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -429,16 +419,6 @@ if ($inbox_list->Recordset)
 <?php if ($inbox_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $inbox_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $inbox_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $inbox_list->Pager->RecordCount ?></span>
-</div>
-<?php } ?>
-<?php if ($inbox_list->TotalRecs > 0 && (!$inbox_list->AutoHidePageSizeSelector || $inbox_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="inbox">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($inbox_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($inbox_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($inbox->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
 </div>
 <?php } ?>
 </form>

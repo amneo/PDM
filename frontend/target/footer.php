@@ -19,9 +19,9 @@ namespace PHPMaker2019\pdm;
 
 	// Get a field value
 	// NOTE: Modify your SQL here, replace the table name, field name and the condition
+	//$myappversion = ExecuteScalar("SELECT * FROM om_func_01()");
+	//echo $myappversion;
 
-	$myappversion = ExecuteScalar("SELECT * FROM om_func_01()");
-	echo $myappversion;
 	?>
 </div>
 <!-- ./wrapper -->

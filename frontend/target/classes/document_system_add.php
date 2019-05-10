@@ -1077,7 +1077,7 @@ class document_system_add extends document_system
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

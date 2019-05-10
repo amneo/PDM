@@ -80,6 +80,35 @@ ftransaction_detailsview.lists["x_approval_status"].options = <?php echo JsonEnc
 <?php
 $transaction_details_view->showMessage();
 ?>
+<?php if (!$transaction_details_view->IsModal) { ?>
+<?php if (!$transaction_details->isExport()) { ?>
+<form name="ew-pager-form" class="form-inline ew-form ew-pager-form" action="<?php echo CurrentPageName() ?>">
+<?php if (!isset($transaction_details_view->Pager)) $transaction_details_view->Pager = new NumericPager($transaction_details_view->StartRec, $transaction_details_view->DisplayRecs, $transaction_details_view->TotalRecs, $transaction_details_view->RecRange, $transaction_details_view->AutoHidePager) ?>
+<?php if ($transaction_details_view->Pager->RecordCount > 0 && $transaction_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($transaction_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($transaction_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $transaction_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="ftransaction_detailsview" id="ftransaction_detailsview" class="form-inline ew-form ew-view-form" action="<?php echo CurrentPageName() ?>" method="post">
 <?php if ($transaction_details_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $transaction_details_view->Token ?>">
@@ -94,6 +123,17 @@ $transaction_details_view->showMessage();
 <span id="el_transaction_details_firelink_doc_no">
 <span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
 <?php echo $transaction_details->firelink_doc_no->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+	<tr id="r_project_name">
+		<td class="<?php echo $transaction_details_view->TableLeftColumnClass ?>"><span id="elh_transaction_details_project_name"><?php echo $transaction_details->project_name->caption() ?></span></td>
+		<td data-name="project_name"<?php echo $transaction_details->project_name->cellAttributes() ?>>
+<span id="el_transaction_details_project_name">
+<span<?php echo $transaction_details->project_name->viewAttributes() ?>>
+<?php echo $transaction_details->project_name->getViewValue() ?></span>
 </span>
 </td>
 	</tr>
@@ -199,6 +239,33 @@ $transaction_details_view->showMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$transaction_details_view->IsModal) { ?>
+<?php if (!$transaction_details->isExport()) { ?>
+<?php if (!isset($transaction_details_view->Pager)) $transaction_details_view->Pager = new NumericPager($transaction_details_view->StartRec, $transaction_details_view->DisplayRecs, $transaction_details_view->TotalRecs, $transaction_details_view->RecRange, $transaction_details_view->AutoHidePager) ?>
+<?php if ($transaction_details_view->Pager->RecordCount > 0 && $transaction_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($transaction_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($transaction_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $transaction_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($transaction_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transaction_details_view->pageUrl() ?>start=<?php echo $transaction_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php
 $transaction_details_view->showPageFooter();

@@ -133,28 +133,6 @@ ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSel
 </script>
 <?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_x_firelink_doc_no") ?>
 </span>
-			<span class="ew-search-cond btw0_firelink_doc_no"><div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="v_firelink_doc_no_1" name="v_firelink_doc_no" value="AND"<?php if ($transaction_details->firelink_doc_no->AdvancedSearch->SearchCondition <> "OR") echo " checked" ?>><label class="form-check-label" for="v_firelink_doc_no_1"><?php echo $Language->phrase("AND") ?></label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="v_firelink_doc_no_2" name="v_firelink_doc_no" value="OR"<?php if ($transaction_details->firelink_doc_no->AdvancedSearch->SearchCondition == "OR") echo " checked" ?>><label class="form-check-label" for="v_firelink_doc_no_2"><?php echo $Language->phrase("OR") ?></label></div></span>
-			<span class="ew-search-operator btw0_firelink_doc_no"><?php echo $Language->phrase("ENDS WITH") ?><input type="hidden" name="w_firelink_doc_no" id="w_firelink_doc_no" value="ENDS WITH"></span>
-			<span id="e2_transaction_details_firelink_doc_no" class="">
-<?php
-$wrkonchange = "" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
-if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
-$transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
-?>
-<span id="as_y_firelink_doc_no" class="text-nowrap" style="z-index: 8980">
-	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_y_firelink_doc_no" id="sv_y_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue2) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
-		<div class="input-group-append">
-			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->firelink_doc_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'y_firelink_doc_no',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->firelink_doc_no->ReadOnly || $transaction_details->firelink_doc_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
-		</div>
-	</div>
-</span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
-<script>
-ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSelect":false});
-</script>
-<?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_y_firelink_doc_no") ?>
-</span>
 		</div></div>
 	</div>
 <?php } else { ?>
@@ -183,27 +161,57 @@ ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSel
 </script>
 <?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_x_firelink_doc_no") ?>
 </span>
-				<span class="ew-search-cond btw0_firelink_doc_no"><div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="v_firelink_doc_no_1" name="v_firelink_doc_no" value="AND"<?php if ($transaction_details->firelink_doc_no->AdvancedSearch->SearchCondition <> "OR") echo " checked" ?>><label class="form-check-label" for="v_firelink_doc_no_1"><?php echo $Language->phrase("AND") ?></label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="v_firelink_doc_no_2" name="v_firelink_doc_no" value="OR"<?php if ($transaction_details->firelink_doc_no->AdvancedSearch->SearchCondition == "OR") echo " checked" ?>><label class="form-check-label" for="v_firelink_doc_no_2"><?php echo $Language->phrase("OR") ?></label></div></span>
-				<span class="ew-search-operator btw0_firelink_doc_no"><?php echo $Language->phrase("ENDS WITH") ?><input type="hidden" name="w_firelink_doc_no" id="w_firelink_doc_no" value="ENDS WITH"></span>
-				<span id="e2_transaction_details_firelink_doc_no" class="">
-<?php
-$wrkonchange = "" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
-if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
-$transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
-?>
-<span id="as_y_firelink_doc_no" class="text-nowrap" style="z-index: 8980">
-	<div class="input-group mb-3">
-		<input type="text" class="form-control" name="sv_y_firelink_doc_no" id="sv_y_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue2) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
-		<div class="input-group-append">
-			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->firelink_doc_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'y_firelink_doc_no',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->firelink_doc_no->ReadOnly || $transaction_details->firelink_doc_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
-		</div>
-	</div>
+			</div>
+		</td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+<?php if ($transaction_details_search->IsMobileOrModal) { ?>
+	<div id="r_project_name" class="form-group row">
+		<label for="x_project_name" class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_project_name"><?php echo $transaction_details->project_name->caption() ?></span>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_project_name" id="z_project_name" value="LIKE"></span>
+		</label>
+		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->project_name->cellAttributes() ?>>
+			<span id="el_transaction_details_project_name">
+<input type="text" data-table="transaction_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($transaction_details->project_name->getPlaceHolder()) ?>" value="<?php echo $transaction_details->project_name->EditValue ?>"<?php echo $transaction_details->project_name->editAttributes() ?>>
 </span>
-<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="y_firelink_doc_no" id="y_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
-<script>
-ftransaction_detailssearch.createAutoSuggest({"id":"y_firelink_doc_no","forceSelect":false});
-</script>
-<?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_y_firelink_doc_no") ?>
+		</div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_project_name">
+		<td class="<?php echo $transaction_details_search->TableLeftColumnClass ?>"><span id="elh_transaction_details_project_name"><?php echo $transaction_details->project_name->caption() ?></span></td>
+		<td class="w-col-1"><span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_project_name" id="z_project_name" value="LIKE"></span></td>
+		<td<?php echo $transaction_details->project_name->cellAttributes() ?>>
+			<div class="text-nowrap">
+				<span id="el_transaction_details_project_name">
+<input type="text" data-table="transaction_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($transaction_details->project_name->getPlaceHolder()) ?>" value="<?php echo $transaction_details->project_name->EditValue ?>"<?php echo $transaction_details->project_name->editAttributes() ?>>
+</span>
+			</div>
+		</td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->document_tittle->Visible) { // document_tittle ?>
+<?php if ($transaction_details_search->IsMobileOrModal) { ?>
+	<div id="r_document_tittle" class="form-group row">
+		<label for="x_document_tittle" class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_document_tittle"><?php echo $transaction_details->document_tittle->caption() ?></span>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_tittle" id="z_document_tittle" value="LIKE"></span>
+		</label>
+		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->document_tittle->cellAttributes() ?>>
+			<span id="el_transaction_details_document_tittle">
+<input type="text" data-table="transaction_details" data-field="x_document_tittle" name="x_document_tittle" id="x_document_tittle" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_tittle->EditValue ?>"<?php echo $transaction_details->document_tittle->editAttributes() ?>>
+</span>
+		</div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_document_tittle">
+		<td class="<?php echo $transaction_details_search->TableLeftColumnClass ?>"><span id="elh_transaction_details_document_tittle"><?php echo $transaction_details->document_tittle->caption() ?></span></td>
+		<td class="w-col-1"><span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_tittle" id="z_document_tittle" value="LIKE"></span></td>
+		<td<?php echo $transaction_details->document_tittle->cellAttributes() ?>>
+			<div class="text-nowrap">
+				<span id="el_transaction_details_document_tittle">
+<input type="text" data-table="transaction_details" data-field="x_document_tittle" name="x_document_tittle" id="x_document_tittle" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_tittle->EditValue ?>"<?php echo $transaction_details->document_tittle->editAttributes() ?>>
 </span>
 			</div>
 		</td>
@@ -275,7 +283,7 @@ $wrkonchange = "" . trim(@$transaction_details->transmit_no->EditAttrs["onchange
 if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
 $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
-<span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
+<span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8930">
 	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">
@@ -303,7 +311,7 @@ $wrkonchange = "" . trim(@$transaction_details->transmit_no->EditAttrs["onchange
 if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
 $transaction_details->transmit_no->EditAttrs["onchange"] = "";
 ?>
-<span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8950">
+<span id="as_x_transmit_no" class="text-nowrap" style="z-index: 8930">
 	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_transmit_no" id="sv_x_transmit_no" value="<?php echo RemoveHtml($transaction_details->transmit_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->transmit_no->getPlaceHolder()) ?>"<?php echo $transaction_details->transmit_no->editAttributes() ?>>
 		<div class="input-group-append">

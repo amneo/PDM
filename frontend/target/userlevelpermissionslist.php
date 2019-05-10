@@ -152,16 +152,6 @@ $userlevelpermissions_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($userlevelpermissions_list->TotalRecs > 0 && (!$userlevelpermissions_list->AutoHidePageSizeSelector || $userlevelpermissions_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="userlevelpermissions">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
-</div>
-<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -362,16 +352,6 @@ if ($userlevelpermissions_list->Recordset)
 <?php if ($userlevelpermissions_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $userlevelpermissions_list->Pager->RecordCount ?></span>
-</div>
-<?php } ?>
-<?php if ($userlevelpermissions_list->TotalRecs > 0 && (!$userlevelpermissions_list->AutoHidePageSizeSelector || $userlevelpermissions_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="userlevelpermissions">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
 </div>
 <?php } ?>
 </form>

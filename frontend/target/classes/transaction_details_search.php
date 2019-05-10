@@ -620,6 +620,8 @@ class transaction_details_search extends transaction_details
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->project_name->setVisibility();
+		$this->document_tittle->setVisibility();
 		$this->submit_no->setVisibility();
 		$this->revision_no->setVisibility();
 		$this->transmit_no->setVisibility();
@@ -700,6 +702,8 @@ class transaction_details_search extends transaction_details
 	{
 		$srchUrl = "";
 		$this->buildSearchUrl($srchUrl, $this->firelink_doc_no); // firelink_doc_no
+		$this->buildSearchUrl($srchUrl, $this->project_name); // project_name
+		$this->buildSearchUrl($srchUrl, $this->document_tittle); // document_tittle
 		$this->buildSearchUrl($srchUrl, $this->submit_no); // submit_no
 		$this->buildSearchUrl($srchUrl, $this->revision_no); // revision_no
 		$this->buildSearchUrl($srchUrl, $this->transmit_no); // transmit_no
@@ -785,9 +789,16 @@ class transaction_details_search extends transaction_details
 		if (!$this->isAddOrEdit())
 			$this->firelink_doc_no->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_firelink_doc_no"));
 		$this->firelink_doc_no->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_firelink_doc_no"));
-		$this->firelink_doc_no->AdvancedSearch->setSearchCondition($CurrentForm->getValue("v_firelink_doc_no"));
-		$this->firelink_doc_no->AdvancedSearch->setSearchValue2($CurrentForm->getValue("y_firelink_doc_no"));
-		$this->firelink_doc_no->AdvancedSearch->setSearchOperator2($CurrentForm->getValue("w_firelink_doc_no"));
+
+		// project_name
+		if (!$this->isAddOrEdit())
+			$this->project_name->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_project_name"));
+		$this->project_name->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_project_name"));
+
+		// document_tittle
+		if (!$this->isAddOrEdit())
+			$this->document_tittle->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_document_tittle"));
+		$this->document_tittle->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_document_tittle"));
 
 		// submit_no
 		if (!$this->isAddOrEdit())
@@ -843,6 +854,8 @@ class transaction_details_search extends transaction_details
 		// Common render codes for all row types
 		// document_sequence
 		// firelink_doc_no
+		// project_name
+		// document_tittle
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -877,7 +890,6 @@ class transaction_details_search extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -890,6 +902,14 @@ class transaction_details_search extends transaction_details
 			}
 			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// project_name
+			$this->project_name->ViewValue = $this->project_name->CurrentValue;
+			$this->project_name->ViewCustomAttributes = "";
+
+			// document_tittle
+			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewCustomAttributes = "";
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
@@ -915,7 +935,6 @@ class transaction_details_search extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -988,6 +1007,16 @@ class transaction_details_search extends transaction_details
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
 
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+			$this->document_tittle->TooltipValue = "";
+
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
 			$this->submit_no->HrefValue = "";
@@ -1043,12 +1072,22 @@ class transaction_details_search extends transaction_details
 				$this->firelink_doc_no->AdvancedSearch->SearchValue = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue);
 			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue);
 			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
-			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
-			$this->firelink_doc_no->EditCustomAttributes = "";
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
 			if (REMOVE_XSS)
-				$this->firelink_doc_no->AdvancedSearch->SearchValue2 = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue2);
-			$this->firelink_doc_no->EditValue2 = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue2);
-			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+				$this->project_name->AdvancedSearch->SearchValue = HtmlDecode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->AdvancedSearch->SearchValue = HtmlDecode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
 
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
@@ -1169,6 +1208,8 @@ class transaction_details_search extends transaction_details
 	public function loadAdvancedSearch()
 	{
 		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
 		$this->submit_no->AdvancedSearch->load();
 		$this->revision_no->AdvancedSearch->load();
 		$this->transmit_no->AdvancedSearch->load();
@@ -1209,7 +1250,7 @@ class transaction_details_search extends transaction_details
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

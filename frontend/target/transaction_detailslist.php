@@ -64,6 +64,16 @@ ftransaction_detailslist.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->firelink_doc_no->caption(), $transaction_details->firelink_doc_no->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transaction_details_list->project_name->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_name");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->project_name->caption(), $transaction_details->project_name->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($transaction_details_list->document_tittle->Required) { ?>
+			elm = this.getElements("x" + infix + "_document_tittle");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_tittle->caption(), $transaction_details->document_tittle->RequiredErrorMessage)) ?>");
+		<?php } ?>
 		<?php if ($transaction_details_list->submit_no->Required) { ?>
 			elm = this.getElements("x" + infix + "_submit_no");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -122,6 +132,8 @@ ftransaction_detailslist.validate = function() {
 ftransaction_detailslist.emptyRow = function(infix) {
 	var fobj = this._form;
 	if (ew.valueChanged(fobj, infix, "firelink_doc_no", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_name", false)) return false;
+	if (ew.valueChanged(fobj, infix, "document_tittle", false)) return false;
 	if (ew.valueChanged(fobj, infix, "submit_no", false)) return false;
 	if (ew.valueChanged(fobj, infix, "revision_no", false)) return false;
 	if (ew.valueChanged(fobj, infix, "transmit_no", false)) return false;
@@ -157,6 +169,34 @@ ftransaction_detailslist.lists["x_approval_status"].options = <?php echo JsonEnc
 
 // Form object for search
 var ftransaction_detailslistsrch = currentSearchForm = new ew.Form("ftransaction_detailslistsrch");
+
+// Validate function for search
+ftransaction_detailslistsrch.validate = function(fobj) {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	fobj = fobj || this._form;
+	var infix = "";
+
+	// Fire Form_CustomValidate event
+	if (!this.Form_CustomValidate(fobj))
+		return false;
+	return true;
+}
+
+// Form_CustomValidate event
+ftransaction_detailslistsrch.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+
+	// Your custom validation code here, return false if invalid.
+	return true;
+}
+
+// Use JavaScript validation or not
+ftransaction_detailslistsrch.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
+
+// Dynamic selection lists
+ftransaction_detailslistsrch.lists["x_firelink_doc_no"] = <?php echo $transaction_details_list->firelink_doc_no->Lookup->toClientList() ?>;
+ftransaction_detailslistsrch.lists["x_firelink_doc_no"].options = <?php echo JsonEncode($transaction_details_list->firelink_doc_no->lookupOptions()) ?>;
+ftransaction_detailslistsrch.autoSuggests["x_firelink_doc_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Filters
 ftransaction_detailslistsrch.filterList = <?php echo $transaction_details_list->getFilterList() ?>;
@@ -194,7 +234,57 @@ $transaction_details_list->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="transaction_details">
 	<div class="ew-basic-search">
+<?php
+if ($SearchError == "")
+	$transaction_details_list->LoadAdvancedSearch(); // Load advanced search
+
+// Render for search
+$transaction_details->RowType = ROWTYPE_SEARCH;
+
+// Render row
+$transaction_details->resetAttributes();
+$transaction_details_list->renderRow();
+?>
 <div id="xsr_1" class="ew-row d-sm-flex">
+<?php if ($transaction_details->firelink_doc_no->Visible) { // firelink_doc_no ?>
+	<div id="xsc_firelink_doc_no" class="ew-cell form-group">
+		<label class="ew-search-caption ew-label"><?php echo $transaction_details->firelink_doc_no->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_firelink_doc_no" id="z_firelink_doc_no" value="LIKE"></span>
+		<span class="ew-search-field">
+<?php
+$wrkonchange = "" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_firelink_doc_no" class="text-nowrap" style="z-index: 8980">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x_firelink_doc_no" id="sv_x_firelink_doc_no" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($transaction_details->firelink_doc_no->getPlaceHolder()) ?>"<?php echo $transaction_details->firelink_doc_no->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($transaction_details->firelink_doc_no->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_firelink_doc_no',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo (($transaction_details->firelink_doc_no->ReadOnly || $transaction_details->firelink_doc_no->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+		</div>
+	</div>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $transaction_details->firelink_doc_no->displayValueSeparatorAttribute() ?>" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+ftransaction_detailslistsrch.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect":false});
+</script>
+<?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_x_firelink_doc_no") ?>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_2" class="ew-row d-sm-flex">
+<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+	<div id="xsc_project_name" class="ew-cell form-group">
+		<label for="x_project_name" class="ew-search-caption ew-label"><?php echo $transaction_details->project_name->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_project_name" id="z_project_name" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="transaction_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($transaction_details->project_name->getPlaceHolder()) ?>" value="<?php echo $transaction_details->project_name->EditValue ?>"<?php echo $transaction_details->project_name->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_3" class="ew-row d-sm-flex">
 	<div class="ew-quick-search input-group">
 		<input type="text" name="<?php echo TABLE_BASIC_SEARCH ?>" id="<?php echo TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo HtmlEncode($transaction_details_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo HtmlEncode($Language->phrase("Search")) ?>">
 		<input type="hidden" name="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo HtmlEncode($transaction_details_list->BasicSearch->getType()) ?>">
@@ -252,16 +342,6 @@ $transaction_details_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $transaction_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $transaction_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $transaction_details_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($transaction_details_list->TotalRecs > 0 && (!$transaction_details_list->AutoHidePageSizeSelector || $transaction_details_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="transaction_details">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($transaction_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($transaction_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($transaction_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
-</div>
-<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -300,12 +380,30 @@ $transaction_details_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+	<?php if ($transaction_details->sortUrl($transaction_details->project_name) == "") { ?>
+		<th data-name="project_name" class="<?php echo $transaction_details->project_name->headerCellClass() ?>"><div id="elh_transaction_details_project_name" class="transaction_details_project_name"><div class="ew-table-header-caption"><?php echo $transaction_details->project_name->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="project_name" class="<?php echo $transaction_details->project_name->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->project_name) ?>',2);"><div id="elh_transaction_details_project_name" class="transaction_details_project_name">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->project_name->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->project_name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->project_name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->document_tittle->Visible) { // document_tittle ?>
+	<?php if ($transaction_details->sortUrl($transaction_details->document_tittle) == "") { ?>
+		<th data-name="document_tittle" class="<?php echo $transaction_details->document_tittle->headerCellClass() ?>"><div id="elh_transaction_details_document_tittle" class="transaction_details_document_tittle"><div class="ew-table-header-caption"><?php echo $transaction_details->document_tittle->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="document_tittle" class="<?php echo $transaction_details->document_tittle->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->document_tittle) ?>',2);"><div id="elh_transaction_details_document_tittle" class="transaction_details_document_tittle">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->document_tittle->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->document_tittle->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->document_tittle->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($transaction_details->submit_no->Visible) { // submit_no ?>
 	<?php if ($transaction_details->sortUrl($transaction_details->submit_no) == "") { ?>
 		<th data-name="submit_no" class="<?php echo $transaction_details->submit_no->headerCellClass() ?>"><div id="elh_transaction_details_submit_no" class="transaction_details_submit_no"><div class="ew-table-header-caption"><?php echo $transaction_details->submit_no->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="submit_no" class="<?php echo $transaction_details->submit_no->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->submit_no) ?>',2);"><div id="elh_transaction_details_submit_no" class="transaction_details_submit_no">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->submit_no->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->submit_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->submit_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->submit_no->caption() ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->submit_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->submit_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -314,7 +412,7 @@ $transaction_details_list->ListOptions->render("header", "left");
 		<th data-name="revision_no" class="<?php echo $transaction_details->revision_no->headerCellClass() ?>"><div id="elh_transaction_details_revision_no" class="transaction_details_revision_no"><div class="ew-table-header-caption"><?php echo $transaction_details->revision_no->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="revision_no" class="<?php echo $transaction_details->revision_no->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->revision_no) ?>',2);"><div id="elh_transaction_details_revision_no" class="transaction_details_revision_no">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->revision_no->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->revision_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->revision_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->revision_no->caption() ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->revision_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->revision_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -471,7 +569,7 @@ $transaction_details_list->ListOptions->render("body", "left", $transaction_deta
 <?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_firelink_doc_no" class="form-group transaction_details_firelink_doc_no">
 <?php
-$wrkonchange = "" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
+$wrkonchange = "ew.autoFill(this);" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
 if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
 $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 ?>
@@ -495,6 +593,38 @@ ftransaction_detailslist.createAutoSuggest({"id":"x<?php echo $transaction_detai
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no">
 <span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
 <?php echo $transaction_details->firelink_doc_no->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+		<td data-name="project_name"<?php echo $transaction_details->project_name->cellAttributes() ?>>
+<?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_project_name" class="form-group transaction_details_project_name">
+<input type="text" data-table="transaction_details" data-field="x_project_name" name="x<?php echo $transaction_details_list->RowIndex ?>_project_name" id="x<?php echo $transaction_details_list->RowIndex ?>_project_name" size="30" placeholder="<?php echo HtmlEncode($transaction_details->project_name->getPlaceHolder()) ?>" value="<?php echo $transaction_details->project_name->EditValue ?>"<?php echo $transaction_details->project_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_project_name" name="o<?php echo $transaction_details_list->RowIndex ?>_project_name" id="o<?php echo $transaction_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($transaction_details->project_name->OldValue) ?>">
+<?php } ?>
+<?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_project_name" class="transaction_details_project_name">
+<span<?php echo $transaction_details->project_name->viewAttributes() ?>>
+<?php echo $transaction_details->project_name->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($transaction_details->document_tittle->Visible) { // document_tittle ?>
+		<td data-name="document_tittle"<?php echo $transaction_details->document_tittle->cellAttributes() ?>>
+<?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_tittle" class="form-group transaction_details_document_tittle">
+<input type="text" data-table="transaction_details" data-field="x_document_tittle" name="x<?php echo $transaction_details_list->RowIndex ?>_document_tittle" id="x<?php echo $transaction_details_list->RowIndex ?>_document_tittle" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_tittle->EditValue ?>"<?php echo $transaction_details->document_tittle->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_document_tittle" name="o<?php echo $transaction_details_list->RowIndex ?>_document_tittle" id="o<?php echo $transaction_details_list->RowIndex ?>_document_tittle" value="<?php echo HtmlEncode($transaction_details->document_tittle->OldValue) ?>">
+<?php } ?>
+<?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_tittle" class="transaction_details_document_tittle">
+<span<?php echo $transaction_details->document_tittle->viewAttributes() ?>>
+<?php echo $transaction_details->document_tittle->getViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
@@ -730,7 +860,7 @@ $transaction_details_list->ListOptions->render("body", "left", $transaction_deta
 		<td data-name="firelink_doc_no">
 <span id="el$rowindex$_transaction_details_firelink_doc_no" class="form-group transaction_details_firelink_doc_no">
 <?php
-$wrkonchange = "" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
+$wrkonchange = "ew.autoFill(this);" . trim(@$transaction_details->firelink_doc_no->EditAttrs["onchange"]);
 if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
 $transaction_details->firelink_doc_no->EditAttrs["onchange"] = "";
 ?>
@@ -749,6 +879,22 @@ ftransaction_detailslist.createAutoSuggest({"id":"x<?php echo $transaction_detai
 <?php echo $transaction_details->firelink_doc_no->Lookup->getParamTag("p_x" . $transaction_details_list->RowIndex . "_firelink_doc_no") ?>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" name="o<?php echo $transaction_details_list->RowIndex ?>_firelink_doc_no" id="o<?php echo $transaction_details_list->RowIndex ?>_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($transaction_details->project_name->Visible) { // project_name ?>
+		<td data-name="project_name">
+<span id="el$rowindex$_transaction_details_project_name" class="form-group transaction_details_project_name">
+<input type="text" data-table="transaction_details" data-field="x_project_name" name="x<?php echo $transaction_details_list->RowIndex ?>_project_name" id="x<?php echo $transaction_details_list->RowIndex ?>_project_name" size="30" placeholder="<?php echo HtmlEncode($transaction_details->project_name->getPlaceHolder()) ?>" value="<?php echo $transaction_details->project_name->EditValue ?>"<?php echo $transaction_details->project_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_project_name" name="o<?php echo $transaction_details_list->RowIndex ?>_project_name" id="o<?php echo $transaction_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($transaction_details->project_name->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($transaction_details->document_tittle->Visible) { // document_tittle ?>
+		<td data-name="document_tittle">
+<span id="el$rowindex$_transaction_details_document_tittle" class="form-group transaction_details_document_tittle">
+<input type="text" data-table="transaction_details" data-field="x_document_tittle" name="x<?php echo $transaction_details_list->RowIndex ?>_document_tittle" id="x<?php echo $transaction_details_list->RowIndex ?>_document_tittle" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_tittle->EditValue ?>"<?php echo $transaction_details->document_tittle->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_document_tittle" name="o<?php echo $transaction_details_list->RowIndex ?>_document_tittle" id="o<?php echo $transaction_details_list->RowIndex ?>_document_tittle" value="<?php echo HtmlEncode($transaction_details->document_tittle->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($transaction_details->submit_no->Visible) { // submit_no ?>
@@ -930,16 +1076,6 @@ if ($transaction_details_list->Recordset)
 <?php if ($transaction_details_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $transaction_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $transaction_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $transaction_details_list->Pager->RecordCount ?></span>
-</div>
-<?php } ?>
-<?php if ($transaction_details_list->TotalRecs > 0 && (!$transaction_details_list->AutoHidePageSizeSelector || $transaction_details_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="transaction_details">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($transaction_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($transaction_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($transaction_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
 </div>
 <?php } ?>
 </form>

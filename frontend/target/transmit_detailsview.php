@@ -75,6 +75,35 @@ ftransmit_detailsview.lists["x_ack_rcvd"].options = <?php echo JsonEncode($trans
 <?php
 $transmit_details_view->showMessage();
 ?>
+<?php if (!$transmit_details_view->IsModal) { ?>
+<?php if (!$transmit_details->isExport()) { ?>
+<form name="ew-pager-form" class="form-inline ew-form ew-pager-form" action="<?php echo CurrentPageName() ?>">
+<?php if (!isset($transmit_details_view->Pager)) $transmit_details_view->Pager = new NumericPager($transmit_details_view->StartRec, $transmit_details_view->DisplayRecs, $transmit_details_view->TotalRecs, $transmit_details_view->RecRange, $transmit_details_view->AutoHidePager) ?>
+<?php if ($transmit_details_view->Pager->RecordCount > 0 && $transmit_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($transmit_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($transmit_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $transmit_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="ftransmit_detailsview" id="ftransmit_detailsview" class="form-inline ew-form ew-view-form" action="<?php echo CurrentPageName() ?>" method="post">
 <?php if ($transmit_details_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $transmit_details_view->Token ?>">
@@ -161,6 +190,33 @@ $transmit_details_view->showMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$transmit_details_view->IsModal) { ?>
+<?php if (!$transmit_details->isExport()) { ?>
+<?php if (!isset($transmit_details_view->Pager)) $transmit_details_view->Pager = new NumericPager($transmit_details_view->StartRec, $transmit_details_view->DisplayRecs, $transmit_details_view->TotalRecs, $transmit_details_view->RecRange, $transmit_details_view->AutoHidePager) ?>
+<?php if ($transmit_details_view->Pager->RecordCount > 0 && $transmit_details_view->Pager->Visible) { ?>
+<div class="ew-pager">
+<div class="ew-numeric-page"><ul class="pagination">
+	<?php if ($transmit_details_view->Pager->FirstButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->PrevButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php } ?>
+	<?php foreach ($transmit_details_view->Pager->Items as $pagerItem) { ?>
+		<li class="page-item<?php if (!$pagerItem->Enabled) { ?> active<?php } ?>"><a class="page-link" href="<?php if ($pagerItem->Enabled) { echo $transmit_details_view->pageUrl() . "start=" . $pagerItem->Start; } else { echo "#"; } ?>"><?php echo $pagerItem->Text ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->NextButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php } ?>
+	<?php if ($transmit_details_view->Pager->LastButton->Enabled) { ?>
+	<li class="page-item"><a class="page-link" href="<?php echo $transmit_details_view->pageUrl() ?>start=<?php echo $transmit_details_view->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php } ?>
+</ul></div>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php
 $transmit_details_view->showPageFooter();

@@ -142,7 +142,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_name"><?php echo $project_details->project_name->caption() ?><?php echo ($project_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_name->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->project_our_client->Visible) { // project_our_client ?>
@@ -150,7 +150,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_our_client"><?php echo $project_details->project_our_client->caption() ?><?php echo ($project_details->project_our_client->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_our_client" name="x_project_our_client" id="x_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_our_client->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->project_end_user->Visible) { // project_end_user ?>
@@ -158,7 +158,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_end_user"><?php echo $project_details->project_end_user->caption() ?><?php echo ($project_details->project_end_user->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_end_user" name="x_project_end_user" id="x_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_end_user->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->project_sales_engg->Visible) { // project_sales_engg ?>
@@ -166,7 +166,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_sales_engg"><?php echo $project_details->project_sales_engg->caption() ?><?php echo ($project_details->project_sales_engg->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_sales_engg" name="x_project_sales_engg" id="x_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_sales_engg->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->project_distribution->Visible) { // project_distribution ?>
@@ -174,7 +174,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_distribution"><?php echo $project_details->project_distribution->caption() ?><?php echo ($project_details->project_distribution->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_distribution" name="x_project_distribution" id="x_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_distribution->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->project_transmittal->Visible) { // project_transmittal ?>
@@ -182,7 +182,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_transmittal"><?php echo $project_details->project_transmittal->caption() ?><?php echo ($project_details->project_transmittal->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_project_transmittal" name="x_project_transmittal" id="x_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
-</div>
+<?php echo $project_details->project_transmittal->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($project_details->order_number->Visible) { // order_number ?>
@@ -190,7 +190,7 @@ $project_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_order_number"><?php echo $project_details->order_number->caption() ?><?php echo ($project_details->order_number->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="project_details" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
-</div>
+<?php echo $project_details->order_number->CustomMsg ?></div>
 	</div>
 <?php } ?>
 </form>

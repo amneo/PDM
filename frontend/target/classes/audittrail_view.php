@@ -603,6 +603,8 @@ class audittrail_view extends audittrail
 	public $StopRec;
 	public $TotalRecs = 0;
 	public $RecRange = 10;
+	public $Pager;
+	public $AutoHidePager = AUTO_HIDE_PAGER;
 	public $RecCnt;
 	public $RecKey = array();
 	public $IsModal = FALSE;
@@ -774,29 +776,46 @@ class audittrail_view extends audittrail
 				$this->id->setFormValue(Route(2));
 				$this->RecKey["id"] = $this->id->FormValue;
 			} else {
-				$returnUrl = "audittraillist.php"; // Return to list
+				$loadCurrentRecord = TRUE;
 			}
 
 			// Get action
 			$this->CurrentAction = "show"; // Display
 			switch ($this->CurrentAction) {
 				case "show": // Get a record to display
+					$this->StartRec = 1; // Initialize start position
+					if ($this->Recordset = $this->loadRecordset()) // Load records
+						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+					if ($this->TotalRecs <= 0) { // No record found
+						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+						$this->terminate("audittraillist.php"); // Return to list page
+					} elseif ($loadCurrentRecord) { // Load current record position
+						$this->setupStartRec(); // Set up start record position
 
-					// Load record based on key
-					if (IsApi()) {
-						$filter = $this->getRecordFilter();
-						$this->CurrentFilter = $filter;
-						$sql = $this->getCurrentSql();
-						$conn = &$this->getConnection();
-						$this->Recordset = LoadRecordset($sql, $conn);
-						$res = $this->Recordset && !$this->Recordset->EOF;
-					} else {
-						$res = $this->loadRow();
+						// Point to current record
+						if ($this->StartRec <= $this->TotalRecs) {
+							$matchRecord = TRUE;
+							$this->Recordset->move($this->StartRec - 1);
+						}
+					} else { // Match key values
+						while (!$this->Recordset->EOF) {
+							if (SameString($this->id->CurrentValue, $this->Recordset->fields('id'))) {
+								$this->setStartRecordNumber($this->StartRec); // Save record position
+								$matchRecord = TRUE;
+								break;
+							} else {
+								$this->StartRec++;
+								$this->Recordset->moveNext();
+							}
+						}
 					}
-					if (!$res) { // Load record based on key
+					if (!$matchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
 						$returnUrl = "audittraillist.php"; // No matching record, return to list
+					} else {
+						$this->loadRowValues($this->Recordset); // Load row values
 					}
 			}
 
@@ -1328,7 +1347,7 @@ class audittrail_view extends audittrail
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

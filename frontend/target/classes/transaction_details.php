@@ -35,6 +35,8 @@ class transaction_details extends DbTable
 	// Fields
 	public $document_sequence;
 	public $firelink_doc_no;
+	public $project_name;
+	public $document_tittle;
 	public $submit_no;
 	public $revision_no;
 	public $transmit_no;
@@ -93,8 +95,18 @@ class transaction_details extends DbTable
 		$this->firelink_doc_no->Nullable = FALSE; // NOT NULL field
 		$this->firelink_doc_no->Required = TRUE; // Required field
 		$this->firelink_doc_no->Sortable = TRUE; // Allow sort
-		$this->firelink_doc_no->Lookup = new Lookup('firelink_doc_no', 'document_details', FALSE, 'firelink_doc_no', ["firelink_doc_no","document_tittle","project_name",""], [], [], [], [], [], [], '"document_sequence" DESC', '');
+		$this->firelink_doc_no->Lookup = new Lookup('firelink_doc_no', 'document_details', FALSE, 'firelink_doc_no', ["firelink_doc_no","document_tittle","",""], [], [], [], [], ["project_name","document_tittle"], ["x_project_name","x_document_tittle"], '"document_sequence" DESC', '<spanclass="text-info">{{:df1}}</span> <smallclass="text-muted">({{:df2}})</small> <br>');
 		$this->fields['firelink_doc_no'] = &$this->firelink_doc_no;
+
+		// project_name
+		$this->project_name = new DbField('transaction_details', 'transaction_details', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"project_name"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->project_name->Sortable = TRUE; // Allow sort
+		$this->fields['project_name'] = &$this->project_name;
+
+		// document_tittle
+		$this->document_tittle = new DbField('transaction_details', 'transaction_details', 'x_document_tittle', 'document_tittle', '"document_tittle"', '"document_tittle"', 200, -1, FALSE, '"document_tittle"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->document_tittle->Sortable = TRUE; // Allow sort
+		$this->fields['document_tittle'] = &$this->document_tittle;
 
 		// submit_no
 		$this->submit_no = new DbField('transaction_details', 'transaction_details', 'x_submit_no', 'submit_no', '"submit_no"', '"submit_no"', 200, -1, FALSE, '"submit_no"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
@@ -115,7 +127,7 @@ class transaction_details extends DbTable
 		$this->transmit_no->Nullable = FALSE; // NOT NULL field
 		$this->transmit_no->Required = TRUE; // Required field
 		$this->transmit_no->Sortable = TRUE; // Allow sort
-		$this->transmit_no->Lookup = new Lookup('transmit_no', 'transmit_details', FALSE, 'transmittal_no', ["transmittal_no","project_name","",""], [], [], [], [], ["transmital_date"], ["x_transmit_date"], '"transmit_id" DESC', '');
+		$this->transmit_no->Lookup = new Lookup('transmit_no', 'transmit_details', FALSE, 'transmittal_no', ["transmittal_no","","",""], [], [], [], [], ["transmital_date"], ["x_transmit_date"], '"transmit_id" DESC', '');
 		$this->fields['transmit_no'] = &$this->transmit_no;
 
 		// transmit_date
@@ -271,7 +283,7 @@ class transaction_details extends DbTable
 	{
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT \"firelink_doc_no\" || '" . ValueSeparator(1, $this->firelink_doc_no) . "' || \"document_tittle\" || '" . ValueSeparator(2, $this->firelink_doc_no) . "' || \"project_name\" FROM \"public\".\"document_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"firelink_doc_no\" = \"transaction_details\".\"firelink_doc_no\" LIMIT 1) AS \"EV__firelink_doc_no\", (SELECT \"transmittal_no\" || '" . ValueSeparator(1, $this->transmit_no) . "' || \"project_name\" FROM \"public\".\"transmit_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"transmittal_no\" = \"transaction_details\".\"transmit_no\" LIMIT 1) AS \"EV__transmit_no\" FROM \"public\".\"transaction_details\"" .
+			"SELECT *, (SELECT \"firelink_doc_no\" || '" . ValueSeparator(1, $this->firelink_doc_no) . "' || \"document_tittle\" FROM \"public\".\"document_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"firelink_doc_no\" = \"transaction_details\".\"firelink_doc_no\" LIMIT 1) AS \"EV__firelink_doc_no\", (SELECT \"transmittal_no\" FROM \"public\".\"transmit_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"transmittal_no\" = \"transaction_details\".\"transmit_no\" LIMIT 1) AS \"EV__transmit_no\" FROM \"public\".\"transaction_details\"" .
 			") \"TMP_TABLE\"";
 		return ($this->SqlSelectList <> "") ? $this->SqlSelectList : $select;
 	}
@@ -609,6 +621,8 @@ class transaction_details extends DbTable
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->document_sequence->DbValue = $row['document_sequence'];
 		$this->firelink_doc_no->DbValue = $row['firelink_doc_no'];
+		$this->project_name->DbValue = $row['project_name'];
+		$this->document_tittle->DbValue = $row['document_tittle'];
 		$this->submit_no->DbValue = $row['submit_no'];
 		$this->revision_no->DbValue = $row['revision_no'];
 		$this->transmit_no->DbValue = $row['transmit_no'];
@@ -851,6 +865,8 @@ class transaction_details extends DbTable
 	{
 		$this->document_sequence->setDbValue($rs->fields('document_sequence'));
 		$this->firelink_doc_no->setDbValue($rs->fields('firelink_doc_no'));
+		$this->project_name->setDbValue($rs->fields('project_name'));
+		$this->document_tittle->setDbValue($rs->fields('document_tittle'));
 		$this->submit_no->setDbValue($rs->fields('submit_no'));
 		$this->revision_no->setDbValue($rs->fields('revision_no'));
 		$this->transmit_no->setDbValue($rs->fields('transmit_no'));
@@ -877,6 +893,8 @@ class transaction_details extends DbTable
 		$this->document_sequence->CellCssStyle = "white-space: nowrap;";
 
 		// firelink_doc_no
+		// project_name
+		// document_tittle
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -911,7 +929,6 @@ class transaction_details extends DbTable
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
 					$arwrk[2] = $rswrk->fields('df2');
-					$arwrk[3] = $rswrk->fields('df3');
 					$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -924,6 +941,14 @@ class transaction_details extends DbTable
 		}
 		$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 		$this->firelink_doc_no->ViewCustomAttributes = "";
+
+		// project_name
+		$this->project_name->ViewValue = $this->project_name->CurrentValue;
+		$this->project_name->ViewCustomAttributes = "";
+
+		// document_tittle
+		$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+		$this->document_tittle->ViewCustomAttributes = "";
 
 		// submit_no
 		$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
@@ -949,7 +974,6 @@ class transaction_details extends DbTable
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
 					$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1030,6 +1054,16 @@ class transaction_details extends DbTable
 		$this->firelink_doc_no->LinkCustomAttributes = "";
 		$this->firelink_doc_no->HrefValue = "";
 		$this->firelink_doc_no->TooltipValue = "";
+
+		// project_name
+		$this->project_name->LinkCustomAttributes = "";
+		$this->project_name->HrefValue = "";
+		$this->project_name->TooltipValue = "";
+
+		// document_tittle
+		$this->document_tittle->LinkCustomAttributes = "";
+		$this->document_tittle->HrefValue = "";
+		$this->document_tittle->TooltipValue = "";
 
 		// submit_no
 		$this->submit_no->LinkCustomAttributes = "";
@@ -1128,7 +1162,6 @@ class transaction_details extends DbTable
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
 					$arwrk[2] = $rswrk->fields('df2');
-					$arwrk[3] = $rswrk->fields('df3');
 					$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1141,6 +1174,22 @@ class transaction_details extends DbTable
 		}
 		$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 		$this->firelink_doc_no->ViewCustomAttributes = "";
+
+		// project_name
+		$this->project_name->EditAttrs["class"] = "form-control";
+		$this->project_name->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+		$this->project_name->EditValue = $this->project_name->CurrentValue;
+		$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+		// document_tittle
+		$this->document_tittle->EditAttrs["class"] = "form-control";
+		$this->document_tittle->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
+		$this->document_tittle->EditValue = $this->document_tittle->CurrentValue;
+		$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
 
 		// submit_no
 		$this->submit_no->EditAttrs["class"] = "form-control";
@@ -1172,7 +1221,6 @@ class transaction_details extends DbTable
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
 					$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1255,6 +1303,8 @@ class transaction_details extends DbTable
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
 					$doc->exportCaption($this->firelink_doc_no);
+					$doc->exportCaption($this->project_name);
+					$doc->exportCaption($this->document_tittle);
 					$doc->exportCaption($this->submit_no);
 					$doc->exportCaption($this->revision_no);
 					$doc->exportCaption($this->transmit_no);
@@ -1263,10 +1313,11 @@ class transaction_details extends DbTable
 					$doc->exportCaption($this->approval_status);
 					$doc->exportCaption($this->document_link);
 					$doc->exportCaption($this->document_native);
-					$doc->exportCaption($this->username);
 				} else {
 					$doc->exportCaption($this->document_sequence);
 					$doc->exportCaption($this->firelink_doc_no);
+					$doc->exportCaption($this->project_name);
+					$doc->exportCaption($this->document_tittle);
 					$doc->exportCaption($this->submit_no);
 					$doc->exportCaption($this->revision_no);
 					$doc->exportCaption($this->transmit_no);
@@ -1306,6 +1357,8 @@ class transaction_details extends DbTable
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
 						$doc->exportField($this->firelink_doc_no);
+						$doc->exportField($this->project_name);
+						$doc->exportField($this->document_tittle);
 						$doc->exportField($this->submit_no);
 						$doc->exportField($this->revision_no);
 						$doc->exportField($this->transmit_no);
@@ -1314,10 +1367,11 @@ class transaction_details extends DbTable
 						$doc->exportField($this->approval_status);
 						$doc->exportField($this->document_link);
 						$doc->exportField($this->document_native);
-						$doc->exportField($this->username);
 					} else {
 						$doc->exportField($this->document_sequence);
 						$doc->exportField($this->firelink_doc_no);
+						$doc->exportField($this->project_name);
+						$doc->exportField($this->document_tittle);
 						$doc->exportField($this->submit_no);
 						$doc->exportField($this->revision_no);
 						$doc->exportField($this->transmit_no);

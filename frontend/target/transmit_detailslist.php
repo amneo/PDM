@@ -155,16 +155,6 @@ $transmit_details_list->showMessage();
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $transmit_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $transmit_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $transmit_details_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($transmit_details_list->TotalRecs > 0 && (!$transmit_details_list->AutoHidePageSizeSelector || $transmit_details_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="transmit_details">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($transmit_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($transmit_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($transmit_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
-</div>
-<?php } ?>
 </form>
 <?php } ?>
 <div class="ew-list-other-options">
@@ -434,16 +424,6 @@ if ($transmit_details_list->Recordset)
 <?php if ($transmit_details_list->Pager->RecordCount > 0) { ?>
 <div class="ew-pager ew-rec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $transmit_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $transmit_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $transmit_details_list->Pager->RecordCount ?></span>
-</div>
-<?php } ?>
-<?php if ($transmit_details_list->TotalRecs > 0 && (!$transmit_details_list->AutoHidePageSizeSelector || $transmit_details_list->Pager->Visible)) { ?>
-<div class="ew-pager">
-<input type="hidden" name="t" value="transmit_details">
-<select name="<?php echo TABLE_REC_PER_PAGE ?>" class="form-control form-control-sm ew-tooltip" title="<?php echo $Language->phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="50"<?php if ($transmit_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($transmit_details_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($transmit_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
-</select>
 </div>
 <?php } ?>
 </form>

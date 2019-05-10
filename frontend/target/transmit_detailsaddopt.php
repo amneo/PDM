@@ -122,7 +122,7 @@ $transmit_details_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_transmittal_no"><?php echo $transmit_details->transmittal_no->caption() ?><?php echo ($transmit_details->transmittal_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="transmit_details" data-field="x_transmittal_no" name="x_transmittal_no" id="x_transmittal_no" size="30" placeholder="<?php echo HtmlEncode($transmit_details->transmittal_no->getPlaceHolder()) ?>" value="<?php echo $transmit_details->transmittal_no->EditValue ?>"<?php echo $transmit_details->transmittal_no->editAttributes() ?>>
-</div>
+<?php echo $transmit_details->transmittal_no->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($transmit_details->project_name->Visible) { // project_name ?>
@@ -144,7 +144,7 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":false});
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
-</div>
+<?php echo $transmit_details->project_name->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($transmit_details->delivery_location->Visible) { // delivery_location ?>
@@ -152,7 +152,7 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 		<label class="col-sm-2 col-form-label ew-label" for="x_delivery_location"><?php echo $transmit_details->delivery_location->caption() ?><?php echo ($transmit_details->delivery_location->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="transmit_details" data-field="x_delivery_location" name="x_delivery_location" id="x_delivery_location" size="30" placeholder="<?php echo HtmlEncode($transmit_details->delivery_location->getPlaceHolder()) ?>" value="<?php echo $transmit_details->delivery_location->EditValue ?>"<?php echo $transmit_details->delivery_location->editAttributes() ?>>
-</div>
+<?php echo $transmit_details->delivery_location->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($transmit_details->addressed_to->Visible) { // addressed_to ?>
@@ -160,7 +160,7 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 		<label class="col-sm-2 col-form-label ew-label" for="x_addressed_to"><?php echo $transmit_details->addressed_to->caption() ?><?php echo ($transmit_details->addressed_to->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="transmit_details" data-field="x_addressed_to" name="x_addressed_to" id="x_addressed_to" size="30" placeholder="<?php echo HtmlEncode($transmit_details->addressed_to->getPlaceHolder()) ?>" value="<?php echo $transmit_details->addressed_to->EditValue ?>"<?php echo $transmit_details->addressed_to->editAttributes() ?>>
-</div>
+<?php echo $transmit_details->addressed_to->CustomMsg ?></div>
 	</div>
 <?php } ?>
 <?php if ($transmit_details->remarks->Visible) { // remarks ?>
@@ -172,7 +172,7 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 <script>
 ew.createEditor("ftransmit_detailsaddopt", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
 </script>
-</div>
+<?php echo $transmit_details->remarks->CustomMsg ?></div>
 	</div>
 <?php } ?>
 </form>

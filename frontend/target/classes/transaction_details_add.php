@@ -626,6 +626,8 @@ class transaction_details_add extends transaction_details
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->project_name->Visible = FALSE;
+		$this->document_tittle->Visible = FALSE;
 		$this->submit_no->setVisibility();
 		$this->revision_no->setVisibility();
 		$this->transmit_no->setVisibility();
@@ -635,7 +637,7 @@ class transaction_details_add extends transaction_details
 		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
-		$this->username->setVisibility();
+		$this->username->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -781,6 +783,10 @@ class transaction_details_add extends transaction_details
 		$this->document_sequence->OldValue = $this->document_sequence->CurrentValue;
 		$this->firelink_doc_no->CurrentValue = NULL;
 		$this->firelink_doc_no->OldValue = $this->firelink_doc_no->CurrentValue;
+		$this->project_name->CurrentValue = NULL;
+		$this->project_name->OldValue = $this->project_name->CurrentValue;
+		$this->document_tittle->CurrentValue = NULL;
+		$this->document_tittle->OldValue = $this->document_tittle->CurrentValue;
 		$this->submit_no->CurrentValue = NULL;
 		$this->submit_no->OldValue = $this->submit_no->CurrentValue;
 		$this->revision_no->CurrentValue = NULL;
@@ -884,15 +890,6 @@ class transaction_details_add extends transaction_details
 				$this->document_native->setFormValue($val);
 		}
 
-		// Check field name 'username' first before field var 'x_username'
-		$val = $CurrentForm->hasValue("username") ? $CurrentForm->getValue("username") : $CurrentForm->getValue("x_username");
-		if (!$this->username->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->username->Visible = FALSE; // Disable update for API request
-			else
-				$this->username->setFormValue($val);
-		}
-
 		// Check field name 'document_sequence' first before field var 'x_document_sequence'
 		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
 	}
@@ -910,7 +907,6 @@ class transaction_details_add extends transaction_details
 		$this->direction->CurrentValue = $this->direction->FormValue;
 		$this->approval_status->CurrentValue = $this->approval_status->FormValue;
 		$this->document_native->CurrentValue = $this->document_native->FormValue;
-		$this->username->CurrentValue = $this->username->FormValue;
 	}
 
 	// Load row based on key values
@@ -955,6 +951,8 @@ class transaction_details_add extends transaction_details
 		} else {
 			$this->firelink_doc_no->VirtualValue = ""; // Clear value
 		}
+		$this->project_name->setDbValue($row['project_name']);
+		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->submit_no->setDbValue($row['submit_no']);
 		$this->revision_no->setDbValue($row['revision_no']);
 		$this->transmit_no->setDbValue($row['transmit_no']);
@@ -980,6 +978,8 @@ class transaction_details_add extends transaction_details
 		$row = [];
 		$row['document_sequence'] = $this->document_sequence->CurrentValue;
 		$row['firelink_doc_no'] = $this->firelink_doc_no->CurrentValue;
+		$row['project_name'] = $this->project_name->CurrentValue;
+		$row['document_tittle'] = $this->document_tittle->CurrentValue;
 		$row['submit_no'] = $this->submit_no->CurrentValue;
 		$row['revision_no'] = $this->revision_no->CurrentValue;
 		$row['transmit_no'] = $this->transmit_no->CurrentValue;
@@ -1029,6 +1029,8 @@ class transaction_details_add extends transaction_details
 		// Common render codes for all row types
 		// document_sequence
 		// firelink_doc_no
+		// project_name
+		// document_tittle
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -1063,7 +1065,6 @@ class transaction_details_add extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1076,6 +1077,14 @@ class transaction_details_add extends transaction_details
 			}
 			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// project_name
+			$this->project_name->ViewValue = $this->project_name->CurrentValue;
+			$this->project_name->ViewCustomAttributes = "";
+
+			// document_tittle
+			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewCustomAttributes = "";
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
@@ -1101,7 +1110,6 @@ class transaction_details_add extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1169,10 +1177,6 @@ class transaction_details_add extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
-			// username
-			$this->username->ViewValue = $this->username->CurrentValue;
-			$this->username->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
@@ -1224,11 +1228,6 @@ class transaction_details_add extends transaction_details
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
 			$this->document_native->TooltipValue = "";
-
-			// username
-			$this->username->LinkCustomAttributes = "";
-			$this->username->HrefValue = "";
-			$this->username->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// firelink_doc_no
@@ -1248,7 +1247,6 @@ class transaction_details_add extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1292,7 +1290,6 @@ class transaction_details_add extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
 						$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1365,7 +1362,6 @@ class transaction_details_add extends transaction_details
 			$this->document_native->EditValue = HtmlEncode($this->document_native->CurrentValue);
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
-			// username
 			// Add refer script
 			// firelink_doc_no
 
@@ -1410,10 +1406,6 @@ class transaction_details_add extends transaction_details
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
-
-			// username
-			$this->username->LinkCustomAttributes = "";
-			$this->username->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1442,6 +1434,16 @@ class transaction_details_add extends transaction_details
 		if ($this->firelink_doc_no->Required) {
 			if (!$this->firelink_doc_no->IsDetailKey && $this->firelink_doc_no->FormValue != NULL && $this->firelink_doc_no->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->firelink_doc_no->caption(), $this->firelink_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->project_name->Required) {
+			if (!$this->project_name->IsDetailKey && $this->project_name->FormValue != NULL && $this->project_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_name->caption(), $this->project_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_tittle->Required) {
+			if (!$this->document_tittle->IsDetailKey && $this->document_tittle->FormValue != NULL && $this->document_tittle->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_tittle->caption(), $this->document_tittle->RequiredErrorMessage));
 			}
 		}
 		if ($this->submit_no->Required) {
@@ -1555,10 +1557,6 @@ class transaction_details_add extends transaction_details
 
 		// document_native
 		$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", FALSE);
-
-		// username
-		$this->username->setDbValueDef($rsnew, CurrentUserName(), NULL);
-		$rsnew['username'] = &$this->username->DbValue;
 		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
 			if (!EmptyValue($this->document_link->Upload->FileName)) {
@@ -1699,7 +1697,7 @@ class transaction_details_add extends transaction_details
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

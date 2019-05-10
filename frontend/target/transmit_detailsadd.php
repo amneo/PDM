@@ -352,7 +352,7 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 <?php } else { ?>
 <span id="el_transmit_details_remarks">
 <span<?php echo $transmit_details->remarks->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->remarks->ViewValue) ?>"></span>
+<?php echo $transmit_details->remarks->ViewValue ?></span>
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" value="<?php echo HtmlEncode($transmit_details->remarks->FormValue) ?>">
 <?php } ?>
@@ -373,7 +373,7 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 <?php } else { ?>
 <span id="el_transmit_details_remarks">
 <span<?php echo $transmit_details->remarks->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->remarks->ViewValue) ?>"></span>
+<?php echo $transmit_details->remarks->ViewValue ?></span>
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_remarks" name="x_remarks" id="x_remarks" value="<?php echo HtmlEncode($transmit_details->remarks->FormValue) ?>">
 <?php } ?>

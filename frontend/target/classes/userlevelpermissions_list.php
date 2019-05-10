@@ -818,9 +818,6 @@ class userlevelpermissions_list extends userlevelpermissions
 			if ($this->processListAction()) // Ajax request
 				$this->terminate();
 
-			// Set up records per page
-			$this->setupDisplayRecs();
-
 			// Handle reset command
 			$this->resetCmd();
 
@@ -981,28 +978,6 @@ class userlevelpermissions_list extends userlevelpermissions
 			$this->Recordset->close();
 			WriteJson(["success" => TRUE, $this->TableVar => $rows, "totalRecordCount" => $this->TotalRecs]);
 			$this->terminate(TRUE);
-		}
-	}
-
-	// Set up number of records displayed per page
-	protected function setupDisplayRecs()
-	{
-		$wrk = Get(TABLE_REC_PER_PAGE, "");
-		if ($wrk <> "") {
-			if (is_numeric($wrk)) {
-				$this->DisplayRecs = (int)$wrk;
-			} else {
-				if (SameText($wrk, "all")) { // Display all records
-					$this->DisplayRecs = -1;
-				} else {
-					$this->DisplayRecs = 50; // Non-numeric, load default
-				}
-			}
-			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
-
-			// Reset start position
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
 		}
 	}
 
@@ -1352,37 +1327,37 @@ class userlevelpermissions_list extends userlevelpermissions
 		// Add group option item
 		$item = &$this->ListOptions->add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
 		// "view"
 		$item = &$this->ListOptions->add("view");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canView();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canEdit();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canAdd();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "delete"
 		$item = &$this->ListOptions->add("delete");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canDelete();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// List actions
 		$item = &$this->ListOptions->add("listactions");
 		$item->CssClass = "text-nowrap";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 		$item->ShowInDropDown = FALSE;
@@ -1390,8 +1365,9 @@ class userlevelpermissions_list extends userlevelpermissions
 		// "checkbox"
 		$item = &$this->ListOptions->add("checkbox");
 		$item->Visible = FALSE;
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew.selectAllKey(this);\">";
+		$item->moveTo(0);
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
@@ -2124,7 +2100,7 @@ class userlevelpermissions_list extends userlevelpermissions
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache

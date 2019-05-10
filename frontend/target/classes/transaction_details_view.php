@@ -611,6 +611,8 @@ class transaction_details_view extends transaction_details
 	public $StopRec;
 	public $TotalRecs = 0;
 	public $RecRange = 10;
+	public $Pager;
+	public $AutoHidePager = AUTO_HIDE_PAGER;
 	public $RecCnt;
 	public $RecKey = array();
 	public $IsModal = FALSE;
@@ -730,6 +732,7 @@ class transaction_details_view extends transaction_details
 		$this->setupExportOptions();
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->project_name->setVisibility();
 		$this->submit_no->setVisibility();
 		$this->revision_no->setVisibility();
 		$this->transmit_no->setVisibility();
@@ -787,29 +790,46 @@ class transaction_details_view extends transaction_details
 				$this->document_sequence->setFormValue(Route(2));
 				$this->RecKey["document_sequence"] = $this->document_sequence->FormValue;
 			} else {
-				$returnUrl = "transaction_detailslist.php"; // Return to list
+				$loadCurrentRecord = TRUE;
 			}
 
 			// Get action
 			$this->CurrentAction = "show"; // Display
 			switch ($this->CurrentAction) {
 				case "show": // Get a record to display
+					$this->StartRec = 1; // Initialize start position
+					if ($this->Recordset = $this->loadRecordset()) // Load records
+						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+					if ($this->TotalRecs <= 0) { // No record found
+						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+						$this->terminate("transaction_detailslist.php"); // Return to list page
+					} elseif ($loadCurrentRecord) { // Load current record position
+						$this->setupStartRec(); // Set up start record position
 
-					// Load record based on key
-					if (IsApi()) {
-						$filter = $this->getRecordFilter();
-						$this->CurrentFilter = $filter;
-						$sql = $this->getCurrentSql();
-						$conn = &$this->getConnection();
-						$this->Recordset = LoadRecordset($sql, $conn);
-						$res = $this->Recordset && !$this->Recordset->EOF;
-					} else {
-						$res = $this->loadRow();
+						// Point to current record
+						if ($this->StartRec <= $this->TotalRecs) {
+							$matchRecord = TRUE;
+							$this->Recordset->move($this->StartRec - 1);
+						}
+					} else { // Match key values
+						while (!$this->Recordset->EOF) {
+							if (SameString($this->document_sequence->CurrentValue, $this->Recordset->fields('document_sequence'))) {
+								$this->setStartRecordNumber($this->StartRec); // Save record position
+								$matchRecord = TRUE;
+								break;
+							} else {
+								$this->StartRec++;
+								$this->Recordset->moveNext();
+							}
+						}
 					}
-					if (!$res) { // Load record based on key
+					if (!$matchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
 						$returnUrl = "transaction_detailslist.php"; // No matching record, return to list
+					} else {
+						$this->loadRowValues($this->Recordset); // Load row values
 					}
 			}
 
@@ -996,6 +1016,7 @@ class transaction_details_view extends transaction_details
 		} else {
 			$this->firelink_doc_no->VirtualValue = ""; // Clear value
 		}
+		$this->project_name->setDbValue($row['project_name']);
 		$this->submit_no->setDbValue($row['submit_no']);
 		$this->revision_no->setDbValue($row['revision_no']);
 		$this->transmit_no->setDbValue($row['transmit_no']);
@@ -1020,6 +1041,7 @@ class transaction_details_view extends transaction_details
 		$row = [];
 		$row['document_sequence'] = NULL;
 		$row['firelink_doc_no'] = NULL;
+		$row['project_name'] = NULL;
 		$row['submit_no'] = NULL;
 		$row['revision_no'] = NULL;
 		$row['transmit_no'] = NULL;
@@ -1052,6 +1074,7 @@ class transaction_details_view extends transaction_details
 		// Common render codes for all row types
 		// document_sequence
 		// firelink_doc_no
+		// project_name
 		// submit_no
 		// revision_no
 		// transmit_no
@@ -1086,7 +1109,6 @@ class transaction_details_view extends transaction_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1099,6 +1121,10 @@ class transaction_details_view extends transaction_details
 			}
 			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// project_name
+			$this->project_name->ViewValue = $this->project_name->CurrentValue;
+			$this->project_name->ViewCustomAttributes = "";
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
@@ -1124,7 +1150,6 @@ class transaction_details_view extends transaction_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1200,6 +1225,11 @@ class transaction_details_view extends transaction_details
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
@@ -1475,7 +1505,7 @@ class transaction_details_view extends transaction_details
 			$sql = $fld->Lookup->getSql(FALSE, "", $lookupFilter, $this);
 
 			// Set up lookup cache
-			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->Options) == 0) {
+			if ($fld->UseLookupCache && $sql <> "" && count($fld->Lookup->ParentFields) == 0 && count($fld->Lookup->Options) == 0) {
 				$conn = &$this->getConnection();
 				$totalCnt = $this->getRecordCount($sql);
 				if ($totalCnt > $fld->LookupCacheCount) // Total count > cache count, do not cache
