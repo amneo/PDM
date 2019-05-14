@@ -11,7 +11,7 @@ class login extends user_dtls
 	public $PageID = "login";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Page object name
 	public $PageObjName = "login";

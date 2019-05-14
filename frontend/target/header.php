@@ -89,6 +89,7 @@ jQuery.extend(ew, {
 	API_PROGRESS_ACTION: "<?php echo API_PROGRESS_ACTION ?>", // API progress action
 	LOOKUP_FILTER_VALUE_SEPARATOR: "<?php echo LOOKUP_FILTER_VALUE_SEPARATOR ?>", // Lookup filter value separator
 	AUTO_SUGGEST_MAX_ENTRIES: <?php echo AUTO_SUGGEST_MAX_ENTRIES ?>, // Auto-Suggest max entries
+	MAX_EMAIL_RECIPIENT: <?php echo MAX_EMAIL_RECIPIENT ?>,
 	DISABLE_BUTTON_ON_SUBMIT: true,
 	IMAGE_FOLDER: "phpimages/", // Image folder
 	SESSION_ID: "<?php echo Encrypt(session_id()) ?>", // Session ID

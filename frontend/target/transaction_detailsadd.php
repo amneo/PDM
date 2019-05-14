@@ -201,7 +201,12 @@ ftransaction_detailsadd.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect
 <?php } else { ?>
 <span id="el_transaction_details_firelink_doc_no">
 <span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></span>
+<?php if ((!EmptyString($transaction_details->firelink_doc_no->ViewValue)) && $transaction_details->firelink_doc_no->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->firelink_doc_no->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></a>
+<?php } else { ?>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>">
+<?php } ?>
+</span>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->FormValue) ?>">
 <?php } ?>
@@ -235,7 +240,12 @@ ftransaction_detailsadd.createAutoSuggest({"id":"x_firelink_doc_no","forceSelect
 <?php } else { ?>
 <span id="el_transaction_details_firelink_doc_no">
 <span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></span>
+<?php if ((!EmptyString($transaction_details->firelink_doc_no->ViewValue)) && $transaction_details->firelink_doc_no->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->firelink_doc_no->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>"></a>
+<?php } else { ?>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->firelink_doc_no->ViewValue) ?>">
+<?php } ?>
+</span>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_firelink_doc_no" data-page="1" name="x_firelink_doc_no" id="x_firelink_doc_no" value="<?php echo HtmlEncode($transaction_details->firelink_doc_no->FormValue) ?>">
 <?php } ?>

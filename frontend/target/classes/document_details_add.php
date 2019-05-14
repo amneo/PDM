@@ -11,7 +11,7 @@ class document_details_add extends document_details
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'document_details';

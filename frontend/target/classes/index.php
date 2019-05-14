@@ -11,7 +11,7 @@ class index
 	public $PageID = "index";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Page object name
 	public $PageObjName = "index";

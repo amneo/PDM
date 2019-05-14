@@ -11,7 +11,7 @@ class forgotpwd extends user_dtls
 	public $PageID = "forgotpwd";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Page object name
 	public $PageObjName = "forgotpwd";

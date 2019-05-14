@@ -456,32 +456,6 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 	</tr>
 <?php } ?>
 <?php } ?>
-<?php if ($transaction_details->document_link->Visible) { // document_link ?>
-<?php if ($transaction_details_search->IsMobileOrModal) { ?>
-	<div id="r_document_link" class="form-group row">
-		<label class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_document_link"><?php echo $transaction_details->document_link->caption() ?></span>
-		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_link" id="z_document_link" value="LIKE"></span>
-		</label>
-		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->document_link->cellAttributes() ?>>
-			<span id="el_transaction_details_document_link">
-<input type="text" data-table="transaction_details" data-field="x_document_link" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
-</span>
-		</div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_document_link">
-		<td class="<?php echo $transaction_details_search->TableLeftColumnClass ?>"><span id="elh_transaction_details_document_link"><?php echo $transaction_details->document_link->caption() ?></span></td>
-		<td class="w-col-1"><span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_link" id="z_document_link" value="LIKE"></span></td>
-		<td<?php echo $transaction_details->document_link->cellAttributes() ?>>
-			<div class="text-nowrap">
-				<span id="el_transaction_details_document_link">
-<input type="text" data-table="transaction_details" data-field="x_document_link" name="x_document_link" id="x_document_link" size="30" placeholder="<?php echo HtmlEncode($transaction_details->document_link->getPlaceHolder()) ?>" value="<?php echo $transaction_details->document_link->EditValue ?>"<?php echo $transaction_details->document_link->editAttributes() ?>>
-</span>
-			</div>
-		</td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($transaction_details->document_native->Visible) { // document_native ?>
 <?php if ($transaction_details_search->IsMobileOrModal) { ?>
 	<div id="r_document_native" class="form-group row">

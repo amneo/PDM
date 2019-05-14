@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/5/10" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/5/14" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -698,7 +698,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="Project Document Management-FireLink" />
-    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal.Frontend Version: 01-Beta Backend Version: 01-Beta Release Date: 2019-03-08" />
+    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal.Frontend Version: 01-Beta Backend Version: 02-Beta Release Date: 2019-05-15" />
     <menu id="18">
       <phrase id="menutext" value="Workplace" />
     </menu>
@@ -754,7 +754,7 @@
         <phrase id="fldcaption" value="Sequence Number" />
       </field>
       <field id="firelink_doc_no">
-        <phrase id="fldcaption" value="FireLink Document Number" />
+        <phrase id="fldcaption" value="FLK Document Number" />
       </field>
       <field id="project_name">
         <phrase id="fldcaption" value="Project Name" />

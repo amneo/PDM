@@ -11,7 +11,7 @@ class document_system_delete extends document_system
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'document_system';

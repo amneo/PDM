@@ -11,7 +11,7 @@ class app_version_add extends app_version
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'app_version';

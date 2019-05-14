@@ -11,7 +11,7 @@ class project_details_addopt extends project_details
 	public $PageID = "addopt";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'project_details';

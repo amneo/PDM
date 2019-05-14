@@ -11,7 +11,7 @@ class transaction_details_edit extends transaction_details
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -622,8 +622,8 @@ class transaction_details_edit extends transaction_details
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
-		$this->project_name->setVisibility();
-		$this->document_tittle->setVisibility();
+		$this->project_name->Visible = FALSE;
+		$this->document_tittle->Visible = FALSE;
 		$this->submit_no->setVisibility();
 		$this->revision_no->setVisibility();
 		$this->transmit_no->setVisibility();
@@ -827,24 +827,6 @@ class transaction_details_edit extends transaction_details
 				$this->firelink_doc_no->setFormValue($val);
 		}
 
-		// Check field name 'project_name' first before field var 'x_project_name'
-		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
-		if (!$this->project_name->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->project_name->Visible = FALSE; // Disable update for API request
-			else
-				$this->project_name->setFormValue($val);
-		}
-
-		// Check field name 'document_tittle' first before field var 'x_document_tittle'
-		$val = $CurrentForm->hasValue("document_tittle") ? $CurrentForm->getValue("document_tittle") : $CurrentForm->getValue("x_document_tittle");
-		if (!$this->document_tittle->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->document_tittle->Visible = FALSE; // Disable update for API request
-			else
-				$this->document_tittle->setFormValue($val);
-		}
-
 		// Check field name 'submit_no' first before field var 'x_submit_no'
 		$val = $CurrentForm->hasValue("submit_no") ? $CurrentForm->getValue("submit_no") : $CurrentForm->getValue("x_submit_no");
 		if (!$this->submit_no->IsDetailKey) {
@@ -903,8 +885,6 @@ class transaction_details_edit extends transaction_details
 		global $CurrentForm;
 		$this->document_sequence->CurrentValue = $this->document_sequence->FormValue;
 		$this->firelink_doc_no->CurrentValue = $this->firelink_doc_no->FormValue;
-		$this->project_name->CurrentValue = $this->project_name->FormValue;
-		$this->document_tittle->CurrentValue = $this->document_tittle->FormValue;
 		$this->submit_no->CurrentValue = $this->submit_no->FormValue;
 		$this->revision_no->CurrentValue = $this->revision_no->FormValue;
 		$this->transmit_no->CurrentValue = $this->transmit_no->FormValue;
@@ -1174,18 +1154,14 @@ class transaction_details_edit extends transaction_details
 
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+			} else {
+				$this->firelink_doc_no->HrefValue = "";
+			}
 			$this->firelink_doc_no->TooltipValue = "";
-
-			// project_name
-			$this->project_name->LinkCustomAttributes = "";
-			$this->project_name->HrefValue = "";
-			$this->project_name->TooltipValue = "";
-
-			// document_tittle
-			$this->document_tittle->LinkCustomAttributes = "";
-			$this->document_tittle->HrefValue = "";
-			$this->document_tittle->TooltipValue = "";
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
@@ -1243,22 +1219,6 @@ class transaction_details_edit extends transaction_details
 			}
 			$this->firelink_doc_no->CellCssStyle .= "text-align: left;";
 			$this->firelink_doc_no->ViewCustomAttributes = "";
-
-			// project_name
-			$this->project_name->EditAttrs["class"] = "form-control";
-			$this->project_name->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
-			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
-			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
-
-			// document_tittle
-			$this->document_tittle->EditAttrs["class"] = "form-control";
-			$this->document_tittle->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
-			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->CurrentValue);
-			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
 
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
@@ -1320,16 +1280,14 @@ class transaction_details_edit extends transaction_details
 			// firelink_doc_no
 
 			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+			} else {
+				$this->firelink_doc_no->HrefValue = "";
+			}
 			$this->firelink_doc_no->TooltipValue = "";
-
-			// project_name
-			$this->project_name->LinkCustomAttributes = "";
-			$this->project_name->HrefValue = "";
-
-			// document_tittle
-			$this->document_tittle->LinkCustomAttributes = "";
-			$this->document_tittle->HrefValue = "";
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
@@ -1480,12 +1438,6 @@ class transaction_details_edit extends transaction_details
 			$rsold = &$rs->fields;
 			$this->loadDbValues($rsold);
 			$rsnew = [];
-
-			// project_name
-			$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, NULL, $this->project_name->ReadOnly);
-
-			// document_tittle
-			$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, NULL, $this->document_tittle->ReadOnly);
 
 			// document_native
 			$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", $this->document_native->ReadOnly);

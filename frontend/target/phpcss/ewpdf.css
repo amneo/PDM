@@ -13,7 +13,7 @@ body {
 	width: 100%;
 	border-top: 0.5px solid;
 	border-left: 0.5px solid;
-	border-color: #BFD3EE; /* border color */
+	border-color: #D5D5D5; /* border color */
 	margin-left: 0;
 	margin-right: 0;
 }
@@ -23,11 +23,11 @@ body {
 	border-left: 0px;
 	border-right: 0.5px solid; /* border width, vertical grid line */
 	border-bottom: 0.5px solid; /* border width, horizontal grid line */
-	border-color: #BFD3EE; /* border color */
+	border-color: #D5D5D5; /* border color */
 }
 .ew-table .ew-table-header td, .ew-table .ew-table-header th {
 	background-image: none; /* remove header bg image */
-	background-color: #2647A0;	/* header bgcolor */
+	background-color: #B1174D;	/* header bgcolor */
 	color: #FFFFFF; /* header font color */
 	vertical-align: top;
 }
@@ -39,10 +39,10 @@ body {
 
 /* alternate row color */
 .ew-table .ew-table-alt-row, .ew-table .ew-table-alt-row td {
-	background-color: #EDF5FF; /* alt row color 2 */
+	background-color: #F8EDEF; /* alt row color 2 */
 }
 
 /* main table footer */
 .ew-table .ew-table-footer td {
-	background-color: #D4E7FD; /* footer color */
+	background-color: #F5F5F5; /* footer color */
 }

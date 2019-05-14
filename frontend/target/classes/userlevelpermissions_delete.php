@@ -11,7 +11,7 @@ class userlevelpermissions_delete extends userlevelpermissions
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'userlevelpermissions';

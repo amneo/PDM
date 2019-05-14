@@ -11,7 +11,7 @@ class user_dtls_edit extends user_dtls
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'user_dtls';

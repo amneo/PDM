@@ -11,7 +11,7 @@ class transaction_details_search extends transaction_details
 	public $PageID = "search";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -628,7 +628,7 @@ class transaction_details_search extends transaction_details
 		$this->transmit_date->setVisibility();
 		$this->direction->setVisibility();
 		$this->approval_status->setVisibility();
-		$this->document_link->setVisibility();
+		$this->document_link->Visible = FALSE;
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
@@ -710,7 +710,6 @@ class transaction_details_search extends transaction_details
 		$this->buildSearchUrl($srchUrl, $this->transmit_date); // transmit_date
 		$this->buildSearchUrl($srchUrl, $this->direction); // direction
 		$this->buildSearchUrl($srchUrl, $this->approval_status); // approval_status
-		$this->buildSearchUrl($srchUrl, $this->document_link); // document_link
 		$this->buildSearchUrl($srchUrl, $this->document_native); // document_native
 		if ($srchUrl <> "")
 			$srchUrl .= "&";
@@ -829,11 +828,6 @@ class transaction_details_search extends transaction_details
 		if (!$this->isAddOrEdit())
 			$this->approval_status->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_approval_status"));
 		$this->approval_status->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_approval_status"));
-
-		// document_link
-		if (!$this->isAddOrEdit())
-			$this->document_link->AdvancedSearch->setSearchValue($CurrentForm->getValue("x_document_link"));
-		$this->document_link->AdvancedSearch->setSearchOperator($CurrentForm->getValue("z_document_link"));
 
 		// document_native
 		if (!$this->isAddOrEdit())
@@ -984,14 +978,6 @@ class transaction_details_search extends transaction_details
 			}
 			$this->approval_status->ViewCustomAttributes = "";
 
-			// document_link
-			if (!EmptyValue($this->document_link->Upload->DbValue)) {
-				$this->document_link->ViewValue = $this->document_link->Upload->DbValue;
-			} else {
-				$this->document_link->ViewValue = "";
-			}
-			$this->document_link->ViewCustomAttributes = "";
-
 			// transaction_date
 			$this->transaction_date->ViewValue = $this->transaction_date->CurrentValue;
 			$this->transaction_date->ViewValue = FormatDateTime($this->transaction_date->ViewValue, 0);
@@ -1004,7 +990,13 @@ class transaction_details_search extends transaction_details
 
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+			} else {
+				$this->firelink_doc_no->HrefValue = "";
+			}
 			$this->firelink_doc_no->TooltipValue = "";
 
 			// project_name
@@ -1046,18 +1038,6 @@ class transaction_details_search extends transaction_details
 			$this->approval_status->LinkCustomAttributes = "";
 			$this->approval_status->HrefValue = "";
 			$this->approval_status->TooltipValue = "";
-
-			// document_link
-			$this->document_link->LinkCustomAttributes = "";
-			if (!EmptyValue($this->document_link->Upload->DbValue)) {
-				$this->document_link->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
-				$this->document_link->LinkAttrs["target"] = "_blank"; // Add target
-				if ($this->isExport()) $this->document_link->HrefValue = FullUrl($this->document_link->HrefValue, "href");
-			} else {
-				$this->document_link->HrefValue = "";
-			}
-			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
-			$this->document_link->TooltipValue = "";
 
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
@@ -1155,14 +1135,6 @@ class transaction_details_search extends transaction_details
 				$this->approval_status->EditValue = $arwrk;
 			}
 
-			// document_link
-			$this->document_link->EditAttrs["class"] = "form-control";
-			$this->document_link->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->document_link->AdvancedSearch->SearchValue = HtmlDecode($this->document_link->AdvancedSearch->SearchValue);
-			$this->document_link->EditValue = HtmlEncode($this->document_link->AdvancedSearch->SearchValue);
-			$this->document_link->PlaceHolder = RemoveHtml($this->document_link->caption());
-
 			// document_native
 			$this->document_native->EditAttrs["class"] = "form-control";
 			$this->document_native->EditCustomAttributes = "";
@@ -1216,7 +1188,6 @@ class transaction_details_search extends transaction_details
 		$this->transmit_date->AdvancedSearch->load();
 		$this->direction->AdvancedSearch->load();
 		$this->approval_status->AdvancedSearch->load();
-		$this->document_link->AdvancedSearch->load();
 		$this->document_native->AdvancedSearch->load();
 	}
 

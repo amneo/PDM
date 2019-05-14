@@ -145,6 +145,11 @@ namespace PHPMaker2019\pdm;
 <div id="ew-modal-lookup-dialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"></div><div class="modal-footer"></div></div></div></div>
 <!-- add option dialog -->
 <div id="ew-add-opt-dialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"></div><div class="modal-footer"><button type="button" class="btn btn-primary ew-btn"><?php echo $Language->phrase("AddBtn") ?></button><button type="button" class="btn btn-default ew-btn" data-dismiss="modal"><?php echo $Language->phrase("CancelBtn") ?></button></div></div></div></div>
+<!-- email dialog -->
+<div id="ew-email-dialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div>
+<div class="modal-body">
+<?php include_once $RELATIVE_PATH . "ewemail15.php" ?>
+</div><div class="modal-footer"><button type="button" class="btn btn-primary ew-btn"><?php echo $Language->phrase("SendEmailBtn") ?></button><button type="button" class="btn btn-default ew-btn" data-dismiss="modal"><?php echo $Language->phrase("CancelBtn") ?></button></div></div></div></div>
 <!-- import dialog -->
 <div id="ew-import-dialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div>
 <div class="modal-body">

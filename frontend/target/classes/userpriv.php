@@ -11,7 +11,7 @@ class userpriv extends userlevels
 	public $PageID = "userpriv";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Page object name
 	public $PageObjName = "userpriv";

@@ -11,7 +11,7 @@ class inbox_add extends inbox
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'inbox';

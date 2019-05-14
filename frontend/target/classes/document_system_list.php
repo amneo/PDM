@@ -11,7 +11,7 @@ class document_system_list extends document_system
 	public $PageID = "list";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'document_system';
@@ -620,7 +620,7 @@ class document_system_list extends document_system
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 50;
+	public $DisplayRecs = 25;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -868,7 +868,7 @@ class document_system_list extends document_system
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 50; // Load default
+			$this->DisplayRecs = 25; // Load default
 		}
 
 		// Load Sorting Order
@@ -1930,7 +1930,7 @@ class document_system_list extends document_system
 		$item = &$this->ExportOptions->add("email");
 		$url = "";
 		$item->Body = "<button id=\"emf_document_system\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_system',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_systemlist,sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
@@ -2031,8 +2031,10 @@ class document_system_list extends document_system
 
 		// Output data
 		if ($this->isExport("email")) {
-
-			// Export-to-email disabled
+			if ($return)
+				return $doc->Text; // Return email content
+			else
+				echo $this->exportEmail($doc->Text); // Send email
 		} else {
 			$doc->export();
 			if ($return) {
@@ -2045,6 +2047,93 @@ class document_system_list extends document_system
 					echo $buffer; // Resume the output buffer
 				return $content;
 			}
+		}
+	}
+
+	// Export email
+	protected function exportEmail($emailContent)
+	{
+		global $TempImages, $Language;
+		$sender = Post("sender", "");
+		$recipient = Post("recipient", "");
+		$cc = Post("cc", "");
+		$bcc = Post("bcc", "");
+
+		// Subject
+		$subject = Post("subject", "");
+		$emailSubject = $subject;
+
+		// Message
+		$content = Post("message", "");
+		$emailMessage = $content;
+
+		// Check sender
+		if ($sender == "") {
+			return "<p class=\"text-danger\">" . $Language->phrase("EnterSenderEmail") . "</p>";
+		}
+		if (!CheckEmail($sender)) {
+			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperSenderEmail") . "</p>";
+		}
+
+		// Check recipient
+		if (!CheckEmailList($recipient, MAX_EMAIL_RECIPIENT)) {
+			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperRecipientEmail") . "</p>";
+		}
+
+		// Check cc
+		if (!CheckEmailList($cc, MAX_EMAIL_RECIPIENT)) {
+			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperCcEmail") . "</p>";
+		}
+
+		// Check bcc
+		if (!CheckEmailList($bcc, MAX_EMAIL_RECIPIENT)) {
+			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperBccEmail") . "</p>";
+		}
+
+		// Check email sent count
+		if (!isset($_SESSION[EXPORT_EMAIL_COUNTER]))
+			$_SESSION[EXPORT_EMAIL_COUNTER] = 0;
+		if ((int)$_SESSION[EXPORT_EMAIL_COUNTER] > MAX_EMAIL_SENT_COUNT) {
+			return "<p class=\"text-danger\">" . $Language->phrase("ExceedMaxEmailExport") . "</p>";
+		}
+
+		// Send email
+		$email = new Email();
+		$email->Sender = $sender; // Sender
+		$email->Recipient = $recipient; // Recipient
+		$email->Cc = $cc; // Cc
+		$email->Bcc = $bcc; // Bcc
+		$email->Subject = $emailSubject; // Subject
+		$email->Format = "html";
+		if ($emailMessage <> "")
+			$emailMessage = RemoveXss($emailMessage) . "<br><br>";
+		foreach ($TempImages as $tmpImage)
+			$email->addEmbeddedImage($tmpImage);
+		$email->Content = $emailMessage . CleanEmailContent($emailContent); // Content
+		$eventArgs = [];
+		if ($this->Recordset) {
+			$this->RecCnt = $this->StartRec - 1;
+			$this->Recordset->moveFirst();
+			if ($this->StartRec > 1)
+				$this->Recordset->move($this->StartRec - 1);
+			$eventArgs["rs"] = &$this->Recordset;
+		}
+		$emailSent = FALSE;
+		if ($this->Email_Sending($email, $eventArgs))
+			$emailSent = $email->send();
+
+		// Check email sent status
+		if ($emailSent) {
+
+			// Update email sent count
+			$_SESSION[EXPORT_EMAIL_COUNTER]++;
+
+			// Sent email success
+			return "<p class=\"text-success\">" . $Language->phrase("SendEmailSuccess") . "</p>"; // Set up success message
+		} else {
+
+			// Sent email failure
+			return "<p class=\"text-danger\">" . $email->SendErrDescription . "</p>";
 		}
 	}
 

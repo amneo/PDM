@@ -11,7 +11,7 @@ class approval_details_delete extends approval_details
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'approval_details';

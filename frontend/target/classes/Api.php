@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
  */
 class Api
 {
-	protected $SecretKey = 'nf1jA0W55vM9LNe7';
+	protected $SecretKey = 'xTfcIx2NqMInr26e';
 	protected $Algorithm = 'HS512';
 
 	// For some reason, the "Authorization" header is removed by IIS, changed to "X-Authorization"

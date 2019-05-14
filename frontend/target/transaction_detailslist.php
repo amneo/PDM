@@ -104,12 +104,6 @@ ftransaction_detailslist.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->approval_status->caption(), $transaction_details->approval_status->RequiredErrorMessage)) ?>");
 		<?php } ?>
-		<?php if ($transaction_details_list->document_link->Required) { ?>
-			felm = this.getElements("x" + infix + "_document_link");
-			elm = this.getElements("fn_x" + infix + "_document_link");
-			if (felm && elm && !ew.hasValue(elm))
-				return this.onError(felm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_link->caption(), $transaction_details->document_link->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($transaction_details_list->document_native->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_native");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -140,7 +134,6 @@ ftransaction_detailslist.emptyRow = function(infix) {
 	if (ew.valueChanged(fobj, infix, "transmit_date", false)) return false;
 	if (ew.valueChanged(fobj, infix, "direction", false)) return false;
 	if (ew.valueChanged(fobj, infix, "approval_status", false)) return false;
-	if (ew.valueChanged(fobj, infix, "document_link", false)) return false;
 	if (ew.valueChanged(fobj, infix, "document_native", false)) return false;
 	return true;
 }
@@ -452,15 +445,6 @@ $transaction_details_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($transaction_details->document_link->Visible) { // document_link ?>
-	<?php if ($transaction_details->sortUrl($transaction_details->document_link) == "") { ?>
-		<th data-name="document_link" class="<?php echo $transaction_details->document_link->headerCellClass() ?>"><div id="elh_transaction_details_document_link" class="transaction_details_document_link"><div class="ew-table-header-caption"><?php echo $transaction_details->document_link->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="document_link" class="<?php echo $transaction_details->document_link->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->document_link) ?>',2);"><div id="elh_transaction_details_document_link" class="transaction_details_document_link">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->document_link->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->document_link->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->document_link->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($transaction_details->document_native->Visible) { // document_native ?>
 	<?php if ($transaction_details->sortUrl($transaction_details->document_native) == "") { ?>
 		<th data-name="document_native" class="<?php echo $transaction_details->document_native->headerCellClass() ?>"><div id="elh_transaction_details_document_native" class="transaction_details_document_native"><div class="ew-table-header-caption"><?php echo $transaction_details->document_native->caption() ?></div></div></th>
@@ -592,7 +576,12 @@ ftransaction_detailslist.createAutoSuggest({"id":"x<?php echo $transaction_detai
 <?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_firelink_doc_no" class="transaction_details_firelink_doc_no">
 <span<?php echo $transaction_details->firelink_doc_no->viewAttributes() ?>>
-<?php echo $transaction_details->firelink_doc_no->getViewValue() ?></span>
+<?php if ((!EmptyString($transaction_details->firelink_doc_no->getViewValue())) && $transaction_details->firelink_doc_no->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->firelink_doc_no->linkAttributes() ?>><?php echo $transaction_details->firelink_doc_no->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $transaction_details->firelink_doc_no->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 <?php } ?>
 </td>
@@ -765,34 +754,6 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_approval_status" class="transaction_details_approval_status">
 <span<?php echo $transaction_details->approval_status->viewAttributes() ?>>
 <?php echo $transaction_details->approval_status->getViewValue() ?></span>
-</span>
-<?php } ?>
-</td>
-	<?php } ?>
-	<?php if ($transaction_details->document_link->Visible) { // document_link ?>
-		<td data-name="document_link"<?php echo $transaction_details->document_link->cellAttributes() ?>>
-<?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_link" class="form-group transaction_details_document_link">
-<div id="fd_x<?php echo $transaction_details_list->RowIndex ?>_document_link">
-<span title="<?php echo $transaction_details->document_link->title() ? $transaction_details->document_link->title() : $Language->phrase("ChooseFile") ?>" class="btn btn-default btn-sm fileinput-button ew-tooltip<?php if ($transaction_details->document_link->ReadOnly || $transaction_details->document_link->Disabled) echo " d-none"; ?>">
-	<span><?php echo $Language->phrase("ChooseFileBtn") ?></span>
-	<input type="file" title=" " data-table="transaction_details" data-field="x_document_link" name="x<?php echo $transaction_details_list->RowIndex ?>_document_link" id="x<?php echo $transaction_details_list->RowIndex ?>_document_link"<?php echo $transaction_details->document_link->editAttributes() ?>>
-</span>
-<input type="hidden" name="fn_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fn_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->Upload->FileName ?>">
-<input type="hidden" name="fa_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fa_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="0">
-<input type="hidden" name="fs_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fs_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="0">
-<input type="hidden" name="fx_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fx_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fm_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->UploadMaxFileSize ?>">
-</div>
-<table id="ft_x<?php echo $transaction_details_list->RowIndex ?>_document_link" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
-<input type="hidden" data-table="transaction_details" data-field="x_document_link" name="o<?php echo $transaction_details_list->RowIndex ?>_document_link" id="o<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo HtmlEncode($transaction_details->document_link->OldValue) ?>">
-<?php } ?>
-<?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_document_link" class="transaction_details_document_link">
-<span<?php echo $transaction_details->document_link->viewAttributes() ?>>
-<?php echo GetFileViewTag($transaction_details->document_link, $transaction_details->document_link->getViewValue()) ?>
-</span>
 </span>
 <?php } ?>
 </td>
@@ -987,25 +948,6 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 </div><!-- /.ew-dropdown-list ##-->
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_approval_status" name="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" id="o<?php echo $transaction_details_list->RowIndex ?>_approval_status" value="<?php echo HtmlEncode($transaction_details->approval_status->OldValue) ?>">
-</td>
-	<?php } ?>
-	<?php if ($transaction_details->document_link->Visible) { // document_link ?>
-		<td data-name="document_link">
-<span id="el$rowindex$_transaction_details_document_link" class="form-group transaction_details_document_link">
-<div id="fd_x<?php echo $transaction_details_list->RowIndex ?>_document_link">
-<span title="<?php echo $transaction_details->document_link->title() ? $transaction_details->document_link->title() : $Language->phrase("ChooseFile") ?>" class="btn btn-default btn-sm fileinput-button ew-tooltip<?php if ($transaction_details->document_link->ReadOnly || $transaction_details->document_link->Disabled) echo " d-none"; ?>">
-	<span><?php echo $Language->phrase("ChooseFileBtn") ?></span>
-	<input type="file" title=" " data-table="transaction_details" data-field="x_document_link" name="x<?php echo $transaction_details_list->RowIndex ?>_document_link" id="x<?php echo $transaction_details_list->RowIndex ?>_document_link"<?php echo $transaction_details->document_link->editAttributes() ?>>
-</span>
-<input type="hidden" name="fn_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fn_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->Upload->FileName ?>">
-<input type="hidden" name="fa_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fa_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="0">
-<input type="hidden" name="fs_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fs_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="0">
-<input type="hidden" name="fx_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fx_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x<?php echo $transaction_details_list->RowIndex ?>_document_link" id= "fm_x<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo $transaction_details->document_link->UploadMaxFileSize ?>">
-</div>
-<table id="ft_x<?php echo $transaction_details_list->RowIndex ?>_document_link" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
-<input type="hidden" data-table="transaction_details" data-field="x_document_link" name="o<?php echo $transaction_details_list->RowIndex ?>_document_link" id="o<?php echo $transaction_details_list->RowIndex ?>_document_link" value="<?php echo HtmlEncode($transaction_details->document_link->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($transaction_details->document_native->Visible) { // document_native ?>

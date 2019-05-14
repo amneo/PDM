@@ -11,7 +11,7 @@ class distribution_details_edit extends distribution_details
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'distribution_details';

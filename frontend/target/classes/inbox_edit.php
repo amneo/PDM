@@ -11,7 +11,7 @@ class inbox_edit extends inbox
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'inbox';

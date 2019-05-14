@@ -11,7 +11,7 @@ class transaction_details_add extends transaction_details
 	public $PageID = "add";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'transaction_details';
@@ -1179,7 +1179,13 @@ class transaction_details_add extends transaction_details
 
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+			} else {
+				$this->firelink_doc_no->HrefValue = "";
+			}
 			$this->firelink_doc_no->TooltipValue = "";
 
 			// submit_no
@@ -1366,7 +1372,13 @@ class transaction_details_add extends transaction_details
 			// firelink_doc_no
 
 			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+			} else {
+				$this->firelink_doc_no->HrefValue = "";
+			}
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";

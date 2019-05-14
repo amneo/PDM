@@ -11,7 +11,7 @@ class transmit_details_edit extends transmit_details
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'transmit_details';

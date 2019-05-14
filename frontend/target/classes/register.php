@@ -11,7 +11,7 @@ class register extends user_dtls
 	public $PageID = "register";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Page object name
 	public $PageObjName = "register";

@@ -73,7 +73,7 @@ class transaction_details extends DbTable
 		$this->ExportWordColumnWidth = NULL; // Cell width (PHPWord only)
 		$this->DetailAdd = FALSE; // Allow detail add
 		$this->DetailEdit = FALSE; // Allow detail edit
-		$this->DetailView = TRUE; // Allow detail view
+		$this->DetailView = FALSE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 5;
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
@@ -95,7 +95,7 @@ class transaction_details extends DbTable
 		$this->firelink_doc_no->Nullable = FALSE; // NOT NULL field
 		$this->firelink_doc_no->Required = TRUE; // Required field
 		$this->firelink_doc_no->Sortable = TRUE; // Allow sort
-		$this->firelink_doc_no->Lookup = new Lookup('firelink_doc_no', 'document_details', FALSE, 'firelink_doc_no', ["firelink_doc_no","document_tittle","",""], [], [], [], [], ["project_name","document_tittle"], ["x_project_name","x_document_tittle"], '"document_sequence" DESC', '<spanclass="text-info">{{:df1}}</span> <smallclass="text-muted">({{:df2}})</small> <br>');
+		$this->firelink_doc_no->Lookup = new Lookup('firelink_doc_no', 'document_details', FALSE, 'firelink_doc_no', ["firelink_doc_no","document_tittle","",""], [], [], [], [], ["project_name","document_tittle"], ["x_project_name","x_document_tittle"], '"document_sequence" DESC', '');
 		$this->fields['firelink_doc_no'] = &$this->firelink_doc_no;
 
 		// project_name
@@ -159,7 +159,7 @@ class transaction_details extends DbTable
 		$this->document_link = new DbField('transaction_details', 'transaction_details', 'x_document_link', 'document_link', '"document_link"', '"document_link"', 200, -1, TRUE, '"document_link"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->document_link->Nullable = FALSE; // NOT NULL field
 		$this->document_link->Required = TRUE; // Required field
-		$this->document_link->Sortable = TRUE; // Allow sort
+		$this->document_link->Sortable = FALSE; // Allow sort
 		$this->document_link->UploadAllowedFileExt = "pdf";
 		$this->fields['document_link'] = &$this->document_link;
 
@@ -1052,7 +1052,13 @@ class transaction_details extends DbTable
 
 		// firelink_doc_no
 		$this->firelink_doc_no->LinkCustomAttributes = "";
-		$this->firelink_doc_no->HrefValue = "";
+		if (!EmptyValue($this->document_link->Upload->DbValue)) {
+			$this->firelink_doc_no->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+			$this->firelink_doc_no->LinkAttrs["target"] = "_blank"; // Add target
+			if ($this->isExport()) $this->firelink_doc_no->HrefValue = FullUrl($this->firelink_doc_no->HrefValue, "href");
+		} else {
+			$this->firelink_doc_no->HrefValue = "";
+		}
 		$this->firelink_doc_no->TooltipValue = "";
 
 		// project_name
@@ -1311,7 +1317,6 @@ class transaction_details extends DbTable
 					$doc->exportCaption($this->transmit_date);
 					$doc->exportCaption($this->direction);
 					$doc->exportCaption($this->approval_status);
-					$doc->exportCaption($this->document_link);
 					$doc->exportCaption($this->document_native);
 				} else {
 					$doc->exportCaption($this->document_sequence);
@@ -1365,7 +1370,6 @@ class transaction_details extends DbTable
 						$doc->exportField($this->transmit_date);
 						$doc->exportField($this->direction);
 						$doc->exportField($this->approval_status);
-						$doc->exportField($this->document_link);
 						$doc->exportField($this->document_native);
 					} else {
 						$doc->exportField($this->document_sequence);
@@ -1921,7 +1925,9 @@ class transaction_details extends DbTable
 
 		// To view properties of field class, use:
 		//var_dump($this-><FieldName>);
+	//var_dump($this->firelink_doc_no->ViewValue);
 
+	$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 	}
 
 	// User ID Filtering event

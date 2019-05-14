@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'PGuf5CKsLvfvvrxZ'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'q3Am0nJp2gmx36yy'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -46,15 +46,15 @@ define(PROJECT_NAMESPACE . "EMAIL_CHARSET", PROJECT_CHARSET); // Email charset
 define(PROJECT_NAMESPACE . "HIGHLIGHT_COMPARE", TRUE); // Highlight compare mode, TRUE(case-insensitive)|FALSE(case-sensitive)
 define(PROJECT_NAMESPACE . "FONT_SIZE", 14);
 define(PROJECT_NAMESPACE . "TEMP_IMAGE_FONT", "DejaVuSans"); // Font for temp files
-$PROJECT_ID = "vishal-pdm"; // Project ID (GUID)
+$PROJECT_ID = "{vishal-pdm}"; // Project ID (GUID)
 $RELATED_PROJECT_ID = "";
 $RELATED_LANGUAGE_FOLDER = "";
 $COMPOSITE_KEY_SEPARATOR = ","; // Composite key separator
 $LAZY_LOAD = TRUE; // Lazy loading of images
 $RELATED_PROJECT_ID = "";
 $BODY_CLASS = "hold-transition sidebar-collapse";
-$SIDEBAR_CLASS = "main-sidebar sidebar-dark-primary";
-$NAVBAR_CLASS = "main-header navbar navbar-expand navbar-dark bg-primary";
+$SIDEBAR_CLASS = "main-sidebar sidebar-dark-danger";
+$NAVBAR_CLASS = "main-header navbar navbar-expand navbar-dark bg-danger";
 $RESET_HEIGHT = TRUE; // Reset layout height
 
 // Class path
@@ -933,9 +933,9 @@ define(PROJECT_NAMESPACE . "AUTO_SUGGEST_FOR_ALL_FIELDS", TRUE);
 define(PROJECT_NAMESPACE . "AUTO_FILL_ORIGINAL_VALUE", TRUE);
 
 // Lookup filter value separator
-define(PROJECT_NAMESPACE . "LOOKUP_FILTER_VALUE_SEPARATOR", "  || ");
+define(PROJECT_NAMESPACE . "LOOKUP_FILTER_VALUE_SEPARATOR", ",");
 define(PROJECT_NAMESPACE . "USE_LOOKUP_CACHE", TRUE);
-define(PROJECT_NAMESPACE . "LOOKUP_CACHE_COUNT", 100);
+define(PROJECT_NAMESPACE . "LOOKUP_CACHE_COUNT", 50);
 
 // Checkbox and radio button groups
 define(PROJECT_NAMESPACE . "ITEM_TEMPLATE_CLASSNAME", "ew-template");

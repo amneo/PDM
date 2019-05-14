@@ -11,7 +11,7 @@ class xmit_details_edit extends xmit_details
 	public $PageID = "edit";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'xmit_details';

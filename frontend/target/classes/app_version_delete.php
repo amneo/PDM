@@ -11,7 +11,7 @@ class app_version_delete extends app_version
 	public $PageID = "delete";
 
 	// Project ID
-	public $ProjectID = "vishal-pdm";
+	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
 	public $TableName = 'app_version';
