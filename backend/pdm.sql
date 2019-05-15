@@ -8,6 +8,7 @@
 
 SET search_path = public, pg_catalog;
 DROP TRIGGER IF EXISTS transaction_details_project ON public.transaction_details;
+DROP TABLE IF EXISTS public.document_log;
 DROP FUNCTION IF EXISTS public.func_transaction_details_project ();
 DROP TABLE IF EXISTS public.transaction_details;
 DROP TABLE IF EXISTS public.xmit_details;
@@ -28,18 +29,18 @@ DROP TABLE IF EXISTS public.project_details;
 DROP TABLE IF EXISTS public.app_version;
 SET check_function_bodies = false;
 --
--- Definition for function om_func_01 (OID = 25697) :
+-- Definition for function om_func_01 (OID = 25697) : 
 --
 CREATE FUNCTION public.om_func_01 (
 )
 RETURNS varchar
-AS
+AS 
 $body$
 DECLARE
 --Frontend_Version VARCHAR;
 --Backend_Version VARCHAR;
 --Release_Date DATE;
-f_version app_version%ROWTYPE;
+f_version app_version%ROWTYPE; 
 BEGIN
 SELECT INTO f_version * FROM app_version order by sequence_no desc limit 1;
 --Frontend_Version := f_version.frontend_version;
@@ -54,12 +55,12 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function func_transaction_details_project (OID = 61778) :
+-- Definition for function func_transaction_details_project (OID = 61778) : 
 --
 CREATE FUNCTION public.func_transaction_details_project (
 )
 RETURNS trigger
-AS
+AS 
 $body$
 DECLARE
 v_project_name VARCHAR;
@@ -78,7 +79,7 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Structure for table app_version (OID = 25384) :
+-- Structure for table app_version (OID = 25384) : 
 --
 CREATE TABLE public.app_version (
     sequence_no integer DEFAULT nextval(('public.app_version_sequence_no_seq'::text)::regclass) NOT NULL,
@@ -90,7 +91,7 @@ CREATE TABLE public.app_version (
 )
 WITH (oids = false);
 --
--- Structure for table project_details (OID = 25427) :
+-- Structure for table project_details (OID = 25427) : 
 --
 CREATE TABLE public.project_details (
     project_id serial NOT NULL,
@@ -104,7 +105,7 @@ CREATE TABLE public.project_details (
 )
 WITH (oids = true);
 --
--- Structure for table distribution_details (OID = 25440) :
+-- Structure for table distribution_details (OID = 25440) : 
 --
 CREATE TABLE public.distribution_details (
     distribution_id serial NOT NULL,
@@ -115,7 +116,7 @@ CREATE TABLE public.distribution_details (
 )
 WITH (oids = true);
 --
--- Structure for table inbox (OID = 25452) :
+-- Structure for table inbox (OID = 25452) : 
 --
 CREATE TABLE public.inbox (
     inbox_id serial NOT NULL,
@@ -129,7 +130,7 @@ CREATE TABLE public.inbox (
 )
 WITH (oids = true);
 --
--- Structure for table audittrail (OID = 25480) :
+-- Structure for table audittrail (OID = 25480) : 
 --
 CREATE TABLE public.audittrail (
     id serial NOT NULL,
@@ -145,7 +146,7 @@ CREATE TABLE public.audittrail (
 )
 WITH (oids = false);
 --
--- Structure for table transmit_details (OID = 25559) :
+-- Structure for table transmit_details (OID = 25559) : 
 --
 CREATE TABLE public.transmit_details (
     transmit_id bigserial NOT NULL,
@@ -160,7 +161,7 @@ CREATE TABLE public.transmit_details (
 )
 WITH (oids = false);
 --
--- Structure for table document_details (OID = 25615) :
+-- Structure for table document_details (OID = 25615) : 
 --
 CREATE TABLE public.document_details (
     document_sequence serial NOT NULL,
@@ -176,16 +177,17 @@ CREATE TABLE public.document_details (
 )
 WITH (oids = true);
 --
--- Structure for table approval_details (OID = 25632) :
+-- Structure for table approval_details (OID = 25632) : 
 --
 CREATE TABLE public.approval_details (
     id serial NOT NULL,
     short_code varchar NOT NULL,
-    "Description" text NOT NULL
+    "Description" text NOT NULL,
+    document_status varchar
 )
 WITH (oids = false);
 --
--- Definition for sequence app_version_sequence_no_seq (OID = 25643) :
+-- Definition for sequence app_version_sequence_no_seq (OID = 25643) : 
 --
 CREATE SEQUENCE public.app_version_sequence_no_seq
     START WITH 1
@@ -194,7 +196,7 @@ CREATE SEQUENCE public.app_version_sequence_no_seq
     NO MINVALUE
     CACHE 1;
 --
--- Structure for table f_version (OID = 25684) :
+-- Structure for table f_version (OID = 25684) : 
 --
 CREATE TABLE public.f_version (
     sequence_no integer,
@@ -206,7 +208,7 @@ CREATE TABLE public.f_version (
 )
 WITH (oids = false);
 --
--- Structure for table document_system (OID = 25741) :
+-- Structure for table document_system (OID = 25741) : 
 --
 CREATE TABLE public.document_system (
     type_id serial NOT NULL,
@@ -215,7 +217,7 @@ CREATE TABLE public.document_system (
 )
 WITH (oids = false);
 --
--- Structure for table userlevels (OID = 25780) :
+-- Structure for table userlevels (OID = 25780) : 
 --
 CREATE TABLE public.userlevels (
     userlevelid integer NOT NULL,
@@ -223,7 +225,7 @@ CREATE TABLE public.userlevels (
 )
 WITH (oids = false);
 --
--- Structure for table userlevelpermissions (OID = 25785) :
+-- Structure for table userlevelpermissions (OID = 25785) : 
 --
 CREATE TABLE public.userlevelpermissions (
     userlevelid integer NOT NULL,
@@ -232,7 +234,7 @@ CREATE TABLE public.userlevelpermissions (
 )
 WITH (oids = false);
 --
--- Structure for table user_dtls (OID = 33912) :
+-- Structure for table user_dtls (OID = 33912) : 
 --
 CREATE TABLE public.user_dtls (
     user_id serial NOT NULL,
@@ -249,7 +251,7 @@ CREATE TABLE public.user_dtls (
 )
 WITH (oids = false);
 --
--- Structure for table xmit_details (OID = 53124) :
+-- Structure for table xmit_details (OID = 53124) : 
 --
 CREATE TABLE public.xmit_details (
     xmit_id bigserial NOT NULL,
@@ -257,14 +259,14 @@ CREATE TABLE public.xmit_details (
 )
 WITH (oids = false);
 --
--- Structure for table transaction_details (OID = 60675) :
+-- Structure for table transaction_details (OID = 60675) : 
 --
 CREATE TABLE public.transaction_details (
     document_sequence serial NOT NULL,
     firelink_doc_no varchar NOT NULL,
     project_name varchar,
     document_tittle varchar,
-    submit_no varchar NOT NULL,
+    submit_no integer NOT NULL,
     revision_no varchar NOT NULL,
     transmit_no varchar NOT NULL,
     transmit_date date NOT NULL,
@@ -273,155 +275,317 @@ CREATE TABLE public.transaction_details (
     document_link varchar NOT NULL,
     transaction_date timestamp without time zone DEFAULT now(),
     document_native text NOT NULL,
-    username varchar
+    username varchar,
+    expiry_date date DEFAULT (('now'::text)::date + 3)
 )
 WITH (oids = true);
 --
--- Definition for index project_details_pk (OID = 25434) :
+-- Structure for table document_log (OID = 61831) : 
+--
+CREATE TABLE public.document_log (
+    log_id bigserial NOT NULL,
+    firelink_doc_no varchar NOT NULL,
+    project_name varchar NOT NULL,
+    document_tittle varchar NOT NULL,
+    current_status varchar DEFAULT 'PLANNED'::character varying,
+    current_status_file varchar,
+    submit_no_sub1 varchar,
+    revision_no_sub1 varchar,
+    direction_out_sub1 varchar,
+    planned_date_out_sub1 date,
+    transmit_date_out_sub1 date,
+    transmit_no_out_sub1 varchar,
+    approval_status_out_sub1 varchar,
+    direction_out_file_sub1 varchar,
+    direction_in_sub1 varchar,
+    transmit_no_in_sub1 varchar,
+    approval_status_in_sub1 varchar,
+    direction_in_file_sub1 varchar,
+    transmit_date_in_sub1 date,
+    submit_no_sub2 varchar,
+    revision_no_sub2 varchar,
+    direction_out_sub2 varchar,
+    planned_date_out_sub2 date,
+    transmit_date_out_sub2 date,
+    transmit_no_out_sub2 varchar,
+    approval_status_out_sub2 varchar,
+    direction_out_file_sub2 varchar,
+    direction_in_sub2 varchar,
+    transmit_no_in_sub2 varchar,
+    approval_status_in_sub2 varchar,
+    direction_in_file_sub2 varchar,
+    transmit_date_in_sub2 date,
+    submit_no_sub3 varchar,
+    revision_no_sub3 varchar,
+    direction_out_sub3 varchar,
+    planned_date_out_sub3 date,
+    transmit_date_out_sub3 date,
+    transmit_no_out_sub3 varchar,
+    approval_status_out_sub3 varchar,
+    direction_out_file_sub3 varchar,
+    direction_in_sub3 varchar,
+    transmit_no_in_sub3 varchar,
+    approval_status_in_sub3 varchar,
+    direction_in_file_sub3 varchar,
+    transmit_date_in_sub3 date,
+    submit_no_sub4 varchar,
+    revision_no_sub4 varchar,
+    direction_out_sub4 varchar,
+    planned_date_out_sub4 date,
+    transmit_date_out_sub4 date,
+    transmit_no_out_sub4 varchar,
+    approval_status_out_sub4 varchar,
+    direction_out_file_sub4 varchar,
+    direction_in_sub4 varchar,
+    transmit_no_in_sub4 varchar,
+    approval_status_in_sub4 varchar,
+    direction_in_file_sub4 varchar,
+    transmit_date_in_sub4 date,
+    submit_no_sub5 varchar,
+    revision_no_sub5 varchar,
+    direction_out_sub5 varchar,
+    planned_date_out_sub5 date,
+    transmit_date_out_sub5 date,
+    transmit_no_out_sub5 varchar,
+    approval_status_out_sub5 varchar,
+    direction_out_file_sub5 varchar,
+    direction_in_sub5 varchar,
+    transmit_no_in_sub5 varchar,
+    approval_status_in_sub5 varchar,
+    direction_in_file_sub5 varchar,
+    transmit_date_in_sub5 date,
+    submit_no_sub6 varchar,
+    revision_no_sub6 varchar,
+    direction_out_sub6 varchar,
+    planned_date_out_sub6 date,
+    transmit_date_out_sub6 date,
+    transmit_no_out_sub6 varchar,
+    approval_status_out_sub6 varchar,
+    direction_out_file_sub6 varchar,
+    direction_in_sub6 varchar,
+    transmit_no_in_sub6 varchar,
+    approval_status_in_sub6 varchar,
+    direction_in_file_sub6 varchar,
+    transmit_date_in_sub6 date,
+    submit_no_sub7 varchar,
+    revision_no_sub7 varchar,
+    direction_out_sub7 varchar,
+    planned_date_out_sub7 date,
+    transmit_date_out_sub7 date,
+    transmit_no_out_sub7 varchar,
+    approval_status_out_sub7 varchar,
+    direction_out_file_sub7 varchar,
+    direction_in_sub7 varchar,
+    transmit_no_in_sub7 varchar,
+    approval_status_in_sub7 varchar,
+    direction_in_file_sub7 varchar,
+    transmit_date_in_sub7 date,
+    submit_no_sub8 varchar,
+    revision_no_sub8 varchar,
+    direction_out_sub8 varchar,
+    planned_date_out_sub8 date,
+    transmit_date_out_sub8 date,
+    transmit_no_out_sub8 varchar,
+    approval_status_out_sub8 varchar,
+    direction_out_file_sub8 varchar,
+    direction_in_sub8 varchar,
+    transmit_no_in_sub8 varchar,
+    approval_status_in_sub8 varchar,
+    direction_in_file_sub8 varchar,
+    transmit_date_in_sub8 date,
+    submit_no_sub9 varchar,
+    revision_no_sub9 varchar,
+    direction_out_sub9 varchar,
+    planned_date_out_sub9 date,
+    transmit_date_out_sub9 date,
+    transmit_no_out_sub9 varchar,
+    approval_status_out_sub9 varchar,
+    direction_out_file_sub9 varchar,
+    direction_in_sub9 varchar,
+    transmit_no_in_sub9 varchar,
+    approval_status_in_sub9 varchar,
+    direction_in_file_sub9 varchar,
+    transmit_date_in_sub9 date,
+    submit_no_sub10 varchar,
+    revision_no_sub10 varchar,
+    direction_out_sub10 varchar,
+    planned_date_out_sub10 date,
+    transmit_date_out_sub10 date,
+    transmit_no_out_sub10 varchar,
+    approval_status_out_sub10 varchar,
+    direction_out_file_sub10 varchar,
+    direction_in_sub10 varchar,
+    transmit_no_in_sub10 varchar,
+    approval_status_in_sub10 varchar,
+    direction_in_file_sub10 varchar,
+    transmit_date_in_sub10 date,
+    log_updatedon timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+)
+WITH (oids = false);
+--
+-- Definition for index project_details_pk (OID = 25434) : 
 --
 ALTER TABLE ONLY project_details
     ADD CONSTRAINT project_details_pk
     PRIMARY KEY (project_id);
 --
--- Definition for index project_details_project_name_key (OID = 25436) :
+-- Definition for index project_details_project_name_key (OID = 25436) : 
 --
 ALTER TABLE ONLY project_details
     ADD CONSTRAINT project_details_project_name_key
     UNIQUE (project_name);
 --
--- Definition for index distribution_details_pk (OID = 25448) :
+-- Definition for index distribution_details_pk (OID = 25448) : 
 --
 ALTER TABLE ONLY distribution_details
     ADD CONSTRAINT distribution_details_pk
     PRIMARY KEY (distribution_id);
 --
--- Definition for index inbox_pk (OID = 25459) :
+-- Definition for index inbox_pk (OID = 25459) : 
 --
 ALTER TABLE ONLY inbox
     ADD CONSTRAINT inbox_pk
     PRIMARY KEY (inbox_id);
 --
--- Definition for index pkaudittrail (OID = 25487) :
+-- Definition for index pkaudittrail (OID = 25487) : 
 --
 ALTER TABLE ONLY audittrail
     ADD CONSTRAINT pkaudittrail
     PRIMARY KEY (id);
 --
--- Definition for index transmit_details_pkey (OID = 25568) :
+-- Definition for index transmit_details_pkey (OID = 25568) : 
 --
 ALTER TABLE ONLY transmit_details
     ADD CONSTRAINT transmit_details_pkey
     PRIMARY KEY (transmit_id);
 --
--- Definition for index transmit_details_transmittal_no_key (OID = 25570) :
+-- Definition for index transmit_details_transmittal_no_key (OID = 25570) : 
 --
 ALTER TABLE ONLY transmit_details
     ADD CONSTRAINT transmit_details_transmittal_no_key
     UNIQUE (transmittal_no);
 --
--- Definition for index document_details_pk (OID = 25623) :
+-- Definition for index document_details_pk (OID = 25623) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_pk
     PRIMARY KEY (document_sequence);
 --
--- Definition for index document_details_client_doc_no_key (OID = 25625) :
+-- Definition for index document_details_client_doc_no_key (OID = 25625) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_client_doc_no_key
     UNIQUE (client_doc_no);
 --
--- Definition for index document_details_firelink_doc_no_key (OID = 25627) :
+-- Definition for index document_details_firelink_doc_no_key (OID = 25627) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_firelink_doc_no_key
     UNIQUE (firelink_doc_no);
 --
--- Definition for index approval_details_pkey (OID = 25639) :
+-- Definition for index approval_details_pkey (OID = 25639) : 
 --
 ALTER TABLE ONLY approval_details
     ADD CONSTRAINT approval_details_pkey
     PRIMARY KEY (id);
 --
--- Definition for index app_version_pkey (OID = 25645) :
+-- Definition for index app_version_pkey (OID = 25645) : 
 --
 ALTER TABLE ONLY app_version
     ADD CONSTRAINT app_version_pkey
     PRIMARY KEY (sequence_no);
 --
--- Definition for index document_system_pkey (OID = 25748) :
+-- Definition for index document_system_pkey (OID = 25748) : 
 --
 ALTER TABLE ONLY document_system
     ADD CONSTRAINT document_system_pkey
     PRIMARY KEY (type_id);
 --
--- Definition for index document_system_system_name_key (OID = 25750) :
+-- Definition for index document_system_system_name_key (OID = 25750) : 
 --
 ALTER TABLE ONLY document_system
     ADD CONSTRAINT document_system_system_name_key
     UNIQUE (system_name);
 --
--- Definition for index pkuserlevels (OID = 25783) :
+-- Definition for index pkuserlevels (OID = 25783) : 
 --
 ALTER TABLE ONLY userlevels
     ADD CONSTRAINT pkuserlevels
     PRIMARY KEY (userlevelid);
 --
--- Definition for index pkuserlevelpermissions (OID = 25788) :
+-- Definition for index pkuserlevelpermissions (OID = 25788) : 
 --
 ALTER TABLE ONLY userlevelpermissions
     ADD CONSTRAINT pkuserlevelpermissions
     PRIMARY KEY (userlevelid, tablename);
 --
--- Definition for index user_dtls_pkey (OID = 33922) :
+-- Definition for index user_dtls_pkey (OID = 33922) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_pkey
     PRIMARY KEY (user_id);
 --
--- Definition for index user_dtls_email_addreess_key (OID = 33924) :
+-- Definition for index user_dtls_email_addreess_key (OID = 33924) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_email_addreess_key
     UNIQUE (email_addreess);
 --
--- Definition for index user_dtls_username_key (OID = 33926) :
+-- Definition for index user_dtls_username_key (OID = 33926) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_username_key
     UNIQUE (username);
 --
--- Definition for index xmit_details_pkey (OID = 53131) :
+-- Definition for index xmit_details_pkey (OID = 53131) : 
 --
 ALTER TABLE ONLY xmit_details
     ADD CONSTRAINT xmit_details_pkey
     PRIMARY KEY (xmit_id);
 --
--- Definition for index transaction_details_pk (OID = 60684) :
+-- Definition for index transaction_details_pk (OID = 60684) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_pk
     PRIMARY KEY (document_sequence);
 --
--- Definition for index transaction_details_document_link_key (OID = 60686) :
+-- Definition for index transaction_details_document_link_key (OID = 60686) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_document_link_key
     UNIQUE (document_link);
 --
--- Definition for index transaction_details_fk (OID = 60688) :
+-- Definition for index transaction_details_fk (OID = 60688) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_fk
     FOREIGN KEY (firelink_doc_no) REFERENCES document_details(firelink_doc_no) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 --
--- Definition for index transaction_details_project_name (OID = 60693) :
+-- Definition for index transaction_details_project_name (OID = 60693) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_project_name
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
--- Definition for trigger transaction_details_project (OID = 61779) :
+-- Definition for index document_log_pkey (OID = 61839) : 
+--
+ALTER TABLE ONLY document_log
+    ADD CONSTRAINT document_log_pkey
+    PRIMARY KEY (log_id);
+--
+-- Definition for index document_log_firelink_doc_no_key (OID = 61841) : 
+--
+ALTER TABLE ONLY document_log
+    ADD CONSTRAINT document_log_firelink_doc_no_key
+    UNIQUE (firelink_doc_no);
+--
+-- Definition for index document_log_document_tittle_key (OID = 61843) : 
+--
+ALTER TABLE ONLY document_log
+    ADD CONSTRAINT document_log_document_tittle_key
+    UNIQUE (document_tittle);
+--
+-- Definition for trigger transaction_details_project (OID = 61779) : 
 --
 CREATE TRIGGER transaction_details_project
     BEFORE INSERT ON transaction_details
@@ -437,5 +601,7 @@ COMMENT ON COLUMN public.transmit_details.transmital_date IS 'Time stamp for tra
 COMMENT ON COLUMN public.user_dtls.reports_to IS 'The User ID this guy reports to';
 COMMENT ON COLUMN public.transaction_details.document_native IS 'SMB url of the native file';
 COMMENT ON COLUMN public.transaction_details.username IS 'frontend user who made the entry';
+COMMENT ON COLUMN public.transaction_details.expiry_date IS 'To record expected expiry date for an in document';
 COMMENT ON CONSTRAINT transaction_details_project_name ON transaction_details IS 'Data inegrity to ensure project names are same. Cascade on Update and Restrict on insert.';
 COMMENT ON TRIGGER transaction_details_project ON transaction_details IS 'Trigger to auto insert the project name and document tittle.';
+COMMENT ON COLUMN public.document_log.log_updatedon IS 'Last update when the query was ran';

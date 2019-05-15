@@ -763,6 +763,7 @@ class approval_details_list extends approval_details
 		$this->id->setVisibility();
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
+		$this->document_status->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1019,9 +1020,6 @@ class approval_details_list extends approval_details
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fapproval_detailslistsrch");
-		$filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-		$filterList = Concat($filterList, $this->short_code->AdvancedSearch->toJson(), ","); // Field short_code
-		$filterList = Concat($filterList, $this->Description->AdvancedSearch->toJson(), ","); // Field Description
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1059,30 +1057,6 @@ class approval_details_list extends approval_details
 			return FALSE;
 		$filter = json_decode(Post("filter"), TRUE);
 		$this->Command = "search";
-
-		// Field id
-		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-		$this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-		$this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-		$this->id->AdvancedSearch->save();
-
-		// Field short_code
-		$this->short_code->AdvancedSearch->SearchValue = @$filter["x_short_code"];
-		$this->short_code->AdvancedSearch->SearchOperator = @$filter["z_short_code"];
-		$this->short_code->AdvancedSearch->SearchCondition = @$filter["v_short_code"];
-		$this->short_code->AdvancedSearch->SearchValue2 = @$filter["y_short_code"];
-		$this->short_code->AdvancedSearch->SearchOperator2 = @$filter["w_short_code"];
-		$this->short_code->AdvancedSearch->save();
-
-		// Field Description
-		$this->Description->AdvancedSearch->SearchValue = @$filter["x_Description"];
-		$this->Description->AdvancedSearch->SearchOperator = @$filter["z_Description"];
-		$this->Description->AdvancedSearch->SearchCondition = @$filter["v_Description"];
-		$this->Description->AdvancedSearch->SearchValue2 = @$filter["y_Description"];
-		$this->Description->AdvancedSearch->SearchOperator2 = @$filter["w_Description"];
-		$this->Description->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1258,6 +1232,7 @@ class approval_details_list extends approval_details
 			$this->updateSort($this->id, $ctrl); // id
 			$this->updateSort($this->short_code, $ctrl); // short_code
 			$this->updateSort($this->Description, $ctrl); // Description
+			$this->updateSort($this->document_status, $ctrl); // document_status
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1296,6 +1271,7 @@ class approval_details_list extends approval_details
 				$this->id->setSort("");
 				$this->short_code->setSort("");
 				$this->Description->setSort("");
+				$this->document_status->setSort("");
 			}
 
 			// Reset start position
@@ -1750,6 +1726,7 @@ class approval_details_list extends approval_details
 		$this->id->setDbValue($row['id']);
 		$this->short_code->setDbValue($row['short_code']);
 		$this->Description->setDbValue($row['Description']);
+		$this->document_status->setDbValue($row['document_status']);
 	}
 
 	// Return a row with default values
@@ -1759,6 +1736,7 @@ class approval_details_list extends approval_details
 		$row['id'] = NULL;
 		$row['short_code'] = NULL;
 		$row['Description'] = NULL;
+		$row['document_status'] = NULL;
 		return $row;
 	}
 
@@ -1805,7 +1783,9 @@ class approval_details_list extends approval_details
 		// id
 		// short_code
 		// Description
+		// document_status
 
+		$this->document_status->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// id
@@ -1819,6 +1799,14 @@ class approval_details_list extends approval_details
 			// Description
 			$this->Description->ViewValue = $this->Description->CurrentValue;
 			$this->Description->ViewCustomAttributes = "";
+
+			// document_status
+			if (strval($this->document_status->CurrentValue) <> "") {
+				$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
+			} else {
+				$this->document_status->ViewValue = NULL;
+			}
+			$this->document_status->ViewCustomAttributes = "";
 
 			// id
 			$this->id->LinkCustomAttributes = "";
@@ -1834,6 +1822,11 @@ class approval_details_list extends approval_details
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
 			$this->Description->TooltipValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
+			$this->document_status->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

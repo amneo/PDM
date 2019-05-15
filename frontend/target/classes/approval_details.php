@@ -28,6 +28,7 @@ class approval_details extends DbTable
 	public $id;
 	public $short_code;
 	public $Description;
+	public $document_status;
 
 	// Constructor
 	public function __construct()
@@ -83,6 +84,15 @@ class approval_details extends DbTable
 		$this->Description->Required = TRUE; // Required field
 		$this->Description->Sortable = TRUE; // Allow sort
 		$this->fields['Description'] = &$this->Description;
+
+		// document_status
+		$this->document_status = new DbField('approval_details', 'approval_details', 'x_document_status', 'document_status', '"document_status"', '"document_status"', 200, -1, FALSE, '"document_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->document_status->Sortable = FALSE; // Allow sort
+		$this->document_status->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->document_status->PleaseSelectText = $Language->phrase("PleaseSelect"); // PleaseSelect text
+		$this->document_status->Lookup = new Lookup('document_status', 'approval_details', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
+		$this->document_status->OptionCount = 4;
+		$this->fields['document_status'] = &$this->document_status;
 	}
 
 	// Field Visibility
@@ -441,6 +451,7 @@ class approval_details extends DbTable
 		$this->id->DbValue = $row['id'];
 		$this->short_code->DbValue = $row['short_code'];
 		$this->Description->DbValue = $row['Description'];
+		$this->document_status->DbValue = $row['document_status'];
 	}
 
 	// Delete uploaded files
@@ -669,6 +680,7 @@ class approval_details extends DbTable
 		$this->id->setDbValue($rs->fields('id'));
 		$this->short_code->setDbValue($rs->fields('short_code'));
 		$this->Description->setDbValue($rs->fields('Description'));
+		$this->document_status->setDbValue($rs->fields('document_status'));
 	}
 
 	// Render list row values
@@ -683,8 +695,11 @@ class approval_details extends DbTable
 		// id
 		// short_code
 		// Description
-		// id
+		// document_status
 
+		$this->document_status->CellCssStyle = "white-space: nowrap;";
+
+		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
@@ -695,6 +710,14 @@ class approval_details extends DbTable
 		// Description
 		$this->Description->ViewValue = $this->Description->CurrentValue;
 		$this->Description->ViewCustomAttributes = "";
+
+		// document_status
+		if (strval($this->document_status->CurrentValue) <> "") {
+			$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
+		} else {
+			$this->document_status->ViewValue = NULL;
+		}
+		$this->document_status->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
@@ -710,6 +733,11 @@ class approval_details extends DbTable
 		$this->Description->LinkCustomAttributes = "";
 		$this->Description->HrefValue = "";
 		$this->Description->TooltipValue = "";
+
+		// document_status
+		$this->document_status->LinkCustomAttributes = "";
+		$this->document_status->HrefValue = "";
+		$this->document_status->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -746,6 +774,11 @@ class approval_details extends DbTable
 		$this->Description->EditValue = $this->Description->CurrentValue;
 		$this->Description->PlaceHolder = RemoveHtml($this->Description->caption());
 
+		// document_status
+		$this->document_status->EditAttrs["class"] = "form-control";
+		$this->document_status->EditCustomAttributes = "";
+		$this->document_status->EditValue = $this->document_status->options(TRUE);
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -775,9 +808,6 @@ class approval_details extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->id);
-					$doc->exportCaption($this->short_code);
-					$doc->exportCaption($this->Description);
 				} else {
 					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->short_code);
@@ -812,9 +842,6 @@ class approval_details extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->id);
-						$doc->exportField($this->short_code);
-						$doc->exportField($this->Description);
 					} else {
 						$doc->exportField($this->id);
 						$doc->exportField($this->short_code);

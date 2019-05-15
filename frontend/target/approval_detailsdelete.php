@@ -50,8 +50,10 @@ fapproval_detailsdelete.Form_CustomValidate = function(fobj) { // DO NOT CHANGE 
 fapproval_detailsdelete.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fapproval_detailsdelete.lists["x_document_status"] = <?php echo $approval_details_delete->document_status->Lookup->toClientList() ?>;
+fapproval_detailsdelete.lists["x_document_status"].options = <?php echo JsonEncode($approval_details_delete->document_status->options(FALSE, TRUE)) ?>;
 
+// Form object for search
 </script>
 <script>
 
@@ -84,6 +86,9 @@ $approval_details_delete->showMessage();
 <?php } ?>
 <?php if ($approval_details->Description->Visible) { // Description ?>
 		<th class="<?php echo $approval_details->Description->headerCellClass() ?>"><span id="elh_approval_details_Description" class="approval_details_Description"><?php echo $approval_details->Description->caption() ?></span></th>
+<?php } ?>
+<?php if ($approval_details->document_status->Visible) { // document_status ?>
+		<th class="<?php echo $approval_details->document_status->headerCellClass() ?>"><span id="elh_approval_details_document_status" class="approval_details_document_status"><?php echo $approval_details->document_status->caption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -127,6 +132,14 @@ while (!$approval_details_delete->Recordset->EOF) {
 <span id="el<?php echo $approval_details_delete->RowCnt ?>_approval_details_Description" class="approval_details_Description">
 <span<?php echo $approval_details->Description->viewAttributes() ?>>
 <?php echo $approval_details->Description->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($approval_details->document_status->Visible) { // document_status ?>
+		<td<?php echo $approval_details->document_status->cellAttributes() ?>>
+<span id="el<?php echo $approval_details_delete->RowCnt ?>_approval_details_document_status" class="approval_details_document_status">
+<span<?php echo $approval_details->document_status->viewAttributes() ?>>
+<?php echo $approval_details->document_status->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

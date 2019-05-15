@@ -64,6 +64,11 @@ fapproval_detailsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->Description->caption(), $approval_details->Description->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($approval_details_add->document_status->Required) { ?>
+			elm = this.getElements("x" + infix + "_document_status");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->document_status->caption(), $approval_details->document_status->RequiredErrorMessage)) ?>");
+		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -92,8 +97,10 @@ fapproval_detailsadd.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THI
 fapproval_detailsadd.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fapproval_detailsadd.lists["x_document_status"] = <?php echo $approval_details_add->document_status->Lookup->toClientList() ?>;
+fapproval_detailsadd.lists["x_document_status"].options = <?php echo JsonEncode($approval_details_add->document_status->options(FALSE, TRUE)) ?>;
 
+// Form object for search
 </script>
 <script>
 
@@ -157,6 +164,35 @@ $approval_details_add->showMessage();
 <textarea data-table="approval_details" data-field="x_Description" name="x_Description" id="x_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
 </span>
 <?php echo $approval_details->Description->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($approval_details->document_status->Visible) { // document_status ?>
+<?php if ($approval_details_add->IsMobileOrModal) { ?>
+	<div id="r_document_status" class="form-group row">
+		<label id="elh_approval_details_document_status" for="x_document_status" class="<?php echo $approval_details_add->LeftColumnClass ?>"><?php echo $approval_details->document_status->caption() ?><?php echo ($approval_details->document_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $approval_details_add->RightColumnClass ?>"><div<?php echo $approval_details->document_status->cellAttributes() ?>>
+<span id="el_approval_details_document_status">
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="approval_details" data-field="x_document_status" data-value-separator="<?php echo $approval_details->document_status->displayValueSeparatorAttribute() ?>" id="x_document_status" name="x_document_status"<?php echo $approval_details->document_status->editAttributes() ?>>
+		<?php echo $approval_details->document_status->selectOptionListHtml("x_document_status") ?>
+	</select>
+</div>
+</span>
+<?php echo $approval_details->document_status->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_document_status">
+		<td class="<?php echo $approval_details_add->TableLeftColumnClass ?>"><span id="elh_approval_details_document_status"><?php echo $approval_details->document_status->caption() ?><?php echo ($approval_details->document_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $approval_details->document_status->cellAttributes() ?>>
+<span id="el_approval_details_document_status">
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="approval_details" data-field="x_document_status" data-value-separator="<?php echo $approval_details->document_status->displayValueSeparatorAttribute() ?>" id="x_document_status" name="x_document_status"<?php echo $approval_details->document_status->editAttributes() ?>>
+		<?php echo $approval_details->document_status->selectOptionListHtml("x_document_status") ?>
+	</select>
+</div>
+</span>
+<?php echo $approval_details->document_status->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>

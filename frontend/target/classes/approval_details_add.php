@@ -619,6 +619,7 @@ class approval_details_add extends approval_details
 		$this->id->Visible = FALSE;
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
+		$this->document_status->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -756,6 +757,7 @@ class approval_details_add extends approval_details
 		$this->short_code->OldValue = $this->short_code->CurrentValue;
 		$this->Description->CurrentValue = NULL;
 		$this->Description->OldValue = $this->Description->CurrentValue;
+		$this->document_status->CurrentValue = "WAITING_FOR";
 	}
 
 	// Load form values
@@ -783,6 +785,15 @@ class approval_details_add extends approval_details
 				$this->Description->setFormValue($val);
 		}
 
+		// Check field name 'document_status' first before field var 'x_document_status'
+		$val = $CurrentForm->hasValue("document_status") ? $CurrentForm->getValue("document_status") : $CurrentForm->getValue("x_document_status");
+		if (!$this->document_status->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_status->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_status->setFormValue($val);
+		}
+
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 	}
@@ -793,6 +804,7 @@ class approval_details_add extends approval_details
 		global $CurrentForm;
 		$this->short_code->CurrentValue = $this->short_code->FormValue;
 		$this->Description->CurrentValue = $this->Description->FormValue;
+		$this->document_status->CurrentValue = $this->document_status->FormValue;
 	}
 
 	// Load row based on key values
@@ -833,6 +845,7 @@ class approval_details_add extends approval_details
 		$this->id->setDbValue($row['id']);
 		$this->short_code->setDbValue($row['short_code']);
 		$this->Description->setDbValue($row['Description']);
+		$this->document_status->setDbValue($row['document_status']);
 	}
 
 	// Return a row with default values
@@ -843,6 +856,7 @@ class approval_details_add extends approval_details
 		$row['id'] = $this->id->CurrentValue;
 		$row['short_code'] = $this->short_code->CurrentValue;
 		$row['Description'] = $this->Description->CurrentValue;
+		$row['document_status'] = $this->document_status->CurrentValue;
 		return $row;
 	}
 
@@ -883,6 +897,7 @@ class approval_details_add extends approval_details
 		// id
 		// short_code
 		// Description
+		// document_status
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -898,6 +913,14 @@ class approval_details_add extends approval_details
 			$this->Description->ViewValue = $this->Description->CurrentValue;
 			$this->Description->ViewCustomAttributes = "";
 
+			// document_status
+			if (strval($this->document_status->CurrentValue) <> "") {
+				$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
+			} else {
+				$this->document_status->ViewValue = NULL;
+			}
+			$this->document_status->ViewCustomAttributes = "";
+
 			// short_code
 			$this->short_code->LinkCustomAttributes = "";
 			$this->short_code->HrefValue = "";
@@ -907,6 +930,11 @@ class approval_details_add extends approval_details
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
 			$this->Description->TooltipValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
+			$this->document_status->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// short_code
@@ -923,6 +951,11 @@ class approval_details_add extends approval_details
 			$this->Description->EditValue = HtmlEncode($this->Description->CurrentValue);
 			$this->Description->PlaceHolder = RemoveHtml($this->Description->caption());
 
+			// document_status
+			$this->document_status->EditAttrs["class"] = "form-control";
+			$this->document_status->EditCustomAttributes = "";
+			$this->document_status->EditValue = $this->document_status->options(TRUE);
+
 			// Add refer script
 			// short_code
 
@@ -932,6 +965,10 @@ class approval_details_add extends approval_details
 			// Description
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -967,6 +1004,11 @@ class approval_details_add extends approval_details
 				AddMessage($FormError, str_replace("%s", $this->Description->caption(), $this->Description->RequiredErrorMessage));
 			}
 		}
+		if ($this->document_status->Required) {
+			if (!$this->document_status->IsDetailKey && $this->document_status->FormValue != NULL && $this->document_status->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_status->caption(), $this->document_status->RequiredErrorMessage));
+			}
+		}
 
 		// Return validate result
 		$validateForm = ($FormError == "");
@@ -997,6 +1039,9 @@ class approval_details_add extends approval_details
 
 		// Description
 		$this->Description->setDbValueDef($rsnew, $this->Description->CurrentValue, "", FALSE);
+
+		// document_status
+		$this->document_status->setDbValueDef($rsnew, $this->document_status->CurrentValue, NULL, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;

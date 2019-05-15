@@ -11,6 +11,7 @@ else
 $topMenu = new Menu("navbar", TRUE, TRUE);
 $topMenu->addMenuItem(18, "mci_Workplace", $MenuLanguage->MenuPhrase("18", "MenuText"), "", -1, "", TRUE, TRUE, TRUE, "", "", TRUE);
 $topMenu->addMenuItem(1, "mi_transaction_details", $MenuLanguage->MenuPhrase("1", "MenuText"), "transaction_detailslist.php", 18, "", AllowListMenu('{vishal-pdm}transaction_details'), FALSE, FALSE, "", "", TRUE);
+$topMenu->addMenuItem(35, "mi_document_log", $MenuLanguage->MenuPhrase("35", "MenuText"), "document_loglist.php", 18, "", AllowListMenu('{vishal-pdm}document_log'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(7, "mi_transmit_details", $MenuLanguage->MenuPhrase("7", "MenuText"), "transmit_detailslist.php", 18, "", AllowListMenu('{vishal-pdm}transmit_details'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(10, "mci_Masters", $MenuLanguage->MenuPhrase("10", "MenuText"), "", -1, "", IsLoggedIn(), TRUE, TRUE, "", "", TRUE);
 $topMenu->addMenuItem(5, "mi_project_details", $MenuLanguage->MenuPhrase("5", "MenuText"), "project_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}project_details'), FALSE, FALSE, "", "", TRUE);
@@ -31,6 +32,7 @@ echo $topMenu->toScript();
 $sideMenu = new Menu("menu", TRUE, FALSE);
 $sideMenu->addMenuItem(18, "mci_Workplace", $MenuLanguage->MenuPhrase("18", "MenuText"), "", -1, "", TRUE, TRUE, TRUE, "", "", TRUE);
 $sideMenu->addMenuItem(1, "mi_transaction_details", $MenuLanguage->MenuPhrase("1", "MenuText"), "transaction_detailslist.php", 18, "", AllowListMenu('{vishal-pdm}transaction_details'), FALSE, FALSE, "", "", TRUE);
+$sideMenu->addMenuItem(35, "mi_document_log", $MenuLanguage->MenuPhrase("35", "MenuText"), "document_loglist.php", 18, "", AllowListMenu('{vishal-pdm}document_log'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(7, "mi_transmit_details", $MenuLanguage->MenuPhrase("7", "MenuText"), "transmit_detailslist.php", 18, "", AllowListMenu('{vishal-pdm}transmit_details'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(10, "mci_Masters", $MenuLanguage->MenuPhrase("10", "MenuText"), "", -1, "", IsLoggedIn(), TRUE, TRUE, "", "", TRUE);
 $sideMenu->addMenuItem(5, "mi_project_details", $MenuLanguage->MenuPhrase("5", "MenuText"), "project_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}project_details'), FALSE, FALSE, "", "", TRUE);

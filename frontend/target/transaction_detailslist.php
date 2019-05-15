@@ -109,6 +109,14 @@ ftransaction_detailslist.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_native->caption(), $transaction_details->document_native->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transaction_details_list->expiry_date->Required) { ?>
+			elm = this.getElements("x" + infix + "_expiry_date");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->expiry_date->caption(), $transaction_details->expiry_date->RequiredErrorMessage)) ?>");
+		<?php } ?>
+			elm = this.getElements("x" + infix + "_expiry_date");
+			if (elm && !ew.checkDateDef(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($transaction_details->expiry_date->errorMessage()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -135,6 +143,7 @@ ftransaction_detailslist.emptyRow = function(infix) {
 	if (ew.valueChanged(fobj, infix, "direction", false)) return false;
 	if (ew.valueChanged(fobj, infix, "approval_status", false)) return false;
 	if (ew.valueChanged(fobj, infix, "document_native", false)) return false;
+	if (ew.valueChanged(fobj, infix, "expiry_date", false)) return false;
 	return true;
 }
 
@@ -451,6 +460,15 @@ $transaction_details_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="document_native" class="<?php echo $transaction_details->document_native->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->document_native) ?>',2);"><div id="elh_transaction_details_document_native" class="transaction_details_document_native">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->document_native->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->document_native->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->document_native->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->expiry_date->Visible) { // expiry_date ?>
+	<?php if ($transaction_details->sortUrl($transaction_details->expiry_date) == "") { ?>
+		<th data-name="expiry_date" class="<?php echo $transaction_details->expiry_date->headerCellClass() ?>"><div id="elh_transaction_details_expiry_date" class="transaction_details_expiry_date"><div class="ew-table-header-caption"><?php echo $transaction_details->expiry_date->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="expiry_date" class="<?php echo $transaction_details->expiry_date->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->expiry_date) ?>',2);"><div id="elh_transaction_details_expiry_date" class="transaction_details_expiry_date">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->expiry_date->caption() ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->expiry_date->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->expiry_date->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -774,6 +792,34 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($transaction_details->expiry_date->Visible) { // expiry_date ?>
+		<td data-name="expiry_date"<?php echo $transaction_details->expiry_date->cellAttributes() ?>>
+<?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_expiry_date" class="form-group transaction_details_expiry_date">
+<input type="text" data-table="transaction_details" data-field="x_expiry_date" name="x<?php echo $transaction_details_list->RowIndex ?>_expiry_date" id="x<?php echo $transaction_details_list->RowIndex ?>_expiry_date" placeholder="<?php echo HtmlEncode($transaction_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->expiry_date->EditValue ?>"<?php echo $transaction_details->expiry_date->editAttributes() ?>>
+<?php if (!$transaction_details->expiry_date->ReadOnly && !$transaction_details->expiry_date->Disabled && !isset($transaction_details->expiry_date->EditAttrs["readonly"]) && !isset($transaction_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_details_list->RowIndex ?>_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_expiry_date" name="o<?php echo $transaction_details_list->RowIndex ?>_expiry_date" id="o<?php echo $transaction_details_list->RowIndex ?>_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->OldValue) ?>">
+<?php } ?>
+<?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_expiry_date" class="transaction_details_expiry_date">
+<span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
+<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><?php echo $transaction_details->expiry_date->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $transaction_details->expiry_date->getViewValue() ?>
+<?php } ?>
+<span id="tt_transaction_details_x<?php echo $transaction_details_list->RowCnt ?>_expiry_date" class="d-none">
+<?php echo $transaction_details->expiry_date->TooltipValue ?>
+</span></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -956,6 +1002,19 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <textarea data-table="transaction_details" data-field="x_document_native" name="x<?php echo $transaction_details_list->RowIndex ?>_document_native" id="x<?php echo $transaction_details_list->RowIndex ?>_document_native" cols="30" rows="4" placeholder="<?php echo HtmlEncode($transaction_details->document_native->getPlaceHolder()) ?>"<?php echo $transaction_details->document_native->editAttributes() ?>><?php echo $transaction_details->document_native->EditValue ?></textarea>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_document_native" name="o<?php echo $transaction_details_list->RowIndex ?>_document_native" id="o<?php echo $transaction_details_list->RowIndex ?>_document_native" value="<?php echo HtmlEncode($transaction_details->document_native->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($transaction_details->expiry_date->Visible) { // expiry_date ?>
+		<td data-name="expiry_date">
+<span id="el$rowindex$_transaction_details_expiry_date" class="form-group transaction_details_expiry_date">
+<input type="text" data-table="transaction_details" data-field="x_expiry_date" name="x<?php echo $transaction_details_list->RowIndex ?>_expiry_date" id="x<?php echo $transaction_details_list->RowIndex ?>_expiry_date" placeholder="<?php echo HtmlEncode($transaction_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->expiry_date->EditValue ?>"<?php echo $transaction_details->expiry_date->editAttributes() ?>>
+<?php if (!$transaction_details->expiry_date->ReadOnly && !$transaction_details->expiry_date->Disabled && !isset($transaction_details->expiry_date->EditAttrs["readonly"]) && !isset($transaction_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_details_list->RowIndex ?>_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_expiry_date" name="o<?php echo $transaction_details_list->RowIndex ?>_expiry_date" id="o<?php echo $transaction_details_list->RowIndex ?>_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php

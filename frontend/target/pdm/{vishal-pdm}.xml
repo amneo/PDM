@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2019/05/14" author="e.World Technology Ltd.">
-  <project id="{vishal-pdm}" file="E:\PDM\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/05/14 22:41:14" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2019/05/15" author="e.World Technology Ltd.">
+  <project id="{vishal-pdm}" file="E:\PDM\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/05/15 23:40:06" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="transaction_details" name="transaction_details" caption="Document Log" userlevel="-2,&quot;Anonymous&quot;,104;0,&quot;Default&quot;,0" priv="1" />
     <table id="distribution_details" name="distribution_details" caption="Distribution" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="inbox" name="inbox" caption="Inbox" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -15,5 +15,6 @@
     <table id="userlevels" name="userlevels" caption="User Levels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="userlevelpermissions" name="userlevelpermissions" caption="User Level Permission" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="xmit_details" name="xmit_details" caption="Tramit Modes" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="document_log" name="document_log" caption="Consolidated Log" userlevel="-2,&quot;Anonymous&quot;,72;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

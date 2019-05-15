@@ -47,6 +47,7 @@ class transaction_details extends DbTable
 	public $transaction_date;
 	public $document_native;
 	public $username;
+	public $expiry_date;
 
 	// Constructor
 	public function __construct()
@@ -109,7 +110,7 @@ class transaction_details extends DbTable
 		$this->fields['document_tittle'] = &$this->document_tittle;
 
 		// submit_no
-		$this->submit_no = new DbField('transaction_details', 'transaction_details', 'x_submit_no', 'submit_no', '"submit_no"', '"submit_no"', 200, -1, FALSE, '"submit_no"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->submit_no = new DbField('transaction_details', 'transaction_details', 'x_submit_no', 'submit_no', '"submit_no"', 'CAST("submit_no" AS varchar(255))', 3, -1, FALSE, '"submit_no"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->submit_no->Nullable = FALSE; // NOT NULL field
 		$this->submit_no->Required = TRUE; // Required field
 		$this->submit_no->Sortable = TRUE; // Allow sort
@@ -180,6 +181,12 @@ class transaction_details extends DbTable
 		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'HIDDEN');
 		$this->username->Sortable = FALSE; // Allow sort
 		$this->fields['username'] = &$this->username;
+
+		// expiry_date
+		$this->expiry_date = new DbField('transaction_details', 'transaction_details', 'x_expiry_date', 'expiry_date', '"expiry_date"', CastDateFieldForLike('"expiry_date"', 0, "DB"), 133, 0, FALSE, '"expiry_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->expiry_date->Sortable = TRUE; // Allow sort
+		$this->expiry_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->fields['expiry_date'] = &$this->expiry_date;
 	}
 
 	// Field Visibility
@@ -633,6 +640,7 @@ class transaction_details extends DbTable
 		$this->transaction_date->DbValue = $row['transaction_date'];
 		$this->document_native->DbValue = $row['document_native'];
 		$this->username->DbValue = $row['username'];
+		$this->expiry_date->DbValue = $row['expiry_date'];
 	}
 
 	// Delete uploaded files
@@ -877,6 +885,7 @@ class transaction_details extends DbTable
 		$this->transaction_date->setDbValue($rs->fields('transaction_date'));
 		$this->document_native->setDbValue($rs->fields('document_native'));
 		$this->username->setDbValue($rs->fields('username'));
+		$this->expiry_date->setDbValue($rs->fields('expiry_date'));
 	}
 
 	// Render list row values
@@ -908,7 +917,9 @@ class transaction_details extends DbTable
 
 		$this->username->CellCssStyle = "white-space: nowrap;";
 
+		// expiry_date
 		// document_sequence
+
 		$this->document_sequence->ViewValue = $this->document_sequence->CurrentValue;
 		$this->document_sequence->CellCssStyle .= "text-align: left;";
 		$this->document_sequence->ViewCustomAttributes = "";
@@ -952,6 +963,7 @@ class transaction_details extends DbTable
 
 		// submit_no
 		$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
+		$this->submit_no->ViewValue = FormatNumber($this->submit_no->ViewValue, 0, -1, -2, -2);
 		$this->submit_no->CellCssStyle .= "text-align: left;";
 		$this->submit_no->ViewCustomAttributes = "";
 
@@ -1045,6 +1057,11 @@ class transaction_details extends DbTable
 		$this->username->ViewValue = $this->username->CurrentValue;
 		$this->username->ViewCustomAttributes = "";
 
+		// expiry_date
+		$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
+		$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
+		$this->expiry_date->ViewCustomAttributes = "";
+
 		// document_sequence
 		$this->document_sequence->LinkCustomAttributes = "";
 		$this->document_sequence->HrefValue = "";
@@ -1128,6 +1145,18 @@ class transaction_details extends DbTable
 		$this->username->HrefValue = "";
 		$this->username->TooltipValue = "";
 
+		// expiry_date
+		$this->expiry_date->LinkCustomAttributes = "";
+		$this->expiry_date->HrefValue = "";
+		if (!$this->isExport()) {
+			$this->expiry_date->TooltipValue = ($this->expiry_date->ViewValue <> "") ? $this->expiry_date->ViewValue : $this->expiry_date->CurrentValue;
+			if ($this->expiry_date->HrefValue == "") $this->expiry_date->HrefValue = "javascript:void(0);";
+			AppendClass($this->expiry_date->LinkAttrs["class"], "ew-tooltip-link");
+			$this->expiry_date->LinkAttrs["data-tooltip-id"] = "tt_transaction_details_x" . (($this->RowType <> ROWTYPE_MASTER) ? @$this->RowCnt : "") . "_expiry_date";
+			$this->expiry_date->LinkAttrs["data-tooltip-width"] = $this->expiry_date->TooltipWidth;
+			$this->expiry_date->LinkAttrs["data-placement"] = $GLOBALS["CSS_FLIP"] ? "left" : "right";
+		}
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 
@@ -1201,6 +1230,7 @@ class transaction_details extends DbTable
 		$this->submit_no->EditAttrs["class"] = "form-control";
 		$this->submit_no->EditCustomAttributes = "";
 		$this->submit_no->EditValue = $this->submit_no->CurrentValue;
+		$this->submit_no->EditValue = FormatNumber($this->submit_no->EditValue, 0, -1, -2, -2);
 		$this->submit_no->CellCssStyle .= "text-align: left;";
 		$this->submit_no->ViewCustomAttributes = "";
 
@@ -1278,8 +1308,14 @@ class transaction_details extends DbTable
 		$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
 		// username
-		// Call Row Rendered event
+		// expiry_date
 
+		$this->expiry_date->EditAttrs["class"] = "form-control";
+		$this->expiry_date->EditCustomAttributes = "";
+		$this->expiry_date->EditValue = FormatDateTime($this->expiry_date->CurrentValue, 8);
+		$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
+
+		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
 
@@ -1318,6 +1354,7 @@ class transaction_details extends DbTable
 					$doc->exportCaption($this->direction);
 					$doc->exportCaption($this->approval_status);
 					$doc->exportCaption($this->document_native);
+					$doc->exportCaption($this->expiry_date);
 				} else {
 					$doc->exportCaption($this->document_sequence);
 					$doc->exportCaption($this->firelink_doc_no);
@@ -1371,6 +1408,7 @@ class transaction_details extends DbTable
 						$doc->exportField($this->direction);
 						$doc->exportField($this->approval_status);
 						$doc->exportField($this->document_native);
+						$doc->exportField($this->expiry_date);
 					} else {
 						$doc->exportField($this->document_sequence);
 						$doc->exportField($this->firelink_doc_no);

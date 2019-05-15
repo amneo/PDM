@@ -632,6 +632,7 @@ class transaction_details_search extends transaction_details
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
+		$this->expiry_date->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -860,6 +861,7 @@ class transaction_details_search extends transaction_details
 		// transaction_date
 		// document_native
 		// username
+		// expiry_date
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -907,6 +909,7 @@ class transaction_details_search extends transaction_details
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
+			$this->submit_no->ViewValue = FormatNumber($this->submit_no->ViewValue, 0, -1, -2, -2);
 			$this->submit_no->CellCssStyle .= "text-align: left;";
 			$this->submit_no->ViewCustomAttributes = "";
 
@@ -1072,8 +1075,6 @@ class transaction_details_search extends transaction_details
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
 			$this->submit_no->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->submit_no->AdvancedSearch->SearchValue = HtmlDecode($this->submit_no->AdvancedSearch->SearchValue);
 			$this->submit_no->EditValue = HtmlEncode($this->submit_no->AdvancedSearch->SearchValue);
 			$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
 

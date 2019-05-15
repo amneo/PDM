@@ -787,6 +787,7 @@ class transaction_details_list extends transaction_details
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
+		$this->expiry_date->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1234,6 +1235,8 @@ class transaction_details_list extends transaction_details
 		if ($CurrentForm->hasValue("x_approval_status") && $CurrentForm->hasValue("o_approval_status") && $this->approval_status->CurrentValue <> $this->approval_status->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_document_native") && $CurrentForm->hasValue("o_document_native") && $this->document_native->CurrentValue <> $this->document_native->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_expiry_date") && $CurrentForm->hasValue("o_expiry_date") && $this->expiry_date->CurrentValue <> $this->expiry_date->OldValue)
 			return FALSE;
 		return TRUE;
 	}
@@ -1774,6 +1777,7 @@ class transaction_details_list extends transaction_details
 			$this->updateSort($this->direction, $ctrl); // direction
 			$this->updateSort($this->approval_status, $ctrl); // approval_status
 			$this->updateSort($this->document_native, $ctrl); // document_native
+			$this->updateSort($this->expiry_date, $ctrl); // expiry_date
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1820,6 +1824,7 @@ class transaction_details_list extends transaction_details
 				$this->direction->setSort("");
 				$this->approval_status->setSort("");
 				$this->document_native->setSort("");
+				$this->expiry_date->setSort("");
 			}
 
 			// Reset start position
@@ -2301,6 +2306,8 @@ class transaction_details_list extends transaction_details
 		$this->document_native->OldValue = $this->document_native->CurrentValue;
 		$this->username->CurrentValue = NULL;
 		$this->username->OldValue = $this->username->CurrentValue;
+		$this->expiry_date->CurrentValue = NULL;
+		$this->expiry_date->OldValue = $this->expiry_date->CurrentValue;
 	}
 
 	// Load basic search values
@@ -2498,6 +2505,17 @@ class transaction_details_list extends transaction_details
 		}
 		$this->document_native->setOldValue($CurrentForm->getValue("o_document_native"));
 
+		// Check field name 'expiry_date' first before field var 'x_expiry_date'
+		$val = $CurrentForm->hasValue("expiry_date") ? $CurrentForm->getValue("expiry_date") : $CurrentForm->getValue("x_expiry_date");
+		if (!$this->expiry_date->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->expiry_date->Visible = FALSE; // Disable update for API request
+			else
+				$this->expiry_date->setFormValue($val);
+			$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
+		}
+		$this->expiry_date->setOldValue($CurrentForm->getValue("o_expiry_date"));
+
 		// Check field name 'document_sequence' first before field var 'x_document_sequence'
 		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
 		if (!$this->document_sequence->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
@@ -2521,6 +2539,8 @@ class transaction_details_list extends transaction_details
 		$this->direction->CurrentValue = $this->direction->FormValue;
 		$this->approval_status->CurrentValue = $this->approval_status->FormValue;
 		$this->document_native->CurrentValue = $this->document_native->FormValue;
+		$this->expiry_date->CurrentValue = $this->expiry_date->FormValue;
+		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
 	}
 
 	// Load recordset
@@ -2610,6 +2630,7 @@ class transaction_details_list extends transaction_details
 		$this->transaction_date->setDbValue($row['transaction_date']);
 		$this->document_native->setDbValue($row['document_native']);
 		$this->username->setDbValue($row['username']);
+		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
 	// Return a row with default values
@@ -2631,6 +2652,7 @@ class transaction_details_list extends transaction_details
 		$row['transaction_date'] = $this->transaction_date->CurrentValue;
 		$row['document_native'] = $this->document_native->CurrentValue;
 		$row['username'] = $this->username->CurrentValue;
+		$row['expiry_date'] = $this->expiry_date->CurrentValue;
 		return $row;
 	}
 
@@ -2693,6 +2715,8 @@ class transaction_details_list extends transaction_details
 		// username
 
 		$this->username->CellCssStyle = "white-space: nowrap;";
+
+		// expiry_date
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// document_sequence
@@ -2739,6 +2763,7 @@ class transaction_details_list extends transaction_details
 
 			// submit_no
 			$this->submit_no->ViewValue = $this->submit_no->CurrentValue;
+			$this->submit_no->ViewValue = FormatNumber($this->submit_no->ViewValue, 0, -1, -2, -2);
 			$this->submit_no->CellCssStyle .= "text-align: left;";
 			$this->submit_no->ViewCustomAttributes = "";
 
@@ -2820,6 +2845,11 @@ class transaction_details_list extends transaction_details
 			$this->document_native->CellCssStyle .= "text-align: left;";
 			$this->document_native->ViewCustomAttributes = "";
 
+			// expiry_date
+			$this->expiry_date->ViewValue = $this->expiry_date->CurrentValue;
+			$this->expiry_date->ViewValue = FormatDateTime($this->expiry_date->ViewValue, 0);
+			$this->expiry_date->ViewCustomAttributes = "";
+
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			if (!EmptyValue($this->document_link->Upload->DbValue)) {
@@ -2885,6 +2915,18 @@ class transaction_details_list extends transaction_details
 			$this->document_native->TooltipValue = "";
 			if (!$this->isExport())
 				$this->document_native->ViewValue = $this->highlightValue($this->document_native);
+
+			// expiry_date
+			$this->expiry_date->LinkCustomAttributes = "";
+			$this->expiry_date->HrefValue = "";
+			if (!$this->isExport()) {
+				$this->expiry_date->TooltipValue = ($this->expiry_date->ViewValue <> "") ? $this->expiry_date->ViewValue : $this->expiry_date->CurrentValue;
+				if ($this->expiry_date->HrefValue == "") $this->expiry_date->HrefValue = "javascript:void(0);";
+				AppendClass($this->expiry_date->LinkAttrs["class"], "ew-tooltip-link");
+				$this->expiry_date->LinkAttrs["data-tooltip-id"] = "tt_transaction_details_x" . $this->RowCnt . "_expiry_date";
+				$this->expiry_date->LinkAttrs["data-tooltip-width"] = $this->expiry_date->TooltipWidth;
+				$this->expiry_date->LinkAttrs["data-placement"] = $GLOBALS["CSS_FLIP"] ? "left" : "right";
+			}
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// firelink_doc_no
@@ -2934,8 +2976,6 @@ class transaction_details_list extends transaction_details
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
 			$this->submit_no->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->submit_no->CurrentValue = HtmlDecode($this->submit_no->CurrentValue);
 			$this->submit_no->EditValue = HtmlEncode($this->submit_no->CurrentValue);
 			$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
 
@@ -3022,6 +3062,12 @@ class transaction_details_list extends transaction_details
 			$this->document_native->EditValue = HtmlEncode($this->document_native->CurrentValue);
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
 
+			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
+			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime($this->expiry_date->CurrentValue, 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
+
 			// Add refer script
 			// firelink_doc_no
 
@@ -3069,6 +3115,10 @@ class transaction_details_list extends transaction_details
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
 			$this->document_native->HrefValue = "";
+
+			// expiry_date
+			$this->expiry_date->LinkCustomAttributes = "";
+			$this->expiry_date->HrefValue = "";
 		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
 
 			// firelink_doc_no
@@ -3098,8 +3148,6 @@ class transaction_details_list extends transaction_details
 			// submit_no
 			$this->submit_no->EditAttrs["class"] = "form-control";
 			$this->submit_no->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->submit_no->AdvancedSearch->SearchValue = HtmlDecode($this->submit_no->AdvancedSearch->SearchValue);
 			$this->submit_no->EditValue = HtmlEncode($this->submit_no->AdvancedSearch->SearchValue);
 			$this->submit_no->PlaceHolder = RemoveHtml($this->submit_no->caption());
 
@@ -3137,6 +3185,12 @@ class transaction_details_list extends transaction_details
 			$this->document_native->EditCustomAttributes = "";
 			$this->document_native->EditValue = HtmlEncode($this->document_native->AdvancedSearch->SearchValue);
 			$this->document_native->PlaceHolder = RemoveHtml($this->document_native->caption());
+
+			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
+			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->expiry_date->AdvancedSearch->SearchValue, 0), 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -3250,6 +3304,14 @@ class transaction_details_list extends transaction_details
 			if (!$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->username->caption(), $this->username->RequiredErrorMessage));
 			}
+		}
+		if ($this->expiry_date->Required) {
+			if (!$this->expiry_date->IsDetailKey && $this->expiry_date->FormValue != NULL && $this->expiry_date->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->expiry_date->caption(), $this->expiry_date->RequiredErrorMessage));
+			}
+		}
+		if (!CheckDate($this->expiry_date->FormValue)) {
+			AddMessage($FormError, $this->expiry_date->errorMessage());
 		}
 
 		// Return validate result
@@ -3372,7 +3434,7 @@ class transaction_details_list extends transaction_details
 		$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, NULL, FALSE);
 
 		// submit_no
-		$this->submit_no->setDbValueDef($rsnew, $this->submit_no->CurrentValue, "", FALSE);
+		$this->submit_no->setDbValueDef($rsnew, $this->submit_no->CurrentValue, 0, FALSE);
 
 		// revision_no
 		$this->revision_no->setDbValueDef($rsnew, $this->revision_no->CurrentValue, "", FALSE);
@@ -3391,6 +3453,9 @@ class transaction_details_list extends transaction_details
 
 		// document_native
 		$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", FALSE);
+
+		// expiry_date
+		$this->expiry_date->setDbValueDef($rsnew, UnFormatDateTime($this->expiry_date->CurrentValue, 0), NULL, strval($this->expiry_date->CurrentValue) == "");
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;

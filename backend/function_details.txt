@@ -1,0 +1,3 @@
+funtion name 	|  Description of Function
+om_func_01 	| Retrives latest version of the application
+om_func_02	| Prepares the consolidated Report of document log in Landscape view	

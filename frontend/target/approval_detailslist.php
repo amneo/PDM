@@ -52,8 +52,10 @@ fapproval_detailslist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE TH
 fapproval_detailslist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fapproval_detailslist.lists["x_document_status"] = <?php echo $approval_details_list->document_status->Lookup->toClientList() ?>;
+fapproval_detailslist.lists["x_document_status"].options = <?php echo JsonEncode($approval_details_list->document_status->options(FALSE, TRUE)) ?>;
 
+// Form object for search
 var fapproval_detailslistsrch = currentSearchForm = new ew.Form("fapproval_detailslistsrch");
 
 // Filters
@@ -206,6 +208,15 @@ $approval_details_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($approval_details->document_status->Visible) { // document_status ?>
+	<?php if ($approval_details->sortUrl($approval_details->document_status) == "") { ?>
+		<th data-name="document_status" class="<?php echo $approval_details->document_status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_approval_details_document_status" class="approval_details_document_status"><div class="ew-table-header-caption"><?php echo $approval_details->document_status->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="document_status" class="<?php echo $approval_details->document_status->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->document_status) ?>',2);"><div id="elh_approval_details_document_status" class="approval_details_document_status">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->document_status->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->document_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->document_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php
 
 // Render list options (header, right)
@@ -292,6 +303,14 @@ $approval_details_list->ListOptions->render("body", "left", $approval_details_li
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_Description" class="approval_details_Description">
 <span<?php echo $approval_details->Description->viewAttributes() ?>>
 <?php echo $approval_details->Description->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($approval_details->document_status->Visible) { // document_status ?>
+		<td data-name="document_status"<?php echo $approval_details->document_status->cellAttributes() ?>>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_document_status" class="approval_details_document_status">
+<span<?php echo $approval_details->document_status->viewAttributes() ?>>
+<?php echo $approval_details->document_status->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

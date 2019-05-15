@@ -595,6 +595,7 @@ class approval_details_delete extends approval_details
 		$this->id->setVisibility();
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
+		$this->document_status->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -736,6 +737,7 @@ class approval_details_delete extends approval_details
 		$this->id->setDbValue($row['id']);
 		$this->short_code->setDbValue($row['short_code']);
 		$this->Description->setDbValue($row['Description']);
+		$this->document_status->setDbValue($row['document_status']);
 	}
 
 	// Return a row with default values
@@ -745,6 +747,7 @@ class approval_details_delete extends approval_details
 		$row['id'] = NULL;
 		$row['short_code'] = NULL;
 		$row['Description'] = NULL;
+		$row['document_status'] = NULL;
 		return $row;
 	}
 
@@ -762,7 +765,9 @@ class approval_details_delete extends approval_details
 		// id
 		// short_code
 		// Description
+		// document_status
 
+		$this->document_status->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// id
@@ -776,6 +781,14 @@ class approval_details_delete extends approval_details
 			// Description
 			$this->Description->ViewValue = $this->Description->CurrentValue;
 			$this->Description->ViewCustomAttributes = "";
+
+			// document_status
+			if (strval($this->document_status->CurrentValue) <> "") {
+				$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
+			} else {
+				$this->document_status->ViewValue = NULL;
+			}
+			$this->document_status->ViewCustomAttributes = "";
 
 			// id
 			$this->id->LinkCustomAttributes = "";
@@ -791,6 +804,11 @@ class approval_details_delete extends approval_details
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
 			$this->Description->TooltipValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
+			$this->document_status->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

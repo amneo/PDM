@@ -442,6 +442,8 @@ class index
 			$this->terminate("userlevelpermissionslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'xmit_details'))
 			$this->terminate("xmit_detailslist.php");
+		if ($Security->allowList(CurrentProjectID() . 'document_log'))
+			$this->terminate("document_loglist.php");
 		if ($Security->isLoggedIn()) {
 			$this->setFailureMessage(DeniedMessage() . "<br><br><a href=\"logout.php\">" . $Language->phrase("BackToLogin") . "</a>");
 		} else {

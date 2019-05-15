@@ -615,6 +615,7 @@ class approval_details_edit extends approval_details
 		$this->id->setVisibility();
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
+		$this->document_status->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -809,6 +810,15 @@ class approval_details_edit extends approval_details
 			else
 				$this->Description->setFormValue($val);
 		}
+
+		// Check field name 'document_status' first before field var 'x_document_status'
+		$val = $CurrentForm->hasValue("document_status") ? $CurrentForm->getValue("document_status") : $CurrentForm->getValue("x_document_status");
+		if (!$this->document_status->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_status->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_status->setFormValue($val);
+		}
 	}
 
 	// Restore form values
@@ -818,6 +828,7 @@ class approval_details_edit extends approval_details
 		$this->id->CurrentValue = $this->id->FormValue;
 		$this->short_code->CurrentValue = $this->short_code->FormValue;
 		$this->Description->CurrentValue = $this->Description->FormValue;
+		$this->document_status->CurrentValue = $this->document_status->FormValue;
 	}
 
 	// Load row based on key values
@@ -858,6 +869,7 @@ class approval_details_edit extends approval_details
 		$this->id->setDbValue($row['id']);
 		$this->short_code->setDbValue($row['short_code']);
 		$this->Description->setDbValue($row['Description']);
+		$this->document_status->setDbValue($row['document_status']);
 	}
 
 	// Return a row with default values
@@ -867,6 +879,7 @@ class approval_details_edit extends approval_details
 		$row['id'] = NULL;
 		$row['short_code'] = NULL;
 		$row['Description'] = NULL;
+		$row['document_status'] = NULL;
 		return $row;
 	}
 
@@ -907,6 +920,7 @@ class approval_details_edit extends approval_details
 		// id
 		// short_code
 		// Description
+		// document_status
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -922,6 +936,14 @@ class approval_details_edit extends approval_details
 			$this->Description->ViewValue = $this->Description->CurrentValue;
 			$this->Description->ViewCustomAttributes = "";
 
+			// document_status
+			if (strval($this->document_status->CurrentValue) <> "") {
+				$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
+			} else {
+				$this->document_status->ViewValue = NULL;
+			}
+			$this->document_status->ViewCustomAttributes = "";
+
 			// id
 			$this->id->LinkCustomAttributes = "";
 			$this->id->HrefValue = "";
@@ -936,6 +958,11 @@ class approval_details_edit extends approval_details
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
 			$this->Description->TooltipValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
+			$this->document_status->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// id
@@ -958,6 +985,11 @@ class approval_details_edit extends approval_details
 			$this->Description->EditValue = HtmlEncode($this->Description->CurrentValue);
 			$this->Description->PlaceHolder = RemoveHtml($this->Description->caption());
 
+			// document_status
+			$this->document_status->EditAttrs["class"] = "form-control";
+			$this->document_status->EditCustomAttributes = "";
+			$this->document_status->EditValue = $this->document_status->options(TRUE);
+
 			// Edit refer script
 			// id
 
@@ -971,6 +1003,10 @@ class approval_details_edit extends approval_details
 			// Description
 			$this->Description->LinkCustomAttributes = "";
 			$this->Description->HrefValue = "";
+
+			// document_status
+			$this->document_status->LinkCustomAttributes = "";
+			$this->document_status->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1004,6 +1040,11 @@ class approval_details_edit extends approval_details
 		if ($this->Description->Required) {
 			if (!$this->Description->IsDetailKey && $this->Description->FormValue != NULL && $this->Description->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Description->caption(), $this->Description->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_status->Required) {
+			if (!$this->document_status->IsDetailKey && $this->document_status->FormValue != NULL && $this->document_status->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_status->caption(), $this->document_status->RequiredErrorMessage));
 			}
 		}
 
@@ -1048,6 +1089,9 @@ class approval_details_edit extends approval_details
 
 			// Description
 			$this->Description->setDbValueDef($rsnew, $this->Description->CurrentValue, "", $this->Description->ReadOnly);
+
+			// document_status
+			$this->document_status->setDbValueDef($rsnew, $this->document_status->CurrentValue, NULL, $this->document_status->ReadOnly);
 
 			// Call Row Updating event
 			$updateRow = $this->Row_Updating($rsold, $rsnew);

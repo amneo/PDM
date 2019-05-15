@@ -103,6 +103,14 @@ ftransaction_detailsadd.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->document_native->caption(), $transaction_details->document_native->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transaction_details_add->expiry_date->Required) { ?>
+			elm = this.getElements("x" + infix + "_expiry_date");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transaction_details->expiry_date->caption(), $transaction_details->expiry_date->RequiredErrorMessage)) ?>");
+		<?php } ?>
+			elm = this.getElements("x" + infix + "_expiry_date");
+			if (elm && !ew.checkDateDef(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($transaction_details->expiry_date->errorMessage()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -640,6 +648,67 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_transmit_date", {"ignoreRe
 <input type="hidden" data-table="transaction_details" data-field="x_document_native" data-page="1" name="x_document_native" id="x_document_native" value="<?php echo HtmlEncode($transaction_details->document_native->FormValue) ?>">
 <?php } ?>
 <?php echo $transaction_details->document_native->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transaction_details->expiry_date->Visible) { // expiry_date ?>
+<?php if ($transaction_details_add->IsMobileOrModal) { ?>
+	<div id="r_expiry_date" class="form-group row">
+		<label id="elh_transaction_details_expiry_date" for="x_expiry_date" class="<?php echo $transaction_details_add->LeftColumnClass ?>"><?php echo $transaction_details->expiry_date->caption() ?><?php echo ($transaction_details->expiry_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transaction_details_add->RightColumnClass ?>"><div<?php echo $transaction_details->expiry_date->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_expiry_date">
+<input type="text" data-table="transaction_details" data-field="x_expiry_date" data-page="1" name="x_expiry_date" id="x_expiry_date" placeholder="<?php echo HtmlEncode($transaction_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->expiry_date->EditValue ?>"<?php echo $transaction_details->expiry_date->editAttributes() ?>>
+<?php if (!$transaction_details->expiry_date->ReadOnly && !$transaction_details->expiry_date->Disabled && !isset($transaction_details->expiry_date->EditAttrs["readonly"]) && !isset($transaction_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("ftransaction_detailsadd", "x_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
+<?php } else { ?>
+<span id="el_transaction_details_expiry_date">
+<span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
+<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></a>
+<?php } else { ?>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>">
+<?php } ?>
+<span id="tt_transaction_details_x_expiry_date" class="d-none">
+<?php echo $transaction_details->expiry_date->TooltipValue ?>
+</span></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_expiry_date" data-page="1" name="x_expiry_date" id="x_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->expiry_date->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_expiry_date">
+		<td class="<?php echo $transaction_details_add->TableLeftColumnClass ?>"><span id="elh_transaction_details_expiry_date"><?php echo $transaction_details->expiry_date->caption() ?><?php echo ($transaction_details->expiry_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transaction_details->expiry_date->cellAttributes() ?>>
+<?php if (!$transaction_details->isConfirm()) { ?>
+<span id="el_transaction_details_expiry_date">
+<input type="text" data-table="transaction_details" data-field="x_expiry_date" data-page="1" name="x_expiry_date" id="x_expiry_date" placeholder="<?php echo HtmlEncode($transaction_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $transaction_details->expiry_date->EditValue ?>"<?php echo $transaction_details->expiry_date->editAttributes() ?>>
+<?php if (!$transaction_details->expiry_date->ReadOnly && !$transaction_details->expiry_date->Disabled && !isset($transaction_details->expiry_date->EditAttrs["readonly"]) && !isset($transaction_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("ftransaction_detailsadd", "x_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
+<?php } else { ?>
+<span id="el_transaction_details_expiry_date">
+<span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
+<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
+<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></a>
+<?php } else { ?>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>">
+<?php } ?>
+<span id="tt_transaction_details_x_expiry_date" class="d-none">
+<?php echo $transaction_details->expiry_date->TooltipValue ?>
+</span></span>
+</span>
+<input type="hidden" data-table="transaction_details" data-field="x_expiry_date" data-page="1" name="x_expiry_date" id="x_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->FormValue) ?>">
+<?php } ?>
+<?php echo $transaction_details->expiry_date->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>
