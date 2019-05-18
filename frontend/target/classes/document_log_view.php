@@ -722,143 +722,143 @@ class document_log_view extends document_log
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->log_id->setVisibility();
-		$this->firelink_doc_no->setVisibility();
-		$this->project_name->setVisibility();
-		$this->document_tittle->setVisibility();
-		$this->current_status->setVisibility();
+		$this->log_id->Visible = FALSE;
+		$this->firelink_doc_no->Visible = FALSE;
+		$this->project_name->Visible = FALSE;
+		$this->document_tittle->Visible = FALSE;
+		$this->current_status->Visible = FALSE;
 		$this->current_status_file->Visible = FALSE;
-		$this->submit_no_sub1->setVisibility();
-		$this->revision_no_sub1->setVisibility();
-		$this->direction_out_sub1->setVisibility();
-		$this->planned_date_out_sub1->setVisibility();
-		$this->transmit_date_out_sub1->setVisibility();
-		$this->transmit_no_out_sub1->setVisibility();
-		$this->approval_status_out_sub1->setVisibility();
-		$this->direction_out_file_sub1->setVisibility();
-		$this->direction_in_sub1->setVisibility();
-		$this->transmit_no_in_sub1->setVisibility();
-		$this->approval_status_in_sub1->setVisibility();
+		$this->submit_no_sub1->Visible = FALSE;
+		$this->revision_no_sub1->Visible = FALSE;
+		$this->direction_out_sub1->Visible = FALSE;
+		$this->planned_date_out_sub1->Visible = FALSE;
+		$this->transmit_date_out_sub1->Visible = FALSE;
+		$this->transmit_no_out_sub1->Visible = FALSE;
+		$this->approval_status_out_sub1->Visible = FALSE;
+		$this->direction_out_file_sub1->Visible = FALSE;
+		$this->direction_in_sub1->Visible = FALSE;
+		$this->transmit_no_in_sub1->Visible = FALSE;
+		$this->approval_status_in_sub1->Visible = FALSE;
 		$this->direction_in_file_sub1->Visible = FALSE;
-		$this->transmit_date_in_sub1->setVisibility();
-		$this->submit_no_sub2->setVisibility();
-		$this->revision_no_sub2->setVisibility();
-		$this->direction_out_sub2->setVisibility();
-		$this->planned_date_out_sub2->setVisibility();
-		$this->transmit_date_out_sub2->setVisibility();
-		$this->transmit_no_out_sub2->setVisibility();
-		$this->approval_status_out_sub2->setVisibility();
+		$this->transmit_date_in_sub1->Visible = FALSE;
+		$this->submit_no_sub2->Visible = FALSE;
+		$this->revision_no_sub2->Visible = FALSE;
+		$this->direction_out_sub2->Visible = FALSE;
+		$this->planned_date_out_sub2->Visible = FALSE;
+		$this->transmit_date_out_sub2->Visible = FALSE;
+		$this->transmit_no_out_sub2->Visible = FALSE;
+		$this->approval_status_out_sub2->Visible = FALSE;
 		$this->direction_out_file_sub2->Visible = FALSE;
-		$this->direction_in_sub2->setVisibility();
-		$this->transmit_no_in_sub2->setVisibility();
-		$this->approval_status_in_sub2->setVisibility();
+		$this->direction_in_sub2->Visible = FALSE;
+		$this->transmit_no_in_sub2->Visible = FALSE;
+		$this->approval_status_in_sub2->Visible = FALSE;
 		$this->direction_in_file_sub2->Visible = FALSE;
-		$this->transmit_date_in_sub2->setVisibility();
-		$this->submit_no_sub3->setVisibility();
-		$this->revision_no_sub3->setVisibility();
-		$this->direction_out_sub3->setVisibility();
-		$this->planned_date_out_sub3->setVisibility();
-		$this->transmit_date_out_sub3->setVisibility();
-		$this->transmit_no_out_sub3->setVisibility();
-		$this->approval_status_out_sub3->setVisibility();
+		$this->transmit_date_in_sub2->Visible = FALSE;
+		$this->submit_no_sub3->Visible = FALSE;
+		$this->revision_no_sub3->Visible = FALSE;
+		$this->direction_out_sub3->Visible = FALSE;
+		$this->planned_date_out_sub3->Visible = FALSE;
+		$this->transmit_date_out_sub3->Visible = FALSE;
+		$this->transmit_no_out_sub3->Visible = FALSE;
+		$this->approval_status_out_sub3->Visible = FALSE;
 		$this->direction_out_file_sub3->Visible = FALSE;
-		$this->direction_in_sub3->setVisibility();
-		$this->transmit_no_in_sub3->setVisibility();
-		$this->approval_status_in_sub3->setVisibility();
+		$this->direction_in_sub3->Visible = FALSE;
+		$this->transmit_no_in_sub3->Visible = FALSE;
+		$this->approval_status_in_sub3->Visible = FALSE;
 		$this->direction_in_file_sub3->Visible = FALSE;
-		$this->transmit_date_in_sub3->setVisibility();
-		$this->submit_no_sub4->setVisibility();
-		$this->revision_no_sub4->setVisibility();
-		$this->direction_out_sub4->setVisibility();
-		$this->planned_date_out_sub4->setVisibility();
-		$this->transmit_date_out_sub4->setVisibility();
-		$this->transmit_no_out_sub4->setVisibility();
-		$this->approval_status_out_sub4->setVisibility();
+		$this->transmit_date_in_sub3->Visible = FALSE;
+		$this->submit_no_sub4->Visible = FALSE;
+		$this->revision_no_sub4->Visible = FALSE;
+		$this->direction_out_sub4->Visible = FALSE;
+		$this->planned_date_out_sub4->Visible = FALSE;
+		$this->transmit_date_out_sub4->Visible = FALSE;
+		$this->transmit_no_out_sub4->Visible = FALSE;
+		$this->approval_status_out_sub4->Visible = FALSE;
 		$this->direction_out_file_sub4->Visible = FALSE;
-		$this->direction_in_sub4->setVisibility();
-		$this->transmit_no_in_sub4->setVisibility();
-		$this->approval_status_in_sub4->setVisibility();
-		$this->direction_in_file_sub4->setVisibility();
-		$this->transmit_date_in_sub4->setVisibility();
-		$this->submit_no_sub5->setVisibility();
-		$this->revision_no_sub5->setVisibility();
-		$this->direction_out_sub5->setVisibility();
-		$this->planned_date_out_sub5->setVisibility();
-		$this->transmit_date_out_sub5->setVisibility();
-		$this->transmit_no_out_sub5->setVisibility();
-		$this->approval_status_out_sub5->setVisibility();
+		$this->direction_in_sub4->Visible = FALSE;
+		$this->transmit_no_in_sub4->Visible = FALSE;
+		$this->approval_status_in_sub4->Visible = FALSE;
+		$this->direction_in_file_sub4->Visible = FALSE;
+		$this->transmit_date_in_sub4->Visible = FALSE;
+		$this->submit_no_sub5->Visible = FALSE;
+		$this->revision_no_sub5->Visible = FALSE;
+		$this->direction_out_sub5->Visible = FALSE;
+		$this->planned_date_out_sub5->Visible = FALSE;
+		$this->transmit_date_out_sub5->Visible = FALSE;
+		$this->transmit_no_out_sub5->Visible = FALSE;
+		$this->approval_status_out_sub5->Visible = FALSE;
 		$this->direction_out_file_sub5->Visible = FALSE;
-		$this->direction_in_sub5->setVisibility();
-		$this->transmit_no_in_sub5->setVisibility();
-		$this->approval_status_in_sub5->setVisibility();
-		$this->direction_in_file_sub5->setVisibility();
-		$this->transmit_date_in_sub5->setVisibility();
-		$this->submit_no_sub6->setVisibility();
-		$this->revision_no_sub6->setVisibility();
-		$this->direction_out_sub6->setVisibility();
-		$this->planned_date_out_sub6->setVisibility();
-		$this->transmit_date_out_sub6->setVisibility();
-		$this->transmit_no_out_sub6->setVisibility();
-		$this->approval_status_out_sub6->setVisibility();
+		$this->direction_in_sub5->Visible = FALSE;
+		$this->transmit_no_in_sub5->Visible = FALSE;
+		$this->approval_status_in_sub5->Visible = FALSE;
+		$this->direction_in_file_sub5->Visible = FALSE;
+		$this->transmit_date_in_sub5->Visible = FALSE;
+		$this->submit_no_sub6->Visible = FALSE;
+		$this->revision_no_sub6->Visible = FALSE;
+		$this->direction_out_sub6->Visible = FALSE;
+		$this->planned_date_out_sub6->Visible = FALSE;
+		$this->transmit_date_out_sub6->Visible = FALSE;
+		$this->transmit_no_out_sub6->Visible = FALSE;
+		$this->approval_status_out_sub6->Visible = FALSE;
 		$this->direction_out_file_sub6->Visible = FALSE;
-		$this->direction_in_sub6->setVisibility();
-		$this->transmit_no_in_sub6->setVisibility();
-		$this->approval_status_in_sub6->setVisibility();
-		$this->direction_in_file_sub6->setVisibility();
-		$this->transmit_date_in_sub6->setVisibility();
-		$this->submit_no_sub7->setVisibility();
-		$this->revision_no_sub7->setVisibility();
-		$this->direction_out_sub7->setVisibility();
-		$this->planned_date_out_sub7->setVisibility();
-		$this->transmit_date_out_sub7->setVisibility();
-		$this->transmit_no_out_sub7->setVisibility();
-		$this->approval_status_out_sub7->setVisibility();
+		$this->direction_in_sub6->Visible = FALSE;
+		$this->transmit_no_in_sub6->Visible = FALSE;
+		$this->approval_status_in_sub6->Visible = FALSE;
+		$this->direction_in_file_sub6->Visible = FALSE;
+		$this->transmit_date_in_sub6->Visible = FALSE;
+		$this->submit_no_sub7->Visible = FALSE;
+		$this->revision_no_sub7->Visible = FALSE;
+		$this->direction_out_sub7->Visible = FALSE;
+		$this->planned_date_out_sub7->Visible = FALSE;
+		$this->transmit_date_out_sub7->Visible = FALSE;
+		$this->transmit_no_out_sub7->Visible = FALSE;
+		$this->approval_status_out_sub7->Visible = FALSE;
 		$this->direction_out_file_sub7->Visible = FALSE;
-		$this->direction_in_sub7->setVisibility();
-		$this->transmit_no_in_sub7->setVisibility();
-		$this->approval_status_in_sub7->setVisibility();
+		$this->direction_in_sub7->Visible = FALSE;
+		$this->transmit_no_in_sub7->Visible = FALSE;
+		$this->approval_status_in_sub7->Visible = FALSE;
 		$this->direction_in_file_sub7->Visible = FALSE;
-		$this->transmit_date_in_sub7->setVisibility();
-		$this->submit_no_sub8->setVisibility();
-		$this->revision_no_sub8->setVisibility();
-		$this->direction_out_sub8->setVisibility();
-		$this->planned_date_out_sub8->setVisibility();
-		$this->transmit_date_out_sub8->setVisibility();
-		$this->transmit_no_out_sub8->setVisibility();
-		$this->approval_status_out_sub8->setVisibility();
-		$this->direction_out_file_sub8->setVisibility();
-		$this->direction_in_sub8->setVisibility();
-		$this->transmit_no_in_sub8->setVisibility();
-		$this->approval_status_in_sub8->setVisibility();
+		$this->transmit_date_in_sub7->Visible = FALSE;
+		$this->submit_no_sub8->Visible = FALSE;
+		$this->revision_no_sub8->Visible = FALSE;
+		$this->direction_out_sub8->Visible = FALSE;
+		$this->planned_date_out_sub8->Visible = FALSE;
+		$this->transmit_date_out_sub8->Visible = FALSE;
+		$this->transmit_no_out_sub8->Visible = FALSE;
+		$this->approval_status_out_sub8->Visible = FALSE;
+		$this->direction_out_file_sub8->Visible = FALSE;
+		$this->direction_in_sub8->Visible = FALSE;
+		$this->transmit_no_in_sub8->Visible = FALSE;
+		$this->approval_status_in_sub8->Visible = FALSE;
 		$this->direction_in_file_sub8->Visible = FALSE;
-		$this->transmit_date_in_sub8->setVisibility();
-		$this->submit_no_sub9->setVisibility();
-		$this->revision_no_sub9->setVisibility();
-		$this->direction_out_sub9->setVisibility();
-		$this->planned_date_out_sub9->setVisibility();
-		$this->transmit_date_out_sub9->setVisibility();
-		$this->transmit_no_out_sub9->setVisibility();
-		$this->approval_status_out_sub9->setVisibility();
+		$this->transmit_date_in_sub8->Visible = FALSE;
+		$this->submit_no_sub9->Visible = FALSE;
+		$this->revision_no_sub9->Visible = FALSE;
+		$this->direction_out_sub9->Visible = FALSE;
+		$this->planned_date_out_sub9->Visible = FALSE;
+		$this->transmit_date_out_sub9->Visible = FALSE;
+		$this->transmit_no_out_sub9->Visible = FALSE;
+		$this->approval_status_out_sub9->Visible = FALSE;
 		$this->direction_out_file_sub9->Visible = FALSE;
-		$this->direction_in_sub9->setVisibility();
-		$this->transmit_no_in_sub9->setVisibility();
-		$this->approval_status_in_sub9->setVisibility();
+		$this->direction_in_sub9->Visible = FALSE;
+		$this->transmit_no_in_sub9->Visible = FALSE;
+		$this->approval_status_in_sub9->Visible = FALSE;
 		$this->direction_in_file_sub9->Visible = FALSE;
-		$this->transmit_date_in_sub9->setVisibility();
-		$this->submit_no_sub10->setVisibility();
-		$this->revision_no_sub10->setVisibility();
-		$this->direction_out_sub10->setVisibility();
-		$this->planned_date_out_sub10->setVisibility();
-		$this->transmit_date_out_sub10->setVisibility();
-		$this->transmit_no_out_sub10->setVisibility();
-		$this->approval_status_out_sub10->setVisibility();
+		$this->transmit_date_in_sub9->Visible = FALSE;
+		$this->submit_no_sub10->Visible = FALSE;
+		$this->revision_no_sub10->Visible = FALSE;
+		$this->direction_out_sub10->Visible = FALSE;
+		$this->planned_date_out_sub10->Visible = FALSE;
+		$this->transmit_date_out_sub10->Visible = FALSE;
+		$this->transmit_no_out_sub10->Visible = FALSE;
+		$this->approval_status_out_sub10->Visible = FALSE;
 		$this->direction_out_file_sub10->Visible = FALSE;
-		$this->direction_in_sub10->setVisibility();
-		$this->transmit_no_in_sub10->setVisibility();
-		$this->approval_status_in_sub10->setVisibility();
+		$this->direction_in_sub10->Visible = FALSE;
+		$this->transmit_no_in_sub10->Visible = FALSE;
+		$this->approval_status_in_sub10->Visible = FALSE;
 		$this->direction_in_file_sub10->Visible = FALSE;
-		$this->transmit_date_in_sub10->setVisibility();
-		$this->log_updatedon->setVisibility();
+		$this->transmit_date_in_sub10->Visible = FALSE;
+		$this->log_updatedon->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1568,10 +1568,6 @@ class document_log_view extends document_log
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// log_id
-			$this->log_id->ViewValue = $this->log_id->CurrentValue;
-			$this->log_id->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
@@ -1617,10 +1613,6 @@ class document_log_view extends document_log
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->ViewValue = $this->approval_status_out_sub1->CurrentValue;
 			$this->approval_status_out_sub1->ViewCustomAttributes = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->ViewValue = $this->direction_out_file_sub1->CurrentValue;
-			$this->direction_out_file_sub1->ViewCustomAttributes = "";
 
 			// direction_in_sub1
 			$this->direction_in_sub1->ViewValue = $this->direction_in_sub1->CurrentValue;
@@ -2082,611 +2074,6 @@ class document_log_view extends document_log
 			$this->log_updatedon->ViewValue = $this->log_updatedon->CurrentValue;
 			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 0);
 			$this->log_updatedon->ViewCustomAttributes = "";
-
-			// log_id
-			$this->log_id->LinkCustomAttributes = "";
-			$this->log_id->HrefValue = "";
-			$this->log_id->TooltipValue = "";
-
-			// firelink_doc_no
-			$this->firelink_doc_no->LinkCustomAttributes = "";
-			$this->firelink_doc_no->HrefValue = "";
-			$this->firelink_doc_no->TooltipValue = "";
-
-			// project_name
-			$this->project_name->LinkCustomAttributes = "";
-			$this->project_name->HrefValue = "";
-			$this->project_name->TooltipValue = "";
-
-			// document_tittle
-			$this->document_tittle->LinkCustomAttributes = "";
-			$this->document_tittle->HrefValue = "";
-			$this->document_tittle->TooltipValue = "";
-
-			// current_status
-			$this->current_status->LinkCustomAttributes = "";
-			$this->current_status->HrefValue = "";
-			$this->current_status->TooltipValue = "";
-
-			// submit_no_sub1
-			$this->submit_no_sub1->LinkCustomAttributes = "";
-			$this->submit_no_sub1->HrefValue = "";
-			$this->submit_no_sub1->TooltipValue = "";
-
-			// revision_no_sub1
-			$this->revision_no_sub1->LinkCustomAttributes = "";
-			$this->revision_no_sub1->HrefValue = "";
-			$this->revision_no_sub1->TooltipValue = "";
-
-			// direction_out_sub1
-			$this->direction_out_sub1->LinkCustomAttributes = "";
-			$this->direction_out_sub1->HrefValue = "";
-			$this->direction_out_sub1->TooltipValue = "";
-
-			// planned_date_out_sub1
-			$this->planned_date_out_sub1->LinkCustomAttributes = "";
-			$this->planned_date_out_sub1->HrefValue = "";
-			$this->planned_date_out_sub1->TooltipValue = "";
-
-			// transmit_date_out_sub1
-			$this->transmit_date_out_sub1->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub1->HrefValue = "";
-			$this->transmit_date_out_sub1->TooltipValue = "";
-
-			// transmit_no_out_sub1
-			$this->transmit_no_out_sub1->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub1->HrefValue = "";
-			$this->transmit_no_out_sub1->TooltipValue = "";
-
-			// approval_status_out_sub1
-			$this->approval_status_out_sub1->LinkCustomAttributes = "";
-			$this->approval_status_out_sub1->HrefValue = "";
-			$this->approval_status_out_sub1->TooltipValue = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->LinkCustomAttributes = "";
-			$this->direction_out_file_sub1->HrefValue = "";
-			$this->direction_out_file_sub1->TooltipValue = "";
-
-			// direction_in_sub1
-			$this->direction_in_sub1->LinkCustomAttributes = "";
-			$this->direction_in_sub1->HrefValue = "";
-			$this->direction_in_sub1->TooltipValue = "";
-
-			// transmit_no_in_sub1
-			$this->transmit_no_in_sub1->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub1->HrefValue = "";
-			$this->transmit_no_in_sub1->TooltipValue = "";
-
-			// approval_status_in_sub1
-			$this->approval_status_in_sub1->LinkCustomAttributes = "";
-			$this->approval_status_in_sub1->HrefValue = "";
-			$this->approval_status_in_sub1->TooltipValue = "";
-
-			// transmit_date_in_sub1
-			$this->transmit_date_in_sub1->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub1->HrefValue = "";
-			$this->transmit_date_in_sub1->TooltipValue = "";
-
-			// submit_no_sub2
-			$this->submit_no_sub2->LinkCustomAttributes = "";
-			$this->submit_no_sub2->HrefValue = "";
-			$this->submit_no_sub2->TooltipValue = "";
-
-			// revision_no_sub2
-			$this->revision_no_sub2->LinkCustomAttributes = "";
-			$this->revision_no_sub2->HrefValue = "";
-			$this->revision_no_sub2->TooltipValue = "";
-
-			// direction_out_sub2
-			$this->direction_out_sub2->LinkCustomAttributes = "";
-			$this->direction_out_sub2->HrefValue = "";
-			$this->direction_out_sub2->TooltipValue = "";
-
-			// planned_date_out_sub2
-			$this->planned_date_out_sub2->LinkCustomAttributes = "";
-			$this->planned_date_out_sub2->HrefValue = "";
-			$this->planned_date_out_sub2->TooltipValue = "";
-
-			// transmit_date_out_sub2
-			$this->transmit_date_out_sub2->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub2->HrefValue = "";
-			$this->transmit_date_out_sub2->TooltipValue = "";
-
-			// transmit_no_out_sub2
-			$this->transmit_no_out_sub2->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub2->HrefValue = "";
-			$this->transmit_no_out_sub2->TooltipValue = "";
-
-			// approval_status_out_sub2
-			$this->approval_status_out_sub2->LinkCustomAttributes = "";
-			$this->approval_status_out_sub2->HrefValue = "";
-			$this->approval_status_out_sub2->TooltipValue = "";
-
-			// direction_in_sub2
-			$this->direction_in_sub2->LinkCustomAttributes = "";
-			$this->direction_in_sub2->HrefValue = "";
-			$this->direction_in_sub2->TooltipValue = "";
-
-			// transmit_no_in_sub2
-			$this->transmit_no_in_sub2->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub2->HrefValue = "";
-			$this->transmit_no_in_sub2->TooltipValue = "";
-
-			// approval_status_in_sub2
-			$this->approval_status_in_sub2->LinkCustomAttributes = "";
-			$this->approval_status_in_sub2->HrefValue = "";
-			$this->approval_status_in_sub2->TooltipValue = "";
-
-			// transmit_date_in_sub2
-			$this->transmit_date_in_sub2->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub2->HrefValue = "";
-			$this->transmit_date_in_sub2->TooltipValue = "";
-
-			// submit_no_sub3
-			$this->submit_no_sub3->LinkCustomAttributes = "";
-			$this->submit_no_sub3->HrefValue = "";
-			$this->submit_no_sub3->TooltipValue = "";
-
-			// revision_no_sub3
-			$this->revision_no_sub3->LinkCustomAttributes = "";
-			$this->revision_no_sub3->HrefValue = "";
-			$this->revision_no_sub3->TooltipValue = "";
-
-			// direction_out_sub3
-			$this->direction_out_sub3->LinkCustomAttributes = "";
-			$this->direction_out_sub3->HrefValue = "";
-			$this->direction_out_sub3->TooltipValue = "";
-
-			// planned_date_out_sub3
-			$this->planned_date_out_sub3->LinkCustomAttributes = "";
-			$this->planned_date_out_sub3->HrefValue = "";
-			$this->planned_date_out_sub3->TooltipValue = "";
-
-			// transmit_date_out_sub3
-			$this->transmit_date_out_sub3->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub3->HrefValue = "";
-			$this->transmit_date_out_sub3->TooltipValue = "";
-
-			// transmit_no_out_sub3
-			$this->transmit_no_out_sub3->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub3->HrefValue = "";
-			$this->transmit_no_out_sub3->TooltipValue = "";
-
-			// approval_status_out_sub3
-			$this->approval_status_out_sub3->LinkCustomAttributes = "";
-			$this->approval_status_out_sub3->HrefValue = "";
-			$this->approval_status_out_sub3->TooltipValue = "";
-
-			// direction_in_sub3
-			$this->direction_in_sub3->LinkCustomAttributes = "";
-			$this->direction_in_sub3->HrefValue = "";
-			$this->direction_in_sub3->TooltipValue = "";
-
-			// transmit_no_in_sub3
-			$this->transmit_no_in_sub3->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub3->HrefValue = "";
-			$this->transmit_no_in_sub3->TooltipValue = "";
-
-			// approval_status_in_sub3
-			$this->approval_status_in_sub3->LinkCustomAttributes = "";
-			$this->approval_status_in_sub3->HrefValue = "";
-			$this->approval_status_in_sub3->TooltipValue = "";
-
-			// transmit_date_in_sub3
-			$this->transmit_date_in_sub3->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub3->HrefValue = "";
-			$this->transmit_date_in_sub3->TooltipValue = "";
-
-			// submit_no_sub4
-			$this->submit_no_sub4->LinkCustomAttributes = "";
-			$this->submit_no_sub4->HrefValue = "";
-			$this->submit_no_sub4->TooltipValue = "";
-
-			// revision_no_sub4
-			$this->revision_no_sub4->LinkCustomAttributes = "";
-			$this->revision_no_sub4->HrefValue = "";
-			$this->revision_no_sub4->TooltipValue = "";
-
-			// direction_out_sub4
-			$this->direction_out_sub4->LinkCustomAttributes = "";
-			$this->direction_out_sub4->HrefValue = "";
-			$this->direction_out_sub4->TooltipValue = "";
-
-			// planned_date_out_sub4
-			$this->planned_date_out_sub4->LinkCustomAttributes = "";
-			$this->planned_date_out_sub4->HrefValue = "";
-			$this->planned_date_out_sub4->TooltipValue = "";
-
-			// transmit_date_out_sub4
-			$this->transmit_date_out_sub4->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub4->HrefValue = "";
-			$this->transmit_date_out_sub4->TooltipValue = "";
-
-			// transmit_no_out_sub4
-			$this->transmit_no_out_sub4->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub4->HrefValue = "";
-			$this->transmit_no_out_sub4->TooltipValue = "";
-
-			// approval_status_out_sub4
-			$this->approval_status_out_sub4->LinkCustomAttributes = "";
-			$this->approval_status_out_sub4->HrefValue = "";
-			$this->approval_status_out_sub4->TooltipValue = "";
-
-			// direction_in_sub4
-			$this->direction_in_sub4->LinkCustomAttributes = "";
-			$this->direction_in_sub4->HrefValue = "";
-			$this->direction_in_sub4->TooltipValue = "";
-
-			// transmit_no_in_sub4
-			$this->transmit_no_in_sub4->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub4->HrefValue = "";
-			$this->transmit_no_in_sub4->TooltipValue = "";
-
-			// approval_status_in_sub4
-			$this->approval_status_in_sub4->LinkCustomAttributes = "";
-			$this->approval_status_in_sub4->HrefValue = "";
-			$this->approval_status_in_sub4->TooltipValue = "";
-
-			// direction_in_file_sub4
-			$this->direction_in_file_sub4->LinkCustomAttributes = "";
-			$this->direction_in_file_sub4->HrefValue = "";
-			$this->direction_in_file_sub4->TooltipValue = "";
-
-			// transmit_date_in_sub4
-			$this->transmit_date_in_sub4->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub4->HrefValue = "";
-			$this->transmit_date_in_sub4->TooltipValue = "";
-
-			// submit_no_sub5
-			$this->submit_no_sub5->LinkCustomAttributes = "";
-			$this->submit_no_sub5->HrefValue = "";
-			$this->submit_no_sub5->TooltipValue = "";
-
-			// revision_no_sub5
-			$this->revision_no_sub5->LinkCustomAttributes = "";
-			$this->revision_no_sub5->HrefValue = "";
-			$this->revision_no_sub5->TooltipValue = "";
-
-			// direction_out_sub5
-			$this->direction_out_sub5->LinkCustomAttributes = "";
-			$this->direction_out_sub5->HrefValue = "";
-			$this->direction_out_sub5->TooltipValue = "";
-
-			// planned_date_out_sub5
-			$this->planned_date_out_sub5->LinkCustomAttributes = "";
-			$this->planned_date_out_sub5->HrefValue = "";
-			$this->planned_date_out_sub5->TooltipValue = "";
-
-			// transmit_date_out_sub5
-			$this->transmit_date_out_sub5->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub5->HrefValue = "";
-			$this->transmit_date_out_sub5->TooltipValue = "";
-
-			// transmit_no_out_sub5
-			$this->transmit_no_out_sub5->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub5->HrefValue = "";
-			$this->transmit_no_out_sub5->TooltipValue = "";
-
-			// approval_status_out_sub5
-			$this->approval_status_out_sub5->LinkCustomAttributes = "";
-			$this->approval_status_out_sub5->HrefValue = "";
-			$this->approval_status_out_sub5->TooltipValue = "";
-
-			// direction_in_sub5
-			$this->direction_in_sub5->LinkCustomAttributes = "";
-			$this->direction_in_sub5->HrefValue = "";
-			$this->direction_in_sub5->TooltipValue = "";
-
-			// transmit_no_in_sub5
-			$this->transmit_no_in_sub5->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub5->HrefValue = "";
-			$this->transmit_no_in_sub5->TooltipValue = "";
-
-			// approval_status_in_sub5
-			$this->approval_status_in_sub5->LinkCustomAttributes = "";
-			$this->approval_status_in_sub5->HrefValue = "";
-			$this->approval_status_in_sub5->TooltipValue = "";
-
-			// direction_in_file_sub5
-			$this->direction_in_file_sub5->LinkCustomAttributes = "";
-			$this->direction_in_file_sub5->HrefValue = "";
-			$this->direction_in_file_sub5->TooltipValue = "";
-
-			// transmit_date_in_sub5
-			$this->transmit_date_in_sub5->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub5->HrefValue = "";
-			$this->transmit_date_in_sub5->TooltipValue = "";
-
-			// submit_no_sub6
-			$this->submit_no_sub6->LinkCustomAttributes = "";
-			$this->submit_no_sub6->HrefValue = "";
-			$this->submit_no_sub6->TooltipValue = "";
-
-			// revision_no_sub6
-			$this->revision_no_sub6->LinkCustomAttributes = "";
-			$this->revision_no_sub6->HrefValue = "";
-			$this->revision_no_sub6->TooltipValue = "";
-
-			// direction_out_sub6
-			$this->direction_out_sub6->LinkCustomAttributes = "";
-			$this->direction_out_sub6->HrefValue = "";
-			$this->direction_out_sub6->TooltipValue = "";
-
-			// planned_date_out_sub6
-			$this->planned_date_out_sub6->LinkCustomAttributes = "";
-			$this->planned_date_out_sub6->HrefValue = "";
-			$this->planned_date_out_sub6->TooltipValue = "";
-
-			// transmit_date_out_sub6
-			$this->transmit_date_out_sub6->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub6->HrefValue = "";
-			$this->transmit_date_out_sub6->TooltipValue = "";
-
-			// transmit_no_out_sub6
-			$this->transmit_no_out_sub6->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub6->HrefValue = "";
-			$this->transmit_no_out_sub6->TooltipValue = "";
-
-			// approval_status_out_sub6
-			$this->approval_status_out_sub6->LinkCustomAttributes = "";
-			$this->approval_status_out_sub6->HrefValue = "";
-			$this->approval_status_out_sub6->TooltipValue = "";
-
-			// direction_in_sub6
-			$this->direction_in_sub6->LinkCustomAttributes = "";
-			$this->direction_in_sub6->HrefValue = "";
-			$this->direction_in_sub6->TooltipValue = "";
-
-			// transmit_no_in_sub6
-			$this->transmit_no_in_sub6->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub6->HrefValue = "";
-			$this->transmit_no_in_sub6->TooltipValue = "";
-
-			// approval_status_in_sub6
-			$this->approval_status_in_sub6->LinkCustomAttributes = "";
-			$this->approval_status_in_sub6->HrefValue = "";
-			$this->approval_status_in_sub6->TooltipValue = "";
-
-			// direction_in_file_sub6
-			$this->direction_in_file_sub6->LinkCustomAttributes = "";
-			$this->direction_in_file_sub6->HrefValue = "";
-			$this->direction_in_file_sub6->TooltipValue = "";
-
-			// transmit_date_in_sub6
-			$this->transmit_date_in_sub6->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub6->HrefValue = "";
-			$this->transmit_date_in_sub6->TooltipValue = "";
-
-			// submit_no_sub7
-			$this->submit_no_sub7->LinkCustomAttributes = "";
-			$this->submit_no_sub7->HrefValue = "";
-			$this->submit_no_sub7->TooltipValue = "";
-
-			// revision_no_sub7
-			$this->revision_no_sub7->LinkCustomAttributes = "";
-			$this->revision_no_sub7->HrefValue = "";
-			$this->revision_no_sub7->TooltipValue = "";
-
-			// direction_out_sub7
-			$this->direction_out_sub7->LinkCustomAttributes = "";
-			$this->direction_out_sub7->HrefValue = "";
-			$this->direction_out_sub7->TooltipValue = "";
-
-			// planned_date_out_sub7
-			$this->planned_date_out_sub7->LinkCustomAttributes = "";
-			$this->planned_date_out_sub7->HrefValue = "";
-			$this->planned_date_out_sub7->TooltipValue = "";
-
-			// transmit_date_out_sub7
-			$this->transmit_date_out_sub7->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub7->HrefValue = "";
-			$this->transmit_date_out_sub7->TooltipValue = "";
-
-			// transmit_no_out_sub7
-			$this->transmit_no_out_sub7->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub7->HrefValue = "";
-			$this->transmit_no_out_sub7->TooltipValue = "";
-
-			// approval_status_out_sub7
-			$this->approval_status_out_sub7->LinkCustomAttributes = "";
-			$this->approval_status_out_sub7->HrefValue = "";
-			$this->approval_status_out_sub7->TooltipValue = "";
-
-			// direction_in_sub7
-			$this->direction_in_sub7->LinkCustomAttributes = "";
-			$this->direction_in_sub7->HrefValue = "";
-			$this->direction_in_sub7->TooltipValue = "";
-
-			// transmit_no_in_sub7
-			$this->transmit_no_in_sub7->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub7->HrefValue = "";
-			$this->transmit_no_in_sub7->TooltipValue = "";
-
-			// approval_status_in_sub7
-			$this->approval_status_in_sub7->LinkCustomAttributes = "";
-			$this->approval_status_in_sub7->HrefValue = "";
-			$this->approval_status_in_sub7->TooltipValue = "";
-
-			// transmit_date_in_sub7
-			$this->transmit_date_in_sub7->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub7->HrefValue = "";
-			$this->transmit_date_in_sub7->TooltipValue = "";
-
-			// submit_no_sub8
-			$this->submit_no_sub8->LinkCustomAttributes = "";
-			$this->submit_no_sub8->HrefValue = "";
-			$this->submit_no_sub8->TooltipValue = "";
-
-			// revision_no_sub8
-			$this->revision_no_sub8->LinkCustomAttributes = "";
-			$this->revision_no_sub8->HrefValue = "";
-			$this->revision_no_sub8->TooltipValue = "";
-
-			// direction_out_sub8
-			$this->direction_out_sub8->LinkCustomAttributes = "";
-			$this->direction_out_sub8->HrefValue = "";
-			$this->direction_out_sub8->TooltipValue = "";
-
-			// planned_date_out_sub8
-			$this->planned_date_out_sub8->LinkCustomAttributes = "";
-			$this->planned_date_out_sub8->HrefValue = "";
-			$this->planned_date_out_sub8->TooltipValue = "";
-
-			// transmit_date_out_sub8
-			$this->transmit_date_out_sub8->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub8->HrefValue = "";
-			$this->transmit_date_out_sub8->TooltipValue = "";
-
-			// transmit_no_out_sub8
-			$this->transmit_no_out_sub8->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub8->HrefValue = "";
-			$this->transmit_no_out_sub8->TooltipValue = "";
-
-			// approval_status_out_sub8
-			$this->approval_status_out_sub8->LinkCustomAttributes = "";
-			$this->approval_status_out_sub8->HrefValue = "";
-			$this->approval_status_out_sub8->TooltipValue = "";
-
-			// direction_out_file_sub8
-			$this->direction_out_file_sub8->LinkCustomAttributes = "";
-			$this->direction_out_file_sub8->HrefValue = "";
-			$this->direction_out_file_sub8->TooltipValue = "";
-
-			// direction_in_sub8
-			$this->direction_in_sub8->LinkCustomAttributes = "";
-			$this->direction_in_sub8->HrefValue = "";
-			$this->direction_in_sub8->TooltipValue = "";
-
-			// transmit_no_in_sub8
-			$this->transmit_no_in_sub8->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub8->HrefValue = "";
-			$this->transmit_no_in_sub8->TooltipValue = "";
-
-			// approval_status_in_sub8
-			$this->approval_status_in_sub8->LinkCustomAttributes = "";
-			$this->approval_status_in_sub8->HrefValue = "";
-			$this->approval_status_in_sub8->TooltipValue = "";
-
-			// transmit_date_in_sub8
-			$this->transmit_date_in_sub8->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub8->HrefValue = "";
-			$this->transmit_date_in_sub8->TooltipValue = "";
-
-			// submit_no_sub9
-			$this->submit_no_sub9->LinkCustomAttributes = "";
-			$this->submit_no_sub9->HrefValue = "";
-			$this->submit_no_sub9->TooltipValue = "";
-
-			// revision_no_sub9
-			$this->revision_no_sub9->LinkCustomAttributes = "";
-			$this->revision_no_sub9->HrefValue = "";
-			$this->revision_no_sub9->TooltipValue = "";
-
-			// direction_out_sub9
-			$this->direction_out_sub9->LinkCustomAttributes = "";
-			$this->direction_out_sub9->HrefValue = "";
-			$this->direction_out_sub9->TooltipValue = "";
-
-			// planned_date_out_sub9
-			$this->planned_date_out_sub9->LinkCustomAttributes = "";
-			$this->planned_date_out_sub9->HrefValue = "";
-			$this->planned_date_out_sub9->TooltipValue = "";
-
-			// transmit_date_out_sub9
-			$this->transmit_date_out_sub9->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub9->HrefValue = "";
-			$this->transmit_date_out_sub9->TooltipValue = "";
-
-			// transmit_no_out_sub9
-			$this->transmit_no_out_sub9->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub9->HrefValue = "";
-			$this->transmit_no_out_sub9->TooltipValue = "";
-
-			// approval_status_out_sub9
-			$this->approval_status_out_sub9->LinkCustomAttributes = "";
-			$this->approval_status_out_sub9->HrefValue = "";
-			$this->approval_status_out_sub9->TooltipValue = "";
-
-			// direction_in_sub9
-			$this->direction_in_sub9->LinkCustomAttributes = "";
-			$this->direction_in_sub9->HrefValue = "";
-			$this->direction_in_sub9->TooltipValue = "";
-
-			// transmit_no_in_sub9
-			$this->transmit_no_in_sub9->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub9->HrefValue = "";
-			$this->transmit_no_in_sub9->TooltipValue = "";
-
-			// approval_status_in_sub9
-			$this->approval_status_in_sub9->LinkCustomAttributes = "";
-			$this->approval_status_in_sub9->HrefValue = "";
-			$this->approval_status_in_sub9->TooltipValue = "";
-
-			// transmit_date_in_sub9
-			$this->transmit_date_in_sub9->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub9->HrefValue = "";
-			$this->transmit_date_in_sub9->TooltipValue = "";
-
-			// submit_no_sub10
-			$this->submit_no_sub10->LinkCustomAttributes = "";
-			$this->submit_no_sub10->HrefValue = "";
-			$this->submit_no_sub10->TooltipValue = "";
-
-			// revision_no_sub10
-			$this->revision_no_sub10->LinkCustomAttributes = "";
-			$this->revision_no_sub10->HrefValue = "";
-			$this->revision_no_sub10->TooltipValue = "";
-
-			// direction_out_sub10
-			$this->direction_out_sub10->LinkCustomAttributes = "";
-			$this->direction_out_sub10->HrefValue = "";
-			$this->direction_out_sub10->TooltipValue = "";
-
-			// planned_date_out_sub10
-			$this->planned_date_out_sub10->LinkCustomAttributes = "";
-			$this->planned_date_out_sub10->HrefValue = "";
-			$this->planned_date_out_sub10->TooltipValue = "";
-
-			// transmit_date_out_sub10
-			$this->transmit_date_out_sub10->LinkCustomAttributes = "";
-			$this->transmit_date_out_sub10->HrefValue = "";
-			$this->transmit_date_out_sub10->TooltipValue = "";
-
-			// transmit_no_out_sub10
-			$this->transmit_no_out_sub10->LinkCustomAttributes = "";
-			$this->transmit_no_out_sub10->HrefValue = "";
-			$this->transmit_no_out_sub10->TooltipValue = "";
-
-			// approval_status_out_sub10
-			$this->approval_status_out_sub10->LinkCustomAttributes = "";
-			$this->approval_status_out_sub10->HrefValue = "";
-			$this->approval_status_out_sub10->TooltipValue = "";
-
-			// direction_in_sub10
-			$this->direction_in_sub10->LinkCustomAttributes = "";
-			$this->direction_in_sub10->HrefValue = "";
-			$this->direction_in_sub10->TooltipValue = "";
-
-			// transmit_no_in_sub10
-			$this->transmit_no_in_sub10->LinkCustomAttributes = "";
-			$this->transmit_no_in_sub10->HrefValue = "";
-			$this->transmit_no_in_sub10->TooltipValue = "";
-
-			// approval_status_in_sub10
-			$this->approval_status_in_sub10->LinkCustomAttributes = "";
-			$this->approval_status_in_sub10->HrefValue = "";
-			$this->approval_status_in_sub10->TooltipValue = "";
-
-			// transmit_date_in_sub10
-			$this->transmit_date_in_sub10->LinkCustomAttributes = "";
-			$this->transmit_date_in_sub10->HrefValue = "";
-			$this->transmit_date_in_sub10->TooltipValue = "";
-
-			// log_updatedon
-			$this->log_updatedon->LinkCustomAttributes = "";
-			$this->log_updatedon->HrefValue = "";
-			$this->log_updatedon->TooltipValue = "";
 		}
 
 		// Call Row Rendered event

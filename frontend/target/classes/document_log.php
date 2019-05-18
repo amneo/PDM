@@ -21,12 +21,22 @@ class document_log extends DbTable
 	public $OffsetColumnClass = "col-sm-10 offset-sm-2";
 	public $TableLeftColumnClass = "w-col-2";
 
+	// Audit trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Export
 	public $ExportDoc;
 
 	// Fields
 	public $log_id;
 	public $firelink_doc_no;
+	public $client_doc_no;
+	public $order_number;
 	public $project_name;
 	public $document_tittle;
 	public $current_status;
@@ -211,6 +221,18 @@ class document_log extends DbTable
 		$this->firelink_doc_no->Sortable = TRUE; // Allow sort
 		$this->fields['firelink_doc_no'] = &$this->firelink_doc_no;
 
+		// client_doc_no
+		$this->client_doc_no = new DbField('document_log', 'document_log', 'x_client_doc_no', 'client_doc_no', '"client_doc_no"', '"client_doc_no"', 200, -1, FALSE, '"client_doc_no"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->client_doc_no->Sortable = TRUE; // Allow sort
+		$this->fields['client_doc_no'] = &$this->client_doc_no;
+
+		// order_number
+		$this->order_number = new DbField('document_log', 'document_log', 'x_order_number', 'order_number', '"order_number"', '"order_number"', 200, -1, FALSE, '"order_number"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->order_number->Nullable = FALSE; // NOT NULL field
+		$this->order_number->Required = TRUE; // Required field
+		$this->order_number->Sortable = TRUE; // Allow sort
+		$this->fields['order_number'] = &$this->order_number;
+
 		// project_name
 		$this->project_name = new DbField('document_log', 'document_log', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"project_name"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->project_name->Nullable = FALSE; // NOT NULL field
@@ -274,7 +296,7 @@ class document_log extends DbTable
 
 		// direction_out_file_sub1
 		$this->direction_out_file_sub1 = new DbField('document_log', 'document_log', 'x_direction_out_file_sub1', 'direction_out_file_sub1', '"direction_out_file_sub1"', '"direction_out_file_sub1"', 200, -1, FALSE, '"direction_out_file_sub1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->direction_out_file_sub1->Sortable = TRUE; // Allow sort
+		$this->direction_out_file_sub1->Sortable = FALSE; // Allow sort
 		$this->fields['direction_out_file_sub1'] = &$this->direction_out_file_sub1;
 
 		// direction_in_sub1
@@ -916,9 +938,9 @@ class document_log extends DbTable
 		$this->fields['transmit_date_in_sub10'] = &$this->transmit_date_in_sub10;
 
 		// log_updatedon
-		$this->log_updatedon = new DbField('document_log', 'document_log', 'x_log_updatedon', 'log_updatedon', '"log_updatedon"', CastDateFieldForLike('"log_updatedon"', 0, "DB"), 135, 0, FALSE, '"log_updatedon"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->log_updatedon = new DbField('document_log', 'document_log', 'x_log_updatedon', 'log_updatedon', '"log_updatedon"', CastDateFieldForLike('"log_updatedon"', 9, "DB"), 135, 9, FALSE, '"log_updatedon"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->log_updatedon->Sortable = TRUE; // Allow sort
-		$this->log_updatedon->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->log_updatedon->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['log_updatedon'] = &$this->log_updatedon;
 	}
 
@@ -1208,6 +1230,8 @@ class document_log extends DbTable
 			// Get insert id if necessary
 			$this->log_id->setDbValue($conn->getOne("SELECT currval('document_log_log_id_seq'::regclass)"));
 			$rs['log_id'] = $this->log_id->DbValue;
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailOnAdd($rs);
 		}
 		return $success;
 	}
@@ -1237,6 +1261,13 @@ class document_log extends DbTable
 	{
 		$conn = &$this->getConnection();
 		$success = $conn->execute($this->updateSql($rs, $where, $curfilter));
+		if ($success && $this->AuditTrailOnEdit && $rsold) {
+			$rsaudit = $rs;
+			$fldname = 'log_id';
+			if (!array_key_exists($fldname, $rsaudit))
+				$rsaudit[$fldname] = $rsold[$fldname];
+			$this->writeAuditTrailOnEdit($rsold, $rsaudit);
+		}
 		return $success;
 	}
 
@@ -1266,6 +1297,8 @@ class document_log extends DbTable
 		$conn = &$this->getConnection();
 		if ($success)
 			$success = $conn->execute($this->deleteSql($rs, $where, $curfilter));
+		if ($success && $this->AuditTrailOnDelete)
+			$this->writeAuditTrailOnDelete($rs);
 		return $success;
 	}
 
@@ -1277,6 +1310,8 @@ class document_log extends DbTable
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->log_id->DbValue = $row['log_id'];
 		$this->firelink_doc_no->DbValue = $row['firelink_doc_no'];
+		$this->client_doc_no->DbValue = $row['client_doc_no'];
+		$this->order_number->DbValue = $row['order_number'];
 		$this->project_name->DbValue = $row['project_name'];
 		$this->document_tittle->DbValue = $row['document_tittle'];
 		$this->current_status->DbValue = $row['current_status'];
@@ -1639,6 +1674,8 @@ class document_log extends DbTable
 	{
 		$this->log_id->setDbValue($rs->fields('log_id'));
 		$this->firelink_doc_no->setDbValue($rs->fields('firelink_doc_no'));
+		$this->client_doc_no->setDbValue($rs->fields('client_doc_no'));
+		$this->order_number->setDbValue($rs->fields('order_number'));
 		$this->project_name->setDbValue($rs->fields('project_name'));
 		$this->document_tittle->setDbValue($rs->fields('document_tittle'));
 		$this->current_status->setDbValue($rs->fields('current_status'));
@@ -1787,6 +1824,8 @@ class document_log extends DbTable
 		// Common render codes
 		// log_id
 		// firelink_doc_no
+		// client_doc_no
+		// order_number
 		// project_name
 		// document_tittle
 		// current_status
@@ -1802,6 +1841,9 @@ class document_log extends DbTable
 		// transmit_no_out_sub1
 		// approval_status_out_sub1
 		// direction_out_file_sub1
+
+		$this->direction_out_file_sub1->CellCssStyle = "white-space: nowrap;";
+
 		// direction_in_sub1
 		// transmit_no_in_sub1
 		// approval_status_in_sub1
@@ -1970,14 +2012,24 @@ class document_log extends DbTable
 
 		// transmit_date_in_sub10
 		// log_updatedon
-		// log_id
 
+		$this->log_updatedon->CellCssStyle = "white-space: nowrap;";
+
+		// log_id
 		$this->log_id->ViewValue = $this->log_id->CurrentValue;
 		$this->log_id->ViewCustomAttributes = "";
 
 		// firelink_doc_no
 		$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 		$this->firelink_doc_no->ViewCustomAttributes = "";
+
+		// client_doc_no
+		$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+		$this->client_doc_no->ViewCustomAttributes = "";
+
+		// order_number
+		$this->order_number->ViewValue = $this->order_number->CurrentValue;
+		$this->order_number->ViewCustomAttributes = "";
 
 		// project_name
 		$this->project_name->ViewValue = $this->project_name->CurrentValue;
@@ -2547,7 +2599,7 @@ class document_log extends DbTable
 
 		// log_updatedon
 		$this->log_updatedon->ViewValue = $this->log_updatedon->CurrentValue;
-		$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 0);
+		$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 9);
 		$this->log_updatedon->ViewCustomAttributes = "";
 
 		// log_id
@@ -2559,6 +2611,16 @@ class document_log extends DbTable
 		$this->firelink_doc_no->LinkCustomAttributes = "";
 		$this->firelink_doc_no->HrefValue = "";
 		$this->firelink_doc_no->TooltipValue = "";
+
+		// client_doc_no
+		$this->client_doc_no->LinkCustomAttributes = "";
+		$this->client_doc_no->HrefValue = "";
+		$this->client_doc_no->TooltipValue = "";
+
+		// order_number
+		$this->order_number->LinkCustomAttributes = "";
+		$this->order_number->HrefValue = "";
+		$this->order_number->TooltipValue = "";
 
 		// project_name
 		$this->project_name->LinkCustomAttributes = "";
@@ -2572,7 +2634,13 @@ class document_log extends DbTable
 
 		// current_status
 		$this->current_status->LinkCustomAttributes = "";
-		$this->current_status->HrefValue = "";
+		if (!EmptyValue($this->current_status_file->CurrentValue)) {
+			$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+			$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
+			if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
+		} else {
+			$this->current_status->HrefValue = "";
+		}
 		$this->current_status->TooltipValue = "";
 
 		// current_status_file
@@ -2612,7 +2680,13 @@ class document_log extends DbTable
 
 		// approval_status_out_sub1
 		$this->approval_status_out_sub1->LinkCustomAttributes = "";
-		$this->approval_status_out_sub1->HrefValue = "";
+		if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+			$this->approval_status_out_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+			$this->approval_status_out_sub1->LinkAttrs["target"] = "_blank"; // Add target
+			if ($this->isExport()) $this->approval_status_out_sub1->HrefValue = FullUrl($this->approval_status_out_sub1->HrefValue, "href");
+		} else {
+			$this->approval_status_out_sub1->HrefValue = "";
+		}
 		$this->approval_status_out_sub1->TooltipValue = "";
 
 		// direction_out_file_sub1
@@ -2632,7 +2706,13 @@ class document_log extends DbTable
 
 		// approval_status_in_sub1
 		$this->approval_status_in_sub1->LinkCustomAttributes = "";
-		$this->approval_status_in_sub1->HrefValue = "";
+		if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+			$this->approval_status_in_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+			$this->approval_status_in_sub1->LinkAttrs["target"] = "_blank"; // Add target
+			if ($this->isExport()) $this->approval_status_in_sub1->HrefValue = FullUrl($this->approval_status_in_sub1->HrefValue, "href");
+		} else {
+			$this->approval_status_in_sub1->HrefValue = "";
+		}
 		$this->approval_status_in_sub1->TooltipValue = "";
 
 		// direction_in_file_sub1
@@ -3263,6 +3343,22 @@ class document_log extends DbTable
 			$this->firelink_doc_no->CurrentValue = HtmlDecode($this->firelink_doc_no->CurrentValue);
 		$this->firelink_doc_no->EditValue = $this->firelink_doc_no->CurrentValue;
 		$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+		// client_doc_no
+		$this->client_doc_no->EditAttrs["class"] = "form-control";
+		$this->client_doc_no->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->client_doc_no->CurrentValue = HtmlDecode($this->client_doc_no->CurrentValue);
+		$this->client_doc_no->EditValue = $this->client_doc_no->CurrentValue;
+		$this->client_doc_no->PlaceHolder = RemoveHtml($this->client_doc_no->caption());
+
+		// order_number
+		$this->order_number->EditAttrs["class"] = "form-control";
+		$this->order_number->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->order_number->CurrentValue = HtmlDecode($this->order_number->CurrentValue);
+		$this->order_number->EditValue = $this->order_number->CurrentValue;
+		$this->order_number->PlaceHolder = RemoveHtml($this->order_number->caption());
 
 		// project_name
 		$this->project_name->EditAttrs["class"] = "form-control";
@@ -4279,7 +4375,7 @@ class document_log extends DbTable
 		// log_updatedon
 		$this->log_updatedon->EditAttrs["class"] = "form-control";
 		$this->log_updatedon->EditCustomAttributes = "";
-		$this->log_updatedon->EditValue = FormatDateTime($this->log_updatedon->CurrentValue, 8);
+		$this->log_updatedon->EditValue = FormatDateTime($this->log_updatedon->CurrentValue, 9);
 		$this->log_updatedon->PlaceHolder = RemoveHtml($this->log_updatedon->caption());
 
 		// Call Row Rendered event
@@ -4311,129 +4407,10 @@ class document_log extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->log_id);
-					$doc->exportCaption($this->firelink_doc_no);
-					$doc->exportCaption($this->project_name);
-					$doc->exportCaption($this->document_tittle);
-					$doc->exportCaption($this->current_status);
-					$doc->exportCaption($this->submit_no_sub1);
-					$doc->exportCaption($this->revision_no_sub1);
-					$doc->exportCaption($this->direction_out_sub1);
-					$doc->exportCaption($this->planned_date_out_sub1);
-					$doc->exportCaption($this->transmit_date_out_sub1);
-					$doc->exportCaption($this->transmit_no_out_sub1);
-					$doc->exportCaption($this->approval_status_out_sub1);
-					$doc->exportCaption($this->direction_out_file_sub1);
-					$doc->exportCaption($this->direction_in_sub1);
-					$doc->exportCaption($this->transmit_no_in_sub1);
-					$doc->exportCaption($this->approval_status_in_sub1);
-					$doc->exportCaption($this->transmit_date_in_sub1);
-					$doc->exportCaption($this->submit_no_sub2);
-					$doc->exportCaption($this->revision_no_sub2);
-					$doc->exportCaption($this->direction_out_sub2);
-					$doc->exportCaption($this->planned_date_out_sub2);
-					$doc->exportCaption($this->transmit_date_out_sub2);
-					$doc->exportCaption($this->transmit_no_out_sub2);
-					$doc->exportCaption($this->approval_status_out_sub2);
-					$doc->exportCaption($this->direction_in_sub2);
-					$doc->exportCaption($this->transmit_no_in_sub2);
-					$doc->exportCaption($this->approval_status_in_sub2);
-					$doc->exportCaption($this->transmit_date_in_sub2);
-					$doc->exportCaption($this->submit_no_sub3);
-					$doc->exportCaption($this->revision_no_sub3);
-					$doc->exportCaption($this->direction_out_sub3);
-					$doc->exportCaption($this->planned_date_out_sub3);
-					$doc->exportCaption($this->transmit_date_out_sub3);
-					$doc->exportCaption($this->transmit_no_out_sub3);
-					$doc->exportCaption($this->approval_status_out_sub3);
-					$doc->exportCaption($this->direction_in_sub3);
-					$doc->exportCaption($this->transmit_no_in_sub3);
-					$doc->exportCaption($this->approval_status_in_sub3);
-					$doc->exportCaption($this->transmit_date_in_sub3);
-					$doc->exportCaption($this->submit_no_sub4);
-					$doc->exportCaption($this->revision_no_sub4);
-					$doc->exportCaption($this->direction_out_sub4);
-					$doc->exportCaption($this->planned_date_out_sub4);
-					$doc->exportCaption($this->transmit_date_out_sub4);
-					$doc->exportCaption($this->transmit_no_out_sub4);
-					$doc->exportCaption($this->approval_status_out_sub4);
-					$doc->exportCaption($this->direction_in_sub4);
-					$doc->exportCaption($this->transmit_no_in_sub4);
-					$doc->exportCaption($this->approval_status_in_sub4);
-					$doc->exportCaption($this->direction_in_file_sub4);
-					$doc->exportCaption($this->transmit_date_in_sub4);
-					$doc->exportCaption($this->submit_no_sub5);
-					$doc->exportCaption($this->revision_no_sub5);
-					$doc->exportCaption($this->direction_out_sub5);
-					$doc->exportCaption($this->planned_date_out_sub5);
-					$doc->exportCaption($this->transmit_date_out_sub5);
-					$doc->exportCaption($this->transmit_no_out_sub5);
-					$doc->exportCaption($this->approval_status_out_sub5);
-					$doc->exportCaption($this->direction_in_sub5);
-					$doc->exportCaption($this->transmit_no_in_sub5);
-					$doc->exportCaption($this->approval_status_in_sub5);
-					$doc->exportCaption($this->direction_in_file_sub5);
-					$doc->exportCaption($this->transmit_date_in_sub5);
-					$doc->exportCaption($this->submit_no_sub6);
-					$doc->exportCaption($this->revision_no_sub6);
-					$doc->exportCaption($this->direction_out_sub6);
-					$doc->exportCaption($this->planned_date_out_sub6);
-					$doc->exportCaption($this->transmit_date_out_sub6);
-					$doc->exportCaption($this->transmit_no_out_sub6);
-					$doc->exportCaption($this->approval_status_out_sub6);
-					$doc->exportCaption($this->direction_in_sub6);
-					$doc->exportCaption($this->transmit_no_in_sub6);
-					$doc->exportCaption($this->approval_status_in_sub6);
-					$doc->exportCaption($this->direction_in_file_sub6);
-					$doc->exportCaption($this->transmit_date_in_sub6);
-					$doc->exportCaption($this->submit_no_sub7);
-					$doc->exportCaption($this->revision_no_sub7);
-					$doc->exportCaption($this->direction_out_sub7);
-					$doc->exportCaption($this->planned_date_out_sub7);
-					$doc->exportCaption($this->transmit_date_out_sub7);
-					$doc->exportCaption($this->transmit_no_out_sub7);
-					$doc->exportCaption($this->approval_status_out_sub7);
-					$doc->exportCaption($this->direction_in_sub7);
-					$doc->exportCaption($this->transmit_no_in_sub7);
-					$doc->exportCaption($this->approval_status_in_sub7);
-					$doc->exportCaption($this->transmit_date_in_sub7);
-					$doc->exportCaption($this->submit_no_sub8);
-					$doc->exportCaption($this->revision_no_sub8);
-					$doc->exportCaption($this->direction_out_sub8);
-					$doc->exportCaption($this->planned_date_out_sub8);
-					$doc->exportCaption($this->transmit_date_out_sub8);
-					$doc->exportCaption($this->transmit_no_out_sub8);
-					$doc->exportCaption($this->approval_status_out_sub8);
-					$doc->exportCaption($this->direction_out_file_sub8);
-					$doc->exportCaption($this->direction_in_sub8);
-					$doc->exportCaption($this->transmit_no_in_sub8);
-					$doc->exportCaption($this->approval_status_in_sub8);
-					$doc->exportCaption($this->transmit_date_in_sub8);
-					$doc->exportCaption($this->submit_no_sub9);
-					$doc->exportCaption($this->revision_no_sub9);
-					$doc->exportCaption($this->direction_out_sub9);
-					$doc->exportCaption($this->planned_date_out_sub9);
-					$doc->exportCaption($this->transmit_date_out_sub9);
-					$doc->exportCaption($this->transmit_no_out_sub9);
-					$doc->exportCaption($this->approval_status_out_sub9);
-					$doc->exportCaption($this->direction_in_sub9);
-					$doc->exportCaption($this->transmit_no_in_sub9);
-					$doc->exportCaption($this->approval_status_in_sub9);
-					$doc->exportCaption($this->transmit_date_in_sub9);
-					$doc->exportCaption($this->submit_no_sub10);
-					$doc->exportCaption($this->revision_no_sub10);
-					$doc->exportCaption($this->direction_out_sub10);
-					$doc->exportCaption($this->planned_date_out_sub10);
-					$doc->exportCaption($this->transmit_date_out_sub10);
-					$doc->exportCaption($this->transmit_no_out_sub10);
-					$doc->exportCaption($this->approval_status_out_sub10);
-					$doc->exportCaption($this->direction_in_sub10);
-					$doc->exportCaption($this->transmit_no_in_sub10);
-					$doc->exportCaption($this->approval_status_in_sub10);
-					$doc->exportCaption($this->transmit_date_in_sub10);
-					$doc->exportCaption($this->log_updatedon);
 				} else {
 					$doc->exportCaption($this->firelink_doc_no);
+					$doc->exportCaption($this->client_doc_no);
+					$doc->exportCaption($this->order_number);
 					$doc->exportCaption($this->project_name);
 					$doc->exportCaption($this->document_tittle);
 					$doc->exportCaption($this->current_status);
@@ -4444,7 +4421,6 @@ class document_log extends DbTable
 					$doc->exportCaption($this->transmit_date_out_sub1);
 					$doc->exportCaption($this->transmit_no_out_sub1);
 					$doc->exportCaption($this->approval_status_out_sub1);
-					$doc->exportCaption($this->direction_out_file_sub1);
 					$doc->exportCaption($this->direction_in_sub1);
 					$doc->exportCaption($this->transmit_no_in_sub1);
 					$doc->exportCaption($this->approval_status_in_sub1);
@@ -4584,129 +4560,10 @@ class document_log extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->log_id);
-						$doc->exportField($this->firelink_doc_no);
-						$doc->exportField($this->project_name);
-						$doc->exportField($this->document_tittle);
-						$doc->exportField($this->current_status);
-						$doc->exportField($this->submit_no_sub1);
-						$doc->exportField($this->revision_no_sub1);
-						$doc->exportField($this->direction_out_sub1);
-						$doc->exportField($this->planned_date_out_sub1);
-						$doc->exportField($this->transmit_date_out_sub1);
-						$doc->exportField($this->transmit_no_out_sub1);
-						$doc->exportField($this->approval_status_out_sub1);
-						$doc->exportField($this->direction_out_file_sub1);
-						$doc->exportField($this->direction_in_sub1);
-						$doc->exportField($this->transmit_no_in_sub1);
-						$doc->exportField($this->approval_status_in_sub1);
-						$doc->exportField($this->transmit_date_in_sub1);
-						$doc->exportField($this->submit_no_sub2);
-						$doc->exportField($this->revision_no_sub2);
-						$doc->exportField($this->direction_out_sub2);
-						$doc->exportField($this->planned_date_out_sub2);
-						$doc->exportField($this->transmit_date_out_sub2);
-						$doc->exportField($this->transmit_no_out_sub2);
-						$doc->exportField($this->approval_status_out_sub2);
-						$doc->exportField($this->direction_in_sub2);
-						$doc->exportField($this->transmit_no_in_sub2);
-						$doc->exportField($this->approval_status_in_sub2);
-						$doc->exportField($this->transmit_date_in_sub2);
-						$doc->exportField($this->submit_no_sub3);
-						$doc->exportField($this->revision_no_sub3);
-						$doc->exportField($this->direction_out_sub3);
-						$doc->exportField($this->planned_date_out_sub3);
-						$doc->exportField($this->transmit_date_out_sub3);
-						$doc->exportField($this->transmit_no_out_sub3);
-						$doc->exportField($this->approval_status_out_sub3);
-						$doc->exportField($this->direction_in_sub3);
-						$doc->exportField($this->transmit_no_in_sub3);
-						$doc->exportField($this->approval_status_in_sub3);
-						$doc->exportField($this->transmit_date_in_sub3);
-						$doc->exportField($this->submit_no_sub4);
-						$doc->exportField($this->revision_no_sub4);
-						$doc->exportField($this->direction_out_sub4);
-						$doc->exportField($this->planned_date_out_sub4);
-						$doc->exportField($this->transmit_date_out_sub4);
-						$doc->exportField($this->transmit_no_out_sub4);
-						$doc->exportField($this->approval_status_out_sub4);
-						$doc->exportField($this->direction_in_sub4);
-						$doc->exportField($this->transmit_no_in_sub4);
-						$doc->exportField($this->approval_status_in_sub4);
-						$doc->exportField($this->direction_in_file_sub4);
-						$doc->exportField($this->transmit_date_in_sub4);
-						$doc->exportField($this->submit_no_sub5);
-						$doc->exportField($this->revision_no_sub5);
-						$doc->exportField($this->direction_out_sub5);
-						$doc->exportField($this->planned_date_out_sub5);
-						$doc->exportField($this->transmit_date_out_sub5);
-						$doc->exportField($this->transmit_no_out_sub5);
-						$doc->exportField($this->approval_status_out_sub5);
-						$doc->exportField($this->direction_in_sub5);
-						$doc->exportField($this->transmit_no_in_sub5);
-						$doc->exportField($this->approval_status_in_sub5);
-						$doc->exportField($this->direction_in_file_sub5);
-						$doc->exportField($this->transmit_date_in_sub5);
-						$doc->exportField($this->submit_no_sub6);
-						$doc->exportField($this->revision_no_sub6);
-						$doc->exportField($this->direction_out_sub6);
-						$doc->exportField($this->planned_date_out_sub6);
-						$doc->exportField($this->transmit_date_out_sub6);
-						$doc->exportField($this->transmit_no_out_sub6);
-						$doc->exportField($this->approval_status_out_sub6);
-						$doc->exportField($this->direction_in_sub6);
-						$doc->exportField($this->transmit_no_in_sub6);
-						$doc->exportField($this->approval_status_in_sub6);
-						$doc->exportField($this->direction_in_file_sub6);
-						$doc->exportField($this->transmit_date_in_sub6);
-						$doc->exportField($this->submit_no_sub7);
-						$doc->exportField($this->revision_no_sub7);
-						$doc->exportField($this->direction_out_sub7);
-						$doc->exportField($this->planned_date_out_sub7);
-						$doc->exportField($this->transmit_date_out_sub7);
-						$doc->exportField($this->transmit_no_out_sub7);
-						$doc->exportField($this->approval_status_out_sub7);
-						$doc->exportField($this->direction_in_sub7);
-						$doc->exportField($this->transmit_no_in_sub7);
-						$doc->exportField($this->approval_status_in_sub7);
-						$doc->exportField($this->transmit_date_in_sub7);
-						$doc->exportField($this->submit_no_sub8);
-						$doc->exportField($this->revision_no_sub8);
-						$doc->exportField($this->direction_out_sub8);
-						$doc->exportField($this->planned_date_out_sub8);
-						$doc->exportField($this->transmit_date_out_sub8);
-						$doc->exportField($this->transmit_no_out_sub8);
-						$doc->exportField($this->approval_status_out_sub8);
-						$doc->exportField($this->direction_out_file_sub8);
-						$doc->exportField($this->direction_in_sub8);
-						$doc->exportField($this->transmit_no_in_sub8);
-						$doc->exportField($this->approval_status_in_sub8);
-						$doc->exportField($this->transmit_date_in_sub8);
-						$doc->exportField($this->submit_no_sub9);
-						$doc->exportField($this->revision_no_sub9);
-						$doc->exportField($this->direction_out_sub9);
-						$doc->exportField($this->planned_date_out_sub9);
-						$doc->exportField($this->transmit_date_out_sub9);
-						$doc->exportField($this->transmit_no_out_sub9);
-						$doc->exportField($this->approval_status_out_sub9);
-						$doc->exportField($this->direction_in_sub9);
-						$doc->exportField($this->transmit_no_in_sub9);
-						$doc->exportField($this->approval_status_in_sub9);
-						$doc->exportField($this->transmit_date_in_sub9);
-						$doc->exportField($this->submit_no_sub10);
-						$doc->exportField($this->revision_no_sub10);
-						$doc->exportField($this->direction_out_sub10);
-						$doc->exportField($this->planned_date_out_sub10);
-						$doc->exportField($this->transmit_date_out_sub10);
-						$doc->exportField($this->transmit_no_out_sub10);
-						$doc->exportField($this->approval_status_out_sub10);
-						$doc->exportField($this->direction_in_sub10);
-						$doc->exportField($this->transmit_no_in_sub10);
-						$doc->exportField($this->approval_status_in_sub10);
-						$doc->exportField($this->transmit_date_in_sub10);
-						$doc->exportField($this->log_updatedon);
 					} else {
 						$doc->exportField($this->firelink_doc_no);
+						$doc->exportField($this->client_doc_no);
+						$doc->exportField($this->order_number);
 						$doc->exportField($this->project_name);
 						$doc->exportField($this->document_tittle);
 						$doc->exportField($this->current_status);
@@ -4717,7 +4574,6 @@ class document_log extends DbTable
 						$doc->exportField($this->transmit_date_out_sub1);
 						$doc->exportField($this->transmit_no_out_sub1);
 						$doc->exportField($this->approval_status_out_sub1);
-						$doc->exportField($this->direction_out_file_sub1);
 						$doc->exportField($this->direction_in_sub1);
 						$doc->exportField($this->transmit_no_in_sub1);
 						$doc->exportField($this->approval_status_in_sub1);
@@ -4981,6 +4837,138 @@ class document_log extends DbTable
 
 		// No binary fields
 		return FALSE;
+	}
+
+	// Write Audit Trail start/end for grid update
+	public function writeAuditTrailDummy($typ)
+	{
+		$table = 'document_log';
+		$usr = CurrentUserID();
+		WriteAuditTrail("log", DbCurrentDateTime(), ScriptName(), $usr, $typ, $table, "", "", "", "");
+	}
+
+	// Write Audit Trail (add page)
+	public function writeAuditTrailOnAdd(&$rs)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnAdd)
+			return;
+		$table = 'document_log';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['log_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
+					$newvalue = $Language->phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
+					if (AUDIT_TRAIL_TO_DATABASE)
+						$newvalue = $rs[$fldname];
+					else
+						$newvalue = "[MEMO]"; // Memo Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
+					$newvalue = "[XML]"; // XML Field
+				} else {
+					$newvalue = $rs[$fldname];
+				}
+				WriteAuditTrail("log", $dt, $id, $usr, "A", $table, $fldname, $key, "", $newvalue);
+			}
+		}
+	}
+
+	// Write Audit Trail (edit page)
+	public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnEdit)
+			return;
+		$table = 'document_log';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rsold['log_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rsnew) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && array_key_exists($fldname, $rsold) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
+					$modified = (FormatDateTime($rsold[$fldname], 0) <> FormatDateTime($rsnew[$fldname], 0));
+				} else {
+					$modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+				}
+				if ($modified) {
+					if ($this->fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+						$oldvalue = $Language->phrase("PasswordMask");
+						$newvalue = $Language->phrase("PasswordMask");
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) { // Memo field
+						if (AUDIT_TRAIL_TO_DATABASE) {
+							$oldvalue = $rsold[$fldname];
+							$newvalue = $rsnew[$fldname];
+						} else {
+							$oldvalue = "[MEMO]";
+							$newvalue = "[MEMO]";
+						}
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) { // XML field
+						$oldvalue = "[XML]";
+						$newvalue = "[XML]";
+					} else {
+						$oldvalue = $rsold[$fldname];
+						$newvalue = $rsnew[$fldname];
+					}
+					WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
+				}
+			}
+		}
+	}
+
+	// Write Audit Trail (delete page)
+	public function writeAuditTrailOnDelete(&$rs)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnDelete)
+			return;
+		$table = 'document_log';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['log_id'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$curUser = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
+					$oldvalue = $Language->phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
+					if (AUDIT_TRAIL_TO_DATABASE)
+						$oldvalue = $rs[$fldname];
+					else
+						$oldvalue = "[MEMO]"; // Memo field
+				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
+					$oldvalue = "[XML]"; // XML field
+				} else {
+					$oldvalue = $rs[$fldname];
+				}
+				WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
+			}
+		}
 	}
 
 	// Table level events

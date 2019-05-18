@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/5/15" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/5/18" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -703,7 +703,7 @@
       <phrase id="menutext" value="Workplace" />
     </menu>
     <menu id="1">
-      <phrase id="menutext" value="Document Log" />
+      <phrase id="menutext" value="Transaction Log" />
     </menu>
     <menu id="35">
       <phrase id="menutext" value="Consolidated Log" />
@@ -751,7 +751,7 @@
       <phrase id="menutext" value="App Version" />
     </menu>
     <table id="transaction_details">
-      <phrase id="tblcaption" value="Document Log" />
+      <phrase id="tblcaption" value="Transaction Log" />
       <phrase id="tblpagecaption1" value="Add" />
       <field id="document_sequence">
         <phrase id="fldcaption" value="Sequence Number" />
@@ -1116,6 +1116,12 @@
       <field id="firelink_doc_no">
         <phrase id="fldcaption" value="FireLink Doc Number" />
       </field>
+      <field id="client_doc_no">
+        <phrase id="fldcaption" value="Client Doc Number" />
+      </field>
+      <field id="order_number">
+        <phrase id="fldcaption" value="Order Number" />
+      </field>
       <field id="project_name">
         <phrase id="fldcaption" value="Project Name" />
       </field>
@@ -1123,7 +1129,7 @@
         <phrase id="fldcaption" value="Document Tittle" />
       </field>
       <field id="current_status">
-        <phrase id="fldcaption" value="Current Status" />
+        <phrase id="fldcaption" value="Summary of Status" />
       </field>
       <field id="current_status_file">
         <phrase id="fldcaption" value="current status file" />
@@ -1519,7 +1525,7 @@
         <phrase id="fldcaption" value="Transmittal Date" />
       </field>
       <field id="log_updatedon">
-        <phrase id="fldcaption" value="log updatedon" />
+        <phrase id="fldcaption" value="Log Updated on" />
       </field>
     </table>
   </project>

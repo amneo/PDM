@@ -932,13 +932,6 @@ class project_details extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->project_name);
-					$doc->exportCaption($this->project_our_client);
-					$doc->exportCaption($this->project_end_user);
-					$doc->exportCaption($this->project_sales_engg);
-					$doc->exportCaption($this->project_distribution);
-					$doc->exportCaption($this->project_transmittal);
-					$doc->exportCaption($this->order_number);
 				} else {
 					$doc->exportCaption($this->project_id);
 					$doc->exportCaption($this->project_name);
@@ -979,13 +972,6 @@ class project_details extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->project_name);
-						$doc->exportField($this->project_our_client);
-						$doc->exportField($this->project_end_user);
-						$doc->exportField($this->project_sales_engg);
-						$doc->exportField($this->project_distribution);
-						$doc->exportField($this->project_transmittal);
-						$doc->exportField($this->order_number);
 					} else {
 						$doc->exportField($this->project_id);
 						$doc->exportField($this->project_name);

@@ -54,15 +54,20 @@ fdocument_logedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($document_log_edit->log_id->Required) { ?>
-			elm = this.getElements("x" + infix + "_log_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->log_id->caption(), $document_log->log_id->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($document_log_edit->firelink_doc_no->Required) { ?>
 			elm = this.getElements("x" + infix + "_firelink_doc_no");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->firelink_doc_no->caption(), $document_log->firelink_doc_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($document_log_edit->client_doc_no->Required) { ?>
+			elm = this.getElements("x" + infix + "_client_doc_no");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->client_doc_no->caption(), $document_log->client_doc_no->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($document_log_edit->order_number->Required) { ?>
+			elm = this.getElements("x" + infix + "_order_number");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->order_number->caption(), $document_log->order_number->RequiredErrorMessage)) ?>");
 		<?php } ?>
 		<?php if ($document_log_edit->project_name->Required) { ?>
 			elm = this.getElements("x" + infix + "_project_name");
@@ -119,11 +124,6 @@ fdocument_logedit.validate = function() {
 			elm = this.getElements("x" + infix + "_approval_status_out_sub1");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->approval_status_out_sub1->caption(), $document_log->approval_status_out_sub1->RequiredErrorMessage)) ?>");
-		<?php } ?>
-		<?php if ($document_log_edit->direction_out_file_sub1->Required) { ?>
-			elm = this.getElements("x" + infix + "_direction_out_file_sub1");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->direction_out_file_sub1->caption(), $document_log->direction_out_file_sub1->RequiredErrorMessage)) ?>");
 		<?php } ?>
 		<?php if ($document_log_edit->direction_in_sub1->Required) { ?>
 			elm = this.getElements("x" + infix + "_direction_in_sub1");
@@ -744,14 +744,6 @@ fdocument_logedit.validate = function() {
 			elm = this.getElements("x" + infix + "_transmit_date_in_sub10");
 			if (elm && !ew.checkDateDef(elm.value))
 				return this.onError(elm, "<?php echo JsEncode($document_log->transmit_date_in_sub10->errorMessage()) ?>");
-		<?php if ($document_log_edit->log_updatedon->Required) { ?>
-			elm = this.getElements("x" + infix + "_log_updatedon");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_log->log_updatedon->caption(), $document_log->log_updatedon->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_log_updatedon");
-			if (elm && !ew.checkDateDef(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($document_log->log_updatedon->errorMessage()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -806,31 +798,6 @@ $document_log_edit->showMessage();
 <?php } else { ?>
 <table id="tbl_document_logedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
 <?php } ?>
-<?php if ($document_log->log_id->Visible) { // log_id ?>
-<?php if ($document_log_edit->IsMobileOrModal) { ?>
-	<div id="r_log_id" class="form-group row">
-		<label id="elh_document_log_log_id" class="<?php echo $document_log_edit->LeftColumnClass ?>"><?php echo $document_log->log_id->caption() ?><?php echo ($document_log->log_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $document_log_edit->RightColumnClass ?>"><div<?php echo $document_log->log_id->cellAttributes() ?>>
-<span id="el_document_log_log_id">
-<span<?php echo $document_log->log_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_log->log_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="document_log" data-field="x_log_id" name="x_log_id" id="x_log_id" value="<?php echo HtmlEncode($document_log->log_id->CurrentValue) ?>">
-<?php echo $document_log->log_id->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_log_id">
-		<td class="<?php echo $document_log_edit->TableLeftColumnClass ?>"><span id="elh_document_log_log_id"><?php echo $document_log->log_id->caption() ?><?php echo ($document_log->log_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $document_log->log_id->cellAttributes() ?>>
-<span id="el_document_log_log_id">
-<span<?php echo $document_log->log_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_log->log_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="document_log" data-field="x_log_id" name="x_log_id" id="x_log_id" value="<?php echo HtmlEncode($document_log->log_id->CurrentValue) ?>">
-<?php echo $document_log->log_id->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($document_log->firelink_doc_no->Visible) { // firelink_doc_no ?>
 <?php if ($document_log_edit->IsMobileOrModal) { ?>
 	<div id="r_firelink_doc_no" class="form-group row">
@@ -849,6 +816,48 @@ $document_log_edit->showMessage();
 <input type="text" data-table="document_log" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_log->firelink_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_log->firelink_doc_no->EditValue ?>"<?php echo $document_log->firelink_doc_no->editAttributes() ?>>
 </span>
 <?php echo $document_log->firelink_doc_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+<?php if ($document_log_edit->IsMobileOrModal) { ?>
+	<div id="r_client_doc_no" class="form-group row">
+		<label id="elh_document_log_client_doc_no" for="x_client_doc_no" class="<?php echo $document_log_edit->LeftColumnClass ?>"><?php echo $document_log->client_doc_no->caption() ?><?php echo ($document_log->client_doc_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $document_log_edit->RightColumnClass ?>"><div<?php echo $document_log->client_doc_no->cellAttributes() ?>>
+<span id="el_document_log_client_doc_no">
+<input type="text" data-table="document_log" data-field="x_client_doc_no" name="x_client_doc_no" id="x_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_log->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_log->client_doc_no->EditValue ?>"<?php echo $document_log->client_doc_no->editAttributes() ?>>
+</span>
+<?php echo $document_log->client_doc_no->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_client_doc_no">
+		<td class="<?php echo $document_log_edit->TableLeftColumnClass ?>"><span id="elh_document_log_client_doc_no"><?php echo $document_log->client_doc_no->caption() ?><?php echo ($document_log->client_doc_no->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $document_log->client_doc_no->cellAttributes() ?>>
+<span id="el_document_log_client_doc_no">
+<input type="text" data-table="document_log" data-field="x_client_doc_no" name="x_client_doc_no" id="x_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_log->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_log->client_doc_no->EditValue ?>"<?php echo $document_log->client_doc_no->editAttributes() ?>>
+</span>
+<?php echo $document_log->client_doc_no->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($document_log->order_number->Visible) { // order_number ?>
+<?php if ($document_log_edit->IsMobileOrModal) { ?>
+	<div id="r_order_number" class="form-group row">
+		<label id="elh_document_log_order_number" for="x_order_number" class="<?php echo $document_log_edit->LeftColumnClass ?>"><?php echo $document_log->order_number->caption() ?><?php echo ($document_log->order_number->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $document_log_edit->RightColumnClass ?>"><div<?php echo $document_log->order_number->cellAttributes() ?>>
+<span id="el_document_log_order_number">
+<input type="text" data-table="document_log" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($document_log->order_number->getPlaceHolder()) ?>" value="<?php echo $document_log->order_number->EditValue ?>"<?php echo $document_log->order_number->editAttributes() ?>>
+</span>
+<?php echo $document_log->order_number->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_order_number">
+		<td class="<?php echo $document_log_edit->TableLeftColumnClass ?>"><span id="elh_document_log_order_number"><?php echo $document_log->order_number->caption() ?><?php echo ($document_log->order_number->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $document_log->order_number->cellAttributes() ?>>
+<span id="el_document_log_order_number">
+<input type="text" data-table="document_log" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($document_log->order_number->getPlaceHolder()) ?>" value="<?php echo $document_log->order_number->EditValue ?>"<?php echo $document_log->order_number->editAttributes() ?>>
+</span>
+<?php echo $document_log->order_number->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>
@@ -1079,27 +1088,6 @@ ew.createDateTimePicker("fdocument_logedit", "x_transmit_date_out_sub1", {"ignor
 <input type="text" data-table="document_log" data-field="x_approval_status_out_sub1" name="x_approval_status_out_sub1" id="x_approval_status_out_sub1" size="30" placeholder="<?php echo HtmlEncode($document_log->approval_status_out_sub1->getPlaceHolder()) ?>" value="<?php echo $document_log->approval_status_out_sub1->EditValue ?>"<?php echo $document_log->approval_status_out_sub1->editAttributes() ?>>
 </span>
 <?php echo $document_log->approval_status_out_sub1->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_file_sub1->Visible) { // direction_out_file_sub1 ?>
-<?php if ($document_log_edit->IsMobileOrModal) { ?>
-	<div id="r_direction_out_file_sub1" class="form-group row">
-		<label id="elh_document_log_direction_out_file_sub1" for="x_direction_out_file_sub1" class="<?php echo $document_log_edit->LeftColumnClass ?>"><?php echo $document_log->direction_out_file_sub1->caption() ?><?php echo ($document_log->direction_out_file_sub1->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $document_log_edit->RightColumnClass ?>"><div<?php echo $document_log->direction_out_file_sub1->cellAttributes() ?>>
-<span id="el_document_log_direction_out_file_sub1">
-<input type="text" data-table="document_log" data-field="x_direction_out_file_sub1" name="x_direction_out_file_sub1" id="x_direction_out_file_sub1" size="30" placeholder="<?php echo HtmlEncode($document_log->direction_out_file_sub1->getPlaceHolder()) ?>" value="<?php echo $document_log->direction_out_file_sub1->EditValue ?>"<?php echo $document_log->direction_out_file_sub1->editAttributes() ?>>
-</span>
-<?php echo $document_log->direction_out_file_sub1->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_direction_out_file_sub1">
-		<td class="<?php echo $document_log_edit->TableLeftColumnClass ?>"><span id="elh_document_log_direction_out_file_sub1"><?php echo $document_log->direction_out_file_sub1->caption() ?><?php echo ($document_log->direction_out_file_sub1->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $document_log->direction_out_file_sub1->cellAttributes() ?>>
-<span id="el_document_log_direction_out_file_sub1">
-<input type="text" data-table="document_log" data-field="x_direction_out_file_sub1" name="x_direction_out_file_sub1" id="x_direction_out_file_sub1" size="30" placeholder="<?php echo HtmlEncode($document_log->direction_out_file_sub1->getPlaceHolder()) ?>" value="<?php echo $document_log->direction_out_file_sub1->EditValue ?>"<?php echo $document_log->direction_out_file_sub1->editAttributes() ?>>
-</span>
-<?php echo $document_log->direction_out_file_sub1->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>
@@ -3630,42 +3618,12 @@ ew.createDateTimePicker("fdocument_logedit", "x_transmit_date_in_sub10", {"ignor
 	</tr>
 <?php } ?>
 <?php } ?>
-<?php if ($document_log->log_updatedon->Visible) { // log_updatedon ?>
-<?php if ($document_log_edit->IsMobileOrModal) { ?>
-	<div id="r_log_updatedon" class="form-group row">
-		<label id="elh_document_log_log_updatedon" for="x_log_updatedon" class="<?php echo $document_log_edit->LeftColumnClass ?>"><?php echo $document_log->log_updatedon->caption() ?><?php echo ($document_log->log_updatedon->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $document_log_edit->RightColumnClass ?>"><div<?php echo $document_log->log_updatedon->cellAttributes() ?>>
-<span id="el_document_log_log_updatedon">
-<input type="text" data-table="document_log" data-field="x_log_updatedon" name="x_log_updatedon" id="x_log_updatedon" placeholder="<?php echo HtmlEncode($document_log->log_updatedon->getPlaceHolder()) ?>" value="<?php echo $document_log->log_updatedon->EditValue ?>"<?php echo $document_log->log_updatedon->editAttributes() ?>>
-<?php if (!$document_log->log_updatedon->ReadOnly && !$document_log->log_updatedon->Disabled && !isset($document_log->log_updatedon->EditAttrs["readonly"]) && !isset($document_log->log_updatedon->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_logedit", "x_log_updatedon", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
-</span>
-<?php echo $document_log->log_updatedon->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_log_updatedon">
-		<td class="<?php echo $document_log_edit->TableLeftColumnClass ?>"><span id="elh_document_log_log_updatedon"><?php echo $document_log->log_updatedon->caption() ?><?php echo ($document_log->log_updatedon->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $document_log->log_updatedon->cellAttributes() ?>>
-<span id="el_document_log_log_updatedon">
-<input type="text" data-table="document_log" data-field="x_log_updatedon" name="x_log_updatedon" id="x_log_updatedon" placeholder="<?php echo HtmlEncode($document_log->log_updatedon->getPlaceHolder()) ?>" value="<?php echo $document_log->log_updatedon->EditValue ?>"<?php echo $document_log->log_updatedon->editAttributes() ?>>
-<?php if (!$document_log->log_updatedon->ReadOnly && !$document_log->log_updatedon->Disabled && !isset($document_log->log_updatedon->EditAttrs["readonly"]) && !isset($document_log->log_updatedon->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_logedit", "x_log_updatedon", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-</script>
-<?php } ?>
-</span>
-<?php echo $document_log->log_updatedon->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($document_log_edit->IsMobileOrModal) { ?>
 </div><!-- /page* -->
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="document_log" data-field="x_log_id" name="x_log_id" id="x_log_id" value="<?php echo HtmlEncode($document_log->log_id->CurrentValue) ?>">
 <?php if (!$document_log_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $document_log_edit->OffsetColumnClass ?>"><!-- buttons offset -->

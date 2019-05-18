@@ -79,6 +79,12 @@ $document_log_delete->showMessage();
 <?php if ($document_log->firelink_doc_no->Visible) { // firelink_doc_no ?>
 		<th class="<?php echo $document_log->firelink_doc_no->headerCellClass() ?>"><span id="elh_document_log_firelink_doc_no" class="document_log_firelink_doc_no"><?php echo $document_log->firelink_doc_no->caption() ?></span></th>
 <?php } ?>
+<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+		<th class="<?php echo $document_log->client_doc_no->headerCellClass() ?>"><span id="elh_document_log_client_doc_no" class="document_log_client_doc_no"><?php echo $document_log->client_doc_no->caption() ?></span></th>
+<?php } ?>
+<?php if ($document_log->order_number->Visible) { // order_number ?>
+		<th class="<?php echo $document_log->order_number->headerCellClass() ?>"><span id="elh_document_log_order_number" class="document_log_order_number"><?php echo $document_log->order_number->caption() ?></span></th>
+<?php } ?>
 <?php if ($document_log->project_name->Visible) { // project_name ?>
 		<th class="<?php echo $document_log->project_name->headerCellClass() ?>"><span id="elh_document_log_project_name" class="document_log_project_name"><?php echo $document_log->project_name->caption() ?></span></th>
 <?php } ?>
@@ -108,9 +114,6 @@ $document_log_delete->showMessage();
 <?php } ?>
 <?php if ($document_log->approval_status_out_sub1->Visible) { // approval_status_out_sub1 ?>
 		<th class="<?php echo $document_log->approval_status_out_sub1->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1"><?php echo $document_log->approval_status_out_sub1->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_file_sub1->Visible) { // direction_out_file_sub1 ?>
-		<th class="<?php echo $document_log->direction_out_file_sub1->headerCellClass() ?>"><span id="elh_document_log_direction_out_file_sub1" class="document_log_direction_out_file_sub1"><?php echo $document_log->direction_out_file_sub1->caption() ?></span></th>
 <?php } ?>
 <?php if ($document_log->direction_in_sub1->Visible) { // direction_in_sub1 ?>
 		<th class="<?php echo $document_log->direction_in_sub1->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub1" class="document_log_direction_in_sub1"><?php echo $document_log->direction_in_sub1->caption() ?></span></th>
@@ -465,6 +468,22 @@ while (!$document_log_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+		<td<?php echo $document_log->client_doc_no->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_client_doc_no" class="document_log_client_doc_no">
+<span<?php echo $document_log->client_doc_no->viewAttributes() ?>>
+<?php echo $document_log->client_doc_no->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($document_log->order_number->Visible) { // order_number ?>
+		<td<?php echo $document_log->order_number->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_order_number" class="document_log_order_number">
+<span<?php echo $document_log->order_number->viewAttributes() ?>>
+<?php echo $document_log->order_number->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($document_log->project_name->Visible) { // project_name ?>
 		<td<?php echo $document_log->project_name->cellAttributes() ?>>
 <span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_project_name" class="document_log_project_name">
@@ -485,7 +504,12 @@ while (!$document_log_delete->Recordset->EOF) {
 		<td<?php echo $document_log->current_status->cellAttributes() ?>>
 <span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_current_status" class="document_log_current_status">
 <span<?php echo $document_log->current_status->viewAttributes() ?>>
-<?php echo $document_log->current_status->getViewValue() ?></span>
+<?php if ((!EmptyString($document_log->current_status->getViewValue())) && $document_log->current_status->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->current_status->linkAttributes() ?>><?php echo $document_log->current_status->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->current_status->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
 <?php } ?>
@@ -541,15 +565,12 @@ while (!$document_log_delete->Recordset->EOF) {
 		<td<?php echo $document_log->approval_status_out_sub1->cellAttributes() ?>>
 <span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
 <span<?php echo $document_log->approval_status_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub1->getViewValue() ?></span>
-</span>
-</td>
+<?php if ((!EmptyString($document_log->approval_status_out_sub1->getViewValue())) && $document_log->approval_status_out_sub1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_out_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_out_sub1->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_out_sub1->getViewValue() ?>
 <?php } ?>
-<?php if ($document_log->direction_out_file_sub1->Visible) { // direction_out_file_sub1 ?>
-		<td<?php echo $document_log->direction_out_file_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_file_sub1" class="document_log_direction_out_file_sub1">
-<span<?php echo $document_log->direction_out_file_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_out_file_sub1->getViewValue() ?></span>
+</span>
 </span>
 </td>
 <?php } ?>
@@ -573,7 +594,12 @@ while (!$document_log_delete->Recordset->EOF) {
 		<td<?php echo $document_log->approval_status_in_sub1->cellAttributes() ?>>
 <span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1">
 <span<?php echo $document_log->approval_status_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub1->getViewValue() ?></span>
+<?php if ((!EmptyString($document_log->approval_status_in_sub1->getViewValue())) && $document_log->approval_status_in_sub1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_in_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_in_sub1->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_in_sub1->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
 <?php } ?>

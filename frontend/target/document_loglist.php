@@ -59,6 +59,7 @@ var fdocument_loglistsrch = currentSearchForm = new ew.Form("fdocument_loglistsr
 // Filters
 fdocument_loglistsrch.filterList = <?php echo $document_log_list->getFilterList() ?>;
 </script>
+<script src="phpjs/ewscrolltable.js"></script>
 <script>
 
 // Write your client script here, no need to add script tags.
@@ -188,6 +189,24 @@ $document_log_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+	<?php if ($document_log->sortUrl($document_log->client_doc_no) == "") { ?>
+		<th data-name="client_doc_no" class="<?php echo $document_log->client_doc_no->headerCellClass() ?>"><div id="elh_document_log_client_doc_no" class="document_log_client_doc_no"><div class="ew-table-header-caption"><?php echo $document_log->client_doc_no->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="client_doc_no" class="<?php echo $document_log->client_doc_no->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->client_doc_no) ?>',2);"><div id="elh_document_log_client_doc_no" class="document_log_client_doc_no">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->client_doc_no->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->client_doc_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->client_doc_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($document_log->order_number->Visible) { // order_number ?>
+	<?php if ($document_log->sortUrl($document_log->order_number) == "") { ?>
+		<th data-name="order_number" class="<?php echo $document_log->order_number->headerCellClass() ?>"><div id="elh_document_log_order_number" class="document_log_order_number"><div class="ew-table-header-caption"><?php echo $document_log->order_number->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="order_number" class="<?php echo $document_log->order_number->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->order_number) ?>',2);"><div id="elh_document_log_order_number" class="document_log_order_number">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->order_number->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->order_number->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->order_number->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($document_log->project_name->Visible) { // project_name ?>
 	<?php if ($document_log->sortUrl($document_log->project_name) == "") { ?>
 		<th data-name="project_name" class="<?php echo $document_log->project_name->headerCellClass() ?>"><div id="elh_document_log_project_name" class="document_log_project_name"><div class="ew-table-header-caption"><?php echo $document_log->project_name->caption() ?></div></div></th>
@@ -275,15 +294,6 @@ $document_log_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="approval_status_out_sub1" class="<?php echo $document_log->approval_status_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub1) ?>',2);"><div id="elh_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_file_sub1->Visible) { // direction_out_file_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_file_sub1) == "") { ?>
-		<th data-name="direction_out_file_sub1" class="<?php echo $document_log->direction_out_file_sub1->headerCellClass() ?>"><div id="elh_document_log_direction_out_file_sub1" class="document_log_direction_out_file_sub1"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_file_sub1->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_file_sub1" class="<?php echo $document_log->direction_out_file_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_file_sub1) ?>',2);"><div id="elh_document_log_direction_out_file_sub1" class="document_log_direction_out_file_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_file_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_file_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_file_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -994,7 +1004,7 @@ $document_log_list->ListOptions->render("header", "left");
 		<th data-name="transmit_no_out_sub8" class="<?php echo $document_log->transmit_no_out_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub8->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="transmit_no_out_sub8" class="<?php echo $document_log->transmit_no_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub8) ?>',2);"><div id="elh_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -1048,7 +1058,7 @@ $document_log_list->ListOptions->render("header", "left");
 		<th data-name="transmit_date_in_sub8" class="<?php echo $document_log->transmit_date_in_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub8->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="transmit_date_in_sub8" class="<?php echo $document_log->transmit_date_in_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub8) ?>',2);"><div id="elh_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -1252,9 +1262,9 @@ $document_log_list->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($document_log->log_updatedon->Visible) { // log_updatedon ?>
 	<?php if ($document_log->sortUrl($document_log->log_updatedon) == "") { ?>
-		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon"><div class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></div></div></th>
+		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon"><div class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->log_updatedon) ?>',2);"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon">
+		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->log_updatedon) ?>',2);"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->log_updatedon->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->log_updatedon->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
@@ -1332,6 +1342,22 @@ $document_log_list->ListOptions->render("body", "left", $document_log_list->RowC
 </span>
 </td>
 	<?php } ?>
+	<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+		<td data-name="client_doc_no"<?php echo $document_log->client_doc_no->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_client_doc_no" class="document_log_client_doc_no">
+<span<?php echo $document_log->client_doc_no->viewAttributes() ?>>
+<?php echo $document_log->client_doc_no->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($document_log->order_number->Visible) { // order_number ?>
+		<td data-name="order_number"<?php echo $document_log->order_number->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_order_number" class="document_log_order_number">
+<span<?php echo $document_log->order_number->viewAttributes() ?>>
+<?php echo $document_log->order_number->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
 	<?php if ($document_log->project_name->Visible) { // project_name ?>
 		<td data-name="project_name"<?php echo $document_log->project_name->cellAttributes() ?>>
 <span id="el<?php echo $document_log_list->RowCnt ?>_document_log_project_name" class="document_log_project_name">
@@ -1352,7 +1378,12 @@ $document_log_list->ListOptions->render("body", "left", $document_log_list->RowC
 		<td data-name="current_status"<?php echo $document_log->current_status->cellAttributes() ?>>
 <span id="el<?php echo $document_log_list->RowCnt ?>_document_log_current_status" class="document_log_current_status">
 <span<?php echo $document_log->current_status->viewAttributes() ?>>
-<?php echo $document_log->current_status->getViewValue() ?></span>
+<?php if ((!EmptyString($document_log->current_status->getViewValue())) && $document_log->current_status->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->current_status->linkAttributes() ?>><?php echo $document_log->current_status->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->current_status->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
 	<?php } ?>
@@ -1408,15 +1439,12 @@ $document_log_list->ListOptions->render("body", "left", $document_log_list->RowC
 		<td data-name="approval_status_out_sub1"<?php echo $document_log->approval_status_out_sub1->cellAttributes() ?>>
 <span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
 <span<?php echo $document_log->approval_status_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub1->getViewValue() ?></span>
+<?php if ((!EmptyString($document_log->approval_status_out_sub1->getViewValue())) && $document_log->approval_status_out_sub1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_out_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_out_sub1->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_out_sub1->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_file_sub1->Visible) { // direction_out_file_sub1 ?>
-		<td data-name="direction_out_file_sub1"<?php echo $document_log->direction_out_file_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_file_sub1" class="document_log_direction_out_file_sub1">
-<span<?php echo $document_log->direction_out_file_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_out_file_sub1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
@@ -1440,7 +1468,12 @@ $document_log_list->ListOptions->render("body", "left", $document_log_list->RowC
 		<td data-name="approval_status_in_sub1"<?php echo $document_log->approval_status_in_sub1->cellAttributes() ?>>
 <span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1">
 <span<?php echo $document_log->approval_status_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub1->getViewValue() ?></span>
+<?php if ((!EmptyString($document_log->approval_status_in_sub1->getViewValue())) && $document_log->approval_status_in_sub1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_in_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_in_sub1->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_in_sub1->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
 	<?php } ?>
@@ -2369,6 +2402,11 @@ if (DEBUG_ENABLED)
 // document.write("page loaded");
 
 </script>
+<?php if (!$document_log->isExport()) { ?>
+<script>
+ew.scrollableTable("gmp_document_log", "100%", "100%");
+</script>
+<?php } ?>
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php

@@ -19,6 +19,14 @@ class document_log_edit extends document_log
 	// Page object name
 	public $PageObjName = "document_log_edit";
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -612,8 +620,10 @@ class document_log_edit extends document_log
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->log_id->setVisibility();
+		$this->log_id->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->client_doc_no->setVisibility();
+		$this->order_number->setVisibility();
 		$this->project_name->setVisibility();
 		$this->document_tittle->setVisibility();
 		$this->current_status->setVisibility();
@@ -625,7 +635,7 @@ class document_log_edit extends document_log
 		$this->transmit_date_out_sub1->setVisibility();
 		$this->transmit_no_out_sub1->setVisibility();
 		$this->approval_status_out_sub1->setVisibility();
-		$this->direction_out_file_sub1->setVisibility();
+		$this->direction_out_file_sub1->Visible = FALSE;
 		$this->direction_in_sub1->setVisibility();
 		$this->transmit_no_in_sub1->setVisibility();
 		$this->approval_status_in_sub1->setVisibility();
@@ -748,7 +758,7 @@ class document_log_edit extends document_log
 		$this->approval_status_in_sub10->setVisibility();
 		$this->direction_in_file_sub10->Visible = FALSE;
 		$this->transmit_date_in_sub10->setVisibility();
-		$this->log_updatedon->setVisibility();
+		$this->log_updatedon->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -921,11 +931,6 @@ class document_log_edit extends document_log
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'log_id' first before field var 'x_log_id'
-		$val = $CurrentForm->hasValue("log_id") ? $CurrentForm->getValue("log_id") : $CurrentForm->getValue("x_log_id");
-		if (!$this->log_id->IsDetailKey)
-			$this->log_id->setFormValue($val);
-
 		// Check field name 'firelink_doc_no' first before field var 'x_firelink_doc_no'
 		$val = $CurrentForm->hasValue("firelink_doc_no") ? $CurrentForm->getValue("firelink_doc_no") : $CurrentForm->getValue("x_firelink_doc_no");
 		if (!$this->firelink_doc_no->IsDetailKey) {
@@ -933,6 +938,24 @@ class document_log_edit extends document_log
 				$this->firelink_doc_no->Visible = FALSE; // Disable update for API request
 			else
 				$this->firelink_doc_no->setFormValue($val);
+		}
+
+		// Check field name 'client_doc_no' first before field var 'x_client_doc_no'
+		$val = $CurrentForm->hasValue("client_doc_no") ? $CurrentForm->getValue("client_doc_no") : $CurrentForm->getValue("x_client_doc_no");
+		if (!$this->client_doc_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->client_doc_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->client_doc_no->setFormValue($val);
+		}
+
+		// Check field name 'order_number' first before field var 'x_order_number'
+		$val = $CurrentForm->hasValue("order_number") ? $CurrentForm->getValue("order_number") : $CurrentForm->getValue("x_order_number");
+		if (!$this->order_number->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->order_number->Visible = FALSE; // Disable update for API request
+			else
+				$this->order_number->setFormValue($val);
 		}
 
 		// Check field name 'project_name' first before field var 'x_project_name'
@@ -1025,15 +1048,6 @@ class document_log_edit extends document_log
 				$this->approval_status_out_sub1->Visible = FALSE; // Disable update for API request
 			else
 				$this->approval_status_out_sub1->setFormValue($val);
-		}
-
-		// Check field name 'direction_out_file_sub1' first before field var 'x_direction_out_file_sub1'
-		$val = $CurrentForm->hasValue("direction_out_file_sub1") ? $CurrentForm->getValue("direction_out_file_sub1") : $CurrentForm->getValue("x_direction_out_file_sub1");
-		if (!$this->direction_out_file_sub1->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->direction_out_file_sub1->Visible = FALSE; // Disable update for API request
-			else
-				$this->direction_out_file_sub1->setFormValue($val);
 		}
 
 		// Check field name 'direction_in_sub1' first before field var 'x_direction_in_sub1'
@@ -2027,15 +2041,10 @@ class document_log_edit extends document_log
 			$this->transmit_date_in_sub10->CurrentValue = UnFormatDateTime($this->transmit_date_in_sub10->CurrentValue, 0);
 		}
 
-		// Check field name 'log_updatedon' first before field var 'x_log_updatedon'
-		$val = $CurrentForm->hasValue("log_updatedon") ? $CurrentForm->getValue("log_updatedon") : $CurrentForm->getValue("x_log_updatedon");
-		if (!$this->log_updatedon->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->log_updatedon->Visible = FALSE; // Disable update for API request
-			else
-				$this->log_updatedon->setFormValue($val);
-			$this->log_updatedon->CurrentValue = UnFormatDateTime($this->log_updatedon->CurrentValue, 0);
-		}
+		// Check field name 'log_id' first before field var 'x_log_id'
+		$val = $CurrentForm->hasValue("log_id") ? $CurrentForm->getValue("log_id") : $CurrentForm->getValue("x_log_id");
+		if (!$this->log_id->IsDetailKey)
+			$this->log_id->setFormValue($val);
 	}
 
 	// Restore form values
@@ -2044,6 +2053,8 @@ class document_log_edit extends document_log
 		global $CurrentForm;
 		$this->log_id->CurrentValue = $this->log_id->FormValue;
 		$this->firelink_doc_no->CurrentValue = $this->firelink_doc_no->FormValue;
+		$this->client_doc_no->CurrentValue = $this->client_doc_no->FormValue;
+		$this->order_number->CurrentValue = $this->order_number->FormValue;
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->document_tittle->CurrentValue = $this->document_tittle->FormValue;
 		$this->current_status->CurrentValue = $this->current_status->FormValue;
@@ -2056,7 +2067,6 @@ class document_log_edit extends document_log
 		$this->transmit_date_out_sub1->CurrentValue = UnFormatDateTime($this->transmit_date_out_sub1->CurrentValue, 0);
 		$this->transmit_no_out_sub1->CurrentValue = $this->transmit_no_out_sub1->FormValue;
 		$this->approval_status_out_sub1->CurrentValue = $this->approval_status_out_sub1->FormValue;
-		$this->direction_out_file_sub1->CurrentValue = $this->direction_out_file_sub1->FormValue;
 		$this->direction_in_sub1->CurrentValue = $this->direction_in_sub1->FormValue;
 		$this->transmit_no_in_sub1->CurrentValue = $this->transmit_no_in_sub1->FormValue;
 		$this->approval_status_in_sub1->CurrentValue = $this->approval_status_in_sub1->FormValue;
@@ -2192,8 +2202,6 @@ class document_log_edit extends document_log
 		$this->approval_status_in_sub10->CurrentValue = $this->approval_status_in_sub10->FormValue;
 		$this->transmit_date_in_sub10->CurrentValue = $this->transmit_date_in_sub10->FormValue;
 		$this->transmit_date_in_sub10->CurrentValue = UnFormatDateTime($this->transmit_date_in_sub10->CurrentValue, 0);
-		$this->log_updatedon->CurrentValue = $this->log_updatedon->FormValue;
-		$this->log_updatedon->CurrentValue = UnFormatDateTime($this->log_updatedon->CurrentValue, 0);
 	}
 
 	// Load row based on key values
@@ -2233,6 +2241,8 @@ class document_log_edit extends document_log
 			return;
 		$this->log_id->setDbValue($row['log_id']);
 		$this->firelink_doc_no->setDbValue($row['firelink_doc_no']);
+		$this->client_doc_no->setDbValue($row['client_doc_no']);
+		$this->order_number->setDbValue($row['order_number']);
 		$this->project_name->setDbValue($row['project_name']);
 		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->current_status->setDbValue($row['current_status']);
@@ -2376,6 +2386,8 @@ class document_log_edit extends document_log
 		$row = [];
 		$row['log_id'] = NULL;
 		$row['firelink_doc_no'] = NULL;
+		$row['client_doc_no'] = NULL;
+		$row['order_number'] = NULL;
 		$row['project_name'] = NULL;
 		$row['document_tittle'] = NULL;
 		$row['current_status'] = NULL;
@@ -2550,6 +2562,8 @@ class document_log_edit extends document_log
 		// Common render codes for all row types
 		// log_id
 		// firelink_doc_no
+		// client_doc_no
+		// order_number
 		// project_name
 		// document_tittle
 		// current_status
@@ -2688,13 +2702,17 @@ class document_log_edit extends document_log
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// log_id
-			$this->log_id->ViewValue = $this->log_id->CurrentValue;
-			$this->log_id->ViewCustomAttributes = "";
-
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// client_doc_no
+			$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+			$this->client_doc_no->ViewCustomAttributes = "";
+
+			// order_number
+			$this->order_number->ViewValue = $this->order_number->CurrentValue;
+			$this->order_number->ViewCustomAttributes = "";
 
 			// project_name
 			$this->project_name->ViewValue = $this->project_name->CurrentValue;
@@ -2737,10 +2755,6 @@ class document_log_edit extends document_log
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->ViewValue = $this->approval_status_out_sub1->CurrentValue;
 			$this->approval_status_out_sub1->ViewCustomAttributes = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->ViewValue = $this->direction_out_file_sub1->CurrentValue;
-			$this->direction_out_file_sub1->ViewCustomAttributes = "";
 
 			// direction_in_sub1
 			$this->direction_in_sub1->ViewValue = $this->direction_in_sub1->CurrentValue;
@@ -3200,18 +3214,23 @@ class document_log_edit extends document_log
 
 			// log_updatedon
 			$this->log_updatedon->ViewValue = $this->log_updatedon->CurrentValue;
-			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 0);
+			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 9);
 			$this->log_updatedon->ViewCustomAttributes = "";
-
-			// log_id
-			$this->log_id->LinkCustomAttributes = "";
-			$this->log_id->HrefValue = "";
-			$this->log_id->TooltipValue = "";
 
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+			$this->client_doc_no->TooltipValue = "";
+
+			// order_number
+			$this->order_number->LinkCustomAttributes = "";
+			$this->order_number->HrefValue = "";
+			$this->order_number->TooltipValue = "";
 
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
@@ -3225,7 +3244,13 @@ class document_log_edit extends document_log
 
 			// current_status
 			$this->current_status->LinkCustomAttributes = "";
-			$this->current_status->HrefValue = "";
+			if (!EmptyValue($this->current_status_file->CurrentValue)) {
+				$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+				$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
+			} else {
+				$this->current_status->HrefValue = "";
+			}
 			$this->current_status->TooltipValue = "";
 
 			// submit_no_sub1
@@ -3260,13 +3285,14 @@ class document_log_edit extends document_log
 
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->LinkCustomAttributes = "";
-			$this->approval_status_out_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_out_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_out_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_out_sub1->HrefValue = FullUrl($this->approval_status_out_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_out_sub1->HrefValue = "";
+			}
 			$this->approval_status_out_sub1->TooltipValue = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->LinkCustomAttributes = "";
-			$this->direction_out_file_sub1->HrefValue = "";
-			$this->direction_out_file_sub1->TooltipValue = "";
 
 			// direction_in_sub1
 			$this->direction_in_sub1->LinkCustomAttributes = "";
@@ -3280,7 +3306,13 @@ class document_log_edit extends document_log
 
 			// approval_status_in_sub1
 			$this->approval_status_in_sub1->LinkCustomAttributes = "";
-			$this->approval_status_in_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_in_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_in_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_in_sub1->HrefValue = FullUrl($this->approval_status_in_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_in_sub1->HrefValue = "";
+			}
 			$this->approval_status_in_sub1->TooltipValue = "";
 
 			// transmit_date_in_sub1
@@ -3802,18 +3834,7 @@ class document_log_edit extends document_log
 			$this->transmit_date_in_sub10->LinkCustomAttributes = "";
 			$this->transmit_date_in_sub10->HrefValue = "";
 			$this->transmit_date_in_sub10->TooltipValue = "";
-
-			// log_updatedon
-			$this->log_updatedon->LinkCustomAttributes = "";
-			$this->log_updatedon->HrefValue = "";
-			$this->log_updatedon->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// log_id
-			$this->log_id->EditAttrs["class"] = "form-control";
-			$this->log_id->EditCustomAttributes = "";
-			$this->log_id->EditValue = $this->log_id->CurrentValue;
-			$this->log_id->ViewCustomAttributes = "";
 
 			// firelink_doc_no
 			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
@@ -3822,6 +3843,22 @@ class document_log_edit extends document_log
 				$this->firelink_doc_no->CurrentValue = HtmlDecode($this->firelink_doc_no->CurrentValue);
 			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->CurrentValue);
 			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// client_doc_no
+			$this->client_doc_no->EditAttrs["class"] = "form-control";
+			$this->client_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->client_doc_no->CurrentValue = HtmlDecode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->EditValue = HtmlEncode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->PlaceHolder = RemoveHtml($this->client_doc_no->caption());
+
+			// order_number
+			$this->order_number->EditAttrs["class"] = "form-control";
+			$this->order_number->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->order_number->CurrentValue = HtmlDecode($this->order_number->CurrentValue);
+			$this->order_number->EditValue = HtmlEncode($this->order_number->CurrentValue);
+			$this->order_number->PlaceHolder = RemoveHtml($this->order_number->caption());
 
 			// project_name
 			$this->project_name->EditAttrs["class"] = "form-control";
@@ -3898,14 +3935,6 @@ class document_log_edit extends document_log
 				$this->approval_status_out_sub1->CurrentValue = HtmlDecode($this->approval_status_out_sub1->CurrentValue);
 			$this->approval_status_out_sub1->EditValue = HtmlEncode($this->approval_status_out_sub1->CurrentValue);
 			$this->approval_status_out_sub1->PlaceHolder = RemoveHtml($this->approval_status_out_sub1->caption());
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->EditAttrs["class"] = "form-control";
-			$this->direction_out_file_sub1->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->direction_out_file_sub1->CurrentValue = HtmlDecode($this->direction_out_file_sub1->CurrentValue);
-			$this->direction_out_file_sub1->EditValue = HtmlEncode($this->direction_out_file_sub1->CurrentValue);
-			$this->direction_out_file_sub1->PlaceHolder = RemoveHtml($this->direction_out_file_sub1->caption());
 
 			// direction_in_sub1
 			$this->direction_in_sub1->EditAttrs["class"] = "form-control";
@@ -4707,21 +4736,19 @@ class document_log_edit extends document_log
 			$this->transmit_date_in_sub10->EditValue = HtmlEncode(FormatDateTime($this->transmit_date_in_sub10->CurrentValue, 8));
 			$this->transmit_date_in_sub10->PlaceHolder = RemoveHtml($this->transmit_date_in_sub10->caption());
 
-			// log_updatedon
-			$this->log_updatedon->EditAttrs["class"] = "form-control";
-			$this->log_updatedon->EditCustomAttributes = "";
-			$this->log_updatedon->EditValue = HtmlEncode(FormatDateTime($this->log_updatedon->CurrentValue, 8));
-			$this->log_updatedon->PlaceHolder = RemoveHtml($this->log_updatedon->caption());
-
 			// Edit refer script
-			// log_id
-
-			$this->log_id->LinkCustomAttributes = "";
-			$this->log_id->HrefValue = "";
-
 			// firelink_doc_no
+
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+
+			// order_number
+			$this->order_number->LinkCustomAttributes = "";
+			$this->order_number->HrefValue = "";
 
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
@@ -4733,7 +4760,13 @@ class document_log_edit extends document_log
 
 			// current_status
 			$this->current_status->LinkCustomAttributes = "";
-			$this->current_status->HrefValue = "";
+			if (!EmptyValue($this->current_status_file->CurrentValue)) {
+				$this->current_status->HrefValue = ((!empty($this->current_status_file->EditValue) && !is_array($this->current_status_file->EditValue)) ? RemoveHtml($this->current_status_file->EditValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+				$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
+			} else {
+				$this->current_status->HrefValue = "";
+			}
 
 			// submit_no_sub1
 			$this->submit_no_sub1->LinkCustomAttributes = "";
@@ -4761,11 +4794,13 @@ class document_log_edit extends document_log
 
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->LinkCustomAttributes = "";
-			$this->approval_status_out_sub1->HrefValue = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->LinkCustomAttributes = "";
-			$this->direction_out_file_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_out_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->EditValue) && !is_array($this->direction_out_file_sub1->EditValue)) ? RemoveHtml($this->direction_out_file_sub1->EditValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_out_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_out_sub1->HrefValue = FullUrl($this->approval_status_out_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_out_sub1->HrefValue = "";
+			}
 
 			// direction_in_sub1
 			$this->direction_in_sub1->LinkCustomAttributes = "";
@@ -4777,7 +4812,13 @@ class document_log_edit extends document_log
 
 			// approval_status_in_sub1
 			$this->approval_status_in_sub1->LinkCustomAttributes = "";
-			$this->approval_status_in_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_in_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->EditValue) && !is_array($this->direction_out_file_sub1->EditValue)) ? RemoveHtml($this->direction_out_file_sub1->EditValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_in_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_in_sub1->HrefValue = FullUrl($this->approval_status_in_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_in_sub1->HrefValue = "";
+			}
 
 			// transmit_date_in_sub1
 			$this->transmit_date_in_sub1->LinkCustomAttributes = "";
@@ -5194,10 +5235,6 @@ class document_log_edit extends document_log
 			// transmit_date_in_sub10
 			$this->transmit_date_in_sub10->LinkCustomAttributes = "";
 			$this->transmit_date_in_sub10->HrefValue = "";
-
-			// log_updatedon
-			$this->log_updatedon->LinkCustomAttributes = "";
-			$this->log_updatedon->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -5226,6 +5263,16 @@ class document_log_edit extends document_log
 		if ($this->firelink_doc_no->Required) {
 			if (!$this->firelink_doc_no->IsDetailKey && $this->firelink_doc_no->FormValue != NULL && $this->firelink_doc_no->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->firelink_doc_no->caption(), $this->firelink_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->client_doc_no->Required) {
+			if (!$this->client_doc_no->IsDetailKey && $this->client_doc_no->FormValue != NULL && $this->client_doc_no->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->client_doc_no->caption(), $this->client_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->order_number->Required) {
+			if (!$this->order_number->IsDetailKey && $this->order_number->FormValue != NULL && $this->order_number->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->order_number->caption(), $this->order_number->RequiredErrorMessage));
 			}
 		}
 		if ($this->project_name->Required) {
@@ -5993,9 +6040,6 @@ class document_log_edit extends document_log
 				AddMessage($FormError, str_replace("%s", $this->log_updatedon->caption(), $this->log_updatedon->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->log_updatedon->FormValue)) {
-			AddMessage($FormError, $this->log_updatedon->errorMessage());
-		}
 
 		// Return validate result
 		$validateForm = ($FormError == "");
@@ -6035,25 +6079,6 @@ class document_log_edit extends document_log
 			}
 			$rsChk->close();
 		}
-		if ($this->document_tittle->CurrentValue <> "") { // Check field with unique index
-			$filterChk = "(\"document_tittle\" = '" . AdjustSql($this->document_tittle->CurrentValue, $this->Dbid) . "')";
-			$filterChk .= " AND NOT (" . $filter . ")";
-			$this->CurrentFilter = $filterChk;
-			$sqlChk = $this->getCurrentSql();
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			$rsChk = $conn->Execute($sqlChk);
-			$conn->raiseErrorFn = '';
-			if ($rsChk === FALSE) {
-				return FALSE;
-			} elseif (!$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->document_tittle->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->document_tittle->CurrentValue, $idxErrMsg);
-				$this->setFailureMessage($idxErrMsg);
-				$rsChk->close();
-				return FALSE;
-			}
-			$rsChk->close();
-		}
 		$this->CurrentFilter = $filter;
 		$sql = $this->getCurrentSql();
 		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
@@ -6073,6 +6098,12 @@ class document_log_edit extends document_log
 
 			// firelink_doc_no
 			$this->firelink_doc_no->setDbValueDef($rsnew, $this->firelink_doc_no->CurrentValue, "", $this->firelink_doc_no->ReadOnly);
+
+			// client_doc_no
+			$this->client_doc_no->setDbValueDef($rsnew, $this->client_doc_no->CurrentValue, NULL, $this->client_doc_no->ReadOnly);
+
+			// order_number
+			$this->order_number->setDbValueDef($rsnew, $this->order_number->CurrentValue, "", $this->order_number->ReadOnly);
 
 			// project_name
 			$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", $this->project_name->ReadOnly);
@@ -6103,9 +6134,6 @@ class document_log_edit extends document_log
 
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->setDbValueDef($rsnew, $this->approval_status_out_sub1->CurrentValue, NULL, $this->approval_status_out_sub1->ReadOnly);
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->setDbValueDef($rsnew, $this->direction_out_file_sub1->CurrentValue, NULL, $this->direction_out_file_sub1->ReadOnly);
 
 			// direction_in_sub1
 			$this->direction_in_sub1->setDbValueDef($rsnew, $this->direction_in_sub1->CurrentValue, NULL, $this->direction_in_sub1->ReadOnly);
@@ -6427,9 +6455,6 @@ class document_log_edit extends document_log
 
 			// transmit_date_in_sub10
 			$this->transmit_date_in_sub10->setDbValueDef($rsnew, UnFormatDateTime($this->transmit_date_in_sub10->CurrentValue, 0), NULL, $this->transmit_date_in_sub10->ReadOnly);
-
-			// log_updatedon
-			$this->log_updatedon->setDbValueDef($rsnew, UnFormatDateTime($this->log_updatedon->CurrentValue, 0), NULL, $this->log_updatedon->ReadOnly);
 
 			// Call Row Updating event
 			$updateRow = $this->Row_Updating($rsold, $rsnew);

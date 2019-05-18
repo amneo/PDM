@@ -19,6 +19,14 @@ class document_log_delete extends document_log
 	// Page object name
 	public $PageObjName = "document_log_delete";
 
+	// Audit Trail
+	public $AuditTrailOnAdd = TRUE;
+	public $AuditTrailOnEdit = TRUE;
+	public $AuditTrailOnDelete = TRUE;
+	public $AuditTrailOnView = FALSE;
+	public $AuditTrailOnViewData = FALSE;
+	public $AuditTrailOnSearch = FALSE;
+
 	// Page headings
 	public $Heading = "";
 	public $Subheading = "";
@@ -594,6 +602,8 @@ class document_log_delete extends document_log
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->log_id->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
+		$this->client_doc_no->setVisibility();
+		$this->order_number->setVisibility();
 		$this->project_name->setVisibility();
 		$this->document_tittle->setVisibility();
 		$this->current_status->setVisibility();
@@ -605,7 +615,7 @@ class document_log_delete extends document_log
 		$this->transmit_date_out_sub1->setVisibility();
 		$this->transmit_no_out_sub1->setVisibility();
 		$this->approval_status_out_sub1->setVisibility();
-		$this->direction_out_file_sub1->setVisibility();
+		$this->direction_out_file_sub1->Visible = FALSE;
 		$this->direction_in_sub1->setVisibility();
 		$this->transmit_no_in_sub1->setVisibility();
 		$this->approval_status_in_sub1->setVisibility();
@@ -869,6 +879,8 @@ class document_log_delete extends document_log
 			return;
 		$this->log_id->setDbValue($row['log_id']);
 		$this->firelink_doc_no->setDbValue($row['firelink_doc_no']);
+		$this->client_doc_no->setDbValue($row['client_doc_no']);
+		$this->order_number->setDbValue($row['order_number']);
 		$this->project_name->setDbValue($row['project_name']);
 		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->current_status->setDbValue($row['current_status']);
@@ -1012,6 +1024,8 @@ class document_log_delete extends document_log
 		$row = [];
 		$row['log_id'] = NULL;
 		$row['firelink_doc_no'] = NULL;
+		$row['client_doc_no'] = NULL;
+		$row['order_number'] = NULL;
 		$row['project_name'] = NULL;
 		$row['document_tittle'] = NULL;
 		$row['current_status'] = NULL;
@@ -1163,6 +1177,8 @@ class document_log_delete extends document_log
 		// Common render codes for all row types
 		// log_id
 		// firelink_doc_no
+		// client_doc_no
+		// order_number
 		// project_name
 		// document_tittle
 		// current_status
@@ -1178,6 +1194,9 @@ class document_log_delete extends document_log
 		// transmit_no_out_sub1
 		// approval_status_out_sub1
 		// direction_out_file_sub1
+
+		$this->direction_out_file_sub1->CellCssStyle = "white-space: nowrap;";
+
 		// direction_in_sub1
 		// transmit_no_in_sub1
 		// approval_status_in_sub1
@@ -1347,11 +1366,20 @@ class document_log_delete extends document_log
 		// transmit_date_in_sub10
 		// log_updatedon
 
+		$this->log_updatedon->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// client_doc_no
+			$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+			$this->client_doc_no->ViewCustomAttributes = "";
+
+			// order_number
+			$this->order_number->ViewValue = $this->order_number->CurrentValue;
+			$this->order_number->ViewCustomAttributes = "";
 
 			// project_name
 			$this->project_name->ViewValue = $this->project_name->CurrentValue;
@@ -1394,10 +1422,6 @@ class document_log_delete extends document_log
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->ViewValue = $this->approval_status_out_sub1->CurrentValue;
 			$this->approval_status_out_sub1->ViewCustomAttributes = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->ViewValue = $this->direction_out_file_sub1->CurrentValue;
-			$this->direction_out_file_sub1->ViewCustomAttributes = "";
 
 			// direction_in_sub1
 			$this->direction_in_sub1->ViewValue = $this->direction_in_sub1->CurrentValue;
@@ -1857,13 +1881,23 @@ class document_log_delete extends document_log
 
 			// log_updatedon
 			$this->log_updatedon->ViewValue = $this->log_updatedon->CurrentValue;
-			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 0);
+			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 9);
 			$this->log_updatedon->ViewCustomAttributes = "";
 
 			// firelink_doc_no
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+			$this->client_doc_no->TooltipValue = "";
+
+			// order_number
+			$this->order_number->LinkCustomAttributes = "";
+			$this->order_number->HrefValue = "";
+			$this->order_number->TooltipValue = "";
 
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
@@ -1877,7 +1911,13 @@ class document_log_delete extends document_log
 
 			// current_status
 			$this->current_status->LinkCustomAttributes = "";
-			$this->current_status->HrefValue = "";
+			if (!EmptyValue($this->current_status_file->CurrentValue)) {
+				$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+				$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
+			} else {
+				$this->current_status->HrefValue = "";
+			}
 			$this->current_status->TooltipValue = "";
 
 			// submit_no_sub1
@@ -1912,13 +1952,14 @@ class document_log_delete extends document_log
 
 			// approval_status_out_sub1
 			$this->approval_status_out_sub1->LinkCustomAttributes = "";
-			$this->approval_status_out_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_out_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_out_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_out_sub1->HrefValue = FullUrl($this->approval_status_out_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_out_sub1->HrefValue = "";
+			}
 			$this->approval_status_out_sub1->TooltipValue = "";
-
-			// direction_out_file_sub1
-			$this->direction_out_file_sub1->LinkCustomAttributes = "";
-			$this->direction_out_file_sub1->HrefValue = "";
-			$this->direction_out_file_sub1->TooltipValue = "";
 
 			// direction_in_sub1
 			$this->direction_in_sub1->LinkCustomAttributes = "";
@@ -1932,7 +1973,13 @@ class document_log_delete extends document_log
 
 			// approval_status_in_sub1
 			$this->approval_status_in_sub1->LinkCustomAttributes = "";
-			$this->approval_status_in_sub1->HrefValue = "";
+			if (!EmptyValue($this->direction_out_file_sub1->CurrentValue)) {
+				$this->approval_status_in_sub1->HrefValue = ((!empty($this->direction_out_file_sub1->ViewValue) && !is_array($this->direction_out_file_sub1->ViewValue)) ? RemoveHtml($this->direction_out_file_sub1->ViewValue) : $this->direction_out_file_sub1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_in_sub1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_in_sub1->HrefValue = FullUrl($this->approval_status_in_sub1->HrefValue, "href");
+			} else {
+				$this->approval_status_in_sub1->HrefValue = "";
+			}
 			$this->approval_status_in_sub1->TooltipValue = "";
 
 			// transmit_date_in_sub1
@@ -2489,6 +2536,8 @@ class document_log_delete extends document_log
 		}
 		$rows = ($rs) ? $rs->getRows() : [];
 		$conn->beginTrans();
+		if ($this->AuditTrailOnDelete)
+			$this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
 
 		// Clone old rows
 		$rsold = $rows;
@@ -2537,8 +2586,12 @@ class document_log_delete extends document_log
 		}
 		if ($deleteRows) {
 			$conn->commitTrans(); // Commit the changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->rollbackTrans(); // Rollback changes
+			if ($this->AuditTrailOnDelete)
+				$this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
 		}
 
 		// Call Row Deleted event

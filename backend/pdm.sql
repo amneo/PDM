@@ -9,7 +9,10 @@
 SET search_path = public, pg_catalog;
 DROP TRIGGER IF EXISTS transaction_details_project ON public.transaction_details;
 DROP TABLE IF EXISTS public.document_log;
-DROP FUNCTION IF EXISTS public.func_transaction_details_project ();
+DROP INDEX IF EXISTS public.project_details_project_name_order_number_key;
+DROP FUNCTION IF EXISTS public.om_func_03 ();
+DROP FUNCTION IF EXISTS public.om_func_04 (f_firelink_doc_no varchar);
+DROP FUNCTION IF EXISTS public.om_func_02 ();
 DROP TABLE IF EXISTS public.transaction_details;
 DROP TABLE IF EXISTS public.xmit_details;
 DROP TABLE IF EXISTS public.user_dtls;
@@ -55,9 +58,9 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function func_transaction_details_project (OID = 61778) : 
+-- Definition for function om_func_02 (OID = 61778) : 
 --
-CREATE FUNCTION public.func_transaction_details_project (
+CREATE FUNCTION public.om_func_02 (
 )
 RETURNS trigger
 AS 
@@ -75,6 +78,108 @@ NEW.document_tittle := v_document_tittle;
 RAISE EXCEPTION Contact Admin with code sai_ravan_001;
 END if;*/
 RETURN NEW;
+END;
+$body$
+LANGUAGE plpgsql;
+--
+-- Definition for function om_func_04 (OID = 62545) : 
+--
+CREATE FUNCTION public.om_func_04 (
+  f_firelink_doc_no character varying
+)
+RETURNS boolean
+AS 
+$body$
+DECLARE
+f_transaction_details transaction_details%ROWTYPE; -- get the complete record
+f_document_details document_details%ROWTYPE;--get the complete record
+f_firelink_doc_no_count INTEGER :=0; --The count of documents in transaction_details
+f_firelink_doc_no_count_doc_log INTEGER :=0; --The count of documents in document_log
+f_document_status VARCHAR := 'ONGOING';--Determine the over all status of the document
+f_order_number VARCHAR := 'TBA';-- Order number for the project
+BEGIN
+--Find how many records are avaialble in transaction details table
+select into f_firelink_doc_no_count count(document_sequence) from transaction_details where firelink_doc_no = f_firelink_doc_no;
+--Find how many records are available in document_log table
+select into f_firelink_doc_no_count_doc_log count(log_id) from document_log where firelink_doc_no = f_firelink_doc_no;
+--Getting the complete record into the variable.
+select into f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no;
+--Getting the client document number from document document_details table
+select into f_document_details * from document_details where firelink_doc_no = f_firelink_doc_no;
+--Preparing to insert for the first condition i.e Document exists only in transaction_details but not in document_log 
+if f_firelink_doc_no_count = 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
+select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status; 
+select into f_order_number order_number from project_details where project_name = f_transaction_details.project_name;
+insert into document_log(
+  firelink_doc_no,
+  client_doc_no,
+  order_number,
+  project_name,
+  document_tittle,
+  current_status,
+  current_status_file,
+  submit_no_sub1,
+  revision_no_sub1,
+  direction_out_sub1,
+  planned_date_out_sub1,
+  transmit_date_out_sub1,
+  transmit_no_out_sub1,
+  approval_status_out_sub1,
+  direction_out_file_sub1
+  )
+  values (
+  f_firelink_doc_no,
+  f_document_details.client_doc_no,
+  f_order_number,
+  f_transaction_details.project_name,
+  f_transaction_details.document_tittle,
+  f_document_status,
+  f_transaction_details.document_link,
+  f_transaction_details.submit_no,
+  f_transaction_details.revision_no,
+  f_transaction_details.direction,
+  f_document_details.planned_date,
+  f_transaction_details.transmit_date,
+  f_transaction_details.transmit_no,
+  f_transaction_details.approval_status,
+  f_transaction_details.document_link
+  );
+RETURN TRUE;
+-- In case more than 1 no of documentcount in transaction_details and none in document_log then insert them too
+    ELSE IF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
+    --limit the transaction to 10 only 
+	END IF;
+END IF;
+RETURN TRUE;
+END;
+$body$
+LANGUAGE plpgsql;
+--
+-- Definition for function om_func_03 (OID = 62551) : 
+--
+CREATE FUNCTION public.om_func_03 (
+)
+RETURNS boolean
+AS 
+$body$
+DECLARE
+f_no_firelink_doc_no VARCHAR ='NO DOCUMENT'; -- documents that has not been transactioned ever i.e no entry in transaction_details table.
+f_yes_firelink_doc_no VARCHAR :='NO DOCUMENT'; -- documents that has not been transactioned ever i.e has entry in transaction_details table.
+f_firelink_doc_no_count INTEGER := 0 ;
+f_om_sai_func_04 BOOLEAN := FALSE;
+BEGIN
+--Finding the firelink_doc_no that has never been transactioned i.e no entry in transaction_log but have been planned i.e document_details
+-- Starting to loop and insert into the transaction_log table
+FOR f_yes_firelink_doc_no IN select firelink_doc_no from transaction_details where firelink_doc_no IN (select firelink_doc_no from document_details)group by firelink_doc_no
+LOOP
+RAISE NOTICE 'The document is %',f_yes_firelink_doc_no;
+f_om_sai_func_04 := om_func_04(f_yes_firelink_doc_no);
+IF f_om_sai_func_04 = FALSE THEN
+RAISE EXCEPTION
+'<br><h1>Automation Error Code </h1><br><h3>psi_ravan_002</h3>';
+END IF;
+END LOOP;
+RETURN TRUE;
 END;
 $body$
 LANGUAGE plpgsql;
@@ -280,11 +385,13 @@ CREATE TABLE public.transaction_details (
 )
 WITH (oids = true);
 --
--- Structure for table document_log (OID = 61831) : 
+-- Structure for table document_log (OID = 62576) : 
 --
 CREATE TABLE public.document_log (
     log_id bigserial NOT NULL,
     firelink_doc_no varchar NOT NULL,
+    client_doc_no varchar DEFAULT 'NOT PROVIDED'::character varying,
+    order_number varchar NOT NULL,
     project_name varchar NOT NULL,
     document_tittle varchar NOT NULL,
     current_status varchar DEFAULT 'PLANNED'::character varying,
@@ -422,6 +529,10 @@ CREATE TABLE public.document_log (
     log_updatedon timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 )
 WITH (oids = false);
+--
+-- Definition for index project_details_project_name_order_number_key (OID = 62602) : 
+--
+CREATE UNIQUE INDEX project_details_project_name_order_number_key ON public.project_details USING btree (project_name, order_number);
 --
 -- Definition for index project_details_pk (OID = 25434) : 
 --
@@ -567,30 +678,30 @@ ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_project_name
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
--- Definition for index document_log_pkey (OID = 61839) : 
+-- Definition for index document_log_pkey (OID = 62586) : 
 --
 ALTER TABLE ONLY document_log
     ADD CONSTRAINT document_log_pkey
     PRIMARY KEY (log_id);
 --
--- Definition for index document_log_firelink_doc_no_key (OID = 61841) : 
+-- Definition for index document_log_firelink_doc_no_key (OID = 62588) : 
 --
 ALTER TABLE ONLY document_log
     ADD CONSTRAINT document_log_firelink_doc_no_key
     UNIQUE (firelink_doc_no);
 --
--- Definition for index document_log_document_tittle_key (OID = 61843) : 
+-- Definition for index document_log_fk (OID = 62603) : 
 --
 ALTER TABLE ONLY document_log
-    ADD CONSTRAINT document_log_document_tittle_key
-    UNIQUE (document_tittle);
+    ADD CONSTRAINT document_log_fk
+    FOREIGN KEY (project_name, order_number) REFERENCES project_details(project_name, order_number) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
 -- Definition for trigger transaction_details_project (OID = 61779) : 
 --
 CREATE TRIGGER transaction_details_project
     BEFORE INSERT ON transaction_details
     FOR EACH ROW
-    EXECUTE PROCEDURE func_transaction_details_project ();
+    EXECUTE PROCEDURE om_func_02 ();
 --
 -- Comments
 --
@@ -604,4 +715,7 @@ COMMENT ON COLUMN public.transaction_details.username IS 'frontend user who made
 COMMENT ON COLUMN public.transaction_details.expiry_date IS 'To record expected expiry date for an in document';
 COMMENT ON CONSTRAINT transaction_details_project_name ON transaction_details IS 'Data inegrity to ensure project names are same. Cascade on Update and Restrict on insert.';
 COMMENT ON TRIGGER transaction_details_project ON transaction_details IS 'Trigger to auto insert the project name and document tittle.';
+COMMENT ON FUNCTION public.om_func_04 (f_firelink_doc_no varchar) IS 'Function to insert documents into the document_log that has never been keyed in.';
+COMMENT ON FUNCTION public.om_func_03 () IS 'This function is used to decide which documents does not already exists in table documet_log ad then insert them or update with latest updates
+ ';
 COMMENT ON COLUMN public.document_log.log_updatedon IS 'Last update when the query was ran';

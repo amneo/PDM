@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'Zll9UFKD76p3ef5w'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", '9d82F3EMqR2nd7iw'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -470,7 +470,7 @@ define(PROJECT_NAMESPACE . "EXPORT_ALL", TRUE); // Export all records
 define(PROJECT_NAMESPACE . "EXPORT_ALL_TIME_LIMIT", 120); // Export all records time limit
 define(PROJECT_NAMESPACE . "XML_ENCODING", "utf-8"); // Encoding for Export to XML
 define(PROJECT_NAMESPACE . "EXPORT_ORIGINAL_VALUE", FALSE);
-define(PROJECT_NAMESPACE . "EXPORT_FIELD_CAPTION", FALSE); // TRUE to export field caption
+define(PROJECT_NAMESPACE . "EXPORT_FIELD_CAPTION", TRUE); // TRUE to export field caption
 define(PROJECT_NAMESPACE . "EXPORT_FIELD_IMAGE", TRUE); // TRUE to export field image
 define(PROJECT_NAMESPACE . "EXPORT_CSS_STYLES", TRUE); // TRUE to export CSS styles
 define(PROJECT_NAMESPACE . "EXPORT_MASTER_RECORD", TRUE); // TRUE to export master record

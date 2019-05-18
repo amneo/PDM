@@ -731,13 +731,13 @@ class project_details_view extends project_details
 		// Setup export options
 		$this->setupExportOptions();
 		$this->project_id->Visible = FALSE;
-		$this->project_name->setVisibility();
-		$this->project_our_client->setVisibility();
-		$this->project_end_user->setVisibility();
-		$this->project_sales_engg->setVisibility();
-		$this->project_distribution->setVisibility();
-		$this->project_transmittal->setVisibility();
-		$this->order_number->setVisibility();
+		$this->project_name->Visible = FALSE;
+		$this->project_our_client->Visible = FALSE;
+		$this->project_end_user->Visible = FALSE;
+		$this->project_sales_engg->Visible = FALSE;
+		$this->project_distribution->Visible = FALSE;
+		$this->project_transmittal->Visible = FALSE;
+		$this->order_number->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1085,41 +1085,6 @@ class project_details_view extends project_details
 			// order_number
 			$this->order_number->ViewValue = $this->order_number->CurrentValue;
 			$this->order_number->ViewCustomAttributes = "";
-
-			// project_name
-			$this->project_name->LinkCustomAttributes = "";
-			$this->project_name->HrefValue = "";
-			$this->project_name->TooltipValue = "";
-
-			// project_our_client
-			$this->project_our_client->LinkCustomAttributes = "";
-			$this->project_our_client->HrefValue = "";
-			$this->project_our_client->TooltipValue = "";
-
-			// project_end_user
-			$this->project_end_user->LinkCustomAttributes = "";
-			$this->project_end_user->HrefValue = "";
-			$this->project_end_user->TooltipValue = "";
-
-			// project_sales_engg
-			$this->project_sales_engg->LinkCustomAttributes = "";
-			$this->project_sales_engg->HrefValue = "";
-			$this->project_sales_engg->TooltipValue = "";
-
-			// project_distribution
-			$this->project_distribution->LinkCustomAttributes = "";
-			$this->project_distribution->HrefValue = "";
-			$this->project_distribution->TooltipValue = "";
-
-			// project_transmittal
-			$this->project_transmittal->LinkCustomAttributes = "";
-			$this->project_transmittal->HrefValue = "";
-			$this->project_transmittal->TooltipValue = "";
-
-			// order_number
-			$this->order_number->LinkCustomAttributes = "";
-			$this->order_number->HrefValue = "";
-			$this->order_number->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
