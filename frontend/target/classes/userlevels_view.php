@@ -1112,7 +1112,7 @@ class userlevels_view extends userlevels
 		// Export to Word
 		$item = &$this->ExportOptions->add("word");
 		$item->Body = $this->getExportTag("word");
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Html
 		$item = &$this->ExportOptions->add("html");
@@ -1132,13 +1132,13 @@ class userlevels_view extends userlevels
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");
 		$item->Body = $this->getExportTag("pdf");
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Email
 		$item = &$this->ExportOptions->add("email");
 		$url = "";
 		$item->Body = "<button id=\"emf_userlevels\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_userlevels',hdr:ew.language.phrase('ExportToEmailText'),f:document.fuserlevelsview,key:" . ArrayToJsonAttribute($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
@@ -1233,10 +1233,8 @@ class userlevels_view extends userlevels
 
 		// Output data
 		if ($this->isExport("email")) {
-			if ($return)
-				return $doc->Text; // Return email content
-			else
-				echo $this->exportEmail($doc->Text); // Send email
+
+			// Export-to-email disabled
 		} else {
 			$doc->export();
 			if ($return) {
@@ -1249,93 +1247,6 @@ class userlevels_view extends userlevels
 					echo $buffer; // Resume the output buffer
 				return $content;
 			}
-		}
-	}
-
-	// Export email
-	protected function exportEmail($emailContent)
-	{
-		global $TempImages, $Language;
-		$sender = Post("sender", "");
-		$recipient = Post("recipient", "");
-		$cc = Post("cc", "");
-		$bcc = Post("bcc", "");
-
-		// Subject
-		$subject = Post("subject", "");
-		$emailSubject = $subject;
-
-		// Message
-		$content = Post("message", "");
-		$emailMessage = $content;
-
-		// Check sender
-		if ($sender == "") {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterSenderEmail") . "</p>";
-		}
-		if (!CheckEmail($sender)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperSenderEmail") . "</p>";
-		}
-
-		// Check recipient
-		if (!CheckEmailList($recipient, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperRecipientEmail") . "</p>";
-		}
-
-		// Check cc
-		if (!CheckEmailList($cc, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperCcEmail") . "</p>";
-		}
-
-		// Check bcc
-		if (!CheckEmailList($bcc, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperBccEmail") . "</p>";
-		}
-
-		// Check email sent count
-		if (!isset($_SESSION[EXPORT_EMAIL_COUNTER]))
-			$_SESSION[EXPORT_EMAIL_COUNTER] = 0;
-		if ((int)$_SESSION[EXPORT_EMAIL_COUNTER] > MAX_EMAIL_SENT_COUNT) {
-			return "<p class=\"text-danger\">" . $Language->phrase("ExceedMaxEmailExport") . "</p>";
-		}
-
-		// Send email
-		$email = new Email();
-		$email->Sender = $sender; // Sender
-		$email->Recipient = $recipient; // Recipient
-		$email->Cc = $cc; // Cc
-		$email->Bcc = $bcc; // Bcc
-		$email->Subject = $emailSubject; // Subject
-		$email->Format = "html";
-		if ($emailMessage <> "")
-			$emailMessage = RemoveXss($emailMessage) . "<br><br>";
-		foreach ($TempImages as $tmpImage)
-			$email->addEmbeddedImage($tmpImage);
-		$email->Content = $emailMessage . CleanEmailContent($emailContent); // Content
-		$eventArgs = [];
-		if ($this->Recordset) {
-			$this->RecCnt = $this->StartRec - 1;
-			$this->Recordset->moveFirst();
-			if ($this->StartRec > 1)
-				$this->Recordset->move($this->StartRec - 1);
-			$eventArgs["rs"] = &$this->Recordset;
-		}
-		$emailSent = FALSE;
-		if ($this->Email_Sending($email, $eventArgs))
-			$emailSent = $email->send();
-
-		// Check email sent status
-		if ($emailSent) {
-
-			// Update email sent count
-			$_SESSION[EXPORT_EMAIL_COUNTER]++;
-
-			// Sent email success
-			return "<p class=\"text-success\">" . $Language->phrase("SendEmailSuccess") . "</p>"; // Set up success message
-		} else {
-
-			// Sent email failure
-			return "<p class=\"text-danger\">" . $email->SendErrDescription . "</p>";
 		}
 	}
 

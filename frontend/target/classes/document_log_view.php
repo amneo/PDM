@@ -723,142 +723,94 @@ class document_log_view extends document_log
 		// Setup export options
 		$this->setupExportOptions();
 		$this->log_id->Visible = FALSE;
-		$this->firelink_doc_no->Visible = FALSE;
-		$this->project_name->Visible = FALSE;
-		$this->document_tittle->Visible = FALSE;
-		$this->current_status->Visible = FALSE;
+		$this->firelink_doc_no->setVisibility();
+		$this->client_doc_no->setVisibility();
+		$this->order_number->setVisibility();
+		$this->project_name->setVisibility();
+		$this->document_tittle->setVisibility();
+		$this->current_status->setVisibility();
 		$this->current_status_file->Visible = FALSE;
-		$this->submit_no_sub1->Visible = FALSE;
-		$this->revision_no_sub1->Visible = FALSE;
-		$this->direction_out_sub1->Visible = FALSE;
-		$this->planned_date_out_sub1->Visible = FALSE;
-		$this->transmit_date_out_sub1->Visible = FALSE;
-		$this->transmit_no_out_sub1->Visible = FALSE;
-		$this->approval_status_out_sub1->Visible = FALSE;
-		$this->direction_out_file_sub1->Visible = FALSE;
-		$this->direction_in_sub1->Visible = FALSE;
-		$this->transmit_no_in_sub1->Visible = FALSE;
-		$this->approval_status_in_sub1->Visible = FALSE;
-		$this->direction_in_file_sub1->Visible = FALSE;
-		$this->transmit_date_in_sub1->Visible = FALSE;
-		$this->submit_no_sub2->Visible = FALSE;
-		$this->revision_no_sub2->Visible = FALSE;
-		$this->direction_out_sub2->Visible = FALSE;
-		$this->planned_date_out_sub2->Visible = FALSE;
-		$this->transmit_date_out_sub2->Visible = FALSE;
-		$this->transmit_no_out_sub2->Visible = FALSE;
-		$this->approval_status_out_sub2->Visible = FALSE;
-		$this->direction_out_file_sub2->Visible = FALSE;
-		$this->direction_in_sub2->Visible = FALSE;
-		$this->transmit_no_in_sub2->Visible = FALSE;
-		$this->approval_status_in_sub2->Visible = FALSE;
-		$this->direction_in_file_sub2->Visible = FALSE;
-		$this->transmit_date_in_sub2->Visible = FALSE;
-		$this->submit_no_sub3->Visible = FALSE;
-		$this->revision_no_sub3->Visible = FALSE;
-		$this->direction_out_sub3->Visible = FALSE;
-		$this->planned_date_out_sub3->Visible = FALSE;
-		$this->transmit_date_out_sub3->Visible = FALSE;
-		$this->transmit_no_out_sub3->Visible = FALSE;
-		$this->approval_status_out_sub3->Visible = FALSE;
-		$this->direction_out_file_sub3->Visible = FALSE;
-		$this->direction_in_sub3->Visible = FALSE;
-		$this->transmit_no_in_sub3->Visible = FALSE;
-		$this->approval_status_in_sub3->Visible = FALSE;
-		$this->direction_in_file_sub3->Visible = FALSE;
-		$this->transmit_date_in_sub3->Visible = FALSE;
-		$this->submit_no_sub4->Visible = FALSE;
-		$this->revision_no_sub4->Visible = FALSE;
-		$this->direction_out_sub4->Visible = FALSE;
-		$this->planned_date_out_sub4->Visible = FALSE;
-		$this->transmit_date_out_sub4->Visible = FALSE;
-		$this->transmit_no_out_sub4->Visible = FALSE;
-		$this->approval_status_out_sub4->Visible = FALSE;
-		$this->direction_out_file_sub4->Visible = FALSE;
-		$this->direction_in_sub4->Visible = FALSE;
-		$this->transmit_no_in_sub4->Visible = FALSE;
-		$this->approval_status_in_sub4->Visible = FALSE;
-		$this->direction_in_file_sub4->Visible = FALSE;
-		$this->transmit_date_in_sub4->Visible = FALSE;
-		$this->submit_no_sub5->Visible = FALSE;
-		$this->revision_no_sub5->Visible = FALSE;
-		$this->direction_out_sub5->Visible = FALSE;
-		$this->planned_date_out_sub5->Visible = FALSE;
-		$this->transmit_date_out_sub5->Visible = FALSE;
-		$this->transmit_no_out_sub5->Visible = FALSE;
-		$this->approval_status_out_sub5->Visible = FALSE;
-		$this->direction_out_file_sub5->Visible = FALSE;
-		$this->direction_in_sub5->Visible = FALSE;
-		$this->transmit_no_in_sub5->Visible = FALSE;
-		$this->approval_status_in_sub5->Visible = FALSE;
-		$this->direction_in_file_sub5->Visible = FALSE;
-		$this->transmit_date_in_sub5->Visible = FALSE;
-		$this->submit_no_sub6->Visible = FALSE;
-		$this->revision_no_sub6->Visible = FALSE;
-		$this->direction_out_sub6->Visible = FALSE;
-		$this->planned_date_out_sub6->Visible = FALSE;
-		$this->transmit_date_out_sub6->Visible = FALSE;
-		$this->transmit_no_out_sub6->Visible = FALSE;
-		$this->approval_status_out_sub6->Visible = FALSE;
-		$this->direction_out_file_sub6->Visible = FALSE;
-		$this->direction_in_sub6->Visible = FALSE;
-		$this->transmit_no_in_sub6->Visible = FALSE;
-		$this->approval_status_in_sub6->Visible = FALSE;
-		$this->direction_in_file_sub6->Visible = FALSE;
-		$this->transmit_date_in_sub6->Visible = FALSE;
-		$this->submit_no_sub7->Visible = FALSE;
-		$this->revision_no_sub7->Visible = FALSE;
-		$this->direction_out_sub7->Visible = FALSE;
-		$this->planned_date_out_sub7->Visible = FALSE;
-		$this->transmit_date_out_sub7->Visible = FALSE;
-		$this->transmit_no_out_sub7->Visible = FALSE;
-		$this->approval_status_out_sub7->Visible = FALSE;
-		$this->direction_out_file_sub7->Visible = FALSE;
-		$this->direction_in_sub7->Visible = FALSE;
-		$this->transmit_no_in_sub7->Visible = FALSE;
-		$this->approval_status_in_sub7->Visible = FALSE;
-		$this->direction_in_file_sub7->Visible = FALSE;
-		$this->transmit_date_in_sub7->Visible = FALSE;
-		$this->submit_no_sub8->Visible = FALSE;
-		$this->revision_no_sub8->Visible = FALSE;
-		$this->direction_out_sub8->Visible = FALSE;
-		$this->planned_date_out_sub8->Visible = FALSE;
-		$this->transmit_date_out_sub8->Visible = FALSE;
-		$this->transmit_no_out_sub8->Visible = FALSE;
-		$this->approval_status_out_sub8->Visible = FALSE;
-		$this->direction_out_file_sub8->Visible = FALSE;
-		$this->direction_in_sub8->Visible = FALSE;
-		$this->transmit_no_in_sub8->Visible = FALSE;
-		$this->approval_status_in_sub8->Visible = FALSE;
-		$this->direction_in_file_sub8->Visible = FALSE;
-		$this->transmit_date_in_sub8->Visible = FALSE;
-		$this->submit_no_sub9->Visible = FALSE;
-		$this->revision_no_sub9->Visible = FALSE;
-		$this->direction_out_sub9->Visible = FALSE;
-		$this->planned_date_out_sub9->Visible = FALSE;
-		$this->transmit_date_out_sub9->Visible = FALSE;
-		$this->transmit_no_out_sub9->Visible = FALSE;
-		$this->approval_status_out_sub9->Visible = FALSE;
-		$this->direction_out_file_sub9->Visible = FALSE;
-		$this->direction_in_sub9->Visible = FALSE;
-		$this->transmit_no_in_sub9->Visible = FALSE;
-		$this->approval_status_in_sub9->Visible = FALSE;
-		$this->direction_in_file_sub9->Visible = FALSE;
-		$this->transmit_date_in_sub9->Visible = FALSE;
-		$this->submit_no_sub10->Visible = FALSE;
-		$this->revision_no_sub10->Visible = FALSE;
-		$this->direction_out_sub10->Visible = FALSE;
-		$this->planned_date_out_sub10->Visible = FALSE;
-		$this->transmit_date_out_sub10->Visible = FALSE;
-		$this->transmit_no_out_sub10->Visible = FALSE;
-		$this->approval_status_out_sub10->Visible = FALSE;
-		$this->direction_out_file_sub10->Visible = FALSE;
-		$this->direction_in_sub10->Visible = FALSE;
-		$this->transmit_no_in_sub10->Visible = FALSE;
-		$this->approval_status_in_sub10->Visible = FALSE;
-		$this->direction_in_file_sub10->Visible = FALSE;
-		$this->transmit_date_in_sub10->Visible = FALSE;
-		$this->log_updatedon->Visible = FALSE;
+		$this->submit_no_1->setVisibility();
+		$this->revision_no_1->setVisibility();
+		$this->direction_1->setVisibility();
+		$this->planned_date_1->Visible = FALSE;
+		$this->transmit_date_1->Visible = FALSE;
+		$this->transmit_no_1->setVisibility();
+		$this->approval_status_1->setVisibility();
+		$this->direction_file_1->Visible = FALSE;
+		$this->submit_no_2->setVisibility();
+		$this->revision_no_2->setVisibility();
+		$this->direction_2->setVisibility();
+		$this->planned_date_2->setVisibility();
+		$this->transmit_date_2->setVisibility();
+		$this->transmit_no_2->setVisibility();
+		$this->approval_status_2->setVisibility();
+		$this->direction_file_2->Visible = FALSE;
+		$this->submit_no_3->setVisibility();
+		$this->revision_no_3->setVisibility();
+		$this->direction_3->setVisibility();
+		$this->planned_date_3->setVisibility();
+		$this->transmit_date_3->setVisibility();
+		$this->transmit_no_3->setVisibility();
+		$this->approval_status_3->setVisibility();
+		$this->direction_file_3->Visible = FALSE;
+		$this->submit_no_4->setVisibility();
+		$this->revision_no_4->setVisibility();
+		$this->direction_4->setVisibility();
+		$this->planned_date_4->setVisibility();
+		$this->transmit_date_4->setVisibility();
+		$this->transmit_no_4->setVisibility();
+		$this->approval_status_4->setVisibility();
+		$this->direction_file_4->Visible = FALSE;
+		$this->submit_no_5->setVisibility();
+		$this->revision_no_5->setVisibility();
+		$this->direction_5->setVisibility();
+		$this->planned_date_5->setVisibility();
+		$this->transmit_date_5->setVisibility();
+		$this->transmit_no_5->setVisibility();
+		$this->approval_status_5->setVisibility();
+		$this->direction_file_5->Visible = FALSE;
+		$this->submit_no_6->setVisibility();
+		$this->revision_no_6->setVisibility();
+		$this->direction_6->setVisibility();
+		$this->planned_date_6->setVisibility();
+		$this->transmit_date_6->setVisibility();
+		$this->transmit_no_6->setVisibility();
+		$this->approval_status_6->setVisibility();
+		$this->direction_file_6->Visible = FALSE;
+		$this->submit_no_7->setVisibility();
+		$this->revision_no_7->setVisibility();
+		$this->direction_7->setVisibility();
+		$this->planned_date_7->setVisibility();
+		$this->transmit_date_7->setVisibility();
+		$this->transmit_no_7->setVisibility();
+		$this->approval_status_7->setVisibility();
+		$this->direction_file_7->Visible = FALSE;
+		$this->submit_no_8->setVisibility();
+		$this->revision_no_8->setVisibility();
+		$this->direction_8->setVisibility();
+		$this->planned_date_8->setVisibility();
+		$this->transmit_date_8->setVisibility();
+		$this->transmit_no_8->setVisibility();
+		$this->approval_status_8->setVisibility();
+		$this->direction_file_8->Visible = FALSE;
+		$this->submit_no_9->setVisibility();
+		$this->revision_no_9->setVisibility();
+		$this->direction_9->setVisibility();
+		$this->planned_date_9->setVisibility();
+		$this->transmit_date_9->setVisibility();
+		$this->transmit_no_9->setVisibility();
+		$this->approval_status_9->setVisibility();
+		$this->direction_file_9->Visible = FALSE;
+		$this->submit_no_10->setVisibility();
+		$this->revision_no_10->setVisibility();
+		$this->direction_10->setVisibility();
+		$this->planned_date_10->setVisibility();
+		$this->transmit_date_10->setVisibility();
+		$this->transmit_no_10->setVisibility();
+		$this->approval_status_10->setVisibility();
+		$this->direction_file_10->Visible = FALSE;
+		$this->log_updatedon->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1130,140 +1082,92 @@ class document_log_view extends document_log
 			return;
 		$this->log_id->setDbValue($row['log_id']);
 		$this->firelink_doc_no->setDbValue($row['firelink_doc_no']);
+		$this->client_doc_no->setDbValue($row['client_doc_no']);
+		$this->order_number->setDbValue($row['order_number']);
 		$this->project_name->setDbValue($row['project_name']);
 		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->current_status->setDbValue($row['current_status']);
 		$this->current_status_file->setDbValue($row['current_status_file']);
-		$this->submit_no_sub1->setDbValue($row['submit_no_sub1']);
-		$this->revision_no_sub1->setDbValue($row['revision_no_sub1']);
-		$this->direction_out_sub1->setDbValue($row['direction_out_sub1']);
-		$this->planned_date_out_sub1->setDbValue($row['planned_date_out_sub1']);
-		$this->transmit_date_out_sub1->setDbValue($row['transmit_date_out_sub1']);
-		$this->transmit_no_out_sub1->setDbValue($row['transmit_no_out_sub1']);
-		$this->approval_status_out_sub1->setDbValue($row['approval_status_out_sub1']);
-		$this->direction_out_file_sub1->setDbValue($row['direction_out_file_sub1']);
-		$this->direction_in_sub1->setDbValue($row['direction_in_sub1']);
-		$this->transmit_no_in_sub1->setDbValue($row['transmit_no_in_sub1']);
-		$this->approval_status_in_sub1->setDbValue($row['approval_status_in_sub1']);
-		$this->direction_in_file_sub1->setDbValue($row['direction_in_file_sub1']);
-		$this->transmit_date_in_sub1->setDbValue($row['transmit_date_in_sub1']);
-		$this->submit_no_sub2->setDbValue($row['submit_no_sub2']);
-		$this->revision_no_sub2->setDbValue($row['revision_no_sub2']);
-		$this->direction_out_sub2->setDbValue($row['direction_out_sub2']);
-		$this->planned_date_out_sub2->setDbValue($row['planned_date_out_sub2']);
-		$this->transmit_date_out_sub2->setDbValue($row['transmit_date_out_sub2']);
-		$this->transmit_no_out_sub2->setDbValue($row['transmit_no_out_sub2']);
-		$this->approval_status_out_sub2->setDbValue($row['approval_status_out_sub2']);
-		$this->direction_out_file_sub2->setDbValue($row['direction_out_file_sub2']);
-		$this->direction_in_sub2->setDbValue($row['direction_in_sub2']);
-		$this->transmit_no_in_sub2->setDbValue($row['transmit_no_in_sub2']);
-		$this->approval_status_in_sub2->setDbValue($row['approval_status_in_sub2']);
-		$this->direction_in_file_sub2->setDbValue($row['direction_in_file_sub2']);
-		$this->transmit_date_in_sub2->setDbValue($row['transmit_date_in_sub2']);
-		$this->submit_no_sub3->setDbValue($row['submit_no_sub3']);
-		$this->revision_no_sub3->setDbValue($row['revision_no_sub3']);
-		$this->direction_out_sub3->setDbValue($row['direction_out_sub3']);
-		$this->planned_date_out_sub3->setDbValue($row['planned_date_out_sub3']);
-		$this->transmit_date_out_sub3->setDbValue($row['transmit_date_out_sub3']);
-		$this->transmit_no_out_sub3->setDbValue($row['transmit_no_out_sub3']);
-		$this->approval_status_out_sub3->setDbValue($row['approval_status_out_sub3']);
-		$this->direction_out_file_sub3->setDbValue($row['direction_out_file_sub3']);
-		$this->direction_in_sub3->setDbValue($row['direction_in_sub3']);
-		$this->transmit_no_in_sub3->setDbValue($row['transmit_no_in_sub3']);
-		$this->approval_status_in_sub3->setDbValue($row['approval_status_in_sub3']);
-		$this->direction_in_file_sub3->setDbValue($row['direction_in_file_sub3']);
-		$this->transmit_date_in_sub3->setDbValue($row['transmit_date_in_sub3']);
-		$this->submit_no_sub4->setDbValue($row['submit_no_sub4']);
-		$this->revision_no_sub4->setDbValue($row['revision_no_sub4']);
-		$this->direction_out_sub4->setDbValue($row['direction_out_sub4']);
-		$this->planned_date_out_sub4->setDbValue($row['planned_date_out_sub4']);
-		$this->transmit_date_out_sub4->setDbValue($row['transmit_date_out_sub4']);
-		$this->transmit_no_out_sub4->setDbValue($row['transmit_no_out_sub4']);
-		$this->approval_status_out_sub4->setDbValue($row['approval_status_out_sub4']);
-		$this->direction_out_file_sub4->setDbValue($row['direction_out_file_sub4']);
-		$this->direction_in_sub4->setDbValue($row['direction_in_sub4']);
-		$this->transmit_no_in_sub4->setDbValue($row['transmit_no_in_sub4']);
-		$this->approval_status_in_sub4->setDbValue($row['approval_status_in_sub4']);
-		$this->direction_in_file_sub4->setDbValue($row['direction_in_file_sub4']);
-		$this->transmit_date_in_sub4->setDbValue($row['transmit_date_in_sub4']);
-		$this->submit_no_sub5->setDbValue($row['submit_no_sub5']);
-		$this->revision_no_sub5->setDbValue($row['revision_no_sub5']);
-		$this->direction_out_sub5->setDbValue($row['direction_out_sub5']);
-		$this->planned_date_out_sub5->setDbValue($row['planned_date_out_sub5']);
-		$this->transmit_date_out_sub5->setDbValue($row['transmit_date_out_sub5']);
-		$this->transmit_no_out_sub5->setDbValue($row['transmit_no_out_sub5']);
-		$this->approval_status_out_sub5->setDbValue($row['approval_status_out_sub5']);
-		$this->direction_out_file_sub5->setDbValue($row['direction_out_file_sub5']);
-		$this->direction_in_sub5->setDbValue($row['direction_in_sub5']);
-		$this->transmit_no_in_sub5->setDbValue($row['transmit_no_in_sub5']);
-		$this->approval_status_in_sub5->setDbValue($row['approval_status_in_sub5']);
-		$this->direction_in_file_sub5->setDbValue($row['direction_in_file_sub5']);
-		$this->transmit_date_in_sub5->setDbValue($row['transmit_date_in_sub5']);
-		$this->submit_no_sub6->setDbValue($row['submit_no_sub6']);
-		$this->revision_no_sub6->setDbValue($row['revision_no_sub6']);
-		$this->direction_out_sub6->setDbValue($row['direction_out_sub6']);
-		$this->planned_date_out_sub6->setDbValue($row['planned_date_out_sub6']);
-		$this->transmit_date_out_sub6->setDbValue($row['transmit_date_out_sub6']);
-		$this->transmit_no_out_sub6->setDbValue($row['transmit_no_out_sub6']);
-		$this->approval_status_out_sub6->setDbValue($row['approval_status_out_sub6']);
-		$this->direction_out_file_sub6->setDbValue($row['direction_out_file_sub6']);
-		$this->direction_in_sub6->setDbValue($row['direction_in_sub6']);
-		$this->transmit_no_in_sub6->setDbValue($row['transmit_no_in_sub6']);
-		$this->approval_status_in_sub6->setDbValue($row['approval_status_in_sub6']);
-		$this->direction_in_file_sub6->setDbValue($row['direction_in_file_sub6']);
-		$this->transmit_date_in_sub6->setDbValue($row['transmit_date_in_sub6']);
-		$this->submit_no_sub7->setDbValue($row['submit_no_sub7']);
-		$this->revision_no_sub7->setDbValue($row['revision_no_sub7']);
-		$this->direction_out_sub7->setDbValue($row['direction_out_sub7']);
-		$this->planned_date_out_sub7->setDbValue($row['planned_date_out_sub7']);
-		$this->transmit_date_out_sub7->setDbValue($row['transmit_date_out_sub7']);
-		$this->transmit_no_out_sub7->setDbValue($row['transmit_no_out_sub7']);
-		$this->approval_status_out_sub7->setDbValue($row['approval_status_out_sub7']);
-		$this->direction_out_file_sub7->setDbValue($row['direction_out_file_sub7']);
-		$this->direction_in_sub7->setDbValue($row['direction_in_sub7']);
-		$this->transmit_no_in_sub7->setDbValue($row['transmit_no_in_sub7']);
-		$this->approval_status_in_sub7->setDbValue($row['approval_status_in_sub7']);
-		$this->direction_in_file_sub7->setDbValue($row['direction_in_file_sub7']);
-		$this->transmit_date_in_sub7->setDbValue($row['transmit_date_in_sub7']);
-		$this->submit_no_sub8->setDbValue($row['submit_no_sub8']);
-		$this->revision_no_sub8->setDbValue($row['revision_no_sub8']);
-		$this->direction_out_sub8->setDbValue($row['direction_out_sub8']);
-		$this->planned_date_out_sub8->setDbValue($row['planned_date_out_sub8']);
-		$this->transmit_date_out_sub8->setDbValue($row['transmit_date_out_sub8']);
-		$this->transmit_no_out_sub8->setDbValue($row['transmit_no_out_sub8']);
-		$this->approval_status_out_sub8->setDbValue($row['approval_status_out_sub8']);
-		$this->direction_out_file_sub8->setDbValue($row['direction_out_file_sub8']);
-		$this->direction_in_sub8->setDbValue($row['direction_in_sub8']);
-		$this->transmit_no_in_sub8->setDbValue($row['transmit_no_in_sub8']);
-		$this->approval_status_in_sub8->setDbValue($row['approval_status_in_sub8']);
-		$this->direction_in_file_sub8->setDbValue($row['direction_in_file_sub8']);
-		$this->transmit_date_in_sub8->setDbValue($row['transmit_date_in_sub8']);
-		$this->submit_no_sub9->setDbValue($row['submit_no_sub9']);
-		$this->revision_no_sub9->setDbValue($row['revision_no_sub9']);
-		$this->direction_out_sub9->setDbValue($row['direction_out_sub9']);
-		$this->planned_date_out_sub9->setDbValue($row['planned_date_out_sub9']);
-		$this->transmit_date_out_sub9->setDbValue($row['transmit_date_out_sub9']);
-		$this->transmit_no_out_sub9->setDbValue($row['transmit_no_out_sub9']);
-		$this->approval_status_out_sub9->setDbValue($row['approval_status_out_sub9']);
-		$this->direction_out_file_sub9->setDbValue($row['direction_out_file_sub9']);
-		$this->direction_in_sub9->setDbValue($row['direction_in_sub9']);
-		$this->transmit_no_in_sub9->setDbValue($row['transmit_no_in_sub9']);
-		$this->approval_status_in_sub9->setDbValue($row['approval_status_in_sub9']);
-		$this->direction_in_file_sub9->setDbValue($row['direction_in_file_sub9']);
-		$this->transmit_date_in_sub9->setDbValue($row['transmit_date_in_sub9']);
-		$this->submit_no_sub10->setDbValue($row['submit_no_sub10']);
-		$this->revision_no_sub10->setDbValue($row['revision_no_sub10']);
-		$this->direction_out_sub10->setDbValue($row['direction_out_sub10']);
-		$this->planned_date_out_sub10->setDbValue($row['planned_date_out_sub10']);
-		$this->transmit_date_out_sub10->setDbValue($row['transmit_date_out_sub10']);
-		$this->transmit_no_out_sub10->setDbValue($row['transmit_no_out_sub10']);
-		$this->approval_status_out_sub10->setDbValue($row['approval_status_out_sub10']);
-		$this->direction_out_file_sub10->setDbValue($row['direction_out_file_sub10']);
-		$this->direction_in_sub10->setDbValue($row['direction_in_sub10']);
-		$this->transmit_no_in_sub10->setDbValue($row['transmit_no_in_sub10']);
-		$this->approval_status_in_sub10->setDbValue($row['approval_status_in_sub10']);
-		$this->direction_in_file_sub10->setDbValue($row['direction_in_file_sub10']);
-		$this->transmit_date_in_sub10->setDbValue($row['transmit_date_in_sub10']);
+		$this->submit_no_1->setDbValue($row['submit_no_1']);
+		$this->revision_no_1->setDbValue($row['revision_no_1']);
+		$this->direction_1->setDbValue($row['direction_1']);
+		$this->planned_date_1->setDbValue($row['planned_date_1']);
+		$this->transmit_date_1->setDbValue($row['transmit_date_1']);
+		$this->transmit_no_1->setDbValue($row['transmit_no_1']);
+		$this->approval_status_1->setDbValue($row['approval_status_1']);
+		$this->direction_file_1->setDbValue($row['direction_file_1']);
+		$this->submit_no_2->setDbValue($row['submit_no_2']);
+		$this->revision_no_2->setDbValue($row['revision_no_2']);
+		$this->direction_2->setDbValue($row['direction_2']);
+		$this->planned_date_2->setDbValue($row['planned_date_2']);
+		$this->transmit_date_2->setDbValue($row['transmit_date_2']);
+		$this->transmit_no_2->setDbValue($row['transmit_no_2']);
+		$this->approval_status_2->setDbValue($row['approval_status_2']);
+		$this->direction_file_2->setDbValue($row['direction_file_2']);
+		$this->submit_no_3->setDbValue($row['submit_no_3']);
+		$this->revision_no_3->setDbValue($row['revision_no_3']);
+		$this->direction_3->setDbValue($row['direction_3']);
+		$this->planned_date_3->setDbValue($row['planned_date_3']);
+		$this->transmit_date_3->setDbValue($row['transmit_date_3']);
+		$this->transmit_no_3->setDbValue($row['transmit_no_3']);
+		$this->approval_status_3->setDbValue($row['approval_status_3']);
+		$this->direction_file_3->setDbValue($row['direction_file_3']);
+		$this->submit_no_4->setDbValue($row['submit_no_4']);
+		$this->revision_no_4->setDbValue($row['revision_no_4']);
+		$this->direction_4->setDbValue($row['direction_4']);
+		$this->planned_date_4->setDbValue($row['planned_date_4']);
+		$this->transmit_date_4->setDbValue($row['transmit_date_4']);
+		$this->transmit_no_4->setDbValue($row['transmit_no_4']);
+		$this->approval_status_4->setDbValue($row['approval_status_4']);
+		$this->direction_file_4->setDbValue($row['direction_file_4']);
+		$this->submit_no_5->setDbValue($row['submit_no_5']);
+		$this->revision_no_5->setDbValue($row['revision_no_5']);
+		$this->direction_5->setDbValue($row['direction_5']);
+		$this->planned_date_5->setDbValue($row['planned_date_5']);
+		$this->transmit_date_5->setDbValue($row['transmit_date_5']);
+		$this->transmit_no_5->setDbValue($row['transmit_no_5']);
+		$this->approval_status_5->setDbValue($row['approval_status_5']);
+		$this->direction_file_5->setDbValue($row['direction_file_5']);
+		$this->submit_no_6->setDbValue($row['submit_no_6']);
+		$this->revision_no_6->setDbValue($row['revision_no_6']);
+		$this->direction_6->setDbValue($row['direction_6']);
+		$this->planned_date_6->setDbValue($row['planned_date_6']);
+		$this->transmit_date_6->setDbValue($row['transmit_date_6']);
+		$this->transmit_no_6->setDbValue($row['transmit_no_6']);
+		$this->approval_status_6->setDbValue($row['approval_status_6']);
+		$this->direction_file_6->setDbValue($row['direction_file_6']);
+		$this->submit_no_7->setDbValue($row['submit_no_7']);
+		$this->revision_no_7->setDbValue($row['revision_no_7']);
+		$this->direction_7->setDbValue($row['direction_7']);
+		$this->planned_date_7->setDbValue($row['planned_date_7']);
+		$this->transmit_date_7->setDbValue($row['transmit_date_7']);
+		$this->transmit_no_7->setDbValue($row['transmit_no_7']);
+		$this->approval_status_7->setDbValue($row['approval_status_7']);
+		$this->direction_file_7->setDbValue($row['direction_file_7']);
+		$this->submit_no_8->setDbValue($row['submit_no_8']);
+		$this->revision_no_8->setDbValue($row['revision_no_8']);
+		$this->direction_8->setDbValue($row['direction_8']);
+		$this->planned_date_8->setDbValue($row['planned_date_8']);
+		$this->transmit_date_8->setDbValue($row['transmit_date_8']);
+		$this->transmit_no_8->setDbValue($row['transmit_no_8']);
+		$this->approval_status_8->setDbValue($row['approval_status_8']);
+		$this->direction_file_8->setDbValue($row['direction_file_8']);
+		$this->submit_no_9->setDbValue($row['submit_no_9']);
+		$this->revision_no_9->setDbValue($row['revision_no_9']);
+		$this->direction_9->setDbValue($row['direction_9']);
+		$this->planned_date_9->setDbValue($row['planned_date_9']);
+		$this->transmit_date_9->setDbValue($row['transmit_date_9']);
+		$this->transmit_no_9->setDbValue($row['transmit_no_9']);
+		$this->approval_status_9->setDbValue($row['approval_status_9']);
+		$this->direction_file_9->setDbValue($row['direction_file_9']);
+		$this->submit_no_10->setDbValue($row['submit_no_10']);
+		$this->revision_no_10->setDbValue($row['revision_no_10']);
+		$this->direction_10->setDbValue($row['direction_10']);
+		$this->planned_date_10->setDbValue($row['planned_date_10']);
+		$this->transmit_date_10->setDbValue($row['transmit_date_10']);
+		$this->transmit_no_10->setDbValue($row['transmit_no_10']);
+		$this->approval_status_10->setDbValue($row['approval_status_10']);
+		$this->direction_file_10->setDbValue($row['direction_file_10']);
 		$this->log_updatedon->setDbValue($row['log_updatedon']);
 	}
 
@@ -1273,140 +1177,92 @@ class document_log_view extends document_log
 		$row = [];
 		$row['log_id'] = NULL;
 		$row['firelink_doc_no'] = NULL;
+		$row['client_doc_no'] = NULL;
+		$row['order_number'] = NULL;
 		$row['project_name'] = NULL;
 		$row['document_tittle'] = NULL;
 		$row['current_status'] = NULL;
 		$row['current_status_file'] = NULL;
-		$row['submit_no_sub1'] = NULL;
-		$row['revision_no_sub1'] = NULL;
-		$row['direction_out_sub1'] = NULL;
-		$row['planned_date_out_sub1'] = NULL;
-		$row['transmit_date_out_sub1'] = NULL;
-		$row['transmit_no_out_sub1'] = NULL;
-		$row['approval_status_out_sub1'] = NULL;
-		$row['direction_out_file_sub1'] = NULL;
-		$row['direction_in_sub1'] = NULL;
-		$row['transmit_no_in_sub1'] = NULL;
-		$row['approval_status_in_sub1'] = NULL;
-		$row['direction_in_file_sub1'] = NULL;
-		$row['transmit_date_in_sub1'] = NULL;
-		$row['submit_no_sub2'] = NULL;
-		$row['revision_no_sub2'] = NULL;
-		$row['direction_out_sub2'] = NULL;
-		$row['planned_date_out_sub2'] = NULL;
-		$row['transmit_date_out_sub2'] = NULL;
-		$row['transmit_no_out_sub2'] = NULL;
-		$row['approval_status_out_sub2'] = NULL;
-		$row['direction_out_file_sub2'] = NULL;
-		$row['direction_in_sub2'] = NULL;
-		$row['transmit_no_in_sub2'] = NULL;
-		$row['approval_status_in_sub2'] = NULL;
-		$row['direction_in_file_sub2'] = NULL;
-		$row['transmit_date_in_sub2'] = NULL;
-		$row['submit_no_sub3'] = NULL;
-		$row['revision_no_sub3'] = NULL;
-		$row['direction_out_sub3'] = NULL;
-		$row['planned_date_out_sub3'] = NULL;
-		$row['transmit_date_out_sub3'] = NULL;
-		$row['transmit_no_out_sub3'] = NULL;
-		$row['approval_status_out_sub3'] = NULL;
-		$row['direction_out_file_sub3'] = NULL;
-		$row['direction_in_sub3'] = NULL;
-		$row['transmit_no_in_sub3'] = NULL;
-		$row['approval_status_in_sub3'] = NULL;
-		$row['direction_in_file_sub3'] = NULL;
-		$row['transmit_date_in_sub3'] = NULL;
-		$row['submit_no_sub4'] = NULL;
-		$row['revision_no_sub4'] = NULL;
-		$row['direction_out_sub4'] = NULL;
-		$row['planned_date_out_sub4'] = NULL;
-		$row['transmit_date_out_sub4'] = NULL;
-		$row['transmit_no_out_sub4'] = NULL;
-		$row['approval_status_out_sub4'] = NULL;
-		$row['direction_out_file_sub4'] = NULL;
-		$row['direction_in_sub4'] = NULL;
-		$row['transmit_no_in_sub4'] = NULL;
-		$row['approval_status_in_sub4'] = NULL;
-		$row['direction_in_file_sub4'] = NULL;
-		$row['transmit_date_in_sub4'] = NULL;
-		$row['submit_no_sub5'] = NULL;
-		$row['revision_no_sub5'] = NULL;
-		$row['direction_out_sub5'] = NULL;
-		$row['planned_date_out_sub5'] = NULL;
-		$row['transmit_date_out_sub5'] = NULL;
-		$row['transmit_no_out_sub5'] = NULL;
-		$row['approval_status_out_sub5'] = NULL;
-		$row['direction_out_file_sub5'] = NULL;
-		$row['direction_in_sub5'] = NULL;
-		$row['transmit_no_in_sub5'] = NULL;
-		$row['approval_status_in_sub5'] = NULL;
-		$row['direction_in_file_sub5'] = NULL;
-		$row['transmit_date_in_sub5'] = NULL;
-		$row['submit_no_sub6'] = NULL;
-		$row['revision_no_sub6'] = NULL;
-		$row['direction_out_sub6'] = NULL;
-		$row['planned_date_out_sub6'] = NULL;
-		$row['transmit_date_out_sub6'] = NULL;
-		$row['transmit_no_out_sub6'] = NULL;
-		$row['approval_status_out_sub6'] = NULL;
-		$row['direction_out_file_sub6'] = NULL;
-		$row['direction_in_sub6'] = NULL;
-		$row['transmit_no_in_sub6'] = NULL;
-		$row['approval_status_in_sub6'] = NULL;
-		$row['direction_in_file_sub6'] = NULL;
-		$row['transmit_date_in_sub6'] = NULL;
-		$row['submit_no_sub7'] = NULL;
-		$row['revision_no_sub7'] = NULL;
-		$row['direction_out_sub7'] = NULL;
-		$row['planned_date_out_sub7'] = NULL;
-		$row['transmit_date_out_sub7'] = NULL;
-		$row['transmit_no_out_sub7'] = NULL;
-		$row['approval_status_out_sub7'] = NULL;
-		$row['direction_out_file_sub7'] = NULL;
-		$row['direction_in_sub7'] = NULL;
-		$row['transmit_no_in_sub7'] = NULL;
-		$row['approval_status_in_sub7'] = NULL;
-		$row['direction_in_file_sub7'] = NULL;
-		$row['transmit_date_in_sub7'] = NULL;
-		$row['submit_no_sub8'] = NULL;
-		$row['revision_no_sub8'] = NULL;
-		$row['direction_out_sub8'] = NULL;
-		$row['planned_date_out_sub8'] = NULL;
-		$row['transmit_date_out_sub8'] = NULL;
-		$row['transmit_no_out_sub8'] = NULL;
-		$row['approval_status_out_sub8'] = NULL;
-		$row['direction_out_file_sub8'] = NULL;
-		$row['direction_in_sub8'] = NULL;
-		$row['transmit_no_in_sub8'] = NULL;
-		$row['approval_status_in_sub8'] = NULL;
-		$row['direction_in_file_sub8'] = NULL;
-		$row['transmit_date_in_sub8'] = NULL;
-		$row['submit_no_sub9'] = NULL;
-		$row['revision_no_sub9'] = NULL;
-		$row['direction_out_sub9'] = NULL;
-		$row['planned_date_out_sub9'] = NULL;
-		$row['transmit_date_out_sub9'] = NULL;
-		$row['transmit_no_out_sub9'] = NULL;
-		$row['approval_status_out_sub9'] = NULL;
-		$row['direction_out_file_sub9'] = NULL;
-		$row['direction_in_sub9'] = NULL;
-		$row['transmit_no_in_sub9'] = NULL;
-		$row['approval_status_in_sub9'] = NULL;
-		$row['direction_in_file_sub9'] = NULL;
-		$row['transmit_date_in_sub9'] = NULL;
-		$row['submit_no_sub10'] = NULL;
-		$row['revision_no_sub10'] = NULL;
-		$row['direction_out_sub10'] = NULL;
-		$row['planned_date_out_sub10'] = NULL;
-		$row['transmit_date_out_sub10'] = NULL;
-		$row['transmit_no_out_sub10'] = NULL;
-		$row['approval_status_out_sub10'] = NULL;
-		$row['direction_out_file_sub10'] = NULL;
-		$row['direction_in_sub10'] = NULL;
-		$row['transmit_no_in_sub10'] = NULL;
-		$row['approval_status_in_sub10'] = NULL;
-		$row['direction_in_file_sub10'] = NULL;
-		$row['transmit_date_in_sub10'] = NULL;
+		$row['submit_no_1'] = NULL;
+		$row['revision_no_1'] = NULL;
+		$row['direction_1'] = NULL;
+		$row['planned_date_1'] = NULL;
+		$row['transmit_date_1'] = NULL;
+		$row['transmit_no_1'] = NULL;
+		$row['approval_status_1'] = NULL;
+		$row['direction_file_1'] = NULL;
+		$row['submit_no_2'] = NULL;
+		$row['revision_no_2'] = NULL;
+		$row['direction_2'] = NULL;
+		$row['planned_date_2'] = NULL;
+		$row['transmit_date_2'] = NULL;
+		$row['transmit_no_2'] = NULL;
+		$row['approval_status_2'] = NULL;
+		$row['direction_file_2'] = NULL;
+		$row['submit_no_3'] = NULL;
+		$row['revision_no_3'] = NULL;
+		$row['direction_3'] = NULL;
+		$row['planned_date_3'] = NULL;
+		$row['transmit_date_3'] = NULL;
+		$row['transmit_no_3'] = NULL;
+		$row['approval_status_3'] = NULL;
+		$row['direction_file_3'] = NULL;
+		$row['submit_no_4'] = NULL;
+		$row['revision_no_4'] = NULL;
+		$row['direction_4'] = NULL;
+		$row['planned_date_4'] = NULL;
+		$row['transmit_date_4'] = NULL;
+		$row['transmit_no_4'] = NULL;
+		$row['approval_status_4'] = NULL;
+		$row['direction_file_4'] = NULL;
+		$row['submit_no_5'] = NULL;
+		$row['revision_no_5'] = NULL;
+		$row['direction_5'] = NULL;
+		$row['planned_date_5'] = NULL;
+		$row['transmit_date_5'] = NULL;
+		$row['transmit_no_5'] = NULL;
+		$row['approval_status_5'] = NULL;
+		$row['direction_file_5'] = NULL;
+		$row['submit_no_6'] = NULL;
+		$row['revision_no_6'] = NULL;
+		$row['direction_6'] = NULL;
+		$row['planned_date_6'] = NULL;
+		$row['transmit_date_6'] = NULL;
+		$row['transmit_no_6'] = NULL;
+		$row['approval_status_6'] = NULL;
+		$row['direction_file_6'] = NULL;
+		$row['submit_no_7'] = NULL;
+		$row['revision_no_7'] = NULL;
+		$row['direction_7'] = NULL;
+		$row['planned_date_7'] = NULL;
+		$row['transmit_date_7'] = NULL;
+		$row['transmit_no_7'] = NULL;
+		$row['approval_status_7'] = NULL;
+		$row['direction_file_7'] = NULL;
+		$row['submit_no_8'] = NULL;
+		$row['revision_no_8'] = NULL;
+		$row['direction_8'] = NULL;
+		$row['planned_date_8'] = NULL;
+		$row['transmit_date_8'] = NULL;
+		$row['transmit_no_8'] = NULL;
+		$row['approval_status_8'] = NULL;
+		$row['direction_file_8'] = NULL;
+		$row['submit_no_9'] = NULL;
+		$row['revision_no_9'] = NULL;
+		$row['direction_9'] = NULL;
+		$row['planned_date_9'] = NULL;
+		$row['transmit_date_9'] = NULL;
+		$row['transmit_no_9'] = NULL;
+		$row['approval_status_9'] = NULL;
+		$row['direction_file_9'] = NULL;
+		$row['submit_no_10'] = NULL;
+		$row['revision_no_10'] = NULL;
+		$row['direction_10'] = NULL;
+		$row['planned_date_10'] = NULL;
+		$row['transmit_date_10'] = NULL;
+		$row['transmit_no_10'] = NULL;
+		$row['approval_status_10'] = NULL;
+		$row['direction_file_10'] = NULL;
 		$row['log_updatedon'] = NULL;
 		return $row;
 	}
@@ -1430,140 +1286,92 @@ class document_log_view extends document_log
 		// Common render codes for all row types
 		// log_id
 		// firelink_doc_no
+		// client_doc_no
+		// order_number
 		// project_name
 		// document_tittle
 		// current_status
 		// current_status_file
-		// submit_no_sub1
-		// revision_no_sub1
-		// direction_out_sub1
-		// planned_date_out_sub1
-		// transmit_date_out_sub1
-		// transmit_no_out_sub1
-		// approval_status_out_sub1
-		// direction_out_file_sub1
-		// direction_in_sub1
-		// transmit_no_in_sub1
-		// approval_status_in_sub1
-		// direction_in_file_sub1
-		// transmit_date_in_sub1
-		// submit_no_sub2
-		// revision_no_sub2
-		// direction_out_sub2
-		// planned_date_out_sub2
-		// transmit_date_out_sub2
-		// transmit_no_out_sub2
-		// approval_status_out_sub2
-		// direction_out_file_sub2
-		// direction_in_sub2
-		// transmit_no_in_sub2
-		// approval_status_in_sub2
-		// direction_in_file_sub2
-		// transmit_date_in_sub2
-		// submit_no_sub3
-		// revision_no_sub3
-		// direction_out_sub3
-		// planned_date_out_sub3
-		// transmit_date_out_sub3
-		// transmit_no_out_sub3
-		// approval_status_out_sub3
-		// direction_out_file_sub3
-		// direction_in_sub3
-		// transmit_no_in_sub3
-		// approval_status_in_sub3
-		// direction_in_file_sub3
-		// transmit_date_in_sub3
-		// submit_no_sub4
-		// revision_no_sub4
-		// direction_out_sub4
-		// planned_date_out_sub4
-		// transmit_date_out_sub4
-		// transmit_no_out_sub4
-		// approval_status_out_sub4
-		// direction_out_file_sub4
-		// direction_in_sub4
-		// transmit_no_in_sub4
-		// approval_status_in_sub4
-		// direction_in_file_sub4
-		// transmit_date_in_sub4
-		// submit_no_sub5
-		// revision_no_sub5
-		// direction_out_sub5
-		// planned_date_out_sub5
-		// transmit_date_out_sub5
-		// transmit_no_out_sub5
-		// approval_status_out_sub5
-		// direction_out_file_sub5
-		// direction_in_sub5
-		// transmit_no_in_sub5
-		// approval_status_in_sub5
-		// direction_in_file_sub5
-		// transmit_date_in_sub5
-		// submit_no_sub6
-		// revision_no_sub6
-		// direction_out_sub6
-		// planned_date_out_sub6
-		// transmit_date_out_sub6
-		// transmit_no_out_sub6
-		// approval_status_out_sub6
-		// direction_out_file_sub6
-		// direction_in_sub6
-		// transmit_no_in_sub6
-		// approval_status_in_sub6
-		// direction_in_file_sub6
-		// transmit_date_in_sub6
-		// submit_no_sub7
-		// revision_no_sub7
-		// direction_out_sub7
-		// planned_date_out_sub7
-		// transmit_date_out_sub7
-		// transmit_no_out_sub7
-		// approval_status_out_sub7
-		// direction_out_file_sub7
-		// direction_in_sub7
-		// transmit_no_in_sub7
-		// approval_status_in_sub7
-		// direction_in_file_sub7
-		// transmit_date_in_sub7
-		// submit_no_sub8
-		// revision_no_sub8
-		// direction_out_sub8
-		// planned_date_out_sub8
-		// transmit_date_out_sub8
-		// transmit_no_out_sub8
-		// approval_status_out_sub8
-		// direction_out_file_sub8
-		// direction_in_sub8
-		// transmit_no_in_sub8
-		// approval_status_in_sub8
-		// direction_in_file_sub8
-		// transmit_date_in_sub8
-		// submit_no_sub9
-		// revision_no_sub9
-		// direction_out_sub9
-		// planned_date_out_sub9
-		// transmit_date_out_sub9
-		// transmit_no_out_sub9
-		// approval_status_out_sub9
-		// direction_out_file_sub9
-		// direction_in_sub9
-		// transmit_no_in_sub9
-		// approval_status_in_sub9
-		// direction_in_file_sub9
-		// transmit_date_in_sub9
-		// submit_no_sub10
-		// revision_no_sub10
-		// direction_out_sub10
-		// planned_date_out_sub10
-		// transmit_date_out_sub10
-		// transmit_no_out_sub10
-		// approval_status_out_sub10
-		// direction_out_file_sub10
-		// direction_in_sub10
-		// transmit_no_in_sub10
-		// approval_status_in_sub10
-		// direction_in_file_sub10
-		// transmit_date_in_sub10
+		// submit_no_1
+		// revision_no_1
+		// direction_1
+		// planned_date_1
+		// transmit_date_1
+		// transmit_no_1
+		// approval_status_1
+		// direction_file_1
+		// submit_no_2
+		// revision_no_2
+		// direction_2
+		// planned_date_2
+		// transmit_date_2
+		// transmit_no_2
+		// approval_status_2
+		// direction_file_2
+		// submit_no_3
+		// revision_no_3
+		// direction_3
+		// planned_date_3
+		// transmit_date_3
+		// transmit_no_3
+		// approval_status_3
+		// direction_file_3
+		// submit_no_4
+		// revision_no_4
+		// direction_4
+		// planned_date_4
+		// transmit_date_4
+		// transmit_no_4
+		// approval_status_4
+		// direction_file_4
+		// submit_no_5
+		// revision_no_5
+		// direction_5
+		// planned_date_5
+		// transmit_date_5
+		// transmit_no_5
+		// approval_status_5
+		// direction_file_5
+		// submit_no_6
+		// revision_no_6
+		// direction_6
+		// planned_date_6
+		// transmit_date_6
+		// transmit_no_6
+		// approval_status_6
+		// direction_file_6
+		// submit_no_7
+		// revision_no_7
+		// direction_7
+		// planned_date_7
+		// transmit_date_7
+		// transmit_no_7
+		// approval_status_7
+		// direction_file_7
+		// submit_no_8
+		// revision_no_8
+		// direction_8
+		// planned_date_8
+		// transmit_date_8
+		// transmit_no_8
+		// approval_status_8
+		// direction_file_8
+		// submit_no_9
+		// revision_no_9
+		// direction_9
+		// planned_date_9
+		// transmit_date_9
+		// transmit_no_9
+		// approval_status_9
+		// direction_file_9
+		// submit_no_10
+		// revision_no_10
+		// direction_10
+		// planned_date_10
+		// transmit_date_10
+		// transmit_no_10
+		// approval_status_10
+		// direction_file_10
 		// log_updatedon
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
@@ -1571,6 +1379,14 @@ class document_log_view extends document_log
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
 			$this->firelink_doc_no->ViewCustomAttributes = "";
+
+			// client_doc_no
+			$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+			$this->client_doc_no->ViewCustomAttributes = "";
+
+			// order_number
+			$this->order_number->ViewValue = $this->order_number->CurrentValue;
+			$this->order_number->ViewCustomAttributes = "";
 
 			// project_name
 			$this->project_name->ViewValue = $this->project_name->CurrentValue;
@@ -1584,496 +1400,687 @@ class document_log_view extends document_log
 			$this->current_status->ViewValue = $this->current_status->CurrentValue;
 			$this->current_status->ViewCustomAttributes = "";
 
-			// submit_no_sub1
-			$this->submit_no_sub1->ViewValue = $this->submit_no_sub1->CurrentValue;
-			$this->submit_no_sub1->ViewCustomAttributes = "";
-
-			// revision_no_sub1
-			$this->revision_no_sub1->ViewValue = $this->revision_no_sub1->CurrentValue;
-			$this->revision_no_sub1->ViewCustomAttributes = "";
-
-			// direction_out_sub1
-			$this->direction_out_sub1->ViewValue = $this->direction_out_sub1->CurrentValue;
-			$this->direction_out_sub1->ViewCustomAttributes = "";
-
-			// planned_date_out_sub1
-			$this->planned_date_out_sub1->ViewValue = $this->planned_date_out_sub1->CurrentValue;
-			$this->planned_date_out_sub1->ViewValue = FormatDateTime($this->planned_date_out_sub1->ViewValue, 0);
-			$this->planned_date_out_sub1->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub1
-			$this->transmit_date_out_sub1->ViewValue = $this->transmit_date_out_sub1->CurrentValue;
-			$this->transmit_date_out_sub1->ViewValue = FormatDateTime($this->transmit_date_out_sub1->ViewValue, 0);
-			$this->transmit_date_out_sub1->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub1
-			$this->transmit_no_out_sub1->ViewValue = $this->transmit_no_out_sub1->CurrentValue;
-			$this->transmit_no_out_sub1->ViewCustomAttributes = "";
-
-			// approval_status_out_sub1
-			$this->approval_status_out_sub1->ViewValue = $this->approval_status_out_sub1->CurrentValue;
-			$this->approval_status_out_sub1->ViewCustomAttributes = "";
-
-			// direction_in_sub1
-			$this->direction_in_sub1->ViewValue = $this->direction_in_sub1->CurrentValue;
-			$this->direction_in_sub1->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub1
-			$this->transmit_no_in_sub1->ViewValue = $this->transmit_no_in_sub1->CurrentValue;
-			$this->transmit_no_in_sub1->ViewCustomAttributes = "";
-
-			// approval_status_in_sub1
-			$this->approval_status_in_sub1->ViewValue = $this->approval_status_in_sub1->CurrentValue;
-			$this->approval_status_in_sub1->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub1
-			$this->transmit_date_in_sub1->ViewValue = $this->transmit_date_in_sub1->CurrentValue;
-			$this->transmit_date_in_sub1->ViewValue = FormatDateTime($this->transmit_date_in_sub1->ViewValue, 0);
-			$this->transmit_date_in_sub1->ViewCustomAttributes = "";
-
-			// submit_no_sub2
-			$this->submit_no_sub2->ViewValue = $this->submit_no_sub2->CurrentValue;
-			$this->submit_no_sub2->ViewCustomAttributes = "";
-
-			// revision_no_sub2
-			$this->revision_no_sub2->ViewValue = $this->revision_no_sub2->CurrentValue;
-			$this->revision_no_sub2->ViewCustomAttributes = "";
-
-			// direction_out_sub2
-			$this->direction_out_sub2->ViewValue = $this->direction_out_sub2->CurrentValue;
-			$this->direction_out_sub2->ViewCustomAttributes = "";
-
-			// planned_date_out_sub2
-			$this->planned_date_out_sub2->ViewValue = $this->planned_date_out_sub2->CurrentValue;
-			$this->planned_date_out_sub2->ViewValue = FormatDateTime($this->planned_date_out_sub2->ViewValue, 0);
-			$this->planned_date_out_sub2->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub2
-			$this->transmit_date_out_sub2->ViewValue = $this->transmit_date_out_sub2->CurrentValue;
-			$this->transmit_date_out_sub2->ViewValue = FormatDateTime($this->transmit_date_out_sub2->ViewValue, 0);
-			$this->transmit_date_out_sub2->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub2
-			$this->transmit_no_out_sub2->ViewValue = $this->transmit_no_out_sub2->CurrentValue;
-			$this->transmit_no_out_sub2->ViewCustomAttributes = "";
-
-			// approval_status_out_sub2
-			$this->approval_status_out_sub2->ViewValue = $this->approval_status_out_sub2->CurrentValue;
-			$this->approval_status_out_sub2->ViewCustomAttributes = "";
-
-			// direction_in_sub2
-			$this->direction_in_sub2->ViewValue = $this->direction_in_sub2->CurrentValue;
-			$this->direction_in_sub2->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub2
-			$this->transmit_no_in_sub2->ViewValue = $this->transmit_no_in_sub2->CurrentValue;
-			$this->transmit_no_in_sub2->ViewCustomAttributes = "";
-
-			// approval_status_in_sub2
-			$this->approval_status_in_sub2->ViewValue = $this->approval_status_in_sub2->CurrentValue;
-			$this->approval_status_in_sub2->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub2
-			$this->transmit_date_in_sub2->ViewValue = $this->transmit_date_in_sub2->CurrentValue;
-			$this->transmit_date_in_sub2->ViewValue = FormatDateTime($this->transmit_date_in_sub2->ViewValue, 0);
-			$this->transmit_date_in_sub2->ViewCustomAttributes = "";
-
-			// submit_no_sub3
-			$this->submit_no_sub3->ViewValue = $this->submit_no_sub3->CurrentValue;
-			$this->submit_no_sub3->ViewCustomAttributes = "";
-
-			// revision_no_sub3
-			$this->revision_no_sub3->ViewValue = $this->revision_no_sub3->CurrentValue;
-			$this->revision_no_sub3->ViewCustomAttributes = "";
-
-			// direction_out_sub3
-			$this->direction_out_sub3->ViewValue = $this->direction_out_sub3->CurrentValue;
-			$this->direction_out_sub3->ViewCustomAttributes = "";
-
-			// planned_date_out_sub3
-			$this->planned_date_out_sub3->ViewValue = $this->planned_date_out_sub3->CurrentValue;
-			$this->planned_date_out_sub3->ViewValue = FormatDateTime($this->planned_date_out_sub3->ViewValue, 0);
-			$this->planned_date_out_sub3->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub3
-			$this->transmit_date_out_sub3->ViewValue = $this->transmit_date_out_sub3->CurrentValue;
-			$this->transmit_date_out_sub3->ViewValue = FormatDateTime($this->transmit_date_out_sub3->ViewValue, 0);
-			$this->transmit_date_out_sub3->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub3
-			$this->transmit_no_out_sub3->ViewValue = $this->transmit_no_out_sub3->CurrentValue;
-			$this->transmit_no_out_sub3->ViewCustomAttributes = "";
-
-			// approval_status_out_sub3
-			$this->approval_status_out_sub3->ViewValue = $this->approval_status_out_sub3->CurrentValue;
-			$this->approval_status_out_sub3->ViewCustomAttributes = "";
-
-			// direction_in_sub3
-			$this->direction_in_sub3->ViewValue = $this->direction_in_sub3->CurrentValue;
-			$this->direction_in_sub3->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub3
-			$this->transmit_no_in_sub3->ViewValue = $this->transmit_no_in_sub3->CurrentValue;
-			$this->transmit_no_in_sub3->ViewCustomAttributes = "";
-
-			// approval_status_in_sub3
-			$this->approval_status_in_sub3->ViewValue = $this->approval_status_in_sub3->CurrentValue;
-			$this->approval_status_in_sub3->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub3
-			$this->transmit_date_in_sub3->ViewValue = $this->transmit_date_in_sub3->CurrentValue;
-			$this->transmit_date_in_sub3->ViewValue = FormatDateTime($this->transmit_date_in_sub3->ViewValue, 0);
-			$this->transmit_date_in_sub3->ViewCustomAttributes = "";
-
-			// submit_no_sub4
-			$this->submit_no_sub4->ViewValue = $this->submit_no_sub4->CurrentValue;
-			$this->submit_no_sub4->ViewCustomAttributes = "";
-
-			// revision_no_sub4
-			$this->revision_no_sub4->ViewValue = $this->revision_no_sub4->CurrentValue;
-			$this->revision_no_sub4->ViewCustomAttributes = "";
-
-			// direction_out_sub4
-			$this->direction_out_sub4->ViewValue = $this->direction_out_sub4->CurrentValue;
-			$this->direction_out_sub4->ViewCustomAttributes = "";
-
-			// planned_date_out_sub4
-			$this->planned_date_out_sub4->ViewValue = $this->planned_date_out_sub4->CurrentValue;
-			$this->planned_date_out_sub4->ViewValue = FormatDateTime($this->planned_date_out_sub4->ViewValue, 0);
-			$this->planned_date_out_sub4->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub4
-			$this->transmit_date_out_sub4->ViewValue = $this->transmit_date_out_sub4->CurrentValue;
-			$this->transmit_date_out_sub4->ViewValue = FormatDateTime($this->transmit_date_out_sub4->ViewValue, 0);
-			$this->transmit_date_out_sub4->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub4
-			$this->transmit_no_out_sub4->ViewValue = $this->transmit_no_out_sub4->CurrentValue;
-			$this->transmit_no_out_sub4->ViewCustomAttributes = "";
-
-			// approval_status_out_sub4
-			$this->approval_status_out_sub4->ViewValue = $this->approval_status_out_sub4->CurrentValue;
-			$this->approval_status_out_sub4->ViewCustomAttributes = "";
-
-			// direction_in_sub4
-			$this->direction_in_sub4->ViewValue = $this->direction_in_sub4->CurrentValue;
-			$this->direction_in_sub4->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub4
-			$this->transmit_no_in_sub4->ViewValue = $this->transmit_no_in_sub4->CurrentValue;
-			$this->transmit_no_in_sub4->ViewCustomAttributes = "";
-
-			// approval_status_in_sub4
-			$this->approval_status_in_sub4->ViewValue = $this->approval_status_in_sub4->CurrentValue;
-			$this->approval_status_in_sub4->ViewCustomAttributes = "";
-
-			// direction_in_file_sub4
-			$this->direction_in_file_sub4->ViewValue = $this->direction_in_file_sub4->CurrentValue;
-			$this->direction_in_file_sub4->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub4
-			$this->transmit_date_in_sub4->ViewValue = $this->transmit_date_in_sub4->CurrentValue;
-			$this->transmit_date_in_sub4->ViewValue = FormatDateTime($this->transmit_date_in_sub4->ViewValue, 0);
-			$this->transmit_date_in_sub4->ViewCustomAttributes = "";
-
-			// submit_no_sub5
-			$this->submit_no_sub5->ViewValue = $this->submit_no_sub5->CurrentValue;
-			$this->submit_no_sub5->ViewCustomAttributes = "";
-
-			// revision_no_sub5
-			$this->revision_no_sub5->ViewValue = $this->revision_no_sub5->CurrentValue;
-			$this->revision_no_sub5->ViewCustomAttributes = "";
-
-			// direction_out_sub5
-			$this->direction_out_sub5->ViewValue = $this->direction_out_sub5->CurrentValue;
-			$this->direction_out_sub5->ViewCustomAttributes = "";
-
-			// planned_date_out_sub5
-			$this->planned_date_out_sub5->ViewValue = $this->planned_date_out_sub5->CurrentValue;
-			$this->planned_date_out_sub5->ViewValue = FormatDateTime($this->planned_date_out_sub5->ViewValue, 0);
-			$this->planned_date_out_sub5->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub5
-			$this->transmit_date_out_sub5->ViewValue = $this->transmit_date_out_sub5->CurrentValue;
-			$this->transmit_date_out_sub5->ViewValue = FormatDateTime($this->transmit_date_out_sub5->ViewValue, 0);
-			$this->transmit_date_out_sub5->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub5
-			$this->transmit_no_out_sub5->ViewValue = $this->transmit_no_out_sub5->CurrentValue;
-			$this->transmit_no_out_sub5->ViewCustomAttributes = "";
-
-			// approval_status_out_sub5
-			$this->approval_status_out_sub5->ViewValue = $this->approval_status_out_sub5->CurrentValue;
-			$this->approval_status_out_sub5->ViewCustomAttributes = "";
-
-			// direction_in_sub5
-			$this->direction_in_sub5->ViewValue = $this->direction_in_sub5->CurrentValue;
-			$this->direction_in_sub5->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub5
-			$this->transmit_no_in_sub5->ViewValue = $this->transmit_no_in_sub5->CurrentValue;
-			$this->transmit_no_in_sub5->ViewCustomAttributes = "";
-
-			// approval_status_in_sub5
-			$this->approval_status_in_sub5->ViewValue = $this->approval_status_in_sub5->CurrentValue;
-			$this->approval_status_in_sub5->ViewCustomAttributes = "";
-
-			// direction_in_file_sub5
-			$this->direction_in_file_sub5->ViewValue = $this->direction_in_file_sub5->CurrentValue;
-			$this->direction_in_file_sub5->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub5
-			$this->transmit_date_in_sub5->ViewValue = $this->transmit_date_in_sub5->CurrentValue;
-			$this->transmit_date_in_sub5->ViewValue = FormatDateTime($this->transmit_date_in_sub5->ViewValue, 0);
-			$this->transmit_date_in_sub5->ViewCustomAttributes = "";
-
-			// submit_no_sub6
-			$this->submit_no_sub6->ViewValue = $this->submit_no_sub6->CurrentValue;
-			$this->submit_no_sub6->ViewCustomAttributes = "";
-
-			// revision_no_sub6
-			$this->revision_no_sub6->ViewValue = $this->revision_no_sub6->CurrentValue;
-			$this->revision_no_sub6->ViewCustomAttributes = "";
-
-			// direction_out_sub6
-			$this->direction_out_sub6->ViewValue = $this->direction_out_sub6->CurrentValue;
-			$this->direction_out_sub6->ViewCustomAttributes = "";
-
-			// planned_date_out_sub6
-			$this->planned_date_out_sub6->ViewValue = $this->planned_date_out_sub6->CurrentValue;
-			$this->planned_date_out_sub6->ViewValue = FormatDateTime($this->planned_date_out_sub6->ViewValue, 0);
-			$this->planned_date_out_sub6->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub6
-			$this->transmit_date_out_sub6->ViewValue = $this->transmit_date_out_sub6->CurrentValue;
-			$this->transmit_date_out_sub6->ViewValue = FormatDateTime($this->transmit_date_out_sub6->ViewValue, 0);
-			$this->transmit_date_out_sub6->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub6
-			$this->transmit_no_out_sub6->ViewValue = $this->transmit_no_out_sub6->CurrentValue;
-			$this->transmit_no_out_sub6->ViewCustomAttributes = "";
-
-			// approval_status_out_sub6
-			$this->approval_status_out_sub6->ViewValue = $this->approval_status_out_sub6->CurrentValue;
-			$this->approval_status_out_sub6->ViewCustomAttributes = "";
-
-			// direction_in_sub6
-			$this->direction_in_sub6->ViewValue = $this->direction_in_sub6->CurrentValue;
-			$this->direction_in_sub6->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub6
-			$this->transmit_no_in_sub6->ViewValue = $this->transmit_no_in_sub6->CurrentValue;
-			$this->transmit_no_in_sub6->ViewCustomAttributes = "";
-
-			// approval_status_in_sub6
-			$this->approval_status_in_sub6->ViewValue = $this->approval_status_in_sub6->CurrentValue;
-			$this->approval_status_in_sub6->ViewCustomAttributes = "";
-
-			// direction_in_file_sub6
-			$this->direction_in_file_sub6->ViewValue = $this->direction_in_file_sub6->CurrentValue;
-			$this->direction_in_file_sub6->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub6
-			$this->transmit_date_in_sub6->ViewValue = $this->transmit_date_in_sub6->CurrentValue;
-			$this->transmit_date_in_sub6->ViewValue = FormatDateTime($this->transmit_date_in_sub6->ViewValue, 0);
-			$this->transmit_date_in_sub6->ViewCustomAttributes = "";
-
-			// submit_no_sub7
-			$this->submit_no_sub7->ViewValue = $this->submit_no_sub7->CurrentValue;
-			$this->submit_no_sub7->ViewCustomAttributes = "";
-
-			// revision_no_sub7
-			$this->revision_no_sub7->ViewValue = $this->revision_no_sub7->CurrentValue;
-			$this->revision_no_sub7->ViewCustomAttributes = "";
-
-			// direction_out_sub7
-			$this->direction_out_sub7->ViewValue = $this->direction_out_sub7->CurrentValue;
-			$this->direction_out_sub7->ViewCustomAttributes = "";
-
-			// planned_date_out_sub7
-			$this->planned_date_out_sub7->ViewValue = $this->planned_date_out_sub7->CurrentValue;
-			$this->planned_date_out_sub7->ViewValue = FormatDateTime($this->planned_date_out_sub7->ViewValue, 0);
-			$this->planned_date_out_sub7->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub7
-			$this->transmit_date_out_sub7->ViewValue = $this->transmit_date_out_sub7->CurrentValue;
-			$this->transmit_date_out_sub7->ViewValue = FormatDateTime($this->transmit_date_out_sub7->ViewValue, 0);
-			$this->transmit_date_out_sub7->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub7
-			$this->transmit_no_out_sub7->ViewValue = $this->transmit_no_out_sub7->CurrentValue;
-			$this->transmit_no_out_sub7->ViewCustomAttributes = "";
-
-			// approval_status_out_sub7
-			$this->approval_status_out_sub7->ViewValue = $this->approval_status_out_sub7->CurrentValue;
-			$this->approval_status_out_sub7->ViewCustomAttributes = "";
-
-			// direction_in_sub7
-			$this->direction_in_sub7->ViewValue = $this->direction_in_sub7->CurrentValue;
-			$this->direction_in_sub7->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub7
-			$this->transmit_no_in_sub7->ViewValue = $this->transmit_no_in_sub7->CurrentValue;
-			$this->transmit_no_in_sub7->ViewCustomAttributes = "";
-
-			// approval_status_in_sub7
-			$this->approval_status_in_sub7->ViewValue = $this->approval_status_in_sub7->CurrentValue;
-			$this->approval_status_in_sub7->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub7
-			$this->transmit_date_in_sub7->ViewValue = $this->transmit_date_in_sub7->CurrentValue;
-			$this->transmit_date_in_sub7->ViewValue = FormatDateTime($this->transmit_date_in_sub7->ViewValue, 0);
-			$this->transmit_date_in_sub7->ViewCustomAttributes = "";
-
-			// submit_no_sub8
-			$this->submit_no_sub8->ViewValue = $this->submit_no_sub8->CurrentValue;
-			$this->submit_no_sub8->ViewCustomAttributes = "";
-
-			// revision_no_sub8
-			$this->revision_no_sub8->ViewValue = $this->revision_no_sub8->CurrentValue;
-			$this->revision_no_sub8->ViewCustomAttributes = "";
-
-			// direction_out_sub8
-			$this->direction_out_sub8->ViewValue = $this->direction_out_sub8->CurrentValue;
-			$this->direction_out_sub8->ViewCustomAttributes = "";
-
-			// planned_date_out_sub8
-			$this->planned_date_out_sub8->ViewValue = $this->planned_date_out_sub8->CurrentValue;
-			$this->planned_date_out_sub8->ViewValue = FormatDateTime($this->planned_date_out_sub8->ViewValue, 0);
-			$this->planned_date_out_sub8->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub8
-			$this->transmit_date_out_sub8->ViewValue = $this->transmit_date_out_sub8->CurrentValue;
-			$this->transmit_date_out_sub8->ViewValue = FormatDateTime($this->transmit_date_out_sub8->ViewValue, 0);
-			$this->transmit_date_out_sub8->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub8
-			$this->transmit_no_out_sub8->ViewValue = $this->transmit_no_out_sub8->CurrentValue;
-			$this->transmit_no_out_sub8->ViewCustomAttributes = "";
-
-			// approval_status_out_sub8
-			$this->approval_status_out_sub8->ViewValue = $this->approval_status_out_sub8->CurrentValue;
-			$this->approval_status_out_sub8->ViewCustomAttributes = "";
-
-			// direction_out_file_sub8
-			$this->direction_out_file_sub8->ViewValue = $this->direction_out_file_sub8->CurrentValue;
-			$this->direction_out_file_sub8->ViewCustomAttributes = "";
-
-			// direction_in_sub8
-			$this->direction_in_sub8->ViewValue = $this->direction_in_sub8->CurrentValue;
-			$this->direction_in_sub8->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub8
-			$this->transmit_no_in_sub8->ViewValue = $this->transmit_no_in_sub8->CurrentValue;
-			$this->transmit_no_in_sub8->ViewCustomAttributes = "";
-
-			// approval_status_in_sub8
-			$this->approval_status_in_sub8->ViewValue = $this->approval_status_in_sub8->CurrentValue;
-			$this->approval_status_in_sub8->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub8
-			$this->transmit_date_in_sub8->ViewValue = $this->transmit_date_in_sub8->CurrentValue;
-			$this->transmit_date_in_sub8->ViewValue = FormatDateTime($this->transmit_date_in_sub8->ViewValue, 0);
-			$this->transmit_date_in_sub8->ViewCustomAttributes = "";
-
-			// submit_no_sub9
-			$this->submit_no_sub9->ViewValue = $this->submit_no_sub9->CurrentValue;
-			$this->submit_no_sub9->ViewCustomAttributes = "";
-
-			// revision_no_sub9
-			$this->revision_no_sub9->ViewValue = $this->revision_no_sub9->CurrentValue;
-			$this->revision_no_sub9->ViewCustomAttributes = "";
-
-			// direction_out_sub9
-			$this->direction_out_sub9->ViewValue = $this->direction_out_sub9->CurrentValue;
-			$this->direction_out_sub9->ViewCustomAttributes = "";
-
-			// planned_date_out_sub9
-			$this->planned_date_out_sub9->ViewValue = $this->planned_date_out_sub9->CurrentValue;
-			$this->planned_date_out_sub9->ViewValue = FormatDateTime($this->planned_date_out_sub9->ViewValue, 0);
-			$this->planned_date_out_sub9->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub9
-			$this->transmit_date_out_sub9->ViewValue = $this->transmit_date_out_sub9->CurrentValue;
-			$this->transmit_date_out_sub9->ViewValue = FormatDateTime($this->transmit_date_out_sub9->ViewValue, 0);
-			$this->transmit_date_out_sub9->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub9
-			$this->transmit_no_out_sub9->ViewValue = $this->transmit_no_out_sub9->CurrentValue;
-			$this->transmit_no_out_sub9->ViewCustomAttributes = "";
-
-			// approval_status_out_sub9
-			$this->approval_status_out_sub9->ViewValue = $this->approval_status_out_sub9->CurrentValue;
-			$this->approval_status_out_sub9->ViewCustomAttributes = "";
-
-			// direction_in_sub9
-			$this->direction_in_sub9->ViewValue = $this->direction_in_sub9->CurrentValue;
-			$this->direction_in_sub9->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub9
-			$this->transmit_no_in_sub9->ViewValue = $this->transmit_no_in_sub9->CurrentValue;
-			$this->transmit_no_in_sub9->ViewCustomAttributes = "";
-
-			// approval_status_in_sub9
-			$this->approval_status_in_sub9->ViewValue = $this->approval_status_in_sub9->CurrentValue;
-			$this->approval_status_in_sub9->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub9
-			$this->transmit_date_in_sub9->ViewValue = $this->transmit_date_in_sub9->CurrentValue;
-			$this->transmit_date_in_sub9->ViewValue = FormatDateTime($this->transmit_date_in_sub9->ViewValue, 0);
-			$this->transmit_date_in_sub9->ViewCustomAttributes = "";
-
-			// submit_no_sub10
-			$this->submit_no_sub10->ViewValue = $this->submit_no_sub10->CurrentValue;
-			$this->submit_no_sub10->ViewCustomAttributes = "";
-
-			// revision_no_sub10
-			$this->revision_no_sub10->ViewValue = $this->revision_no_sub10->CurrentValue;
-			$this->revision_no_sub10->ViewCustomAttributes = "";
-
-			// direction_out_sub10
-			$this->direction_out_sub10->ViewValue = $this->direction_out_sub10->CurrentValue;
-			$this->direction_out_sub10->ViewCustomAttributes = "";
-
-			// planned_date_out_sub10
-			$this->planned_date_out_sub10->ViewValue = $this->planned_date_out_sub10->CurrentValue;
-			$this->planned_date_out_sub10->ViewValue = FormatDateTime($this->planned_date_out_sub10->ViewValue, 0);
-			$this->planned_date_out_sub10->ViewCustomAttributes = "";
-
-			// transmit_date_out_sub10
-			$this->transmit_date_out_sub10->ViewValue = $this->transmit_date_out_sub10->CurrentValue;
-			$this->transmit_date_out_sub10->ViewValue = FormatDateTime($this->transmit_date_out_sub10->ViewValue, 0);
-			$this->transmit_date_out_sub10->ViewCustomAttributes = "";
-
-			// transmit_no_out_sub10
-			$this->transmit_no_out_sub10->ViewValue = $this->transmit_no_out_sub10->CurrentValue;
-			$this->transmit_no_out_sub10->ViewCustomAttributes = "";
-
-			// approval_status_out_sub10
-			$this->approval_status_out_sub10->ViewValue = $this->approval_status_out_sub10->CurrentValue;
-			$this->approval_status_out_sub10->ViewCustomAttributes = "";
-
-			// direction_in_sub10
-			$this->direction_in_sub10->ViewValue = $this->direction_in_sub10->CurrentValue;
-			$this->direction_in_sub10->ViewCustomAttributes = "";
-
-			// transmit_no_in_sub10
-			$this->transmit_no_in_sub10->ViewValue = $this->transmit_no_in_sub10->CurrentValue;
-			$this->transmit_no_in_sub10->ViewCustomAttributes = "";
-
-			// approval_status_in_sub10
-			$this->approval_status_in_sub10->ViewValue = $this->approval_status_in_sub10->CurrentValue;
-			$this->approval_status_in_sub10->ViewCustomAttributes = "";
-
-			// transmit_date_in_sub10
-			$this->transmit_date_in_sub10->ViewValue = $this->transmit_date_in_sub10->CurrentValue;
-			$this->transmit_date_in_sub10->ViewValue = FormatDateTime($this->transmit_date_in_sub10->ViewValue, 0);
-			$this->transmit_date_in_sub10->ViewCustomAttributes = "";
+			// submit_no_1
+			$this->submit_no_1->ViewValue = $this->submit_no_1->CurrentValue;
+			$this->submit_no_1->ViewCustomAttributes = "";
+
+			// revision_no_1
+			$this->revision_no_1->ViewValue = $this->revision_no_1->CurrentValue;
+			$this->revision_no_1->ViewCustomAttributes = "";
+
+			// direction_1
+			$this->direction_1->ViewValue = $this->direction_1->CurrentValue;
+			$this->direction_1->ViewCustomAttributes = "";
+
+			// transmit_no_1
+			$this->transmit_no_1->ViewValue = $this->transmit_no_1->CurrentValue;
+			$this->transmit_no_1->ViewCustomAttributes = "";
+
+			// approval_status_1
+			$this->approval_status_1->ViewValue = $this->approval_status_1->CurrentValue;
+			$this->approval_status_1->ViewCustomAttributes = "";
+
+			// submit_no_2
+			$this->submit_no_2->ViewValue = $this->submit_no_2->CurrentValue;
+			$this->submit_no_2->ViewCustomAttributes = "";
+
+			// revision_no_2
+			$this->revision_no_2->ViewValue = $this->revision_no_2->CurrentValue;
+			$this->revision_no_2->ViewCustomAttributes = "";
+
+			// direction_2
+			$this->direction_2->ViewValue = $this->direction_2->CurrentValue;
+			$this->direction_2->ViewCustomAttributes = "";
+
+			// planned_date_2
+			$this->planned_date_2->ViewValue = $this->planned_date_2->CurrentValue;
+			$this->planned_date_2->ViewValue = FormatDateTime($this->planned_date_2->ViewValue, 0);
+			$this->planned_date_2->ViewCustomAttributes = "";
+
+			// transmit_date_2
+			$this->transmit_date_2->ViewValue = $this->transmit_date_2->CurrentValue;
+			$this->transmit_date_2->ViewValue = FormatDateTime($this->transmit_date_2->ViewValue, 0);
+			$this->transmit_date_2->ViewCustomAttributes = "";
+
+			// transmit_no_2
+			$this->transmit_no_2->ViewValue = $this->transmit_no_2->CurrentValue;
+			$this->transmit_no_2->ViewCustomAttributes = "";
+
+			// approval_status_2
+			$this->approval_status_2->ViewValue = $this->approval_status_2->CurrentValue;
+			$this->approval_status_2->ViewCustomAttributes = "";
+
+			// submit_no_3
+			$this->submit_no_3->ViewValue = $this->submit_no_3->CurrentValue;
+			$this->submit_no_3->ViewCustomAttributes = "";
+
+			// revision_no_3
+			$this->revision_no_3->ViewValue = $this->revision_no_3->CurrentValue;
+			$this->revision_no_3->ViewCustomAttributes = "";
+
+			// direction_3
+			$this->direction_3->ViewValue = $this->direction_3->CurrentValue;
+			$this->direction_3->ViewCustomAttributes = "";
+
+			// planned_date_3
+			$this->planned_date_3->ViewValue = $this->planned_date_3->CurrentValue;
+			$this->planned_date_3->ViewValue = FormatDateTime($this->planned_date_3->ViewValue, 0);
+			$this->planned_date_3->ViewCustomAttributes = "";
+
+			// transmit_date_3
+			$this->transmit_date_3->ViewValue = $this->transmit_date_3->CurrentValue;
+			$this->transmit_date_3->ViewValue = FormatDateTime($this->transmit_date_3->ViewValue, 0);
+			$this->transmit_date_3->ViewCustomAttributes = "";
+
+			// transmit_no_3
+			$this->transmit_no_3->ViewValue = $this->transmit_no_3->CurrentValue;
+			$this->transmit_no_3->ViewCustomAttributes = "";
+
+			// approval_status_3
+			$this->approval_status_3->ViewValue = $this->approval_status_3->CurrentValue;
+			$this->approval_status_3->ViewCustomAttributes = "";
+
+			// submit_no_4
+			$this->submit_no_4->ViewValue = $this->submit_no_4->CurrentValue;
+			$this->submit_no_4->ViewCustomAttributes = "";
+
+			// revision_no_4
+			$this->revision_no_4->ViewValue = $this->revision_no_4->CurrentValue;
+			$this->revision_no_4->ViewCustomAttributes = "";
+
+			// direction_4
+			$this->direction_4->ViewValue = $this->direction_4->CurrentValue;
+			$this->direction_4->ViewCustomAttributes = "";
+
+			// planned_date_4
+			$this->planned_date_4->ViewValue = $this->planned_date_4->CurrentValue;
+			$this->planned_date_4->ViewValue = FormatDateTime($this->planned_date_4->ViewValue, 0);
+			$this->planned_date_4->ViewCustomAttributes = "";
+
+			// transmit_date_4
+			$this->transmit_date_4->ViewValue = $this->transmit_date_4->CurrentValue;
+			$this->transmit_date_4->ViewValue = FormatDateTime($this->transmit_date_4->ViewValue, 0);
+			$this->transmit_date_4->ViewCustomAttributes = "";
+
+			// transmit_no_4
+			$this->transmit_no_4->ViewValue = $this->transmit_no_4->CurrentValue;
+			$this->transmit_no_4->ViewCustomAttributes = "";
+
+			// approval_status_4
+			$this->approval_status_4->ViewValue = $this->approval_status_4->CurrentValue;
+			$this->approval_status_4->ViewCustomAttributes = "";
+
+			// submit_no_5
+			$this->submit_no_5->ViewValue = $this->submit_no_5->CurrentValue;
+			$this->submit_no_5->ViewCustomAttributes = "";
+
+			// revision_no_5
+			$this->revision_no_5->ViewValue = $this->revision_no_5->CurrentValue;
+			$this->revision_no_5->ViewCustomAttributes = "";
+
+			// direction_5
+			$this->direction_5->ViewValue = $this->direction_5->CurrentValue;
+			$this->direction_5->ViewCustomAttributes = "";
+
+			// planned_date_5
+			$this->planned_date_5->ViewValue = $this->planned_date_5->CurrentValue;
+			$this->planned_date_5->ViewValue = FormatDateTime($this->planned_date_5->ViewValue, 0);
+			$this->planned_date_5->ViewCustomAttributes = "";
+
+			// transmit_date_5
+			$this->transmit_date_5->ViewValue = $this->transmit_date_5->CurrentValue;
+			$this->transmit_date_5->ViewValue = FormatDateTime($this->transmit_date_5->ViewValue, 0);
+			$this->transmit_date_5->ViewCustomAttributes = "";
+
+			// transmit_no_5
+			$this->transmit_no_5->ViewValue = $this->transmit_no_5->CurrentValue;
+			$this->transmit_no_5->ViewCustomAttributes = "";
+
+			// approval_status_5
+			$this->approval_status_5->ViewValue = $this->approval_status_5->CurrentValue;
+			$this->approval_status_5->ViewCustomAttributes = "";
+
+			// submit_no_6
+			$this->submit_no_6->ViewValue = $this->submit_no_6->CurrentValue;
+			$this->submit_no_6->ViewCustomAttributes = "";
+
+			// revision_no_6
+			$this->revision_no_6->ViewValue = $this->revision_no_6->CurrentValue;
+			$this->revision_no_6->ViewCustomAttributes = "";
+
+			// direction_6
+			$this->direction_6->ViewValue = $this->direction_6->CurrentValue;
+			$this->direction_6->ViewCustomAttributes = "";
+
+			// planned_date_6
+			$this->planned_date_6->ViewValue = $this->planned_date_6->CurrentValue;
+			$this->planned_date_6->ViewValue = FormatDateTime($this->planned_date_6->ViewValue, 0);
+			$this->planned_date_6->ViewCustomAttributes = "";
+
+			// transmit_date_6
+			$this->transmit_date_6->ViewValue = $this->transmit_date_6->CurrentValue;
+			$this->transmit_date_6->ViewValue = FormatDateTime($this->transmit_date_6->ViewValue, 0);
+			$this->transmit_date_6->ViewCustomAttributes = "";
+
+			// transmit_no_6
+			$this->transmit_no_6->ViewValue = $this->transmit_no_6->CurrentValue;
+			$this->transmit_no_6->ViewCustomAttributes = "";
+
+			// approval_status_6
+			$this->approval_status_6->ViewValue = $this->approval_status_6->CurrentValue;
+			$this->approval_status_6->ViewCustomAttributes = "";
+
+			// submit_no_7
+			$this->submit_no_7->ViewValue = $this->submit_no_7->CurrentValue;
+			$this->submit_no_7->ViewCustomAttributes = "";
+
+			// revision_no_7
+			$this->revision_no_7->ViewValue = $this->revision_no_7->CurrentValue;
+			$this->revision_no_7->ViewCustomAttributes = "";
+
+			// direction_7
+			$this->direction_7->ViewValue = $this->direction_7->CurrentValue;
+			$this->direction_7->ViewCustomAttributes = "";
+
+			// planned_date_7
+			$this->planned_date_7->ViewValue = $this->planned_date_7->CurrentValue;
+			$this->planned_date_7->ViewValue = FormatDateTime($this->planned_date_7->ViewValue, 0);
+			$this->planned_date_7->ViewCustomAttributes = "";
+
+			// transmit_date_7
+			$this->transmit_date_7->ViewValue = $this->transmit_date_7->CurrentValue;
+			$this->transmit_date_7->ViewValue = FormatDateTime($this->transmit_date_7->ViewValue, 0);
+			$this->transmit_date_7->ViewCustomAttributes = "";
+
+			// transmit_no_7
+			$this->transmit_no_7->ViewValue = $this->transmit_no_7->CurrentValue;
+			$this->transmit_no_7->ViewCustomAttributes = "";
+
+			// approval_status_7
+			$this->approval_status_7->ViewValue = $this->approval_status_7->CurrentValue;
+			$this->approval_status_7->ViewCustomAttributes = "";
+
+			// submit_no_8
+			$this->submit_no_8->ViewValue = $this->submit_no_8->CurrentValue;
+			$this->submit_no_8->ViewCustomAttributes = "";
+
+			// revision_no_8
+			$this->revision_no_8->ViewValue = $this->revision_no_8->CurrentValue;
+			$this->revision_no_8->ViewCustomAttributes = "";
+
+			// direction_8
+			$this->direction_8->ViewValue = $this->direction_8->CurrentValue;
+			$this->direction_8->ViewCustomAttributes = "";
+
+			// planned_date_8
+			$this->planned_date_8->ViewValue = $this->planned_date_8->CurrentValue;
+			$this->planned_date_8->ViewValue = FormatDateTime($this->planned_date_8->ViewValue, 0);
+			$this->planned_date_8->ViewCustomAttributes = "";
+
+			// transmit_date_8
+			$this->transmit_date_8->ViewValue = $this->transmit_date_8->CurrentValue;
+			$this->transmit_date_8->ViewValue = FormatDateTime($this->transmit_date_8->ViewValue, 0);
+			$this->transmit_date_8->ViewCustomAttributes = "";
+
+			// transmit_no_8
+			$this->transmit_no_8->ViewValue = $this->transmit_no_8->CurrentValue;
+			$this->transmit_no_8->ViewCustomAttributes = "";
+
+			// approval_status_8
+			$this->approval_status_8->ViewValue = $this->approval_status_8->CurrentValue;
+			$this->approval_status_8->ViewCustomAttributes = "";
+
+			// submit_no_9
+			$this->submit_no_9->ViewValue = $this->submit_no_9->CurrentValue;
+			$this->submit_no_9->ViewCustomAttributes = "";
+
+			// revision_no_9
+			$this->revision_no_9->ViewValue = $this->revision_no_9->CurrentValue;
+			$this->revision_no_9->ViewCustomAttributes = "";
+
+			// direction_9
+			$this->direction_9->ViewValue = $this->direction_9->CurrentValue;
+			$this->direction_9->ViewCustomAttributes = "";
+
+			// planned_date_9
+			$this->planned_date_9->ViewValue = $this->planned_date_9->CurrentValue;
+			$this->planned_date_9->ViewValue = FormatDateTime($this->planned_date_9->ViewValue, 0);
+			$this->planned_date_9->ViewCustomAttributes = "";
+
+			// transmit_date_9
+			$this->transmit_date_9->ViewValue = $this->transmit_date_9->CurrentValue;
+			$this->transmit_date_9->ViewValue = FormatDateTime($this->transmit_date_9->ViewValue, 0);
+			$this->transmit_date_9->ViewCustomAttributes = "";
+
+			// transmit_no_9
+			$this->transmit_no_9->ViewValue = $this->transmit_no_9->CurrentValue;
+			$this->transmit_no_9->ViewCustomAttributes = "";
+
+			// approval_status_9
+			$this->approval_status_9->ViewValue = $this->approval_status_9->CurrentValue;
+			$this->approval_status_9->ViewCustomAttributes = "";
+
+			// submit_no_10
+			$this->submit_no_10->ViewValue = $this->submit_no_10->CurrentValue;
+			$this->submit_no_10->ViewCustomAttributes = "";
+
+			// revision_no_10
+			$this->revision_no_10->ViewValue = $this->revision_no_10->CurrentValue;
+			$this->revision_no_10->ViewCustomAttributes = "";
+
+			// direction_10
+			$this->direction_10->ViewValue = $this->direction_10->CurrentValue;
+			$this->direction_10->ViewCustomAttributes = "";
+
+			// planned_date_10
+			$this->planned_date_10->ViewValue = $this->planned_date_10->CurrentValue;
+			$this->planned_date_10->ViewValue = FormatDateTime($this->planned_date_10->ViewValue, 0);
+			$this->planned_date_10->ViewCustomAttributes = "";
+
+			// transmit_date_10
+			$this->transmit_date_10->ViewValue = $this->transmit_date_10->CurrentValue;
+			$this->transmit_date_10->ViewValue = FormatDateTime($this->transmit_date_10->ViewValue, 0);
+			$this->transmit_date_10->ViewCustomAttributes = "";
+
+			// transmit_no_10
+			$this->transmit_no_10->ViewValue = $this->transmit_no_10->CurrentValue;
+			$this->transmit_no_10->ViewCustomAttributes = "";
+
+			// approval_status_10
+			$this->approval_status_10->ViewValue = $this->approval_status_10->CurrentValue;
+			$this->approval_status_10->ViewCustomAttributes = "";
 
 			// log_updatedon
 			$this->log_updatedon->ViewValue = $this->log_updatedon->CurrentValue;
-			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 0);
+			$this->log_updatedon->ViewValue = FormatDateTime($this->log_updatedon->ViewValue, 115);
 			$this->log_updatedon->ViewCustomAttributes = "";
+
+			// firelink_doc_no
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+			$this->firelink_doc_no->TooltipValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+			$this->client_doc_no->TooltipValue = "";
+
+			// order_number
+			$this->order_number->LinkCustomAttributes = "";
+			$this->order_number->HrefValue = "";
+			$this->order_number->TooltipValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+			$this->document_tittle->TooltipValue = "";
+
+			// current_status
+			$this->current_status->LinkCustomAttributes = "";
+			if (!EmptyValue($this->current_status_file->CurrentValue)) {
+				$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+				$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
+			} else {
+				$this->current_status->HrefValue = "";
+			}
+			$this->current_status->TooltipValue = "";
+
+			// submit_no_1
+			$this->submit_no_1->LinkCustomAttributes = "";
+			$this->submit_no_1->HrefValue = "";
+			$this->submit_no_1->TooltipValue = "";
+
+			// revision_no_1
+			$this->revision_no_1->LinkCustomAttributes = "";
+			$this->revision_no_1->HrefValue = "";
+			$this->revision_no_1->TooltipValue = "";
+
+			// direction_1
+			$this->direction_1->LinkCustomAttributes = "";
+			$this->direction_1->HrefValue = "";
+			$this->direction_1->TooltipValue = "";
+
+			// transmit_no_1
+			$this->transmit_no_1->LinkCustomAttributes = "";
+			$this->transmit_no_1->HrefValue = "";
+			$this->transmit_no_1->TooltipValue = "";
+
+			// approval_status_1
+			$this->approval_status_1->LinkCustomAttributes = "";
+			if (!EmptyValue($this->direction_file_1->CurrentValue)) {
+				$this->approval_status_1->HrefValue = ((!empty($this->direction_file_1->ViewValue) && !is_array($this->direction_file_1->ViewValue)) ? RemoveHtml($this->direction_file_1->ViewValue) : $this->direction_file_1->CurrentValue); // Add prefix/suffix
+				$this->approval_status_1->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->approval_status_1->HrefValue = FullUrl($this->approval_status_1->HrefValue, "href");
+			} else {
+				$this->approval_status_1->HrefValue = "";
+			}
+			$this->approval_status_1->TooltipValue = "";
+
+			// submit_no_2
+			$this->submit_no_2->LinkCustomAttributes = "";
+			$this->submit_no_2->HrefValue = "";
+			$this->submit_no_2->TooltipValue = "";
+
+			// revision_no_2
+			$this->revision_no_2->LinkCustomAttributes = "";
+			$this->revision_no_2->HrefValue = "";
+			$this->revision_no_2->TooltipValue = "";
+
+			// direction_2
+			$this->direction_2->LinkCustomAttributes = "";
+			$this->direction_2->HrefValue = "";
+			$this->direction_2->TooltipValue = "";
+
+			// planned_date_2
+			$this->planned_date_2->LinkCustomAttributes = "";
+			$this->planned_date_2->HrefValue = "";
+			$this->planned_date_2->TooltipValue = "";
+
+			// transmit_date_2
+			$this->transmit_date_2->LinkCustomAttributes = "";
+			$this->transmit_date_2->HrefValue = "";
+			$this->transmit_date_2->TooltipValue = "";
+
+			// transmit_no_2
+			$this->transmit_no_2->LinkCustomAttributes = "";
+			$this->transmit_no_2->HrefValue = "";
+			$this->transmit_no_2->TooltipValue = "";
+
+			// approval_status_2
+			$this->approval_status_2->LinkCustomAttributes = "";
+			$this->approval_status_2->HrefValue = "";
+			$this->approval_status_2->TooltipValue = "";
+
+			// submit_no_3
+			$this->submit_no_3->LinkCustomAttributes = "";
+			$this->submit_no_3->HrefValue = "";
+			$this->submit_no_3->TooltipValue = "";
+
+			// revision_no_3
+			$this->revision_no_3->LinkCustomAttributes = "";
+			$this->revision_no_3->HrefValue = "";
+			$this->revision_no_3->TooltipValue = "";
+
+			// direction_3
+			$this->direction_3->LinkCustomAttributes = "";
+			$this->direction_3->HrefValue = "";
+			$this->direction_3->TooltipValue = "";
+
+			// planned_date_3
+			$this->planned_date_3->LinkCustomAttributes = "";
+			$this->planned_date_3->HrefValue = "";
+			$this->planned_date_3->TooltipValue = "";
+
+			// transmit_date_3
+			$this->transmit_date_3->LinkCustomAttributes = "";
+			$this->transmit_date_3->HrefValue = "";
+			$this->transmit_date_3->TooltipValue = "";
+
+			// transmit_no_3
+			$this->transmit_no_3->LinkCustomAttributes = "";
+			$this->transmit_no_3->HrefValue = "";
+			$this->transmit_no_3->TooltipValue = "";
+
+			// approval_status_3
+			$this->approval_status_3->LinkCustomAttributes = "";
+			$this->approval_status_3->HrefValue = "";
+			$this->approval_status_3->TooltipValue = "";
+
+			// submit_no_4
+			$this->submit_no_4->LinkCustomAttributes = "";
+			$this->submit_no_4->HrefValue = "";
+			$this->submit_no_4->TooltipValue = "";
+
+			// revision_no_4
+			$this->revision_no_4->LinkCustomAttributes = "";
+			$this->revision_no_4->HrefValue = "";
+			$this->revision_no_4->TooltipValue = "";
+
+			// direction_4
+			$this->direction_4->LinkCustomAttributes = "";
+			$this->direction_4->HrefValue = "";
+			$this->direction_4->TooltipValue = "";
+
+			// planned_date_4
+			$this->planned_date_4->LinkCustomAttributes = "";
+			$this->planned_date_4->HrefValue = "";
+			$this->planned_date_4->TooltipValue = "";
+
+			// transmit_date_4
+			$this->transmit_date_4->LinkCustomAttributes = "";
+			$this->transmit_date_4->HrefValue = "";
+			$this->transmit_date_4->TooltipValue = "";
+
+			// transmit_no_4
+			$this->transmit_no_4->LinkCustomAttributes = "";
+			$this->transmit_no_4->HrefValue = "";
+			$this->transmit_no_4->TooltipValue = "";
+
+			// approval_status_4
+			$this->approval_status_4->LinkCustomAttributes = "";
+			$this->approval_status_4->HrefValue = "";
+			$this->approval_status_4->TooltipValue = "";
+
+			// submit_no_5
+			$this->submit_no_5->LinkCustomAttributes = "";
+			$this->submit_no_5->HrefValue = "";
+			$this->submit_no_5->TooltipValue = "";
+
+			// revision_no_5
+			$this->revision_no_5->LinkCustomAttributes = "";
+			$this->revision_no_5->HrefValue = "";
+			$this->revision_no_5->TooltipValue = "";
+
+			// direction_5
+			$this->direction_5->LinkCustomAttributes = "";
+			$this->direction_5->HrefValue = "";
+			$this->direction_5->TooltipValue = "";
+
+			// planned_date_5
+			$this->planned_date_5->LinkCustomAttributes = "";
+			$this->planned_date_5->HrefValue = "";
+			$this->planned_date_5->TooltipValue = "";
+
+			// transmit_date_5
+			$this->transmit_date_5->LinkCustomAttributes = "";
+			$this->transmit_date_5->HrefValue = "";
+			$this->transmit_date_5->TooltipValue = "";
+
+			// transmit_no_5
+			$this->transmit_no_5->LinkCustomAttributes = "";
+			$this->transmit_no_5->HrefValue = "";
+			$this->transmit_no_5->TooltipValue = "";
+
+			// approval_status_5
+			$this->approval_status_5->LinkCustomAttributes = "";
+			$this->approval_status_5->HrefValue = "";
+			$this->approval_status_5->TooltipValue = "";
+
+			// submit_no_6
+			$this->submit_no_6->LinkCustomAttributes = "";
+			$this->submit_no_6->HrefValue = "";
+			$this->submit_no_6->TooltipValue = "";
+
+			// revision_no_6
+			$this->revision_no_6->LinkCustomAttributes = "";
+			$this->revision_no_6->HrefValue = "";
+			$this->revision_no_6->TooltipValue = "";
+
+			// direction_6
+			$this->direction_6->LinkCustomAttributes = "";
+			$this->direction_6->HrefValue = "";
+			$this->direction_6->TooltipValue = "";
+
+			// planned_date_6
+			$this->planned_date_6->LinkCustomAttributes = "";
+			$this->planned_date_6->HrefValue = "";
+			$this->planned_date_6->TooltipValue = "";
+
+			// transmit_date_6
+			$this->transmit_date_6->LinkCustomAttributes = "";
+			$this->transmit_date_6->HrefValue = "";
+			$this->transmit_date_6->TooltipValue = "";
+
+			// transmit_no_6
+			$this->transmit_no_6->LinkCustomAttributes = "";
+			$this->transmit_no_6->HrefValue = "";
+			$this->transmit_no_6->TooltipValue = "";
+
+			// approval_status_6
+			$this->approval_status_6->LinkCustomAttributes = "";
+			$this->approval_status_6->HrefValue = "";
+			$this->approval_status_6->TooltipValue = "";
+
+			// submit_no_7
+			$this->submit_no_7->LinkCustomAttributes = "";
+			$this->submit_no_7->HrefValue = "";
+			$this->submit_no_7->TooltipValue = "";
+
+			// revision_no_7
+			$this->revision_no_7->LinkCustomAttributes = "";
+			$this->revision_no_7->HrefValue = "";
+			$this->revision_no_7->TooltipValue = "";
+
+			// direction_7
+			$this->direction_7->LinkCustomAttributes = "";
+			$this->direction_7->HrefValue = "";
+			$this->direction_7->TooltipValue = "";
+
+			// planned_date_7
+			$this->planned_date_7->LinkCustomAttributes = "";
+			$this->planned_date_7->HrefValue = "";
+			$this->planned_date_7->TooltipValue = "";
+
+			// transmit_date_7
+			$this->transmit_date_7->LinkCustomAttributes = "";
+			$this->transmit_date_7->HrefValue = "";
+			$this->transmit_date_7->TooltipValue = "";
+
+			// transmit_no_7
+			$this->transmit_no_7->LinkCustomAttributes = "";
+			$this->transmit_no_7->HrefValue = "";
+			$this->transmit_no_7->TooltipValue = "";
+
+			// approval_status_7
+			$this->approval_status_7->LinkCustomAttributes = "";
+			$this->approval_status_7->HrefValue = "";
+			$this->approval_status_7->TooltipValue = "";
+
+			// submit_no_8
+			$this->submit_no_8->LinkCustomAttributes = "";
+			$this->submit_no_8->HrefValue = "";
+			$this->submit_no_8->TooltipValue = "";
+
+			// revision_no_8
+			$this->revision_no_8->LinkCustomAttributes = "";
+			$this->revision_no_8->HrefValue = "";
+			$this->revision_no_8->TooltipValue = "";
+
+			// direction_8
+			$this->direction_8->LinkCustomAttributes = "";
+			$this->direction_8->HrefValue = "";
+			$this->direction_8->TooltipValue = "";
+
+			// planned_date_8
+			$this->planned_date_8->LinkCustomAttributes = "";
+			$this->planned_date_8->HrefValue = "";
+			$this->planned_date_8->TooltipValue = "";
+
+			// transmit_date_8
+			$this->transmit_date_8->LinkCustomAttributes = "";
+			$this->transmit_date_8->HrefValue = "";
+			$this->transmit_date_8->TooltipValue = "";
+
+			// transmit_no_8
+			$this->transmit_no_8->LinkCustomAttributes = "";
+			$this->transmit_no_8->HrefValue = "";
+			$this->transmit_no_8->TooltipValue = "";
+
+			// approval_status_8
+			$this->approval_status_8->LinkCustomAttributes = "";
+			$this->approval_status_8->HrefValue = "";
+			$this->approval_status_8->TooltipValue = "";
+
+			// submit_no_9
+			$this->submit_no_9->LinkCustomAttributes = "";
+			$this->submit_no_9->HrefValue = "";
+			$this->submit_no_9->TooltipValue = "";
+
+			// revision_no_9
+			$this->revision_no_9->LinkCustomAttributes = "";
+			$this->revision_no_9->HrefValue = "";
+			$this->revision_no_9->TooltipValue = "";
+
+			// direction_9
+			$this->direction_9->LinkCustomAttributes = "";
+			$this->direction_9->HrefValue = "";
+			$this->direction_9->TooltipValue = "";
+
+			// planned_date_9
+			$this->planned_date_9->LinkCustomAttributes = "";
+			$this->planned_date_9->HrefValue = "";
+			$this->planned_date_9->TooltipValue = "";
+
+			// transmit_date_9
+			$this->transmit_date_9->LinkCustomAttributes = "";
+			$this->transmit_date_9->HrefValue = "";
+			$this->transmit_date_9->TooltipValue = "";
+
+			// transmit_no_9
+			$this->transmit_no_9->LinkCustomAttributes = "";
+			$this->transmit_no_9->HrefValue = "";
+			$this->transmit_no_9->TooltipValue = "";
+
+			// approval_status_9
+			$this->approval_status_9->LinkCustomAttributes = "";
+			$this->approval_status_9->HrefValue = "";
+			$this->approval_status_9->TooltipValue = "";
+
+			// submit_no_10
+			$this->submit_no_10->LinkCustomAttributes = "";
+			$this->submit_no_10->HrefValue = "";
+			$this->submit_no_10->TooltipValue = "";
+
+			// revision_no_10
+			$this->revision_no_10->LinkCustomAttributes = "";
+			$this->revision_no_10->HrefValue = "";
+			$this->revision_no_10->TooltipValue = "";
+
+			// direction_10
+			$this->direction_10->LinkCustomAttributes = "";
+			$this->direction_10->HrefValue = "";
+			$this->direction_10->TooltipValue = "";
+
+			// planned_date_10
+			$this->planned_date_10->LinkCustomAttributes = "";
+			$this->planned_date_10->HrefValue = "";
+			$this->planned_date_10->TooltipValue = "";
+
+			// transmit_date_10
+			$this->transmit_date_10->LinkCustomAttributes = "";
+			$this->transmit_date_10->HrefValue = "";
+			$this->transmit_date_10->TooltipValue = "";
+
+			// transmit_no_10
+			$this->transmit_no_10->LinkCustomAttributes = "";
+			$this->transmit_no_10->HrefValue = "";
+			$this->transmit_no_10->TooltipValue = "";
+
+			// approval_status_10
+			$this->approval_status_10->LinkCustomAttributes = "";
+			$this->approval_status_10->HrefValue = "";
+			$this->approval_status_10->TooltipValue = "";
+
+			// log_updatedon
+			$this->log_updatedon->LinkCustomAttributes = "";
+			$this->log_updatedon->HrefValue = "";
+			$this->log_updatedon->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -2129,7 +2136,7 @@ class document_log_view extends document_log
 		// Export to Word
 		$item = &$this->ExportOptions->add("word");
 		$item->Body = $this->getExportTag("word");
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Html
 		$item = &$this->ExportOptions->add("html");
@@ -2149,13 +2156,13 @@ class document_log_view extends document_log
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");
 		$item->Body = $this->getExportTag("pdf");
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Email
 		$item = &$this->ExportOptions->add("email");
 		$url = "";
 		$item->Body = "<button id=\"emf_document_log\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_log',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_logview,key:" . ArrayToJsonAttribute($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
@@ -2250,10 +2257,8 @@ class document_log_view extends document_log
 
 		// Output data
 		if ($this->isExport("email")) {
-			if ($return)
-				return $doc->Text; // Return email content
-			else
-				echo $this->exportEmail($doc->Text); // Send email
+
+			// Export-to-email disabled
 		} else {
 			$doc->export();
 			if ($return) {
@@ -2266,93 +2271,6 @@ class document_log_view extends document_log
 					echo $buffer; // Resume the output buffer
 				return $content;
 			}
-		}
-	}
-
-	// Export email
-	protected function exportEmail($emailContent)
-	{
-		global $TempImages, $Language;
-		$sender = Post("sender", "");
-		$recipient = Post("recipient", "");
-		$cc = Post("cc", "");
-		$bcc = Post("bcc", "");
-
-		// Subject
-		$subject = Post("subject", "");
-		$emailSubject = $subject;
-
-		// Message
-		$content = Post("message", "");
-		$emailMessage = $content;
-
-		// Check sender
-		if ($sender == "") {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterSenderEmail") . "</p>";
-		}
-		if (!CheckEmail($sender)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperSenderEmail") . "</p>";
-		}
-
-		// Check recipient
-		if (!CheckEmailList($recipient, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperRecipientEmail") . "</p>";
-		}
-
-		// Check cc
-		if (!CheckEmailList($cc, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperCcEmail") . "</p>";
-		}
-
-		// Check bcc
-		if (!CheckEmailList($bcc, MAX_EMAIL_RECIPIENT)) {
-			return "<p class=\"text-danger\">" . $Language->phrase("EnterProperBccEmail") . "</p>";
-		}
-
-		// Check email sent count
-		if (!isset($_SESSION[EXPORT_EMAIL_COUNTER]))
-			$_SESSION[EXPORT_EMAIL_COUNTER] = 0;
-		if ((int)$_SESSION[EXPORT_EMAIL_COUNTER] > MAX_EMAIL_SENT_COUNT) {
-			return "<p class=\"text-danger\">" . $Language->phrase("ExceedMaxEmailExport") . "</p>";
-		}
-
-		// Send email
-		$email = new Email();
-		$email->Sender = $sender; // Sender
-		$email->Recipient = $recipient; // Recipient
-		$email->Cc = $cc; // Cc
-		$email->Bcc = $bcc; // Bcc
-		$email->Subject = $emailSubject; // Subject
-		$email->Format = "html";
-		if ($emailMessage <> "")
-			$emailMessage = RemoveXss($emailMessage) . "<br><br>";
-		foreach ($TempImages as $tmpImage)
-			$email->addEmbeddedImage($tmpImage);
-		$email->Content = $emailMessage . CleanEmailContent($emailContent); // Content
-		$eventArgs = [];
-		if ($this->Recordset) {
-			$this->RecCnt = $this->StartRec - 1;
-			$this->Recordset->moveFirst();
-			if ($this->StartRec > 1)
-				$this->Recordset->move($this->StartRec - 1);
-			$eventArgs["rs"] = &$this->Recordset;
-		}
-		$emailSent = FALSE;
-		if ($this->Email_Sending($email, $eventArgs))
-			$emailSent = $email->send();
-
-		// Check email sent status
-		if ($emailSent) {
-
-			// Update email sent count
-			$_SESSION[EXPORT_EMAIL_COUNTER]++;
-
-			// Sent email success
-			return "<p class=\"text-success\">" . $Language->phrase("SendEmailSuccess") . "</p>"; // Set up success message
-		} else {
-
-			// Sent email failure
-			return "<p class=\"text-danger\">" . $email->SendErrDescription . "</p>";
 		}
 	}
 

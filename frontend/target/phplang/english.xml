@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/5/18" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/5/20" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -699,6 +699,9 @@
   <project>
     <phrase id="bodytitle" value="Project Document Management-FireLink" />
     <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal.Frontend Version: 01-Beta Backend Version: 02-Beta Release Date: 2019-05-15" />
+    <menu id="36">
+      <phrase id="menutext" value="cron" />
+    </menu>
     <menu id="18">
       <phrase id="menutext" value="Workplace" />
     </menu>
@@ -1114,13 +1117,13 @@
         <phrase id="fldcaption" value="log id" />
       </field>
       <field id="firelink_doc_no">
-        <phrase id="fldcaption" value="FireLink Doc Number" />
+        <phrase id="fldcaption" value="FireLink Doc No" />
       </field>
       <field id="client_doc_no">
-        <phrase id="fldcaption" value="Client Doc Number" />
+        <phrase id="fldcaption" value="Client Doc No" />
       </field>
       <field id="order_number">
-        <phrase id="fldcaption" value="Order Number" />
+        <phrase id="fldcaption" value="FLK Order No" />
       </field>
       <field id="project_name">
         <phrase id="fldcaption" value="Project Name" />
@@ -1129,404 +1132,257 @@
         <phrase id="fldcaption" value="Document Tittle" />
       </field>
       <field id="current_status">
-        <phrase id="fldcaption" value="Summary of Status" />
+        <phrase id="fldcaption" value="Current Status Summary " />
       </field>
       <field id="current_status_file">
         <phrase id="fldcaption" value="current status file" />
       </field>
-      <field id="submit_no_sub1">
-        <phrase id="fldcaption" value="Submit Number" />
-      </field>
-      <field id="revision_no_sub1">
-        <phrase id="fldcaption" value="Revision Number" />
-      </field>
-      <field id="direction_out_sub1">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub1">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub1">
-        <phrase id="fldcaption" value="Transmital Date" />
-      </field>
-      <field id="transmit_no_out_sub1">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_out_sub1">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_out_file_sub1">
-        <phrase id="fldcaption" value="direction_out_file_sub1" />
-      </field>
-      <field id="direction_in_sub1">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub1">
-        <phrase id="fldcaption" value="Transmital No" />
-      </field>
-      <field id="approval_status_in_sub1">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_in_file_sub1">
-        <phrase id="fldcaption" value="direction in file sub 1" />
-      </field>
-      <field id="transmit_date_in_sub1">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub2">
-        <phrase id="fldcaption" value="Submit Number" />
-      </field>
-      <field id="revision_no_sub2">
-        <phrase id="fldcaption" value="Revision No" />
-      </field>
-      <field id="direction_out_sub2">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub2">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub2">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="transmit_no_out_sub2">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_out_sub2">
-        <phrase id="fldcaption" value="Approval Status " />
-      </field>
-      <field id="direction_out_file_sub2">
-        <phrase id="fldcaption" value="direction out file sub 2" />
-      </field>
-      <field id="direction_in_sub2">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub2">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub2">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_in_file_sub2">
-        <phrase id="fldcaption" value="direction in file sub 2" />
-      </field>
-      <field id="transmit_date_in_sub2">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub3">
+      <field id="submit_no_1">
         <phrase id="fldcaption" value="Submit No" />
       </field>
-      <field id="revision_no_sub3">
-        <phrase id="fldcaption" value="Revision Number" />
+      <field id="revision_no_1">
+        <phrase id="fldcaption" value="Revision" />
       </field>
-      <field id="direction_out_sub3">
+      <field id="direction_1">
         <phrase id="fldcaption" value="Direction" />
       </field>
-      <field id="planned_date_out_sub3">
+      <field id="planned_date_1">
         <phrase id="fldcaption" value="Planned Date" />
       </field>
-      <field id="transmit_date_out_sub3">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="transmit_no_out_sub3">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_out_sub3">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_out_file_sub3">
-        <phrase id="fldcaption" value="direction out file sub 3" />
-      </field>
-      <field id="direction_in_sub3">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub3">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub3">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_in_file_sub3">
-        <phrase id="fldcaption" value="direction in file sub 3" />
-      </field>
-      <field id="transmit_date_in_sub3">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub4">
-        <phrase id="fldcaption" value="Submit No" />
-      </field>
-      <field id="revision_no_sub4">
-        <phrase id="fldcaption" value="Revision No" />
-      </field>
-      <field id="direction_out_sub4">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub4">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub4">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="transmit_no_out_sub4">
-        <phrase id="fldcaption" value="Transmital Number" />
-      </field>
-      <field id="approval_status_out_sub4">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_out_file_sub4">
-        <phrase id="fldcaption" value="direction out file sub 4" />
-      </field>
-      <field id="direction_in_sub4">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub4">
-        <phrase id="fldcaption" value="Transmital Number" />
-      </field>
-      <field id="approval_status_in_sub4">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_in_file_sub4">
-        <phrase id="fldcaption" value="direction in file sub 4" />
-      </field>
-      <field id="transmit_date_in_sub4">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub5">
-        <phrase id="fldcaption" value="Submit No" />
-      </field>
-      <field id="revision_no_sub5">
-        <phrase id="fldcaption" value="Revision No" />
-      </field>
-      <field id="direction_out_sub5">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub5">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub5">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="transmit_no_out_sub5">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_out_sub5">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_out_file_sub5">
-        <phrase id="fldcaption" value="direction out file sub 5" />
-      </field>
-      <field id="direction_in_sub5">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub5">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub5">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_in_file_sub5">
-        <phrase id="fldcaption" value="direction in file sub 5" />
-      </field>
-      <field id="transmit_date_in_sub5">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub6">
-        <phrase id="fldcaption" value="Submit No" />
-      </field>
-      <field id="revision_no_sub6">
-        <phrase id="fldcaption" value="Revision No" />
-      </field>
-      <field id="direction_out_sub6">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub6">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub6">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="transmit_no_out_sub6">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_out_sub6">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_out_file_sub6">
-        <phrase id="fldcaption" value="direction out file sub 6" />
-      </field>
-      <field id="direction_in_sub6">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub6">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub6">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_in_file_sub6">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_date_in_sub6">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub7">
-        <phrase id="fldcaption" value="Submit No" />
-      </field>
-      <field id="revision_no_sub7">
-        <phrase id="fldcaption" value="Revision NO" />
-      </field>
-      <field id="direction_out_sub7">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="planned_date_out_sub7">
-        <phrase id="fldcaption" value="Planned Date" />
-      </field>
-      <field id="transmit_date_out_sub7">
+      <field id="transmit_date_1">
         <phrase id="fldcaption" value="Transmit Date" />
       </field>
-      <field id="transmit_no_out_sub7">
-        <phrase id="fldcaption" value="Transmittal No" />
+      <field id="transmit_no_1">
+        <phrase id="fldcaption" value="Transmit No" />
       </field>
-      <field id="approval_status_out_sub7">
-        <phrase id="fldcaption" value="Approval" />
+      <field id="approval_status_1">
+        <phrase id="fldcaption" value="Approval Status" />
       </field>
-      <field id="direction_out_file_sub7">
-        <phrase id="fldcaption" value="direction out file sub 7" />
+      <field id="direction_file_1">
+        <phrase id="fldcaption" value="direction file 1" />
       </field>
-      <field id="direction_in_sub7">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub7">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub7">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_in_file_sub7">
-        <phrase id="fldcaption" value="direction in file sub 7" />
-      </field>
-      <field id="transmit_date_in_sub7">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub8">
+      <field id="submit_no_2">
         <phrase id="fldcaption" value="Submit No" />
       </field>
-      <field id="revision_no_sub8">
-        <phrase id="fldcaption" value="Revision NO" />
+      <field id="revision_no_2">
+        <phrase id="fldcaption" value="Revision" />
       </field>
-      <field id="direction_out_sub8">
+      <field id="direction_2">
         <phrase id="fldcaption" value="Direction" />
       </field>
-      <field id="planned_date_out_sub8">
+      <field id="planned_date_2">
         <phrase id="fldcaption" value="Planned Date" />
       </field>
-      <field id="transmit_date_out_sub8">
+      <field id="transmit_date_2">
         <phrase id="fldcaption" value="Transmit Date" />
       </field>
-      <field id="transmit_no_out_sub8">
-        <phrase id="fldcaption" value="Transmittal No" />
+      <field id="transmit_no_2">
+        <phrase id="fldcaption" value="Transmit No" />
       </field>
-      <field id="approval_status_out_sub8">
-        <phrase id="fldcaption" value="Approval" />
+      <field id="approval_status_2">
+        <phrase id="fldcaption" value="Approval Status" />
       </field>
-      <field id="direction_out_file_sub8">
-        <phrase id="fldcaption" value="Direction" />
+      <field id="direction_file_2">
+        <phrase id="fldcaption" value="direction file 2" />
       </field>
-      <field id="direction_in_sub8">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub8">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub8">
-        <phrase id="fldcaption" value="Approval" />
-      </field>
-      <field id="direction_in_file_sub8">
-        <phrase id="fldcaption" value="direction in file sub 8" />
-      </field>
-      <field id="transmit_date_in_sub8">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub9">
+      <field id="submit_no_3">
         <phrase id="fldcaption" value="Submit No" />
       </field>
-      <field id="revision_no_sub9">
-        <phrase id="fldcaption" value="Revision No" />
+      <field id="revision_no_3">
+        <phrase id="fldcaption" value="Revision" />
       </field>
-      <field id="direction_out_sub9">
+      <field id="direction_3">
         <phrase id="fldcaption" value="Direction" />
       </field>
-      <field id="planned_date_out_sub9">
+      <field id="planned_date_3">
         <phrase id="fldcaption" value="Planned Date" />
       </field>
-      <field id="transmit_date_out_sub9">
-        <phrase id="fldcaption" value="Transmittal Date" />
+      <field id="transmit_date_3">
+        <phrase id="fldcaption" value="Transmit Date" />
       </field>
-      <field id="transmit_no_out_sub9">
-        <phrase id="fldcaption" value="Transmittal No" />
+      <field id="transmit_no_3">
+        <phrase id="fldcaption" value="Transmit No" />
       </field>
-      <field id="approval_status_out_sub9">
+      <field id="approval_status_3">
         <phrase id="fldcaption" value="Approval Status" />
       </field>
-      <field id="direction_out_file_sub9">
-        <phrase id="fldcaption" value="direction out file sub9" />
+      <field id="direction_file_3">
+        <phrase id="fldcaption" value="direction file 3" />
       </field>
-      <field id="direction_in_sub9">
-        <phrase id="fldcaption" value="Direction" />
-      </field>
-      <field id="transmit_no_in_sub9">
-        <phrase id="fldcaption" value="Transmittal No" />
-      </field>
-      <field id="approval_status_in_sub9">
-        <phrase id="fldcaption" value="Approval Status" />
-      </field>
-      <field id="direction_in_file_sub9">
-        <phrase id="fldcaption" value="direction in file sub 9" />
-      </field>
-      <field id="transmit_date_in_sub9">
-        <phrase id="fldcaption" value="Transmittal Date" />
-      </field>
-      <field id="submit_no_sub10">
+      <field id="submit_no_4">
         <phrase id="fldcaption" value="Submit No" />
       </field>
-      <field id="revision_no_sub10">
-        <phrase id="fldcaption" value="Revison No" />
+      <field id="revision_no_4">
+        <phrase id="fldcaption" value="Revision" />
       </field>
-      <field id="direction_out_sub10">
+      <field id="direction_4">
         <phrase id="fldcaption" value="Direction" />
       </field>
-      <field id="planned_date_out_sub10">
+      <field id="planned_date_4">
         <phrase id="fldcaption" value="Planned Date" />
       </field>
-      <field id="transmit_date_out_sub10">
-        <phrase id="fldcaption" value="Transmittal Date" />
+      <field id="transmit_date_4">
+        <phrase id="fldcaption" value="Transmit Date" />
       </field>
-      <field id="transmit_no_out_sub10">
-        <phrase id="fldcaption" value="Transmittal No" />
+      <field id="transmit_no_4">
+        <phrase id="fldcaption" value="Transmit No" />
       </field>
-      <field id="approval_status_out_sub10">
+      <field id="approval_status_4">
         <phrase id="fldcaption" value="Approval Status" />
       </field>
-      <field id="direction_out_file_sub10">
-        <phrase id="fldcaption" value="direction out file sub 10" />
+      <field id="direction_file_4">
+        <phrase id="fldcaption" value="direction file 4" />
       </field>
-      <field id="direction_in_sub10">
+      <field id="submit_no_5">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_5">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_5">
         <phrase id="fldcaption" value="Direction" />
       </field>
-      <field id="transmit_no_in_sub10">
-        <phrase id="fldcaption" value="Transmittal No" />
+      <field id="planned_date_5">
+        <phrase id="fldcaption" value="Planned Date" />
       </field>
-      <field id="approval_status_in_sub10">
+      <field id="transmit_date_5">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_5">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_5">
         <phrase id="fldcaption" value="Approval Status" />
       </field>
-      <field id="direction_in_file_sub10">
-        <phrase id="fldcaption" value="direction in file sub 10" />
+      <field id="direction_file_5">
+        <phrase id="fldcaption" value="direction file 5" />
       </field>
-      <field id="transmit_date_in_sub10">
-        <phrase id="fldcaption" value="Transmittal Date" />
+      <field id="submit_no_6">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_6">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_6">
+        <phrase id="fldcaption" value="Direction" />
+      </field>
+      <field id="planned_date_6">
+        <phrase id="fldcaption" value="Planned Date" />
+      </field>
+      <field id="transmit_date_6">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_6">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_6">
+        <phrase id="fldcaption" value="Approval Status" />
+      </field>
+      <field id="direction_file_6">
+        <phrase id="fldcaption" value="direction file 6" />
+      </field>
+      <field id="submit_no_7">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_7">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_7">
+        <phrase id="fldcaption" value="Direction" />
+      </field>
+      <field id="planned_date_7">
+        <phrase id="fldcaption" value="Planned Date" />
+      </field>
+      <field id="transmit_date_7">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_7">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_7">
+        <phrase id="fldcaption" value="Approval Status" />
+      </field>
+      <field id="direction_file_7">
+        <phrase id="fldcaption" value="direction file 7" />
+      </field>
+      <field id="submit_no_8">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_8">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_8">
+        <phrase id="fldcaption" value="Direction" />
+      </field>
+      <field id="planned_date_8">
+        <phrase id="fldcaption" value="Planned Date" />
+      </field>
+      <field id="transmit_date_8">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_8">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_8">
+        <phrase id="fldcaption" value="Approval Status" />
+      </field>
+      <field id="direction_file_8">
+        <phrase id="fldcaption" value="direction file 8" />
+      </field>
+      <field id="submit_no_9">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_9">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_9">
+        <phrase id="fldcaption" value="Direction" />
+      </field>
+      <field id="planned_date_9">
+        <phrase id="fldcaption" value="Planned Date" />
+      </field>
+      <field id="transmit_date_9">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_9">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_9">
+        <phrase id="fldcaption" value="Approval Status" />
+      </field>
+      <field id="direction_file_9">
+        <phrase id="fldcaption" value="direction file 9" />
+      </field>
+      <field id="submit_no_10">
+        <phrase id="fldcaption" value="Submit No" />
+      </field>
+      <field id="revision_no_10">
+        <phrase id="fldcaption" value="Revision" />
+      </field>
+      <field id="direction_10">
+        <phrase id="fldcaption" value="Direction" />
+      </field>
+      <field id="planned_date_10">
+        <phrase id="fldcaption" value="Planned Date" />
+      </field>
+      <field id="transmit_date_10">
+        <phrase id="fldcaption" value="Transmit Date" />
+      </field>
+      <field id="transmit_no_10">
+        <phrase id="fldcaption" value="Transmit No" />
+      </field>
+      <field id="approval_status_10">
+        <phrase id="fldcaption" value="Approval Status" />
+      </field>
+      <field id="direction_file_10">
+        <phrase id="fldcaption" value="direction file 10" />
       </field>
       <field id="log_updatedon">
-        <phrase id="fldcaption" value="Log Updated on" />
+        <phrase id="fldcaption" value="Log Last Updated On" />
       </field>
+    </table>
+    <table id="cron_file">
+      <phrase id="tblcaption" value="cron" />
     </table>
   </project>
 </ew-language>

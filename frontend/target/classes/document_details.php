@@ -400,8 +400,6 @@ class document_details extends DbTable
 			$where = " " . str_replace(array("(",")"), array("",""), $where) . " ";
 		if ($orderBy <> "")
 			$orderBy = " " . str_replace(array("(",")"), array("",""), $orderBy) . " ";
-		if ($this->BasicSearch->getKeyword() <> "")
-			return TRUE;
 		if ($this->project_name->AdvancedSearch->SearchValue <> "" ||
 			$this->project_name->AdvancedSearch->SearchValue2 <> "" ||
 			ContainsString($where, " " . $this->project_name->VirtualExpression . " "))

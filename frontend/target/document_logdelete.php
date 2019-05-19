@@ -94,347 +94,215 @@ $document_log_delete->showMessage();
 <?php if ($document_log->current_status->Visible) { // current_status ?>
 		<th class="<?php echo $document_log->current_status->headerCellClass() ?>"><span id="elh_document_log_current_status" class="document_log_current_status"><?php echo $document_log->current_status->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub1->Visible) { // submit_no_sub1 ?>
-		<th class="<?php echo $document_log->submit_no_sub1->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub1" class="document_log_submit_no_sub1"><?php echo $document_log->submit_no_sub1->caption() ?></span></th>
+<?php if ($document_log->submit_no_1->Visible) { // submit_no_1 ?>
+		<th class="<?php echo $document_log->submit_no_1->headerCellClass() ?>"><span id="elh_document_log_submit_no_1" class="document_log_submit_no_1"><?php echo $document_log->submit_no_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub1->Visible) { // revision_no_sub1 ?>
-		<th class="<?php echo $document_log->revision_no_sub1->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub1" class="document_log_revision_no_sub1"><?php echo $document_log->revision_no_sub1->caption() ?></span></th>
+<?php if ($document_log->revision_no_1->Visible) { // revision_no_1 ?>
+		<th class="<?php echo $document_log->revision_no_1->headerCellClass() ?>"><span id="elh_document_log_revision_no_1" class="document_log_revision_no_1"><?php echo $document_log->revision_no_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub1->Visible) { // direction_out_sub1 ?>
-		<th class="<?php echo $document_log->direction_out_sub1->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub1" class="document_log_direction_out_sub1"><?php echo $document_log->direction_out_sub1->caption() ?></span></th>
+<?php if ($document_log->direction_1->Visible) { // direction_1 ?>
+		<th class="<?php echo $document_log->direction_1->headerCellClass() ?>"><span id="elh_document_log_direction_1" class="document_log_direction_1"><?php echo $document_log->direction_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub1->Visible) { // planned_date_out_sub1 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub1->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub1" class="document_log_planned_date_out_sub1"><?php echo $document_log->planned_date_out_sub1->caption() ?></span></th>
+<?php if ($document_log->planned_date_1->Visible) { // planned_date_1 ?>
+		<th class="<?php echo $document_log->planned_date_1->headerCellClass() ?>"><span id="elh_document_log_planned_date_1" class="document_log_planned_date_1"><?php echo $document_log->planned_date_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub1->Visible) { // transmit_date_out_sub1 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub1->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub1" class="document_log_transmit_date_out_sub1"><?php echo $document_log->transmit_date_out_sub1->caption() ?></span></th>
+<?php if ($document_log->transmit_date_1->Visible) { // transmit_date_1 ?>
+		<th class="<?php echo $document_log->transmit_date_1->headerCellClass() ?>"><span id="elh_document_log_transmit_date_1" class="document_log_transmit_date_1"><?php echo $document_log->transmit_date_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub1->Visible) { // transmit_no_out_sub1 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub1->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub1" class="document_log_transmit_no_out_sub1"><?php echo $document_log->transmit_no_out_sub1->caption() ?></span></th>
+<?php if ($document_log->transmit_no_1->Visible) { // transmit_no_1 ?>
+		<th class="<?php echo $document_log->transmit_no_1->headerCellClass() ?>"><span id="elh_document_log_transmit_no_1" class="document_log_transmit_no_1"><?php echo $document_log->transmit_no_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub1->Visible) { // approval_status_out_sub1 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub1->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1"><?php echo $document_log->approval_status_out_sub1->caption() ?></span></th>
+<?php if ($document_log->approval_status_1->Visible) { // approval_status_1 ?>
+		<th class="<?php echo $document_log->approval_status_1->headerCellClass() ?>"><span id="elh_document_log_approval_status_1" class="document_log_approval_status_1"><?php echo $document_log->approval_status_1->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub1->Visible) { // direction_in_sub1 ?>
-		<th class="<?php echo $document_log->direction_in_sub1->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub1" class="document_log_direction_in_sub1"><?php echo $document_log->direction_in_sub1->caption() ?></span></th>
+<?php if ($document_log->submit_no_2->Visible) { // submit_no_2 ?>
+		<th class="<?php echo $document_log->submit_no_2->headerCellClass() ?>"><span id="elh_document_log_submit_no_2" class="document_log_submit_no_2"><?php echo $document_log->submit_no_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub1->Visible) { // transmit_no_in_sub1 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub1->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub1" class="document_log_transmit_no_in_sub1"><?php echo $document_log->transmit_no_in_sub1->caption() ?></span></th>
+<?php if ($document_log->revision_no_2->Visible) { // revision_no_2 ?>
+		<th class="<?php echo $document_log->revision_no_2->headerCellClass() ?>"><span id="elh_document_log_revision_no_2" class="document_log_revision_no_2"><?php echo $document_log->revision_no_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub1->Visible) { // approval_status_in_sub1 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub1->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1"><?php echo $document_log->approval_status_in_sub1->caption() ?></span></th>
+<?php if ($document_log->direction_2->Visible) { // direction_2 ?>
+		<th class="<?php echo $document_log->direction_2->headerCellClass() ?>"><span id="elh_document_log_direction_2" class="document_log_direction_2"><?php echo $document_log->direction_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub1->Visible) { // transmit_date_in_sub1 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub1->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub1" class="document_log_transmit_date_in_sub1"><?php echo $document_log->transmit_date_in_sub1->caption() ?></span></th>
+<?php if ($document_log->planned_date_2->Visible) { // planned_date_2 ?>
+		<th class="<?php echo $document_log->planned_date_2->headerCellClass() ?>"><span id="elh_document_log_planned_date_2" class="document_log_planned_date_2"><?php echo $document_log->planned_date_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub2->Visible) { // submit_no_sub2 ?>
-		<th class="<?php echo $document_log->submit_no_sub2->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub2" class="document_log_submit_no_sub2"><?php echo $document_log->submit_no_sub2->caption() ?></span></th>
+<?php if ($document_log->transmit_date_2->Visible) { // transmit_date_2 ?>
+		<th class="<?php echo $document_log->transmit_date_2->headerCellClass() ?>"><span id="elh_document_log_transmit_date_2" class="document_log_transmit_date_2"><?php echo $document_log->transmit_date_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub2->Visible) { // revision_no_sub2 ?>
-		<th class="<?php echo $document_log->revision_no_sub2->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub2" class="document_log_revision_no_sub2"><?php echo $document_log->revision_no_sub2->caption() ?></span></th>
+<?php if ($document_log->transmit_no_2->Visible) { // transmit_no_2 ?>
+		<th class="<?php echo $document_log->transmit_no_2->headerCellClass() ?>"><span id="elh_document_log_transmit_no_2" class="document_log_transmit_no_2"><?php echo $document_log->transmit_no_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub2->Visible) { // direction_out_sub2 ?>
-		<th class="<?php echo $document_log->direction_out_sub2->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub2" class="document_log_direction_out_sub2"><?php echo $document_log->direction_out_sub2->caption() ?></span></th>
+<?php if ($document_log->approval_status_2->Visible) { // approval_status_2 ?>
+		<th class="<?php echo $document_log->approval_status_2->headerCellClass() ?>"><span id="elh_document_log_approval_status_2" class="document_log_approval_status_2"><?php echo $document_log->approval_status_2->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub2->Visible) { // planned_date_out_sub2 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub2->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub2" class="document_log_planned_date_out_sub2"><?php echo $document_log->planned_date_out_sub2->caption() ?></span></th>
+<?php if ($document_log->submit_no_3->Visible) { // submit_no_3 ?>
+		<th class="<?php echo $document_log->submit_no_3->headerCellClass() ?>"><span id="elh_document_log_submit_no_3" class="document_log_submit_no_3"><?php echo $document_log->submit_no_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub2->Visible) { // transmit_date_out_sub2 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub2->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub2" class="document_log_transmit_date_out_sub2"><?php echo $document_log->transmit_date_out_sub2->caption() ?></span></th>
+<?php if ($document_log->revision_no_3->Visible) { // revision_no_3 ?>
+		<th class="<?php echo $document_log->revision_no_3->headerCellClass() ?>"><span id="elh_document_log_revision_no_3" class="document_log_revision_no_3"><?php echo $document_log->revision_no_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub2->Visible) { // transmit_no_out_sub2 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub2->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub2" class="document_log_transmit_no_out_sub2"><?php echo $document_log->transmit_no_out_sub2->caption() ?></span></th>
+<?php if ($document_log->direction_3->Visible) { // direction_3 ?>
+		<th class="<?php echo $document_log->direction_3->headerCellClass() ?>"><span id="elh_document_log_direction_3" class="document_log_direction_3"><?php echo $document_log->direction_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub2->Visible) { // approval_status_out_sub2 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub2->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub2" class="document_log_approval_status_out_sub2"><?php echo $document_log->approval_status_out_sub2->caption() ?></span></th>
+<?php if ($document_log->planned_date_3->Visible) { // planned_date_3 ?>
+		<th class="<?php echo $document_log->planned_date_3->headerCellClass() ?>"><span id="elh_document_log_planned_date_3" class="document_log_planned_date_3"><?php echo $document_log->planned_date_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub2->Visible) { // direction_in_sub2 ?>
-		<th class="<?php echo $document_log->direction_in_sub2->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub2" class="document_log_direction_in_sub2"><?php echo $document_log->direction_in_sub2->caption() ?></span></th>
+<?php if ($document_log->transmit_date_3->Visible) { // transmit_date_3 ?>
+		<th class="<?php echo $document_log->transmit_date_3->headerCellClass() ?>"><span id="elh_document_log_transmit_date_3" class="document_log_transmit_date_3"><?php echo $document_log->transmit_date_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub2->Visible) { // transmit_no_in_sub2 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub2->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub2" class="document_log_transmit_no_in_sub2"><?php echo $document_log->transmit_no_in_sub2->caption() ?></span></th>
+<?php if ($document_log->transmit_no_3->Visible) { // transmit_no_3 ?>
+		<th class="<?php echo $document_log->transmit_no_3->headerCellClass() ?>"><span id="elh_document_log_transmit_no_3" class="document_log_transmit_no_3"><?php echo $document_log->transmit_no_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub2->Visible) { // approval_status_in_sub2 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub2->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub2" class="document_log_approval_status_in_sub2"><?php echo $document_log->approval_status_in_sub2->caption() ?></span></th>
+<?php if ($document_log->approval_status_3->Visible) { // approval_status_3 ?>
+		<th class="<?php echo $document_log->approval_status_3->headerCellClass() ?>"><span id="elh_document_log_approval_status_3" class="document_log_approval_status_3"><?php echo $document_log->approval_status_3->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub2->Visible) { // transmit_date_in_sub2 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub2->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub2" class="document_log_transmit_date_in_sub2"><?php echo $document_log->transmit_date_in_sub2->caption() ?></span></th>
+<?php if ($document_log->submit_no_4->Visible) { // submit_no_4 ?>
+		<th class="<?php echo $document_log->submit_no_4->headerCellClass() ?>"><span id="elh_document_log_submit_no_4" class="document_log_submit_no_4"><?php echo $document_log->submit_no_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub3->Visible) { // submit_no_sub3 ?>
-		<th class="<?php echo $document_log->submit_no_sub3->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub3" class="document_log_submit_no_sub3"><?php echo $document_log->submit_no_sub3->caption() ?></span></th>
+<?php if ($document_log->revision_no_4->Visible) { // revision_no_4 ?>
+		<th class="<?php echo $document_log->revision_no_4->headerCellClass() ?>"><span id="elh_document_log_revision_no_4" class="document_log_revision_no_4"><?php echo $document_log->revision_no_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub3->Visible) { // revision_no_sub3 ?>
-		<th class="<?php echo $document_log->revision_no_sub3->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub3" class="document_log_revision_no_sub3"><?php echo $document_log->revision_no_sub3->caption() ?></span></th>
+<?php if ($document_log->direction_4->Visible) { // direction_4 ?>
+		<th class="<?php echo $document_log->direction_4->headerCellClass() ?>"><span id="elh_document_log_direction_4" class="document_log_direction_4"><?php echo $document_log->direction_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub3->Visible) { // direction_out_sub3 ?>
-		<th class="<?php echo $document_log->direction_out_sub3->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub3" class="document_log_direction_out_sub3"><?php echo $document_log->direction_out_sub3->caption() ?></span></th>
+<?php if ($document_log->planned_date_4->Visible) { // planned_date_4 ?>
+		<th class="<?php echo $document_log->planned_date_4->headerCellClass() ?>"><span id="elh_document_log_planned_date_4" class="document_log_planned_date_4"><?php echo $document_log->planned_date_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub3->Visible) { // planned_date_out_sub3 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub3->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub3" class="document_log_planned_date_out_sub3"><?php echo $document_log->planned_date_out_sub3->caption() ?></span></th>
+<?php if ($document_log->transmit_date_4->Visible) { // transmit_date_4 ?>
+		<th class="<?php echo $document_log->transmit_date_4->headerCellClass() ?>"><span id="elh_document_log_transmit_date_4" class="document_log_transmit_date_4"><?php echo $document_log->transmit_date_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub3->Visible) { // transmit_date_out_sub3 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub3->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub3" class="document_log_transmit_date_out_sub3"><?php echo $document_log->transmit_date_out_sub3->caption() ?></span></th>
+<?php if ($document_log->transmit_no_4->Visible) { // transmit_no_4 ?>
+		<th class="<?php echo $document_log->transmit_no_4->headerCellClass() ?>"><span id="elh_document_log_transmit_no_4" class="document_log_transmit_no_4"><?php echo $document_log->transmit_no_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub3->Visible) { // transmit_no_out_sub3 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub3->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub3" class="document_log_transmit_no_out_sub3"><?php echo $document_log->transmit_no_out_sub3->caption() ?></span></th>
+<?php if ($document_log->approval_status_4->Visible) { // approval_status_4 ?>
+		<th class="<?php echo $document_log->approval_status_4->headerCellClass() ?>"><span id="elh_document_log_approval_status_4" class="document_log_approval_status_4"><?php echo $document_log->approval_status_4->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub3->Visible) { // approval_status_out_sub3 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub3->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub3" class="document_log_approval_status_out_sub3"><?php echo $document_log->approval_status_out_sub3->caption() ?></span></th>
+<?php if ($document_log->submit_no_5->Visible) { // submit_no_5 ?>
+		<th class="<?php echo $document_log->submit_no_5->headerCellClass() ?>"><span id="elh_document_log_submit_no_5" class="document_log_submit_no_5"><?php echo $document_log->submit_no_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub3->Visible) { // direction_in_sub3 ?>
-		<th class="<?php echo $document_log->direction_in_sub3->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub3" class="document_log_direction_in_sub3"><?php echo $document_log->direction_in_sub3->caption() ?></span></th>
+<?php if ($document_log->revision_no_5->Visible) { // revision_no_5 ?>
+		<th class="<?php echo $document_log->revision_no_5->headerCellClass() ?>"><span id="elh_document_log_revision_no_5" class="document_log_revision_no_5"><?php echo $document_log->revision_no_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub3->Visible) { // transmit_no_in_sub3 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub3->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub3" class="document_log_transmit_no_in_sub3"><?php echo $document_log->transmit_no_in_sub3->caption() ?></span></th>
+<?php if ($document_log->direction_5->Visible) { // direction_5 ?>
+		<th class="<?php echo $document_log->direction_5->headerCellClass() ?>"><span id="elh_document_log_direction_5" class="document_log_direction_5"><?php echo $document_log->direction_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub3->Visible) { // approval_status_in_sub3 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub3->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub3" class="document_log_approval_status_in_sub3"><?php echo $document_log->approval_status_in_sub3->caption() ?></span></th>
+<?php if ($document_log->planned_date_5->Visible) { // planned_date_5 ?>
+		<th class="<?php echo $document_log->planned_date_5->headerCellClass() ?>"><span id="elh_document_log_planned_date_5" class="document_log_planned_date_5"><?php echo $document_log->planned_date_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub3->Visible) { // transmit_date_in_sub3 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub3->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub3" class="document_log_transmit_date_in_sub3"><?php echo $document_log->transmit_date_in_sub3->caption() ?></span></th>
+<?php if ($document_log->transmit_date_5->Visible) { // transmit_date_5 ?>
+		<th class="<?php echo $document_log->transmit_date_5->headerCellClass() ?>"><span id="elh_document_log_transmit_date_5" class="document_log_transmit_date_5"><?php echo $document_log->transmit_date_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub4->Visible) { // submit_no_sub4 ?>
-		<th class="<?php echo $document_log->submit_no_sub4->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub4" class="document_log_submit_no_sub4"><?php echo $document_log->submit_no_sub4->caption() ?></span></th>
+<?php if ($document_log->transmit_no_5->Visible) { // transmit_no_5 ?>
+		<th class="<?php echo $document_log->transmit_no_5->headerCellClass() ?>"><span id="elh_document_log_transmit_no_5" class="document_log_transmit_no_5"><?php echo $document_log->transmit_no_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub4->Visible) { // revision_no_sub4 ?>
-		<th class="<?php echo $document_log->revision_no_sub4->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub4" class="document_log_revision_no_sub4"><?php echo $document_log->revision_no_sub4->caption() ?></span></th>
+<?php if ($document_log->approval_status_5->Visible) { // approval_status_5 ?>
+		<th class="<?php echo $document_log->approval_status_5->headerCellClass() ?>"><span id="elh_document_log_approval_status_5" class="document_log_approval_status_5"><?php echo $document_log->approval_status_5->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub4->Visible) { // direction_out_sub4 ?>
-		<th class="<?php echo $document_log->direction_out_sub4->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub4" class="document_log_direction_out_sub4"><?php echo $document_log->direction_out_sub4->caption() ?></span></th>
+<?php if ($document_log->submit_no_6->Visible) { // submit_no_6 ?>
+		<th class="<?php echo $document_log->submit_no_6->headerCellClass() ?>"><span id="elh_document_log_submit_no_6" class="document_log_submit_no_6"><?php echo $document_log->submit_no_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub4->Visible) { // planned_date_out_sub4 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub4->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub4" class="document_log_planned_date_out_sub4"><?php echo $document_log->planned_date_out_sub4->caption() ?></span></th>
+<?php if ($document_log->revision_no_6->Visible) { // revision_no_6 ?>
+		<th class="<?php echo $document_log->revision_no_6->headerCellClass() ?>"><span id="elh_document_log_revision_no_6" class="document_log_revision_no_6"><?php echo $document_log->revision_no_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub4->Visible) { // transmit_date_out_sub4 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub4->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub4" class="document_log_transmit_date_out_sub4"><?php echo $document_log->transmit_date_out_sub4->caption() ?></span></th>
+<?php if ($document_log->direction_6->Visible) { // direction_6 ?>
+		<th class="<?php echo $document_log->direction_6->headerCellClass() ?>"><span id="elh_document_log_direction_6" class="document_log_direction_6"><?php echo $document_log->direction_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub4->Visible) { // transmit_no_out_sub4 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub4->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub4" class="document_log_transmit_no_out_sub4"><?php echo $document_log->transmit_no_out_sub4->caption() ?></span></th>
+<?php if ($document_log->planned_date_6->Visible) { // planned_date_6 ?>
+		<th class="<?php echo $document_log->planned_date_6->headerCellClass() ?>"><span id="elh_document_log_planned_date_6" class="document_log_planned_date_6"><?php echo $document_log->planned_date_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub4->Visible) { // approval_status_out_sub4 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub4->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub4" class="document_log_approval_status_out_sub4"><?php echo $document_log->approval_status_out_sub4->caption() ?></span></th>
+<?php if ($document_log->transmit_date_6->Visible) { // transmit_date_6 ?>
+		<th class="<?php echo $document_log->transmit_date_6->headerCellClass() ?>"><span id="elh_document_log_transmit_date_6" class="document_log_transmit_date_6"><?php echo $document_log->transmit_date_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub4->Visible) { // direction_in_sub4 ?>
-		<th class="<?php echo $document_log->direction_in_sub4->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub4" class="document_log_direction_in_sub4"><?php echo $document_log->direction_in_sub4->caption() ?></span></th>
+<?php if ($document_log->transmit_no_6->Visible) { // transmit_no_6 ?>
+		<th class="<?php echo $document_log->transmit_no_6->headerCellClass() ?>"><span id="elh_document_log_transmit_no_6" class="document_log_transmit_no_6"><?php echo $document_log->transmit_no_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub4->Visible) { // transmit_no_in_sub4 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub4->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub4" class="document_log_transmit_no_in_sub4"><?php echo $document_log->transmit_no_in_sub4->caption() ?></span></th>
+<?php if ($document_log->approval_status_6->Visible) { // approval_status_6 ?>
+		<th class="<?php echo $document_log->approval_status_6->headerCellClass() ?>"><span id="elh_document_log_approval_status_6" class="document_log_approval_status_6"><?php echo $document_log->approval_status_6->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub4->Visible) { // approval_status_in_sub4 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub4->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub4" class="document_log_approval_status_in_sub4"><?php echo $document_log->approval_status_in_sub4->caption() ?></span></th>
+<?php if ($document_log->submit_no_7->Visible) { // submit_no_7 ?>
+		<th class="<?php echo $document_log->submit_no_7->headerCellClass() ?>"><span id="elh_document_log_submit_no_7" class="document_log_submit_no_7"><?php echo $document_log->submit_no_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub4->Visible) { // direction_in_file_sub4 ?>
-		<th class="<?php echo $document_log->direction_in_file_sub4->headerCellClass() ?>"><span id="elh_document_log_direction_in_file_sub4" class="document_log_direction_in_file_sub4"><?php echo $document_log->direction_in_file_sub4->caption() ?></span></th>
+<?php if ($document_log->revision_no_7->Visible) { // revision_no_7 ?>
+		<th class="<?php echo $document_log->revision_no_7->headerCellClass() ?>"><span id="elh_document_log_revision_no_7" class="document_log_revision_no_7"><?php echo $document_log->revision_no_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub4->Visible) { // transmit_date_in_sub4 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub4->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub4" class="document_log_transmit_date_in_sub4"><?php echo $document_log->transmit_date_in_sub4->caption() ?></span></th>
+<?php if ($document_log->direction_7->Visible) { // direction_7 ?>
+		<th class="<?php echo $document_log->direction_7->headerCellClass() ?>"><span id="elh_document_log_direction_7" class="document_log_direction_7"><?php echo $document_log->direction_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub5->Visible) { // submit_no_sub5 ?>
-		<th class="<?php echo $document_log->submit_no_sub5->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub5" class="document_log_submit_no_sub5"><?php echo $document_log->submit_no_sub5->caption() ?></span></th>
+<?php if ($document_log->planned_date_7->Visible) { // planned_date_7 ?>
+		<th class="<?php echo $document_log->planned_date_7->headerCellClass() ?>"><span id="elh_document_log_planned_date_7" class="document_log_planned_date_7"><?php echo $document_log->planned_date_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub5->Visible) { // revision_no_sub5 ?>
-		<th class="<?php echo $document_log->revision_no_sub5->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub5" class="document_log_revision_no_sub5"><?php echo $document_log->revision_no_sub5->caption() ?></span></th>
+<?php if ($document_log->transmit_date_7->Visible) { // transmit_date_7 ?>
+		<th class="<?php echo $document_log->transmit_date_7->headerCellClass() ?>"><span id="elh_document_log_transmit_date_7" class="document_log_transmit_date_7"><?php echo $document_log->transmit_date_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub5->Visible) { // direction_out_sub5 ?>
-		<th class="<?php echo $document_log->direction_out_sub5->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub5" class="document_log_direction_out_sub5"><?php echo $document_log->direction_out_sub5->caption() ?></span></th>
+<?php if ($document_log->transmit_no_7->Visible) { // transmit_no_7 ?>
+		<th class="<?php echo $document_log->transmit_no_7->headerCellClass() ?>"><span id="elh_document_log_transmit_no_7" class="document_log_transmit_no_7"><?php echo $document_log->transmit_no_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub5->Visible) { // planned_date_out_sub5 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub5->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub5" class="document_log_planned_date_out_sub5"><?php echo $document_log->planned_date_out_sub5->caption() ?></span></th>
+<?php if ($document_log->approval_status_7->Visible) { // approval_status_7 ?>
+		<th class="<?php echo $document_log->approval_status_7->headerCellClass() ?>"><span id="elh_document_log_approval_status_7" class="document_log_approval_status_7"><?php echo $document_log->approval_status_7->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub5->Visible) { // transmit_date_out_sub5 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub5->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub5" class="document_log_transmit_date_out_sub5"><?php echo $document_log->transmit_date_out_sub5->caption() ?></span></th>
+<?php if ($document_log->submit_no_8->Visible) { // submit_no_8 ?>
+		<th class="<?php echo $document_log->submit_no_8->headerCellClass() ?>"><span id="elh_document_log_submit_no_8" class="document_log_submit_no_8"><?php echo $document_log->submit_no_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub5->Visible) { // transmit_no_out_sub5 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub5->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub5" class="document_log_transmit_no_out_sub5"><?php echo $document_log->transmit_no_out_sub5->caption() ?></span></th>
+<?php if ($document_log->revision_no_8->Visible) { // revision_no_8 ?>
+		<th class="<?php echo $document_log->revision_no_8->headerCellClass() ?>"><span id="elh_document_log_revision_no_8" class="document_log_revision_no_8"><?php echo $document_log->revision_no_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub5->Visible) { // approval_status_out_sub5 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub5->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub5" class="document_log_approval_status_out_sub5"><?php echo $document_log->approval_status_out_sub5->caption() ?></span></th>
+<?php if ($document_log->direction_8->Visible) { // direction_8 ?>
+		<th class="<?php echo $document_log->direction_8->headerCellClass() ?>"><span id="elh_document_log_direction_8" class="document_log_direction_8"><?php echo $document_log->direction_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub5->Visible) { // direction_in_sub5 ?>
-		<th class="<?php echo $document_log->direction_in_sub5->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub5" class="document_log_direction_in_sub5"><?php echo $document_log->direction_in_sub5->caption() ?></span></th>
+<?php if ($document_log->planned_date_8->Visible) { // planned_date_8 ?>
+		<th class="<?php echo $document_log->planned_date_8->headerCellClass() ?>"><span id="elh_document_log_planned_date_8" class="document_log_planned_date_8"><?php echo $document_log->planned_date_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub5->Visible) { // transmit_no_in_sub5 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub5->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub5" class="document_log_transmit_no_in_sub5"><?php echo $document_log->transmit_no_in_sub5->caption() ?></span></th>
+<?php if ($document_log->transmit_date_8->Visible) { // transmit_date_8 ?>
+		<th class="<?php echo $document_log->transmit_date_8->headerCellClass() ?>"><span id="elh_document_log_transmit_date_8" class="document_log_transmit_date_8"><?php echo $document_log->transmit_date_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub5->Visible) { // approval_status_in_sub5 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub5->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub5" class="document_log_approval_status_in_sub5"><?php echo $document_log->approval_status_in_sub5->caption() ?></span></th>
+<?php if ($document_log->transmit_no_8->Visible) { // transmit_no_8 ?>
+		<th class="<?php echo $document_log->transmit_no_8->headerCellClass() ?>"><span id="elh_document_log_transmit_no_8" class="document_log_transmit_no_8"><?php echo $document_log->transmit_no_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub5->Visible) { // direction_in_file_sub5 ?>
-		<th class="<?php echo $document_log->direction_in_file_sub5->headerCellClass() ?>"><span id="elh_document_log_direction_in_file_sub5" class="document_log_direction_in_file_sub5"><?php echo $document_log->direction_in_file_sub5->caption() ?></span></th>
+<?php if ($document_log->approval_status_8->Visible) { // approval_status_8 ?>
+		<th class="<?php echo $document_log->approval_status_8->headerCellClass() ?>"><span id="elh_document_log_approval_status_8" class="document_log_approval_status_8"><?php echo $document_log->approval_status_8->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub5->Visible) { // transmit_date_in_sub5 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub5->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub5" class="document_log_transmit_date_in_sub5"><?php echo $document_log->transmit_date_in_sub5->caption() ?></span></th>
+<?php if ($document_log->submit_no_9->Visible) { // submit_no_9 ?>
+		<th class="<?php echo $document_log->submit_no_9->headerCellClass() ?>"><span id="elh_document_log_submit_no_9" class="document_log_submit_no_9"><?php echo $document_log->submit_no_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub6->Visible) { // submit_no_sub6 ?>
-		<th class="<?php echo $document_log->submit_no_sub6->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub6" class="document_log_submit_no_sub6"><?php echo $document_log->submit_no_sub6->caption() ?></span></th>
+<?php if ($document_log->revision_no_9->Visible) { // revision_no_9 ?>
+		<th class="<?php echo $document_log->revision_no_9->headerCellClass() ?>"><span id="elh_document_log_revision_no_9" class="document_log_revision_no_9"><?php echo $document_log->revision_no_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->revision_no_sub6->Visible) { // revision_no_sub6 ?>
-		<th class="<?php echo $document_log->revision_no_sub6->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub6" class="document_log_revision_no_sub6"><?php echo $document_log->revision_no_sub6->caption() ?></span></th>
+<?php if ($document_log->direction_9->Visible) { // direction_9 ?>
+		<th class="<?php echo $document_log->direction_9->headerCellClass() ?>"><span id="elh_document_log_direction_9" class="document_log_direction_9"><?php echo $document_log->direction_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_out_sub6->Visible) { // direction_out_sub6 ?>
-		<th class="<?php echo $document_log->direction_out_sub6->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub6" class="document_log_direction_out_sub6"><?php echo $document_log->direction_out_sub6->caption() ?></span></th>
+<?php if ($document_log->planned_date_9->Visible) { // planned_date_9 ?>
+		<th class="<?php echo $document_log->planned_date_9->headerCellClass() ?>"><span id="elh_document_log_planned_date_9" class="document_log_planned_date_9"><?php echo $document_log->planned_date_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub6->Visible) { // planned_date_out_sub6 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub6->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub6" class="document_log_planned_date_out_sub6"><?php echo $document_log->planned_date_out_sub6->caption() ?></span></th>
+<?php if ($document_log->transmit_date_9->Visible) { // transmit_date_9 ?>
+		<th class="<?php echo $document_log->transmit_date_9->headerCellClass() ?>"><span id="elh_document_log_transmit_date_9" class="document_log_transmit_date_9"><?php echo $document_log->transmit_date_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub6->Visible) { // transmit_date_out_sub6 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub6->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub6" class="document_log_transmit_date_out_sub6"><?php echo $document_log->transmit_date_out_sub6->caption() ?></span></th>
+<?php if ($document_log->transmit_no_9->Visible) { // transmit_no_9 ?>
+		<th class="<?php echo $document_log->transmit_no_9->headerCellClass() ?>"><span id="elh_document_log_transmit_no_9" class="document_log_transmit_no_9"><?php echo $document_log->transmit_no_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub6->Visible) { // transmit_no_out_sub6 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub6->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub6" class="document_log_transmit_no_out_sub6"><?php echo $document_log->transmit_no_out_sub6->caption() ?></span></th>
+<?php if ($document_log->approval_status_9->Visible) { // approval_status_9 ?>
+		<th class="<?php echo $document_log->approval_status_9->headerCellClass() ?>"><span id="elh_document_log_approval_status_9" class="document_log_approval_status_9"><?php echo $document_log->approval_status_9->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub6->Visible) { // approval_status_out_sub6 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub6->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub6" class="document_log_approval_status_out_sub6"><?php echo $document_log->approval_status_out_sub6->caption() ?></span></th>
+<?php if ($document_log->submit_no_10->Visible) { // submit_no_10 ?>
+		<th class="<?php echo $document_log->submit_no_10->headerCellClass() ?>"><span id="elh_document_log_submit_no_10" class="document_log_submit_no_10"><?php echo $document_log->submit_no_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_sub6->Visible) { // direction_in_sub6 ?>
-		<th class="<?php echo $document_log->direction_in_sub6->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub6" class="document_log_direction_in_sub6"><?php echo $document_log->direction_in_sub6->caption() ?></span></th>
+<?php if ($document_log->revision_no_10->Visible) { // revision_no_10 ?>
+		<th class="<?php echo $document_log->revision_no_10->headerCellClass() ?>"><span id="elh_document_log_revision_no_10" class="document_log_revision_no_10"><?php echo $document_log->revision_no_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub6->Visible) { // transmit_no_in_sub6 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub6->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub6" class="document_log_transmit_no_in_sub6"><?php echo $document_log->transmit_no_in_sub6->caption() ?></span></th>
+<?php if ($document_log->direction_10->Visible) { // direction_10 ?>
+		<th class="<?php echo $document_log->direction_10->headerCellClass() ?>"><span id="elh_document_log_direction_10" class="document_log_direction_10"><?php echo $document_log->direction_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub6->Visible) { // approval_status_in_sub6 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub6->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub6" class="document_log_approval_status_in_sub6"><?php echo $document_log->approval_status_in_sub6->caption() ?></span></th>
+<?php if ($document_log->planned_date_10->Visible) { // planned_date_10 ?>
+		<th class="<?php echo $document_log->planned_date_10->headerCellClass() ?>"><span id="elh_document_log_planned_date_10" class="document_log_planned_date_10"><?php echo $document_log->planned_date_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub6->Visible) { // direction_in_file_sub6 ?>
-		<th class="<?php echo $document_log->direction_in_file_sub6->headerCellClass() ?>"><span id="elh_document_log_direction_in_file_sub6" class="document_log_direction_in_file_sub6"><?php echo $document_log->direction_in_file_sub6->caption() ?></span></th>
+<?php if ($document_log->transmit_date_10->Visible) { // transmit_date_10 ?>
+		<th class="<?php echo $document_log->transmit_date_10->headerCellClass() ?>"><span id="elh_document_log_transmit_date_10" class="document_log_transmit_date_10"><?php echo $document_log->transmit_date_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub6->Visible) { // transmit_date_in_sub6 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub6->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub6" class="document_log_transmit_date_in_sub6"><?php echo $document_log->transmit_date_in_sub6->caption() ?></span></th>
+<?php if ($document_log->transmit_no_10->Visible) { // transmit_no_10 ?>
+		<th class="<?php echo $document_log->transmit_no_10->headerCellClass() ?>"><span id="elh_document_log_transmit_no_10" class="document_log_transmit_no_10"><?php echo $document_log->transmit_no_10->caption() ?></span></th>
 <?php } ?>
-<?php if ($document_log->submit_no_sub7->Visible) { // submit_no_sub7 ?>
-		<th class="<?php echo $document_log->submit_no_sub7->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub7" class="document_log_submit_no_sub7"><?php echo $document_log->submit_no_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->revision_no_sub7->Visible) { // revision_no_sub7 ?>
-		<th class="<?php echo $document_log->revision_no_sub7->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub7" class="document_log_revision_no_sub7"><?php echo $document_log->revision_no_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_sub7->Visible) { // direction_out_sub7 ?>
-		<th class="<?php echo $document_log->direction_out_sub7->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub7" class="document_log_direction_out_sub7"><?php echo $document_log->direction_out_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub7->Visible) { // planned_date_out_sub7 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub7->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub7" class="document_log_planned_date_out_sub7"><?php echo $document_log->planned_date_out_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub7->Visible) { // transmit_date_out_sub7 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub7->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub7" class="document_log_transmit_date_out_sub7"><?php echo $document_log->transmit_date_out_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub7->Visible) { // transmit_no_out_sub7 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub7->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub7" class="document_log_transmit_no_out_sub7"><?php echo $document_log->transmit_no_out_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub7->Visible) { // approval_status_out_sub7 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub7->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub7" class="document_log_approval_status_out_sub7"><?php echo $document_log->approval_status_out_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_in_sub7->Visible) { // direction_in_sub7 ?>
-		<th class="<?php echo $document_log->direction_in_sub7->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub7" class="document_log_direction_in_sub7"><?php echo $document_log->direction_in_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub7->Visible) { // transmit_no_in_sub7 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub7->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub7" class="document_log_transmit_no_in_sub7"><?php echo $document_log->transmit_no_in_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub7->Visible) { // approval_status_in_sub7 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub7->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub7" class="document_log_approval_status_in_sub7"><?php echo $document_log->approval_status_in_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub7->Visible) { // transmit_date_in_sub7 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub7->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub7" class="document_log_transmit_date_in_sub7"><?php echo $document_log->transmit_date_in_sub7->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->submit_no_sub8->Visible) { // submit_no_sub8 ?>
-		<th class="<?php echo $document_log->submit_no_sub8->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub8" class="document_log_submit_no_sub8"><?php echo $document_log->submit_no_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->revision_no_sub8->Visible) { // revision_no_sub8 ?>
-		<th class="<?php echo $document_log->revision_no_sub8->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub8" class="document_log_revision_no_sub8"><?php echo $document_log->revision_no_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_sub8->Visible) { // direction_out_sub8 ?>
-		<th class="<?php echo $document_log->direction_out_sub8->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub8" class="document_log_direction_out_sub8"><?php echo $document_log->direction_out_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub8->Visible) { // planned_date_out_sub8 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub8->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub8" class="document_log_planned_date_out_sub8"><?php echo $document_log->planned_date_out_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub8->Visible) { // transmit_date_out_sub8 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub8->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub8" class="document_log_transmit_date_out_sub8"><?php echo $document_log->transmit_date_out_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub8->Visible) { // transmit_no_out_sub8 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub8->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8"><?php echo $document_log->transmit_no_out_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub8->Visible) { // approval_status_out_sub8 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub8->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub8" class="document_log_approval_status_out_sub8"><?php echo $document_log->approval_status_out_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_file_sub8->Visible) { // direction_out_file_sub8 ?>
-		<th class="<?php echo $document_log->direction_out_file_sub8->headerCellClass() ?>"><span id="elh_document_log_direction_out_file_sub8" class="document_log_direction_out_file_sub8"><?php echo $document_log->direction_out_file_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_in_sub8->Visible) { // direction_in_sub8 ?>
-		<th class="<?php echo $document_log->direction_in_sub8->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub8" class="document_log_direction_in_sub8"><?php echo $document_log->direction_in_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub8->Visible) { // transmit_no_in_sub8 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub8->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub8" class="document_log_transmit_no_in_sub8"><?php echo $document_log->transmit_no_in_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub8->Visible) { // approval_status_in_sub8 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub8->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub8" class="document_log_approval_status_in_sub8"><?php echo $document_log->approval_status_in_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub8->Visible) { // transmit_date_in_sub8 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub8->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8"><?php echo $document_log->transmit_date_in_sub8->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->submit_no_sub9->Visible) { // submit_no_sub9 ?>
-		<th class="<?php echo $document_log->submit_no_sub9->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub9" class="document_log_submit_no_sub9"><?php echo $document_log->submit_no_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->revision_no_sub9->Visible) { // revision_no_sub9 ?>
-		<th class="<?php echo $document_log->revision_no_sub9->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub9" class="document_log_revision_no_sub9"><?php echo $document_log->revision_no_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_sub9->Visible) { // direction_out_sub9 ?>
-		<th class="<?php echo $document_log->direction_out_sub9->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub9" class="document_log_direction_out_sub9"><?php echo $document_log->direction_out_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub9->Visible) { // planned_date_out_sub9 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub9->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub9" class="document_log_planned_date_out_sub9"><?php echo $document_log->planned_date_out_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub9->Visible) { // transmit_date_out_sub9 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub9->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub9" class="document_log_transmit_date_out_sub9"><?php echo $document_log->transmit_date_out_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub9->Visible) { // transmit_no_out_sub9 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub9->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub9" class="document_log_transmit_no_out_sub9"><?php echo $document_log->transmit_no_out_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub9->Visible) { // approval_status_out_sub9 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub9->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub9" class="document_log_approval_status_out_sub9"><?php echo $document_log->approval_status_out_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_in_sub9->Visible) { // direction_in_sub9 ?>
-		<th class="<?php echo $document_log->direction_in_sub9->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub9" class="document_log_direction_in_sub9"><?php echo $document_log->direction_in_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub9->Visible) { // transmit_no_in_sub9 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub9->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub9" class="document_log_transmit_no_in_sub9"><?php echo $document_log->transmit_no_in_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub9->Visible) { // approval_status_in_sub9 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub9->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub9" class="document_log_approval_status_in_sub9"><?php echo $document_log->approval_status_in_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub9->Visible) { // transmit_date_in_sub9 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub9->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub9" class="document_log_transmit_date_in_sub9"><?php echo $document_log->transmit_date_in_sub9->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->submit_no_sub10->Visible) { // submit_no_sub10 ?>
-		<th class="<?php echo $document_log->submit_no_sub10->headerCellClass() ?>"><span id="elh_document_log_submit_no_sub10" class="document_log_submit_no_sub10"><?php echo $document_log->submit_no_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->revision_no_sub10->Visible) { // revision_no_sub10 ?>
-		<th class="<?php echo $document_log->revision_no_sub10->headerCellClass() ?>"><span id="elh_document_log_revision_no_sub10" class="document_log_revision_no_sub10"><?php echo $document_log->revision_no_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_out_sub10->Visible) { // direction_out_sub10 ?>
-		<th class="<?php echo $document_log->direction_out_sub10->headerCellClass() ?>"><span id="elh_document_log_direction_out_sub10" class="document_log_direction_out_sub10"><?php echo $document_log->direction_out_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub10->Visible) { // planned_date_out_sub10 ?>
-		<th class="<?php echo $document_log->planned_date_out_sub10->headerCellClass() ?>"><span id="elh_document_log_planned_date_out_sub10" class="document_log_planned_date_out_sub10"><?php echo $document_log->planned_date_out_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub10->Visible) { // transmit_date_out_sub10 ?>
-		<th class="<?php echo $document_log->transmit_date_out_sub10->headerCellClass() ?>"><span id="elh_document_log_transmit_date_out_sub10" class="document_log_transmit_date_out_sub10"><?php echo $document_log->transmit_date_out_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub10->Visible) { // transmit_no_out_sub10 ?>
-		<th class="<?php echo $document_log->transmit_no_out_sub10->headerCellClass() ?>"><span id="elh_document_log_transmit_no_out_sub10" class="document_log_transmit_no_out_sub10"><?php echo $document_log->transmit_no_out_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub10->Visible) { // approval_status_out_sub10 ?>
-		<th class="<?php echo $document_log->approval_status_out_sub10->headerCellClass() ?>"><span id="elh_document_log_approval_status_out_sub10" class="document_log_approval_status_out_sub10"><?php echo $document_log->approval_status_out_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->direction_in_sub10->Visible) { // direction_in_sub10 ?>
-		<th class="<?php echo $document_log->direction_in_sub10->headerCellClass() ?>"><span id="elh_document_log_direction_in_sub10" class="document_log_direction_in_sub10"><?php echo $document_log->direction_in_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub10->Visible) { // transmit_no_in_sub10 ?>
-		<th class="<?php echo $document_log->transmit_no_in_sub10->headerCellClass() ?>"><span id="elh_document_log_transmit_no_in_sub10" class="document_log_transmit_no_in_sub10"><?php echo $document_log->transmit_no_in_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub10->Visible) { // approval_status_in_sub10 ?>
-		<th class="<?php echo $document_log->approval_status_in_sub10->headerCellClass() ?>"><span id="elh_document_log_approval_status_in_sub10" class="document_log_approval_status_in_sub10"><?php echo $document_log->approval_status_in_sub10->caption() ?></span></th>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub10->Visible) { // transmit_date_in_sub10 ?>
-		<th class="<?php echo $document_log->transmit_date_in_sub10->headerCellClass() ?>"><span id="elh_document_log_transmit_date_in_sub10" class="document_log_transmit_date_in_sub10"><?php echo $document_log->transmit_date_in_sub10->caption() ?></span></th>
+<?php if ($document_log->approval_status_10->Visible) { // approval_status_10 ?>
+		<th class="<?php echo $document_log->approval_status_10->headerCellClass() ?>"><span id="elh_document_log_approval_status_10" class="document_log_approval_status_10"><?php echo $document_log->approval_status_10->caption() ?></span></th>
 <?php } ?>
 <?php if ($document_log->log_updatedon->Visible) { // log_updatedon ?>
 		<th class="<?php echo $document_log->log_updatedon->headerCellClass() ?>"><span id="elh_document_log_log_updatedon" class="document_log_log_updatedon"><?php echo $document_log->log_updatedon->caption() ?></span></th>
@@ -513,925 +381,568 @@ while (!$document_log_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub1->Visible) { // submit_no_sub1 ?>
-		<td<?php echo $document_log->submit_no_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub1" class="document_log_submit_no_sub1">
-<span<?php echo $document_log->submit_no_sub1->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub1->getViewValue() ?></span>
+<?php if ($document_log->submit_no_1->Visible) { // submit_no_1 ?>
+		<td<?php echo $document_log->submit_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_1" class="document_log_submit_no_1">
+<span<?php echo $document_log->submit_no_1->viewAttributes() ?>>
+<?php echo $document_log->submit_no_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub1->Visible) { // revision_no_sub1 ?>
-		<td<?php echo $document_log->revision_no_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub1" class="document_log_revision_no_sub1">
-<span<?php echo $document_log->revision_no_sub1->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub1->getViewValue() ?></span>
+<?php if ($document_log->revision_no_1->Visible) { // revision_no_1 ?>
+		<td<?php echo $document_log->revision_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_1" class="document_log_revision_no_1">
+<span<?php echo $document_log->revision_no_1->viewAttributes() ?>>
+<?php echo $document_log->revision_no_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub1->Visible) { // direction_out_sub1 ?>
-		<td<?php echo $document_log->direction_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub1" class="document_log_direction_out_sub1">
-<span<?php echo $document_log->direction_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub1->getViewValue() ?></span>
+<?php if ($document_log->direction_1->Visible) { // direction_1 ?>
+		<td<?php echo $document_log->direction_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_1" class="document_log_direction_1">
+<span<?php echo $document_log->direction_1->viewAttributes() ?>>
+<?php echo $document_log->direction_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub1->Visible) { // planned_date_out_sub1 ?>
-		<td<?php echo $document_log->planned_date_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub1" class="document_log_planned_date_out_sub1">
-<span<?php echo $document_log->planned_date_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub1->getViewValue() ?></span>
+<?php if ($document_log->planned_date_1->Visible) { // planned_date_1 ?>
+		<td<?php echo $document_log->planned_date_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_1" class="document_log_planned_date_1">
+<span<?php echo $document_log->planned_date_1->viewAttributes() ?>>
+<?php echo $document_log->planned_date_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub1->Visible) { // transmit_date_out_sub1 ?>
-		<td<?php echo $document_log->transmit_date_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub1" class="document_log_transmit_date_out_sub1">
-<span<?php echo $document_log->transmit_date_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub1->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_1->Visible) { // transmit_date_1 ?>
+		<td<?php echo $document_log->transmit_date_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_1" class="document_log_transmit_date_1">
+<span<?php echo $document_log->transmit_date_1->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub1->Visible) { // transmit_no_out_sub1 ?>
-		<td<?php echo $document_log->transmit_no_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub1" class="document_log_transmit_no_out_sub1">
-<span<?php echo $document_log->transmit_no_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub1->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_1->Visible) { // transmit_no_1 ?>
+		<td<?php echo $document_log->transmit_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_1" class="document_log_transmit_no_1">
+<span<?php echo $document_log->transmit_no_1->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_1->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub1->Visible) { // approval_status_out_sub1 ?>
-		<td<?php echo $document_log->approval_status_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
-<span<?php echo $document_log->approval_status_out_sub1->viewAttributes() ?>>
-<?php if ((!EmptyString($document_log->approval_status_out_sub1->getViewValue())) && $document_log->approval_status_out_sub1->linkAttributes() <> "") { ?>
-<a<?php echo $document_log->approval_status_out_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_out_sub1->getViewValue() ?></a>
+<?php if ($document_log->approval_status_1->Visible) { // approval_status_1 ?>
+		<td<?php echo $document_log->approval_status_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_1" class="document_log_approval_status_1">
+<span<?php echo $document_log->approval_status_1->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_1->getViewValue())) && $document_log->approval_status_1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_1->linkAttributes() ?>><?php echo $document_log->approval_status_1->getViewValue() ?></a>
 <?php } else { ?>
-<?php echo $document_log->approval_status_out_sub1->getViewValue() ?>
+<?php echo $document_log->approval_status_1->getViewValue() ?>
 <?php } ?>
 </span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub1->Visible) { // direction_in_sub1 ?>
-		<td<?php echo $document_log->direction_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub1" class="document_log_direction_in_sub1">
-<span<?php echo $document_log->direction_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub1->getViewValue() ?></span>
+<?php if ($document_log->submit_no_2->Visible) { // submit_no_2 ?>
+		<td<?php echo $document_log->submit_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_2" class="document_log_submit_no_2">
+<span<?php echo $document_log->submit_no_2->viewAttributes() ?>>
+<?php echo $document_log->submit_no_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub1->Visible) { // transmit_no_in_sub1 ?>
-		<td<?php echo $document_log->transmit_no_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub1" class="document_log_transmit_no_in_sub1">
-<span<?php echo $document_log->transmit_no_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub1->getViewValue() ?></span>
+<?php if ($document_log->revision_no_2->Visible) { // revision_no_2 ?>
+		<td<?php echo $document_log->revision_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_2" class="document_log_revision_no_2">
+<span<?php echo $document_log->revision_no_2->viewAttributes() ?>>
+<?php echo $document_log->revision_no_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub1->Visible) { // approval_status_in_sub1 ?>
-		<td<?php echo $document_log->approval_status_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1">
-<span<?php echo $document_log->approval_status_in_sub1->viewAttributes() ?>>
-<?php if ((!EmptyString($document_log->approval_status_in_sub1->getViewValue())) && $document_log->approval_status_in_sub1->linkAttributes() <> "") { ?>
-<a<?php echo $document_log->approval_status_in_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_in_sub1->getViewValue() ?></a>
-<?php } else { ?>
-<?php echo $document_log->approval_status_in_sub1->getViewValue() ?>
-<?php } ?>
-</span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub1->Visible) { // transmit_date_in_sub1 ?>
-		<td<?php echo $document_log->transmit_date_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub1" class="document_log_transmit_date_in_sub1">
-<span<?php echo $document_log->transmit_date_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub1->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->submit_no_sub2->Visible) { // submit_no_sub2 ?>
-		<td<?php echo $document_log->submit_no_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub2" class="document_log_submit_no_sub2">
-<span<?php echo $document_log->submit_no_sub2->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->revision_no_sub2->Visible) { // revision_no_sub2 ?>
-		<td<?php echo $document_log->revision_no_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub2" class="document_log_revision_no_sub2">
-<span<?php echo $document_log->revision_no_sub2->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_out_sub2->Visible) { // direction_out_sub2 ?>
-		<td<?php echo $document_log->direction_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub2" class="document_log_direction_out_sub2">
-<span<?php echo $document_log->direction_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub2->Visible) { // planned_date_out_sub2 ?>
-		<td<?php echo $document_log->planned_date_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub2" class="document_log_planned_date_out_sub2">
-<span<?php echo $document_log->planned_date_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub2->Visible) { // transmit_date_out_sub2 ?>
-		<td<?php echo $document_log->transmit_date_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub2" class="document_log_transmit_date_out_sub2">
-<span<?php echo $document_log->transmit_date_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub2->Visible) { // transmit_no_out_sub2 ?>
-		<td<?php echo $document_log->transmit_no_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub2" class="document_log_transmit_no_out_sub2">
-<span<?php echo $document_log->transmit_no_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub2->Visible) { // approval_status_out_sub2 ?>
-		<td<?php echo $document_log->approval_status_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub2" class="document_log_approval_status_out_sub2">
-<span<?php echo $document_log->approval_status_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_in_sub2->Visible) { // direction_in_sub2 ?>
-		<td<?php echo $document_log->direction_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub2" class="document_log_direction_in_sub2">
-<span<?php echo $document_log->direction_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub2->Visible) { // transmit_no_in_sub2 ?>
-		<td<?php echo $document_log->transmit_no_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub2" class="document_log_transmit_no_in_sub2">
-<span<?php echo $document_log->transmit_no_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub2->Visible) { // approval_status_in_sub2 ?>
-		<td<?php echo $document_log->approval_status_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub2" class="document_log_approval_status_in_sub2">
-<span<?php echo $document_log->approval_status_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub2->Visible) { // transmit_date_in_sub2 ?>
-		<td<?php echo $document_log->transmit_date_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub2" class="document_log_transmit_date_in_sub2">
-<span<?php echo $document_log->transmit_date_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->submit_no_sub3->Visible) { // submit_no_sub3 ?>
-		<td<?php echo $document_log->submit_no_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub3" class="document_log_submit_no_sub3">
-<span<?php echo $document_log->submit_no_sub3->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->revision_no_sub3->Visible) { // revision_no_sub3 ?>
-		<td<?php echo $document_log->revision_no_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub3" class="document_log_revision_no_sub3">
-<span<?php echo $document_log->revision_no_sub3->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_out_sub3->Visible) { // direction_out_sub3 ?>
-		<td<?php echo $document_log->direction_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub3" class="document_log_direction_out_sub3">
-<span<?php echo $document_log->direction_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub3->Visible) { // planned_date_out_sub3 ?>
-		<td<?php echo $document_log->planned_date_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub3" class="document_log_planned_date_out_sub3">
-<span<?php echo $document_log->planned_date_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub3->Visible) { // transmit_date_out_sub3 ?>
-		<td<?php echo $document_log->transmit_date_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub3" class="document_log_transmit_date_out_sub3">
-<span<?php echo $document_log->transmit_date_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub3->Visible) { // transmit_no_out_sub3 ?>
-		<td<?php echo $document_log->transmit_no_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub3" class="document_log_transmit_no_out_sub3">
-<span<?php echo $document_log->transmit_no_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub3->Visible) { // approval_status_out_sub3 ?>
-		<td<?php echo $document_log->approval_status_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub3" class="document_log_approval_status_out_sub3">
-<span<?php echo $document_log->approval_status_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_in_sub3->Visible) { // direction_in_sub3 ?>
-		<td<?php echo $document_log->direction_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub3" class="document_log_direction_in_sub3">
-<span<?php echo $document_log->direction_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub3->Visible) { // transmit_no_in_sub3 ?>
-		<td<?php echo $document_log->transmit_no_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub3" class="document_log_transmit_no_in_sub3">
-<span<?php echo $document_log->transmit_no_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub3->Visible) { // approval_status_in_sub3 ?>
-		<td<?php echo $document_log->approval_status_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub3" class="document_log_approval_status_in_sub3">
-<span<?php echo $document_log->approval_status_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub3->Visible) { // transmit_date_in_sub3 ?>
-		<td<?php echo $document_log->transmit_date_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub3" class="document_log_transmit_date_in_sub3">
-<span<?php echo $document_log->transmit_date_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->submit_no_sub4->Visible) { // submit_no_sub4 ?>
-		<td<?php echo $document_log->submit_no_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub4" class="document_log_submit_no_sub4">
-<span<?php echo $document_log->submit_no_sub4->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->revision_no_sub4->Visible) { // revision_no_sub4 ?>
-		<td<?php echo $document_log->revision_no_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub4" class="document_log_revision_no_sub4">
-<span<?php echo $document_log->revision_no_sub4->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_out_sub4->Visible) { // direction_out_sub4 ?>
-		<td<?php echo $document_log->direction_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub4" class="document_log_direction_out_sub4">
-<span<?php echo $document_log->direction_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub4->Visible) { // planned_date_out_sub4 ?>
-		<td<?php echo $document_log->planned_date_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub4" class="document_log_planned_date_out_sub4">
-<span<?php echo $document_log->planned_date_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub4->Visible) { // transmit_date_out_sub4 ?>
-		<td<?php echo $document_log->transmit_date_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub4" class="document_log_transmit_date_out_sub4">
-<span<?php echo $document_log->transmit_date_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub4->Visible) { // transmit_no_out_sub4 ?>
-		<td<?php echo $document_log->transmit_no_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub4" class="document_log_transmit_no_out_sub4">
-<span<?php echo $document_log->transmit_no_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub4->Visible) { // approval_status_out_sub4 ?>
-		<td<?php echo $document_log->approval_status_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub4" class="document_log_approval_status_out_sub4">
-<span<?php echo $document_log->approval_status_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_in_sub4->Visible) { // direction_in_sub4 ?>
-		<td<?php echo $document_log->direction_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub4" class="document_log_direction_in_sub4">
-<span<?php echo $document_log->direction_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub4->Visible) { // transmit_no_in_sub4 ?>
-		<td<?php echo $document_log->transmit_no_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub4" class="document_log_transmit_no_in_sub4">
-<span<?php echo $document_log->transmit_no_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub4->Visible) { // approval_status_in_sub4 ?>
-		<td<?php echo $document_log->approval_status_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub4" class="document_log_approval_status_in_sub4">
-<span<?php echo $document_log->approval_status_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_in_file_sub4->Visible) { // direction_in_file_sub4 ?>
-		<td<?php echo $document_log->direction_in_file_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_file_sub4" class="document_log_direction_in_file_sub4">
-<span<?php echo $document_log->direction_in_file_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub4->Visible) { // transmit_date_in_sub4 ?>
-		<td<?php echo $document_log->transmit_date_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub4" class="document_log_transmit_date_in_sub4">
-<span<?php echo $document_log->transmit_date_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub4->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->submit_no_sub5->Visible) { // submit_no_sub5 ?>
-		<td<?php echo $document_log->submit_no_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub5" class="document_log_submit_no_sub5">
-<span<?php echo $document_log->submit_no_sub5->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->revision_no_sub5->Visible) { // revision_no_sub5 ?>
-		<td<?php echo $document_log->revision_no_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub5" class="document_log_revision_no_sub5">
-<span<?php echo $document_log->revision_no_sub5->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_out_sub5->Visible) { // direction_out_sub5 ?>
-		<td<?php echo $document_log->direction_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub5" class="document_log_direction_out_sub5">
-<span<?php echo $document_log->direction_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub5->Visible) { // planned_date_out_sub5 ?>
-		<td<?php echo $document_log->planned_date_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub5" class="document_log_planned_date_out_sub5">
-<span<?php echo $document_log->planned_date_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub5->Visible) { // transmit_date_out_sub5 ?>
-		<td<?php echo $document_log->transmit_date_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub5" class="document_log_transmit_date_out_sub5">
-<span<?php echo $document_log->transmit_date_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub5->Visible) { // transmit_no_out_sub5 ?>
-		<td<?php echo $document_log->transmit_no_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub5" class="document_log_transmit_no_out_sub5">
-<span<?php echo $document_log->transmit_no_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub5->Visible) { // approval_status_out_sub5 ?>
-		<td<?php echo $document_log->approval_status_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub5" class="document_log_approval_status_out_sub5">
-<span<?php echo $document_log->approval_status_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->direction_in_sub5->Visible) { // direction_in_sub5 ?>
-		<td<?php echo $document_log->direction_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub5" class="document_log_direction_in_sub5">
-<span<?php echo $document_log->direction_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub5->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub5->Visible) { // transmit_no_in_sub5 ?>
-		<td<?php echo $document_log->transmit_no_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub5" class="document_log_transmit_no_in_sub5">
-<span<?php echo $document_log->transmit_no_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub5->getViewValue() ?></span>
+<?php if ($document_log->direction_2->Visible) { // direction_2 ?>
+		<td<?php echo $document_log->direction_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_2" class="document_log_direction_2">
+<span<?php echo $document_log->direction_2->viewAttributes() ?>>
+<?php echo $document_log->direction_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub5->Visible) { // approval_status_in_sub5 ?>
-		<td<?php echo $document_log->approval_status_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub5" class="document_log_approval_status_in_sub5">
-<span<?php echo $document_log->approval_status_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub5->getViewValue() ?></span>
+<?php if ($document_log->planned_date_2->Visible) { // planned_date_2 ?>
+		<td<?php echo $document_log->planned_date_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_2" class="document_log_planned_date_2">
+<span<?php echo $document_log->planned_date_2->viewAttributes() ?>>
+<?php echo $document_log->planned_date_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub5->Visible) { // direction_in_file_sub5 ?>
-		<td<?php echo $document_log->direction_in_file_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_file_sub5" class="document_log_direction_in_file_sub5">
-<span<?php echo $document_log->direction_in_file_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub5->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_2->Visible) { // transmit_date_2 ?>
+		<td<?php echo $document_log->transmit_date_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_2" class="document_log_transmit_date_2">
+<span<?php echo $document_log->transmit_date_2->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub5->Visible) { // transmit_date_in_sub5 ?>
-		<td<?php echo $document_log->transmit_date_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub5" class="document_log_transmit_date_in_sub5">
-<span<?php echo $document_log->transmit_date_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub5->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_2->Visible) { // transmit_no_2 ?>
+		<td<?php echo $document_log->transmit_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_2" class="document_log_transmit_no_2">
+<span<?php echo $document_log->transmit_no_2->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub6->Visible) { // submit_no_sub6 ?>
-		<td<?php echo $document_log->submit_no_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub6" class="document_log_submit_no_sub6">
-<span<?php echo $document_log->submit_no_sub6->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub6->getViewValue() ?></span>
+<?php if ($document_log->approval_status_2->Visible) { // approval_status_2 ?>
+		<td<?php echo $document_log->approval_status_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_2" class="document_log_approval_status_2">
+<span<?php echo $document_log->approval_status_2->viewAttributes() ?>>
+<?php echo $document_log->approval_status_2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub6->Visible) { // revision_no_sub6 ?>
-		<td<?php echo $document_log->revision_no_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub6" class="document_log_revision_no_sub6">
-<span<?php echo $document_log->revision_no_sub6->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub6->getViewValue() ?></span>
+<?php if ($document_log->submit_no_3->Visible) { // submit_no_3 ?>
+		<td<?php echo $document_log->submit_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_3" class="document_log_submit_no_3">
+<span<?php echo $document_log->submit_no_3->viewAttributes() ?>>
+<?php echo $document_log->submit_no_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub6->Visible) { // direction_out_sub6 ?>
-		<td<?php echo $document_log->direction_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub6" class="document_log_direction_out_sub6">
-<span<?php echo $document_log->direction_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub6->getViewValue() ?></span>
+<?php if ($document_log->revision_no_3->Visible) { // revision_no_3 ?>
+		<td<?php echo $document_log->revision_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_3" class="document_log_revision_no_3">
+<span<?php echo $document_log->revision_no_3->viewAttributes() ?>>
+<?php echo $document_log->revision_no_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub6->Visible) { // planned_date_out_sub6 ?>
-		<td<?php echo $document_log->planned_date_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub6" class="document_log_planned_date_out_sub6">
-<span<?php echo $document_log->planned_date_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub6->getViewValue() ?></span>
+<?php if ($document_log->direction_3->Visible) { // direction_3 ?>
+		<td<?php echo $document_log->direction_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_3" class="document_log_direction_3">
+<span<?php echo $document_log->direction_3->viewAttributes() ?>>
+<?php echo $document_log->direction_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub6->Visible) { // transmit_date_out_sub6 ?>
-		<td<?php echo $document_log->transmit_date_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub6" class="document_log_transmit_date_out_sub6">
-<span<?php echo $document_log->transmit_date_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub6->getViewValue() ?></span>
+<?php if ($document_log->planned_date_3->Visible) { // planned_date_3 ?>
+		<td<?php echo $document_log->planned_date_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_3" class="document_log_planned_date_3">
+<span<?php echo $document_log->planned_date_3->viewAttributes() ?>>
+<?php echo $document_log->planned_date_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub6->Visible) { // transmit_no_out_sub6 ?>
-		<td<?php echo $document_log->transmit_no_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub6" class="document_log_transmit_no_out_sub6">
-<span<?php echo $document_log->transmit_no_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub6->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_3->Visible) { // transmit_date_3 ?>
+		<td<?php echo $document_log->transmit_date_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_3" class="document_log_transmit_date_3">
+<span<?php echo $document_log->transmit_date_3->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub6->Visible) { // approval_status_out_sub6 ?>
-		<td<?php echo $document_log->approval_status_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub6" class="document_log_approval_status_out_sub6">
-<span<?php echo $document_log->approval_status_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub6->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_3->Visible) { // transmit_no_3 ?>
+		<td<?php echo $document_log->transmit_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_3" class="document_log_transmit_no_3">
+<span<?php echo $document_log->transmit_no_3->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub6->Visible) { // direction_in_sub6 ?>
-		<td<?php echo $document_log->direction_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub6" class="document_log_direction_in_sub6">
-<span<?php echo $document_log->direction_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub6->getViewValue() ?></span>
+<?php if ($document_log->approval_status_3->Visible) { // approval_status_3 ?>
+		<td<?php echo $document_log->approval_status_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_3" class="document_log_approval_status_3">
+<span<?php echo $document_log->approval_status_3->viewAttributes() ?>>
+<?php echo $document_log->approval_status_3->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub6->Visible) { // transmit_no_in_sub6 ?>
-		<td<?php echo $document_log->transmit_no_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub6" class="document_log_transmit_no_in_sub6">
-<span<?php echo $document_log->transmit_no_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub6->getViewValue() ?></span>
+<?php if ($document_log->submit_no_4->Visible) { // submit_no_4 ?>
+		<td<?php echo $document_log->submit_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_4" class="document_log_submit_no_4">
+<span<?php echo $document_log->submit_no_4->viewAttributes() ?>>
+<?php echo $document_log->submit_no_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub6->Visible) { // approval_status_in_sub6 ?>
-		<td<?php echo $document_log->approval_status_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub6" class="document_log_approval_status_in_sub6">
-<span<?php echo $document_log->approval_status_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub6->getViewValue() ?></span>
+<?php if ($document_log->revision_no_4->Visible) { // revision_no_4 ?>
+		<td<?php echo $document_log->revision_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_4" class="document_log_revision_no_4">
+<span<?php echo $document_log->revision_no_4->viewAttributes() ?>>
+<?php echo $document_log->revision_no_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub6->Visible) { // direction_in_file_sub6 ?>
-		<td<?php echo $document_log->direction_in_file_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_file_sub6" class="document_log_direction_in_file_sub6">
-<span<?php echo $document_log->direction_in_file_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub6->getViewValue() ?></span>
+<?php if ($document_log->direction_4->Visible) { // direction_4 ?>
+		<td<?php echo $document_log->direction_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_4" class="document_log_direction_4">
+<span<?php echo $document_log->direction_4->viewAttributes() ?>>
+<?php echo $document_log->direction_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub6->Visible) { // transmit_date_in_sub6 ?>
-		<td<?php echo $document_log->transmit_date_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub6" class="document_log_transmit_date_in_sub6">
-<span<?php echo $document_log->transmit_date_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub6->getViewValue() ?></span>
+<?php if ($document_log->planned_date_4->Visible) { // planned_date_4 ?>
+		<td<?php echo $document_log->planned_date_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_4" class="document_log_planned_date_4">
+<span<?php echo $document_log->planned_date_4->viewAttributes() ?>>
+<?php echo $document_log->planned_date_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub7->Visible) { // submit_no_sub7 ?>
-		<td<?php echo $document_log->submit_no_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub7" class="document_log_submit_no_sub7">
-<span<?php echo $document_log->submit_no_sub7->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub7->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_4->Visible) { // transmit_date_4 ?>
+		<td<?php echo $document_log->transmit_date_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_4" class="document_log_transmit_date_4">
+<span<?php echo $document_log->transmit_date_4->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub7->Visible) { // revision_no_sub7 ?>
-		<td<?php echo $document_log->revision_no_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub7" class="document_log_revision_no_sub7">
-<span<?php echo $document_log->revision_no_sub7->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub7->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_4->Visible) { // transmit_no_4 ?>
+		<td<?php echo $document_log->transmit_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_4" class="document_log_transmit_no_4">
+<span<?php echo $document_log->transmit_no_4->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub7->Visible) { // direction_out_sub7 ?>
-		<td<?php echo $document_log->direction_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub7" class="document_log_direction_out_sub7">
-<span<?php echo $document_log->direction_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub7->getViewValue() ?></span>
+<?php if ($document_log->approval_status_4->Visible) { // approval_status_4 ?>
+		<td<?php echo $document_log->approval_status_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_4" class="document_log_approval_status_4">
+<span<?php echo $document_log->approval_status_4->viewAttributes() ?>>
+<?php echo $document_log->approval_status_4->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub7->Visible) { // planned_date_out_sub7 ?>
-		<td<?php echo $document_log->planned_date_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub7" class="document_log_planned_date_out_sub7">
-<span<?php echo $document_log->planned_date_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub7->getViewValue() ?></span>
+<?php if ($document_log->submit_no_5->Visible) { // submit_no_5 ?>
+		<td<?php echo $document_log->submit_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_5" class="document_log_submit_no_5">
+<span<?php echo $document_log->submit_no_5->viewAttributes() ?>>
+<?php echo $document_log->submit_no_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub7->Visible) { // transmit_date_out_sub7 ?>
-		<td<?php echo $document_log->transmit_date_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub7" class="document_log_transmit_date_out_sub7">
-<span<?php echo $document_log->transmit_date_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub7->getViewValue() ?></span>
+<?php if ($document_log->revision_no_5->Visible) { // revision_no_5 ?>
+		<td<?php echo $document_log->revision_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_5" class="document_log_revision_no_5">
+<span<?php echo $document_log->revision_no_5->viewAttributes() ?>>
+<?php echo $document_log->revision_no_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub7->Visible) { // transmit_no_out_sub7 ?>
-		<td<?php echo $document_log->transmit_no_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub7" class="document_log_transmit_no_out_sub7">
-<span<?php echo $document_log->transmit_no_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub7->getViewValue() ?></span>
+<?php if ($document_log->direction_5->Visible) { // direction_5 ?>
+		<td<?php echo $document_log->direction_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_5" class="document_log_direction_5">
+<span<?php echo $document_log->direction_5->viewAttributes() ?>>
+<?php echo $document_log->direction_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub7->Visible) { // approval_status_out_sub7 ?>
-		<td<?php echo $document_log->approval_status_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub7" class="document_log_approval_status_out_sub7">
-<span<?php echo $document_log->approval_status_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub7->getViewValue() ?></span>
+<?php if ($document_log->planned_date_5->Visible) { // planned_date_5 ?>
+		<td<?php echo $document_log->planned_date_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_5" class="document_log_planned_date_5">
+<span<?php echo $document_log->planned_date_5->viewAttributes() ?>>
+<?php echo $document_log->planned_date_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub7->Visible) { // direction_in_sub7 ?>
-		<td<?php echo $document_log->direction_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub7" class="document_log_direction_in_sub7">
-<span<?php echo $document_log->direction_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub7->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_5->Visible) { // transmit_date_5 ?>
+		<td<?php echo $document_log->transmit_date_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_5" class="document_log_transmit_date_5">
+<span<?php echo $document_log->transmit_date_5->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub7->Visible) { // transmit_no_in_sub7 ?>
-		<td<?php echo $document_log->transmit_no_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub7" class="document_log_transmit_no_in_sub7">
-<span<?php echo $document_log->transmit_no_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub7->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_5->Visible) { // transmit_no_5 ?>
+		<td<?php echo $document_log->transmit_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_5" class="document_log_transmit_no_5">
+<span<?php echo $document_log->transmit_no_5->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub7->Visible) { // approval_status_in_sub7 ?>
-		<td<?php echo $document_log->approval_status_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub7" class="document_log_approval_status_in_sub7">
-<span<?php echo $document_log->approval_status_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub7->getViewValue() ?></span>
+<?php if ($document_log->approval_status_5->Visible) { // approval_status_5 ?>
+		<td<?php echo $document_log->approval_status_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_5" class="document_log_approval_status_5">
+<span<?php echo $document_log->approval_status_5->viewAttributes() ?>>
+<?php echo $document_log->approval_status_5->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub7->Visible) { // transmit_date_in_sub7 ?>
-		<td<?php echo $document_log->transmit_date_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub7" class="document_log_transmit_date_in_sub7">
-<span<?php echo $document_log->transmit_date_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub7->getViewValue() ?></span>
+<?php if ($document_log->submit_no_6->Visible) { // submit_no_6 ?>
+		<td<?php echo $document_log->submit_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_6" class="document_log_submit_no_6">
+<span<?php echo $document_log->submit_no_6->viewAttributes() ?>>
+<?php echo $document_log->submit_no_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub8->Visible) { // submit_no_sub8 ?>
-		<td<?php echo $document_log->submit_no_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub8" class="document_log_submit_no_sub8">
-<span<?php echo $document_log->submit_no_sub8->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub8->getViewValue() ?></span>
+<?php if ($document_log->revision_no_6->Visible) { // revision_no_6 ?>
+		<td<?php echo $document_log->revision_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_6" class="document_log_revision_no_6">
+<span<?php echo $document_log->revision_no_6->viewAttributes() ?>>
+<?php echo $document_log->revision_no_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub8->Visible) { // revision_no_sub8 ?>
-		<td<?php echo $document_log->revision_no_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub8" class="document_log_revision_no_sub8">
-<span<?php echo $document_log->revision_no_sub8->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub8->getViewValue() ?></span>
+<?php if ($document_log->direction_6->Visible) { // direction_6 ?>
+		<td<?php echo $document_log->direction_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_6" class="document_log_direction_6">
+<span<?php echo $document_log->direction_6->viewAttributes() ?>>
+<?php echo $document_log->direction_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub8->Visible) { // direction_out_sub8 ?>
-		<td<?php echo $document_log->direction_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub8" class="document_log_direction_out_sub8">
-<span<?php echo $document_log->direction_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub8->getViewValue() ?></span>
+<?php if ($document_log->planned_date_6->Visible) { // planned_date_6 ?>
+		<td<?php echo $document_log->planned_date_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_6" class="document_log_planned_date_6">
+<span<?php echo $document_log->planned_date_6->viewAttributes() ?>>
+<?php echo $document_log->planned_date_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub8->Visible) { // planned_date_out_sub8 ?>
-		<td<?php echo $document_log->planned_date_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub8" class="document_log_planned_date_out_sub8">
-<span<?php echo $document_log->planned_date_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub8->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_6->Visible) { // transmit_date_6 ?>
+		<td<?php echo $document_log->transmit_date_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_6" class="document_log_transmit_date_6">
+<span<?php echo $document_log->transmit_date_6->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub8->Visible) { // transmit_date_out_sub8 ?>
-		<td<?php echo $document_log->transmit_date_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub8" class="document_log_transmit_date_out_sub8">
-<span<?php echo $document_log->transmit_date_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub8->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_6->Visible) { // transmit_no_6 ?>
+		<td<?php echo $document_log->transmit_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_6" class="document_log_transmit_no_6">
+<span<?php echo $document_log->transmit_no_6->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub8->Visible) { // transmit_no_out_sub8 ?>
-		<td<?php echo $document_log->transmit_no_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8">
-<span<?php echo $document_log->transmit_no_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub8->getViewValue() ?></span>
+<?php if ($document_log->approval_status_6->Visible) { // approval_status_6 ?>
+		<td<?php echo $document_log->approval_status_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_6" class="document_log_approval_status_6">
+<span<?php echo $document_log->approval_status_6->viewAttributes() ?>>
+<?php echo $document_log->approval_status_6->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub8->Visible) { // approval_status_out_sub8 ?>
-		<td<?php echo $document_log->approval_status_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub8" class="document_log_approval_status_out_sub8">
-<span<?php echo $document_log->approval_status_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub8->getViewValue() ?></span>
+<?php if ($document_log->submit_no_7->Visible) { // submit_no_7 ?>
+		<td<?php echo $document_log->submit_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_7" class="document_log_submit_no_7">
+<span<?php echo $document_log->submit_no_7->viewAttributes() ?>>
+<?php echo $document_log->submit_no_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_file_sub8->Visible) { // direction_out_file_sub8 ?>
-		<td<?php echo $document_log->direction_out_file_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_file_sub8" class="document_log_direction_out_file_sub8">
-<span<?php echo $document_log->direction_out_file_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_out_file_sub8->getViewValue() ?></span>
+<?php if ($document_log->revision_no_7->Visible) { // revision_no_7 ?>
+		<td<?php echo $document_log->revision_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_7" class="document_log_revision_no_7">
+<span<?php echo $document_log->revision_no_7->viewAttributes() ?>>
+<?php echo $document_log->revision_no_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub8->Visible) { // direction_in_sub8 ?>
-		<td<?php echo $document_log->direction_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub8" class="document_log_direction_in_sub8">
-<span<?php echo $document_log->direction_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub8->getViewValue() ?></span>
+<?php if ($document_log->direction_7->Visible) { // direction_7 ?>
+		<td<?php echo $document_log->direction_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_7" class="document_log_direction_7">
+<span<?php echo $document_log->direction_7->viewAttributes() ?>>
+<?php echo $document_log->direction_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub8->Visible) { // transmit_no_in_sub8 ?>
-		<td<?php echo $document_log->transmit_no_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub8" class="document_log_transmit_no_in_sub8">
-<span<?php echo $document_log->transmit_no_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub8->getViewValue() ?></span>
+<?php if ($document_log->planned_date_7->Visible) { // planned_date_7 ?>
+		<td<?php echo $document_log->planned_date_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_7" class="document_log_planned_date_7">
+<span<?php echo $document_log->planned_date_7->viewAttributes() ?>>
+<?php echo $document_log->planned_date_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub8->Visible) { // approval_status_in_sub8 ?>
-		<td<?php echo $document_log->approval_status_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub8" class="document_log_approval_status_in_sub8">
-<span<?php echo $document_log->approval_status_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub8->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_7->Visible) { // transmit_date_7 ?>
+		<td<?php echo $document_log->transmit_date_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_7" class="document_log_transmit_date_7">
+<span<?php echo $document_log->transmit_date_7->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub8->Visible) { // transmit_date_in_sub8 ?>
-		<td<?php echo $document_log->transmit_date_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8">
-<span<?php echo $document_log->transmit_date_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub8->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_7->Visible) { // transmit_no_7 ?>
+		<td<?php echo $document_log->transmit_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_7" class="document_log_transmit_no_7">
+<span<?php echo $document_log->transmit_no_7->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub9->Visible) { // submit_no_sub9 ?>
-		<td<?php echo $document_log->submit_no_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub9" class="document_log_submit_no_sub9">
-<span<?php echo $document_log->submit_no_sub9->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub9->getViewValue() ?></span>
+<?php if ($document_log->approval_status_7->Visible) { // approval_status_7 ?>
+		<td<?php echo $document_log->approval_status_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_7" class="document_log_approval_status_7">
+<span<?php echo $document_log->approval_status_7->viewAttributes() ?>>
+<?php echo $document_log->approval_status_7->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub9->Visible) { // revision_no_sub9 ?>
-		<td<?php echo $document_log->revision_no_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub9" class="document_log_revision_no_sub9">
-<span<?php echo $document_log->revision_no_sub9->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub9->getViewValue() ?></span>
+<?php if ($document_log->submit_no_8->Visible) { // submit_no_8 ?>
+		<td<?php echo $document_log->submit_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_8" class="document_log_submit_no_8">
+<span<?php echo $document_log->submit_no_8->viewAttributes() ?>>
+<?php echo $document_log->submit_no_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub9->Visible) { // direction_out_sub9 ?>
-		<td<?php echo $document_log->direction_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub9" class="document_log_direction_out_sub9">
-<span<?php echo $document_log->direction_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub9->getViewValue() ?></span>
+<?php if ($document_log->revision_no_8->Visible) { // revision_no_8 ?>
+		<td<?php echo $document_log->revision_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_8" class="document_log_revision_no_8">
+<span<?php echo $document_log->revision_no_8->viewAttributes() ?>>
+<?php echo $document_log->revision_no_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub9->Visible) { // planned_date_out_sub9 ?>
-		<td<?php echo $document_log->planned_date_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub9" class="document_log_planned_date_out_sub9">
-<span<?php echo $document_log->planned_date_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub9->getViewValue() ?></span>
+<?php if ($document_log->direction_8->Visible) { // direction_8 ?>
+		<td<?php echo $document_log->direction_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_8" class="document_log_direction_8">
+<span<?php echo $document_log->direction_8->viewAttributes() ?>>
+<?php echo $document_log->direction_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub9->Visible) { // transmit_date_out_sub9 ?>
-		<td<?php echo $document_log->transmit_date_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub9" class="document_log_transmit_date_out_sub9">
-<span<?php echo $document_log->transmit_date_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub9->getViewValue() ?></span>
+<?php if ($document_log->planned_date_8->Visible) { // planned_date_8 ?>
+		<td<?php echo $document_log->planned_date_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_8" class="document_log_planned_date_8">
+<span<?php echo $document_log->planned_date_8->viewAttributes() ?>>
+<?php echo $document_log->planned_date_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub9->Visible) { // transmit_no_out_sub9 ?>
-		<td<?php echo $document_log->transmit_no_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub9" class="document_log_transmit_no_out_sub9">
-<span<?php echo $document_log->transmit_no_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub9->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_8->Visible) { // transmit_date_8 ?>
+		<td<?php echo $document_log->transmit_date_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_8" class="document_log_transmit_date_8">
+<span<?php echo $document_log->transmit_date_8->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub9->Visible) { // approval_status_out_sub9 ?>
-		<td<?php echo $document_log->approval_status_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub9" class="document_log_approval_status_out_sub9">
-<span<?php echo $document_log->approval_status_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub9->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_8->Visible) { // transmit_no_8 ?>
+		<td<?php echo $document_log->transmit_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_8" class="document_log_transmit_no_8">
+<span<?php echo $document_log->transmit_no_8->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub9->Visible) { // direction_in_sub9 ?>
-		<td<?php echo $document_log->direction_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub9" class="document_log_direction_in_sub9">
-<span<?php echo $document_log->direction_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub9->getViewValue() ?></span>
+<?php if ($document_log->approval_status_8->Visible) { // approval_status_8 ?>
+		<td<?php echo $document_log->approval_status_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_8" class="document_log_approval_status_8">
+<span<?php echo $document_log->approval_status_8->viewAttributes() ?>>
+<?php echo $document_log->approval_status_8->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub9->Visible) { // transmit_no_in_sub9 ?>
-		<td<?php echo $document_log->transmit_no_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub9" class="document_log_transmit_no_in_sub9">
-<span<?php echo $document_log->transmit_no_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub9->getViewValue() ?></span>
+<?php if ($document_log->submit_no_9->Visible) { // submit_no_9 ?>
+		<td<?php echo $document_log->submit_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_9" class="document_log_submit_no_9">
+<span<?php echo $document_log->submit_no_9->viewAttributes() ?>>
+<?php echo $document_log->submit_no_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub9->Visible) { // approval_status_in_sub9 ?>
-		<td<?php echo $document_log->approval_status_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub9" class="document_log_approval_status_in_sub9">
-<span<?php echo $document_log->approval_status_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub9->getViewValue() ?></span>
+<?php if ($document_log->revision_no_9->Visible) { // revision_no_9 ?>
+		<td<?php echo $document_log->revision_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_9" class="document_log_revision_no_9">
+<span<?php echo $document_log->revision_no_9->viewAttributes() ?>>
+<?php echo $document_log->revision_no_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub9->Visible) { // transmit_date_in_sub9 ?>
-		<td<?php echo $document_log->transmit_date_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub9" class="document_log_transmit_date_in_sub9">
-<span<?php echo $document_log->transmit_date_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub9->getViewValue() ?></span>
+<?php if ($document_log->direction_9->Visible) { // direction_9 ?>
+		<td<?php echo $document_log->direction_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_9" class="document_log_direction_9">
+<span<?php echo $document_log->direction_9->viewAttributes() ?>>
+<?php echo $document_log->direction_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->submit_no_sub10->Visible) { // submit_no_sub10 ?>
-		<td<?php echo $document_log->submit_no_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_sub10" class="document_log_submit_no_sub10">
-<span<?php echo $document_log->submit_no_sub10->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub10->getViewValue() ?></span>
+<?php if ($document_log->planned_date_9->Visible) { // planned_date_9 ?>
+		<td<?php echo $document_log->planned_date_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_9" class="document_log_planned_date_9">
+<span<?php echo $document_log->planned_date_9->viewAttributes() ?>>
+<?php echo $document_log->planned_date_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->revision_no_sub10->Visible) { // revision_no_sub10 ?>
-		<td<?php echo $document_log->revision_no_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_sub10" class="document_log_revision_no_sub10">
-<span<?php echo $document_log->revision_no_sub10->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub10->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_9->Visible) { // transmit_date_9 ?>
+		<td<?php echo $document_log->transmit_date_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_9" class="document_log_transmit_date_9">
+<span<?php echo $document_log->transmit_date_9->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_out_sub10->Visible) { // direction_out_sub10 ?>
-		<td<?php echo $document_log->direction_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_out_sub10" class="document_log_direction_out_sub10">
-<span<?php echo $document_log->direction_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub10->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_9->Visible) { // transmit_no_9 ?>
+		<td<?php echo $document_log->transmit_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_9" class="document_log_transmit_no_9">
+<span<?php echo $document_log->transmit_no_9->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub10->Visible) { // planned_date_out_sub10 ?>
-		<td<?php echo $document_log->planned_date_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_out_sub10" class="document_log_planned_date_out_sub10">
-<span<?php echo $document_log->planned_date_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub10->getViewValue() ?></span>
+<?php if ($document_log->approval_status_9->Visible) { // approval_status_9 ?>
+		<td<?php echo $document_log->approval_status_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_9" class="document_log_approval_status_9">
+<span<?php echo $document_log->approval_status_9->viewAttributes() ?>>
+<?php echo $document_log->approval_status_9->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub10->Visible) { // transmit_date_out_sub10 ?>
-		<td<?php echo $document_log->transmit_date_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_out_sub10" class="document_log_transmit_date_out_sub10">
-<span<?php echo $document_log->transmit_date_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub10->getViewValue() ?></span>
+<?php if ($document_log->submit_no_10->Visible) { // submit_no_10 ?>
+		<td<?php echo $document_log->submit_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_submit_no_10" class="document_log_submit_no_10">
+<span<?php echo $document_log->submit_no_10->viewAttributes() ?>>
+<?php echo $document_log->submit_no_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub10->Visible) { // transmit_no_out_sub10 ?>
-		<td<?php echo $document_log->transmit_no_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_out_sub10" class="document_log_transmit_no_out_sub10">
-<span<?php echo $document_log->transmit_no_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub10->getViewValue() ?></span>
+<?php if ($document_log->revision_no_10->Visible) { // revision_no_10 ?>
+		<td<?php echo $document_log->revision_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_revision_no_10" class="document_log_revision_no_10">
+<span<?php echo $document_log->revision_no_10->viewAttributes() ?>>
+<?php echo $document_log->revision_no_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub10->Visible) { // approval_status_out_sub10 ?>
-		<td<?php echo $document_log->approval_status_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_out_sub10" class="document_log_approval_status_out_sub10">
-<span<?php echo $document_log->approval_status_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub10->getViewValue() ?></span>
+<?php if ($document_log->direction_10->Visible) { // direction_10 ?>
+		<td<?php echo $document_log->direction_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_10" class="document_log_direction_10">
+<span<?php echo $document_log->direction_10->viewAttributes() ?>>
+<?php echo $document_log->direction_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->direction_in_sub10->Visible) { // direction_in_sub10 ?>
-		<td<?php echo $document_log->direction_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_direction_in_sub10" class="document_log_direction_in_sub10">
-<span<?php echo $document_log->direction_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub10->getViewValue() ?></span>
+<?php if ($document_log->planned_date_10->Visible) { // planned_date_10 ?>
+		<td<?php echo $document_log->planned_date_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_planned_date_10" class="document_log_planned_date_10">
+<span<?php echo $document_log->planned_date_10->viewAttributes() ?>>
+<?php echo $document_log->planned_date_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub10->Visible) { // transmit_no_in_sub10 ?>
-		<td<?php echo $document_log->transmit_no_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_in_sub10" class="document_log_transmit_no_in_sub10">
-<span<?php echo $document_log->transmit_no_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub10->getViewValue() ?></span>
+<?php if ($document_log->transmit_date_10->Visible) { // transmit_date_10 ?>
+		<td<?php echo $document_log->transmit_date_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_10" class="document_log_transmit_date_10">
+<span<?php echo $document_log->transmit_date_10->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub10->Visible) { // approval_status_in_sub10 ?>
-		<td<?php echo $document_log->approval_status_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_in_sub10" class="document_log_approval_status_in_sub10">
-<span<?php echo $document_log->approval_status_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub10->getViewValue() ?></span>
+<?php if ($document_log->transmit_no_10->Visible) { // transmit_no_10 ?>
+		<td<?php echo $document_log->transmit_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_no_10" class="document_log_transmit_no_10">
+<span<?php echo $document_log->transmit_no_10->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub10->Visible) { // transmit_date_in_sub10 ?>
-		<td<?php echo $document_log->transmit_date_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_transmit_date_in_sub10" class="document_log_transmit_date_in_sub10">
-<span<?php echo $document_log->transmit_date_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub10->getViewValue() ?></span>
+<?php if ($document_log->approval_status_10->Visible) { // approval_status_10 ?>
+		<td<?php echo $document_log->approval_status_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_delete->RowCnt ?>_document_log_approval_status_10" class="document_log_approval_status_10">
+<span<?php echo $document_log->approval_status_10->viewAttributes() ?>>
+<?php echo $document_log->approval_status_10->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

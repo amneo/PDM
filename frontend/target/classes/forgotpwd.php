@@ -573,6 +573,9 @@ class forgotpwd extends user_dtls
 	function Page_Load() {
 
 		//echo "Page Load";
+	// Delete record
+	// NOTE: Modify your SQL here, replace the table name and condition
+
 	}
 
 	// Page Unload event

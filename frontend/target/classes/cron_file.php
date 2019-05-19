@@ -4,17 +4,20 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class index
+class cron_file
 {
 
 	// Page ID
-	public $PageID = "index";
+	public $PageID = "custom";
 
 	// Project ID
 	public $ProjectID = "{vishal-pdm}";
 
+	// Table name
+	public $TableName = 'cron_file.php';
+
 	// Page object name
-	public $PageObjName = "index";
+	public $PageObjName = "cron_file";
 
 	// Page headings
 	public $Heading = "";
@@ -300,7 +303,11 @@ class index
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
-			define(PROJECT_NAMESPACE . "PAGE_ID", 'index');
+			define(PROJECT_NAMESPACE . "PAGE_ID", 'custom');
+
+		// Table name (for backward compatibility)
+		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
+			define(PROJECT_NAMESPACE . "TABLE_NAME", 'cron_file.php');
 
 		// Start timer
 		if (!isset($GLOBALS["DebugTimer"]))
@@ -325,17 +332,12 @@ class index
 	{
 		global $ExportFileName, $TempImages;
 
-		// Page Unload event
-		$this->Page_Unload();
-
 		// Global Page Unloaded event (in userfn*.php)
 		Page_Unloaded();
 
 		// Export
-		if (!IsApi())
-			$this->Page_Redirecting($url);
-
 		// Close connection
+
 		CloseConnections();
 
 		// Return for API
@@ -362,8 +364,7 @@ class index
 
 	public function run()
 	{
-		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm,
-			$Breadcrumb;
+		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm;
 
 		// Init Session data for API request if token found
 		if (IsApi() && session_status() !== PHP_SESSION_ACTIVE) {
@@ -390,13 +391,32 @@ class index
 				$Security->loginUser(@$RequestSecurity["username"], @$RequestSecurity["userid"], @$RequestSecurity["parentuserid"], @$RequestSecurity["userlevelid"]);
 		}
 		if (!$validRequest) {
+			if (IsPasswordExpired())
+				$this->terminate(GetUrl("changepwd.php"));
+			if (!$Security->isLoggedIn())
+				$Security->autoLogin();
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loading();
+			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
+			if ($Security->isLoggedIn())
+				$Security->TablePermission_Loaded();
+			if (!$Security->canReport()) {
+				$Security->saveLastUrl();
+				$this->setFailureMessage(DeniedMessage()); // Set no permission
+				$this->terminate(GetUrl("index.php"));
+				return;
+			}
+			if ($Security->isLoggedIn()) {
+				$Security->UserID_Loading();
+				$Security->loadUserID();
+				$Security->UserID_Loaded();
+			}
 		}
+		if (Get("export") !== NULL)
+			$ExportType = Get("export"); // Get export parameter, used in header
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
-
-		// Page Load event
-		$this->Page_Load();
 
 		// Check token
 		if (!$this->validPost()) {
@@ -406,80 +426,19 @@ class index
 
 		// Create Token
 		$this->createToken();
+
+		// Set up Breadcrumb
+		$this->setupBreadcrumb();
+	}
+
+	// Set up Breadcrumb
+	protected function setupBreadcrumb()
+	{
+		global $Breadcrumb, $Language;
 		$Breadcrumb = new Breadcrumb();
-
-		// If session expired, show session expired message
-		if (Get("expired") == "1")
-			$this->setFailureMessage($Language->phrase("SessionExpired"));
-		if (!$Security->isLoggedIn())
-			$Security->autoLogin();
-		$Security->loadUserLevel(); // Load User Level
-		if ($Security->allowList(CurrentProjectID() . 'transaction_details'))
-			$this->terminate("transaction_detailslist.php"); // Exit and go to default page
-		if ($Security->allowList(CurrentProjectID() . 'distribution_details'))
-			$this->terminate("distribution_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'inbox'))
-			$this->terminate("inboxlist.php");
-		if ($Security->allowList(CurrentProjectID() . 'document_details'))
-			$this->terminate("document_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'project_details'))
-			$this->terminate("project_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'app_version'))
-			$this->terminate("app_versionlist.php");
-		if ($Security->allowList(CurrentProjectID() . 'audittrail'))
-			$this->terminate("audittraillist.php");
-		if ($Security->allowList(CurrentProjectID() . 'transmit_details'))
-			$this->terminate("transmit_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'user_dtls'))
-			$this->terminate("user_dtlslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'approval_details'))
-			$this->terminate("approval_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'document_system'))
-			$this->terminate("document_systemlist.php");
-		if ($Security->allowList(CurrentProjectID() . 'userlevels'))
-			$this->terminate("userlevelslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'userlevelpermissions'))
-			$this->terminate("userlevelpermissionslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'xmit_details'))
-			$this->terminate("xmit_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'document_log'))
-			$this->terminate("document_loglist.php");
-		if ($Security->allowList(CurrentProjectID() . 'cron_file.php'))
-			$this->terminate("./cron_file.php");
-		if ($Security->isLoggedIn()) {
-			$this->setFailureMessage(DeniedMessage() . "<br><br><a href=\"logout.php\">" . $Language->phrase("BackToLogin") . "</a>");
-		} else {
-			$this->terminate("login.php"); // Exit and go to login page
-		}
-	}
-
-	// Page Load event
-	function Page_Load() {
-
-		//echo "Page Load";
-	}
-
-	// Page Unload event
-	function Page_Unload() {
-
-		//echo "Page Unload";
-	}
-
-	// Page Redirecting event
-	function Page_Redirecting(&$url) {
-
-		// Example:
-		//$url = "your URL";
-
-	}
-
-	// Message Showing event
-	// $type = ''|'success'|'failure'
-	function Message_Showing(&$msg, $type) {
-
-		// Example:
-		//if ($type == 'success') $msg = "your success message";
-
+		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
+		$Breadcrumb->add("custom", "cron_file", $url, "", "cron_file", TRUE);
+		$this->Heading = $Language->TablePhrase("cron_file", "TblCaption"); 
 	}
 }
 ?>

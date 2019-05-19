@@ -234,1037 +234,641 @@ $document_log_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub1->Visible) { // submit_no_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub1) == "") { ?>
-		<th data-name="submit_no_sub1" class="<?php echo $document_log->submit_no_sub1->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub1" class="document_log_submit_no_sub1"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub1->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_1->Visible) { // submit_no_1 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_1) == "") { ?>
+		<th data-name="submit_no_1" class="<?php echo $document_log->submit_no_1->headerCellClass() ?>"><div id="elh_document_log_submit_no_1" class="document_log_submit_no_1"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub1" class="<?php echo $document_log->submit_no_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub1) ?>',2);"><div id="elh_document_log_submit_no_sub1" class="document_log_submit_no_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_1" class="<?php echo $document_log->submit_no_1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_1) ?>',2);"><div id="elh_document_log_submit_no_1" class="document_log_submit_no_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub1->Visible) { // revision_no_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub1) == "") { ?>
-		<th data-name="revision_no_sub1" class="<?php echo $document_log->revision_no_sub1->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub1" class="document_log_revision_no_sub1"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub1->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_1->Visible) { // revision_no_1 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_1) == "") { ?>
+		<th data-name="revision_no_1" class="<?php echo $document_log->revision_no_1->headerCellClass() ?>"><div id="elh_document_log_revision_no_1" class="document_log_revision_no_1"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub1" class="<?php echo $document_log->revision_no_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub1) ?>',2);"><div id="elh_document_log_revision_no_sub1" class="document_log_revision_no_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_1" class="<?php echo $document_log->revision_no_1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_1) ?>',2);"><div id="elh_document_log_revision_no_1" class="document_log_revision_no_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub1->Visible) { // direction_out_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub1) == "") { ?>
-		<th data-name="direction_out_sub1" class="<?php echo $document_log->direction_out_sub1->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub1" class="document_log_direction_out_sub1"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub1->caption() ?></div></div></th>
+<?php if ($document_log->direction_1->Visible) { // direction_1 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_1) == "") { ?>
+		<th data-name="direction_1" class="<?php echo $document_log->direction_1->headerCellClass() ?>"><div id="elh_document_log_direction_1" class="document_log_direction_1"><div class="ew-table-header-caption"><?php echo $document_log->direction_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub1" class="<?php echo $document_log->direction_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub1) ?>',2);"><div id="elh_document_log_direction_out_sub1" class="document_log_direction_out_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_1" class="<?php echo $document_log->direction_1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_1) ?>',2);"><div id="elh_document_log_direction_1" class="document_log_direction_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub1->Visible) { // planned_date_out_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub1) == "") { ?>
-		<th data-name="planned_date_out_sub1" class="<?php echo $document_log->planned_date_out_sub1->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub1" class="document_log_planned_date_out_sub1"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub1->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_1->Visible) { // planned_date_1 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_1) == "") { ?>
+		<th data-name="planned_date_1" class="<?php echo $document_log->planned_date_1->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_document_log_planned_date_1" class="document_log_planned_date_1"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub1" class="<?php echo $document_log->planned_date_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub1) ?>',2);"><div id="elh_document_log_planned_date_out_sub1" class="document_log_planned_date_out_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_1" class="<?php echo $document_log->planned_date_1->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_1) ?>',2);"><div id="elh_document_log_planned_date_1" class="document_log_planned_date_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub1->Visible) { // transmit_date_out_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub1) == "") { ?>
-		<th data-name="transmit_date_out_sub1" class="<?php echo $document_log->transmit_date_out_sub1->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub1" class="document_log_transmit_date_out_sub1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub1->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_1->Visible) { // transmit_date_1 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_1) == "") { ?>
+		<th data-name="transmit_date_1" class="<?php echo $document_log->transmit_date_1->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_document_log_transmit_date_1" class="document_log_transmit_date_1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub1" class="<?php echo $document_log->transmit_date_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub1) ?>',2);"><div id="elh_document_log_transmit_date_out_sub1" class="document_log_transmit_date_out_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_1" class="<?php echo $document_log->transmit_date_1->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_1) ?>',2);"><div id="elh_document_log_transmit_date_1" class="document_log_transmit_date_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub1->Visible) { // transmit_no_out_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub1) == "") { ?>
-		<th data-name="transmit_no_out_sub1" class="<?php echo $document_log->transmit_no_out_sub1->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub1" class="document_log_transmit_no_out_sub1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub1->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_1->Visible) { // transmit_no_1 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_1) == "") { ?>
+		<th data-name="transmit_no_1" class="<?php echo $document_log->transmit_no_1->headerCellClass() ?>"><div id="elh_document_log_transmit_no_1" class="document_log_transmit_no_1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub1" class="<?php echo $document_log->transmit_no_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub1) ?>',2);"><div id="elh_document_log_transmit_no_out_sub1" class="document_log_transmit_no_out_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_1" class="<?php echo $document_log->transmit_no_1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_1) ?>',2);"><div id="elh_document_log_transmit_no_1" class="document_log_transmit_no_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub1->Visible) { // approval_status_out_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub1) == "") { ?>
-		<th data-name="approval_status_out_sub1" class="<?php echo $document_log->approval_status_out_sub1->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub1->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_1->Visible) { // approval_status_1 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_1) == "") { ?>
+		<th data-name="approval_status_1" class="<?php echo $document_log->approval_status_1->headerCellClass() ?>"><div id="elh_document_log_approval_status_1" class="document_log_approval_status_1"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_1->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub1" class="<?php echo $document_log->approval_status_out_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub1) ?>',2);"><div id="elh_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_1" class="<?php echo $document_log->approval_status_1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_1) ?>',2);"><div id="elh_document_log_approval_status_1" class="document_log_approval_status_1">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub1->Visible) { // direction_in_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub1) == "") { ?>
-		<th data-name="direction_in_sub1" class="<?php echo $document_log->direction_in_sub1->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub1" class="document_log_direction_in_sub1"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub1->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_2->Visible) { // submit_no_2 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_2) == "") { ?>
+		<th data-name="submit_no_2" class="<?php echo $document_log->submit_no_2->headerCellClass() ?>"><div id="elh_document_log_submit_no_2" class="document_log_submit_no_2"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub1" class="<?php echo $document_log->direction_in_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub1) ?>',2);"><div id="elh_document_log_direction_in_sub1" class="document_log_direction_in_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_2" class="<?php echo $document_log->submit_no_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_2) ?>',2);"><div id="elh_document_log_submit_no_2" class="document_log_submit_no_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub1->Visible) { // transmit_no_in_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub1) == "") { ?>
-		<th data-name="transmit_no_in_sub1" class="<?php echo $document_log->transmit_no_in_sub1->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub1" class="document_log_transmit_no_in_sub1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub1->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_2->Visible) { // revision_no_2 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_2) == "") { ?>
+		<th data-name="revision_no_2" class="<?php echo $document_log->revision_no_2->headerCellClass() ?>"><div id="elh_document_log_revision_no_2" class="document_log_revision_no_2"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub1" class="<?php echo $document_log->transmit_no_in_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub1) ?>',2);"><div id="elh_document_log_transmit_no_in_sub1" class="document_log_transmit_no_in_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_2" class="<?php echo $document_log->revision_no_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_2) ?>',2);"><div id="elh_document_log_revision_no_2" class="document_log_revision_no_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub1->Visible) { // approval_status_in_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub1) == "") { ?>
-		<th data-name="approval_status_in_sub1" class="<?php echo $document_log->approval_status_in_sub1->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub1->caption() ?></div></div></th>
+<?php if ($document_log->direction_2->Visible) { // direction_2 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_2) == "") { ?>
+		<th data-name="direction_2" class="<?php echo $document_log->direction_2->headerCellClass() ?>"><div id="elh_document_log_direction_2" class="document_log_direction_2"><div class="ew-table-header-caption"><?php echo $document_log->direction_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub1" class="<?php echo $document_log->approval_status_in_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub1) ?>',2);"><div id="elh_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub1->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_2" class="<?php echo $document_log->direction_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_2) ?>',2);"><div id="elh_document_log_direction_2" class="document_log_direction_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub1->Visible) { // transmit_date_in_sub1 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub1) == "") { ?>
-		<th data-name="transmit_date_in_sub1" class="<?php echo $document_log->transmit_date_in_sub1->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub1" class="document_log_transmit_date_in_sub1"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub1->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_2->Visible) { // planned_date_2 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_2) == "") { ?>
+		<th data-name="planned_date_2" class="<?php echo $document_log->planned_date_2->headerCellClass() ?>"><div id="elh_document_log_planned_date_2" class="document_log_planned_date_2"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub1" class="<?php echo $document_log->transmit_date_in_sub1->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub1) ?>',2);"><div id="elh_document_log_transmit_date_in_sub1" class="document_log_transmit_date_in_sub1">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub1->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub1->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub1->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_2" class="<?php echo $document_log->planned_date_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_2) ?>',2);"><div id="elh_document_log_planned_date_2" class="document_log_planned_date_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub2->Visible) { // submit_no_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub2) == "") { ?>
-		<th data-name="submit_no_sub2" class="<?php echo $document_log->submit_no_sub2->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub2" class="document_log_submit_no_sub2"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub2->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_2->Visible) { // transmit_date_2 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_2) == "") { ?>
+		<th data-name="transmit_date_2" class="<?php echo $document_log->transmit_date_2->headerCellClass() ?>"><div id="elh_document_log_transmit_date_2" class="document_log_transmit_date_2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub2" class="<?php echo $document_log->submit_no_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub2) ?>',2);"><div id="elh_document_log_submit_no_sub2" class="document_log_submit_no_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_2" class="<?php echo $document_log->transmit_date_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_2) ?>',2);"><div id="elh_document_log_transmit_date_2" class="document_log_transmit_date_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub2->Visible) { // revision_no_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub2) == "") { ?>
-		<th data-name="revision_no_sub2" class="<?php echo $document_log->revision_no_sub2->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub2" class="document_log_revision_no_sub2"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub2->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_2->Visible) { // transmit_no_2 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_2) == "") { ?>
+		<th data-name="transmit_no_2" class="<?php echo $document_log->transmit_no_2->headerCellClass() ?>"><div id="elh_document_log_transmit_no_2" class="document_log_transmit_no_2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub2" class="<?php echo $document_log->revision_no_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub2) ?>',2);"><div id="elh_document_log_revision_no_sub2" class="document_log_revision_no_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_2" class="<?php echo $document_log->transmit_no_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_2) ?>',2);"><div id="elh_document_log_transmit_no_2" class="document_log_transmit_no_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub2->Visible) { // direction_out_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub2) == "") { ?>
-		<th data-name="direction_out_sub2" class="<?php echo $document_log->direction_out_sub2->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub2" class="document_log_direction_out_sub2"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub2->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_2->Visible) { // approval_status_2 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_2) == "") { ?>
+		<th data-name="approval_status_2" class="<?php echo $document_log->approval_status_2->headerCellClass() ?>"><div id="elh_document_log_approval_status_2" class="document_log_approval_status_2"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_2->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub2" class="<?php echo $document_log->direction_out_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub2) ?>',2);"><div id="elh_document_log_direction_out_sub2" class="document_log_direction_out_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_2" class="<?php echo $document_log->approval_status_2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_2) ?>',2);"><div id="elh_document_log_approval_status_2" class="document_log_approval_status_2">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub2->Visible) { // planned_date_out_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub2) == "") { ?>
-		<th data-name="planned_date_out_sub2" class="<?php echo $document_log->planned_date_out_sub2->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub2" class="document_log_planned_date_out_sub2"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub2->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_3->Visible) { // submit_no_3 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_3) == "") { ?>
+		<th data-name="submit_no_3" class="<?php echo $document_log->submit_no_3->headerCellClass() ?>"><div id="elh_document_log_submit_no_3" class="document_log_submit_no_3"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub2" class="<?php echo $document_log->planned_date_out_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub2) ?>',2);"><div id="elh_document_log_planned_date_out_sub2" class="document_log_planned_date_out_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_3" class="<?php echo $document_log->submit_no_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_3) ?>',2);"><div id="elh_document_log_submit_no_3" class="document_log_submit_no_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub2->Visible) { // transmit_date_out_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub2) == "") { ?>
-		<th data-name="transmit_date_out_sub2" class="<?php echo $document_log->transmit_date_out_sub2->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub2" class="document_log_transmit_date_out_sub2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub2->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_3->Visible) { // revision_no_3 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_3) == "") { ?>
+		<th data-name="revision_no_3" class="<?php echo $document_log->revision_no_3->headerCellClass() ?>"><div id="elh_document_log_revision_no_3" class="document_log_revision_no_3"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub2" class="<?php echo $document_log->transmit_date_out_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub2) ?>',2);"><div id="elh_document_log_transmit_date_out_sub2" class="document_log_transmit_date_out_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_3" class="<?php echo $document_log->revision_no_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_3) ?>',2);"><div id="elh_document_log_revision_no_3" class="document_log_revision_no_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub2->Visible) { // transmit_no_out_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub2) == "") { ?>
-		<th data-name="transmit_no_out_sub2" class="<?php echo $document_log->transmit_no_out_sub2->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub2" class="document_log_transmit_no_out_sub2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub2->caption() ?></div></div></th>
+<?php if ($document_log->direction_3->Visible) { // direction_3 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_3) == "") { ?>
+		<th data-name="direction_3" class="<?php echo $document_log->direction_3->headerCellClass() ?>"><div id="elh_document_log_direction_3" class="document_log_direction_3"><div class="ew-table-header-caption"><?php echo $document_log->direction_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub2" class="<?php echo $document_log->transmit_no_out_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub2) ?>',2);"><div id="elh_document_log_transmit_no_out_sub2" class="document_log_transmit_no_out_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_3" class="<?php echo $document_log->direction_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_3) ?>',2);"><div id="elh_document_log_direction_3" class="document_log_direction_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub2->Visible) { // approval_status_out_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub2) == "") { ?>
-		<th data-name="approval_status_out_sub2" class="<?php echo $document_log->approval_status_out_sub2->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub2" class="document_log_approval_status_out_sub2"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub2->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_3->Visible) { // planned_date_3 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_3) == "") { ?>
+		<th data-name="planned_date_3" class="<?php echo $document_log->planned_date_3->headerCellClass() ?>"><div id="elh_document_log_planned_date_3" class="document_log_planned_date_3"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub2" class="<?php echo $document_log->approval_status_out_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub2) ?>',2);"><div id="elh_document_log_approval_status_out_sub2" class="document_log_approval_status_out_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_3" class="<?php echo $document_log->planned_date_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_3) ?>',2);"><div id="elh_document_log_planned_date_3" class="document_log_planned_date_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub2->Visible) { // direction_in_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub2) == "") { ?>
-		<th data-name="direction_in_sub2" class="<?php echo $document_log->direction_in_sub2->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub2" class="document_log_direction_in_sub2"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub2->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_3->Visible) { // transmit_date_3 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_3) == "") { ?>
+		<th data-name="transmit_date_3" class="<?php echo $document_log->transmit_date_3->headerCellClass() ?>"><div id="elh_document_log_transmit_date_3" class="document_log_transmit_date_3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub2" class="<?php echo $document_log->direction_in_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub2) ?>',2);"><div id="elh_document_log_direction_in_sub2" class="document_log_direction_in_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_3" class="<?php echo $document_log->transmit_date_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_3) ?>',2);"><div id="elh_document_log_transmit_date_3" class="document_log_transmit_date_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub2->Visible) { // transmit_no_in_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub2) == "") { ?>
-		<th data-name="transmit_no_in_sub2" class="<?php echo $document_log->transmit_no_in_sub2->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub2" class="document_log_transmit_no_in_sub2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub2->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_3->Visible) { // transmit_no_3 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_3) == "") { ?>
+		<th data-name="transmit_no_3" class="<?php echo $document_log->transmit_no_3->headerCellClass() ?>"><div id="elh_document_log_transmit_no_3" class="document_log_transmit_no_3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub2" class="<?php echo $document_log->transmit_no_in_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub2) ?>',2);"><div id="elh_document_log_transmit_no_in_sub2" class="document_log_transmit_no_in_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_3" class="<?php echo $document_log->transmit_no_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_3) ?>',2);"><div id="elh_document_log_transmit_no_3" class="document_log_transmit_no_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub2->Visible) { // approval_status_in_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub2) == "") { ?>
-		<th data-name="approval_status_in_sub2" class="<?php echo $document_log->approval_status_in_sub2->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub2" class="document_log_approval_status_in_sub2"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub2->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_3->Visible) { // approval_status_3 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_3) == "") { ?>
+		<th data-name="approval_status_3" class="<?php echo $document_log->approval_status_3->headerCellClass() ?>"><div id="elh_document_log_approval_status_3" class="document_log_approval_status_3"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_3->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub2" class="<?php echo $document_log->approval_status_in_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub2) ?>',2);"><div id="elh_document_log_approval_status_in_sub2" class="document_log_approval_status_in_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub2->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_3" class="<?php echo $document_log->approval_status_3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_3) ?>',2);"><div id="elh_document_log_approval_status_3" class="document_log_approval_status_3">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub2->Visible) { // transmit_date_in_sub2 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub2) == "") { ?>
-		<th data-name="transmit_date_in_sub2" class="<?php echo $document_log->transmit_date_in_sub2->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub2" class="document_log_transmit_date_in_sub2"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub2->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_4->Visible) { // submit_no_4 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_4) == "") { ?>
+		<th data-name="submit_no_4" class="<?php echo $document_log->submit_no_4->headerCellClass() ?>"><div id="elh_document_log_submit_no_4" class="document_log_submit_no_4"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub2" class="<?php echo $document_log->transmit_date_in_sub2->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub2) ?>',2);"><div id="elh_document_log_transmit_date_in_sub2" class="document_log_transmit_date_in_sub2">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub2->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub2->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub2->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_4" class="<?php echo $document_log->submit_no_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_4) ?>',2);"><div id="elh_document_log_submit_no_4" class="document_log_submit_no_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub3->Visible) { // submit_no_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub3) == "") { ?>
-		<th data-name="submit_no_sub3" class="<?php echo $document_log->submit_no_sub3->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub3" class="document_log_submit_no_sub3"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub3->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_4->Visible) { // revision_no_4 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_4) == "") { ?>
+		<th data-name="revision_no_4" class="<?php echo $document_log->revision_no_4->headerCellClass() ?>"><div id="elh_document_log_revision_no_4" class="document_log_revision_no_4"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub3" class="<?php echo $document_log->submit_no_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub3) ?>',2);"><div id="elh_document_log_submit_no_sub3" class="document_log_submit_no_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_4" class="<?php echo $document_log->revision_no_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_4) ?>',2);"><div id="elh_document_log_revision_no_4" class="document_log_revision_no_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub3->Visible) { // revision_no_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub3) == "") { ?>
-		<th data-name="revision_no_sub3" class="<?php echo $document_log->revision_no_sub3->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub3" class="document_log_revision_no_sub3"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub3->caption() ?></div></div></th>
+<?php if ($document_log->direction_4->Visible) { // direction_4 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_4) == "") { ?>
+		<th data-name="direction_4" class="<?php echo $document_log->direction_4->headerCellClass() ?>"><div id="elh_document_log_direction_4" class="document_log_direction_4"><div class="ew-table-header-caption"><?php echo $document_log->direction_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub3" class="<?php echo $document_log->revision_no_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub3) ?>',2);"><div id="elh_document_log_revision_no_sub3" class="document_log_revision_no_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_4" class="<?php echo $document_log->direction_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_4) ?>',2);"><div id="elh_document_log_direction_4" class="document_log_direction_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub3->Visible) { // direction_out_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub3) == "") { ?>
-		<th data-name="direction_out_sub3" class="<?php echo $document_log->direction_out_sub3->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub3" class="document_log_direction_out_sub3"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub3->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_4->Visible) { // planned_date_4 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_4) == "") { ?>
+		<th data-name="planned_date_4" class="<?php echo $document_log->planned_date_4->headerCellClass() ?>"><div id="elh_document_log_planned_date_4" class="document_log_planned_date_4"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub3" class="<?php echo $document_log->direction_out_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub3) ?>',2);"><div id="elh_document_log_direction_out_sub3" class="document_log_direction_out_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_4" class="<?php echo $document_log->planned_date_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_4) ?>',2);"><div id="elh_document_log_planned_date_4" class="document_log_planned_date_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub3->Visible) { // planned_date_out_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub3) == "") { ?>
-		<th data-name="planned_date_out_sub3" class="<?php echo $document_log->planned_date_out_sub3->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub3" class="document_log_planned_date_out_sub3"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub3->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_4->Visible) { // transmit_date_4 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_4) == "") { ?>
+		<th data-name="transmit_date_4" class="<?php echo $document_log->transmit_date_4->headerCellClass() ?>"><div id="elh_document_log_transmit_date_4" class="document_log_transmit_date_4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub3" class="<?php echo $document_log->planned_date_out_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub3) ?>',2);"><div id="elh_document_log_planned_date_out_sub3" class="document_log_planned_date_out_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_4" class="<?php echo $document_log->transmit_date_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_4) ?>',2);"><div id="elh_document_log_transmit_date_4" class="document_log_transmit_date_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub3->Visible) { // transmit_date_out_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub3) == "") { ?>
-		<th data-name="transmit_date_out_sub3" class="<?php echo $document_log->transmit_date_out_sub3->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub3" class="document_log_transmit_date_out_sub3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub3->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_4->Visible) { // transmit_no_4 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_4) == "") { ?>
+		<th data-name="transmit_no_4" class="<?php echo $document_log->transmit_no_4->headerCellClass() ?>"><div id="elh_document_log_transmit_no_4" class="document_log_transmit_no_4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub3" class="<?php echo $document_log->transmit_date_out_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub3) ?>',2);"><div id="elh_document_log_transmit_date_out_sub3" class="document_log_transmit_date_out_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_4" class="<?php echo $document_log->transmit_no_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_4) ?>',2);"><div id="elh_document_log_transmit_no_4" class="document_log_transmit_no_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub3->Visible) { // transmit_no_out_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub3) == "") { ?>
-		<th data-name="transmit_no_out_sub3" class="<?php echo $document_log->transmit_no_out_sub3->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub3" class="document_log_transmit_no_out_sub3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub3->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_4->Visible) { // approval_status_4 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_4) == "") { ?>
+		<th data-name="approval_status_4" class="<?php echo $document_log->approval_status_4->headerCellClass() ?>"><div id="elh_document_log_approval_status_4" class="document_log_approval_status_4"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_4->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub3" class="<?php echo $document_log->transmit_no_out_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub3) ?>',2);"><div id="elh_document_log_transmit_no_out_sub3" class="document_log_transmit_no_out_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_4" class="<?php echo $document_log->approval_status_4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_4) ?>',2);"><div id="elh_document_log_approval_status_4" class="document_log_approval_status_4">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub3->Visible) { // approval_status_out_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub3) == "") { ?>
-		<th data-name="approval_status_out_sub3" class="<?php echo $document_log->approval_status_out_sub3->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub3" class="document_log_approval_status_out_sub3"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub3->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_5->Visible) { // submit_no_5 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_5) == "") { ?>
+		<th data-name="submit_no_5" class="<?php echo $document_log->submit_no_5->headerCellClass() ?>"><div id="elh_document_log_submit_no_5" class="document_log_submit_no_5"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub3" class="<?php echo $document_log->approval_status_out_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub3) ?>',2);"><div id="elh_document_log_approval_status_out_sub3" class="document_log_approval_status_out_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_5" class="<?php echo $document_log->submit_no_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_5) ?>',2);"><div id="elh_document_log_submit_no_5" class="document_log_submit_no_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub3->Visible) { // direction_in_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub3) == "") { ?>
-		<th data-name="direction_in_sub3" class="<?php echo $document_log->direction_in_sub3->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub3" class="document_log_direction_in_sub3"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub3->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_5->Visible) { // revision_no_5 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_5) == "") { ?>
+		<th data-name="revision_no_5" class="<?php echo $document_log->revision_no_5->headerCellClass() ?>"><div id="elh_document_log_revision_no_5" class="document_log_revision_no_5"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub3" class="<?php echo $document_log->direction_in_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub3) ?>',2);"><div id="elh_document_log_direction_in_sub3" class="document_log_direction_in_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_5" class="<?php echo $document_log->revision_no_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_5) ?>',2);"><div id="elh_document_log_revision_no_5" class="document_log_revision_no_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub3->Visible) { // transmit_no_in_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub3) == "") { ?>
-		<th data-name="transmit_no_in_sub3" class="<?php echo $document_log->transmit_no_in_sub3->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub3" class="document_log_transmit_no_in_sub3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub3->caption() ?></div></div></th>
+<?php if ($document_log->direction_5->Visible) { // direction_5 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_5) == "") { ?>
+		<th data-name="direction_5" class="<?php echo $document_log->direction_5->headerCellClass() ?>"><div id="elh_document_log_direction_5" class="document_log_direction_5"><div class="ew-table-header-caption"><?php echo $document_log->direction_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub3" class="<?php echo $document_log->transmit_no_in_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub3) ?>',2);"><div id="elh_document_log_transmit_no_in_sub3" class="document_log_transmit_no_in_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_5" class="<?php echo $document_log->direction_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_5) ?>',2);"><div id="elh_document_log_direction_5" class="document_log_direction_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub3->Visible) { // approval_status_in_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub3) == "") { ?>
-		<th data-name="approval_status_in_sub3" class="<?php echo $document_log->approval_status_in_sub3->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub3" class="document_log_approval_status_in_sub3"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub3->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_5->Visible) { // planned_date_5 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_5) == "") { ?>
+		<th data-name="planned_date_5" class="<?php echo $document_log->planned_date_5->headerCellClass() ?>"><div id="elh_document_log_planned_date_5" class="document_log_planned_date_5"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub3" class="<?php echo $document_log->approval_status_in_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub3) ?>',2);"><div id="elh_document_log_approval_status_in_sub3" class="document_log_approval_status_in_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub3->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_5" class="<?php echo $document_log->planned_date_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_5) ?>',2);"><div id="elh_document_log_planned_date_5" class="document_log_planned_date_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub3->Visible) { // transmit_date_in_sub3 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub3) == "") { ?>
-		<th data-name="transmit_date_in_sub3" class="<?php echo $document_log->transmit_date_in_sub3->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub3" class="document_log_transmit_date_in_sub3"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub3->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_5->Visible) { // transmit_date_5 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_5) == "") { ?>
+		<th data-name="transmit_date_5" class="<?php echo $document_log->transmit_date_5->headerCellClass() ?>"><div id="elh_document_log_transmit_date_5" class="document_log_transmit_date_5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub3" class="<?php echo $document_log->transmit_date_in_sub3->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub3) ?>',2);"><div id="elh_document_log_transmit_date_in_sub3" class="document_log_transmit_date_in_sub3">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub3->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub3->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub3->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_5" class="<?php echo $document_log->transmit_date_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_5) ?>',2);"><div id="elh_document_log_transmit_date_5" class="document_log_transmit_date_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub4->Visible) { // submit_no_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub4) == "") { ?>
-		<th data-name="submit_no_sub4" class="<?php echo $document_log->submit_no_sub4->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub4" class="document_log_submit_no_sub4"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub4->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_5->Visible) { // transmit_no_5 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_5) == "") { ?>
+		<th data-name="transmit_no_5" class="<?php echo $document_log->transmit_no_5->headerCellClass() ?>"><div id="elh_document_log_transmit_no_5" class="document_log_transmit_no_5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub4" class="<?php echo $document_log->submit_no_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub4) ?>',2);"><div id="elh_document_log_submit_no_sub4" class="document_log_submit_no_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_5" class="<?php echo $document_log->transmit_no_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_5) ?>',2);"><div id="elh_document_log_transmit_no_5" class="document_log_transmit_no_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub4->Visible) { // revision_no_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub4) == "") { ?>
-		<th data-name="revision_no_sub4" class="<?php echo $document_log->revision_no_sub4->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub4" class="document_log_revision_no_sub4"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub4->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_5->Visible) { // approval_status_5 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_5) == "") { ?>
+		<th data-name="approval_status_5" class="<?php echo $document_log->approval_status_5->headerCellClass() ?>"><div id="elh_document_log_approval_status_5" class="document_log_approval_status_5"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_5->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub4" class="<?php echo $document_log->revision_no_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub4) ?>',2);"><div id="elh_document_log_revision_no_sub4" class="document_log_revision_no_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_5" class="<?php echo $document_log->approval_status_5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_5) ?>',2);"><div id="elh_document_log_approval_status_5" class="document_log_approval_status_5">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub4->Visible) { // direction_out_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub4) == "") { ?>
-		<th data-name="direction_out_sub4" class="<?php echo $document_log->direction_out_sub4->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub4" class="document_log_direction_out_sub4"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub4->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_6->Visible) { // submit_no_6 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_6) == "") { ?>
+		<th data-name="submit_no_6" class="<?php echo $document_log->submit_no_6->headerCellClass() ?>"><div id="elh_document_log_submit_no_6" class="document_log_submit_no_6"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub4" class="<?php echo $document_log->direction_out_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub4) ?>',2);"><div id="elh_document_log_direction_out_sub4" class="document_log_direction_out_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_6" class="<?php echo $document_log->submit_no_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_6) ?>',2);"><div id="elh_document_log_submit_no_6" class="document_log_submit_no_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub4->Visible) { // planned_date_out_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub4) == "") { ?>
-		<th data-name="planned_date_out_sub4" class="<?php echo $document_log->planned_date_out_sub4->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub4" class="document_log_planned_date_out_sub4"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub4->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_6->Visible) { // revision_no_6 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_6) == "") { ?>
+		<th data-name="revision_no_6" class="<?php echo $document_log->revision_no_6->headerCellClass() ?>"><div id="elh_document_log_revision_no_6" class="document_log_revision_no_6"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub4" class="<?php echo $document_log->planned_date_out_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub4) ?>',2);"><div id="elh_document_log_planned_date_out_sub4" class="document_log_planned_date_out_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_6" class="<?php echo $document_log->revision_no_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_6) ?>',2);"><div id="elh_document_log_revision_no_6" class="document_log_revision_no_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub4->Visible) { // transmit_date_out_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub4) == "") { ?>
-		<th data-name="transmit_date_out_sub4" class="<?php echo $document_log->transmit_date_out_sub4->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub4" class="document_log_transmit_date_out_sub4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub4->caption() ?></div></div></th>
+<?php if ($document_log->direction_6->Visible) { // direction_6 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_6) == "") { ?>
+		<th data-name="direction_6" class="<?php echo $document_log->direction_6->headerCellClass() ?>"><div id="elh_document_log_direction_6" class="document_log_direction_6"><div class="ew-table-header-caption"><?php echo $document_log->direction_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub4" class="<?php echo $document_log->transmit_date_out_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub4) ?>',2);"><div id="elh_document_log_transmit_date_out_sub4" class="document_log_transmit_date_out_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_6" class="<?php echo $document_log->direction_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_6) ?>',2);"><div id="elh_document_log_direction_6" class="document_log_direction_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub4->Visible) { // transmit_no_out_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub4) == "") { ?>
-		<th data-name="transmit_no_out_sub4" class="<?php echo $document_log->transmit_no_out_sub4->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub4" class="document_log_transmit_no_out_sub4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub4->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_6->Visible) { // planned_date_6 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_6) == "") { ?>
+		<th data-name="planned_date_6" class="<?php echo $document_log->planned_date_6->headerCellClass() ?>"><div id="elh_document_log_planned_date_6" class="document_log_planned_date_6"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub4" class="<?php echo $document_log->transmit_no_out_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub4) ?>',2);"><div id="elh_document_log_transmit_no_out_sub4" class="document_log_transmit_no_out_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_6" class="<?php echo $document_log->planned_date_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_6) ?>',2);"><div id="elh_document_log_planned_date_6" class="document_log_planned_date_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub4->Visible) { // approval_status_out_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub4) == "") { ?>
-		<th data-name="approval_status_out_sub4" class="<?php echo $document_log->approval_status_out_sub4->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub4" class="document_log_approval_status_out_sub4"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub4->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_6->Visible) { // transmit_date_6 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_6) == "") { ?>
+		<th data-name="transmit_date_6" class="<?php echo $document_log->transmit_date_6->headerCellClass() ?>"><div id="elh_document_log_transmit_date_6" class="document_log_transmit_date_6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub4" class="<?php echo $document_log->approval_status_out_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub4) ?>',2);"><div id="elh_document_log_approval_status_out_sub4" class="document_log_approval_status_out_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_6" class="<?php echo $document_log->transmit_date_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_6) ?>',2);"><div id="elh_document_log_transmit_date_6" class="document_log_transmit_date_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub4->Visible) { // direction_in_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub4) == "") { ?>
-		<th data-name="direction_in_sub4" class="<?php echo $document_log->direction_in_sub4->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub4" class="document_log_direction_in_sub4"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub4->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_6->Visible) { // transmit_no_6 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_6) == "") { ?>
+		<th data-name="transmit_no_6" class="<?php echo $document_log->transmit_no_6->headerCellClass() ?>"><div id="elh_document_log_transmit_no_6" class="document_log_transmit_no_6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub4" class="<?php echo $document_log->direction_in_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub4) ?>',2);"><div id="elh_document_log_direction_in_sub4" class="document_log_direction_in_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_6" class="<?php echo $document_log->transmit_no_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_6) ?>',2);"><div id="elh_document_log_transmit_no_6" class="document_log_transmit_no_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub4->Visible) { // transmit_no_in_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub4) == "") { ?>
-		<th data-name="transmit_no_in_sub4" class="<?php echo $document_log->transmit_no_in_sub4->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub4" class="document_log_transmit_no_in_sub4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub4->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_6->Visible) { // approval_status_6 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_6) == "") { ?>
+		<th data-name="approval_status_6" class="<?php echo $document_log->approval_status_6->headerCellClass() ?>"><div id="elh_document_log_approval_status_6" class="document_log_approval_status_6"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_6->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub4" class="<?php echo $document_log->transmit_no_in_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub4) ?>',2);"><div id="elh_document_log_transmit_no_in_sub4" class="document_log_transmit_no_in_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_6" class="<?php echo $document_log->approval_status_6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_6) ?>',2);"><div id="elh_document_log_approval_status_6" class="document_log_approval_status_6">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub4->Visible) { // approval_status_in_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub4) == "") { ?>
-		<th data-name="approval_status_in_sub4" class="<?php echo $document_log->approval_status_in_sub4->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub4" class="document_log_approval_status_in_sub4"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub4->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_7->Visible) { // submit_no_7 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_7) == "") { ?>
+		<th data-name="submit_no_7" class="<?php echo $document_log->submit_no_7->headerCellClass() ?>"><div id="elh_document_log_submit_no_7" class="document_log_submit_no_7"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub4" class="<?php echo $document_log->approval_status_in_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub4) ?>',2);"><div id="elh_document_log_approval_status_in_sub4" class="document_log_approval_status_in_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_7" class="<?php echo $document_log->submit_no_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_7) ?>',2);"><div id="elh_document_log_submit_no_7" class="document_log_submit_no_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub4->Visible) { // direction_in_file_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_file_sub4) == "") { ?>
-		<th data-name="direction_in_file_sub4" class="<?php echo $document_log->direction_in_file_sub4->headerCellClass() ?>"><div id="elh_document_log_direction_in_file_sub4" class="document_log_direction_in_file_sub4"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub4->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_7->Visible) { // revision_no_7 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_7) == "") { ?>
+		<th data-name="revision_no_7" class="<?php echo $document_log->revision_no_7->headerCellClass() ?>"><div id="elh_document_log_revision_no_7" class="document_log_revision_no_7"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_file_sub4" class="<?php echo $document_log->direction_in_file_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_file_sub4) ?>',2);"><div id="elh_document_log_direction_in_file_sub4" class="document_log_direction_in_file_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub4->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_file_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_file_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_7" class="<?php echo $document_log->revision_no_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_7) ?>',2);"><div id="elh_document_log_revision_no_7" class="document_log_revision_no_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub4->Visible) { // transmit_date_in_sub4 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub4) == "") { ?>
-		<th data-name="transmit_date_in_sub4" class="<?php echo $document_log->transmit_date_in_sub4->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub4" class="document_log_transmit_date_in_sub4"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub4->caption() ?></div></div></th>
+<?php if ($document_log->direction_7->Visible) { // direction_7 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_7) == "") { ?>
+		<th data-name="direction_7" class="<?php echo $document_log->direction_7->headerCellClass() ?>"><div id="elh_document_log_direction_7" class="document_log_direction_7"><div class="ew-table-header-caption"><?php echo $document_log->direction_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub4" class="<?php echo $document_log->transmit_date_in_sub4->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub4) ?>',2);"><div id="elh_document_log_transmit_date_in_sub4" class="document_log_transmit_date_in_sub4">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub4->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub4->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub4->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_7" class="<?php echo $document_log->direction_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_7) ?>',2);"><div id="elh_document_log_direction_7" class="document_log_direction_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub5->Visible) { // submit_no_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub5) == "") { ?>
-		<th data-name="submit_no_sub5" class="<?php echo $document_log->submit_no_sub5->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub5" class="document_log_submit_no_sub5"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub5->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_7->Visible) { // planned_date_7 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_7) == "") { ?>
+		<th data-name="planned_date_7" class="<?php echo $document_log->planned_date_7->headerCellClass() ?>"><div id="elh_document_log_planned_date_7" class="document_log_planned_date_7"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub5" class="<?php echo $document_log->submit_no_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub5) ?>',2);"><div id="elh_document_log_submit_no_sub5" class="document_log_submit_no_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_7" class="<?php echo $document_log->planned_date_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_7) ?>',2);"><div id="elh_document_log_planned_date_7" class="document_log_planned_date_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub5->Visible) { // revision_no_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub5) == "") { ?>
-		<th data-name="revision_no_sub5" class="<?php echo $document_log->revision_no_sub5->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub5" class="document_log_revision_no_sub5"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub5->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_7->Visible) { // transmit_date_7 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_7) == "") { ?>
+		<th data-name="transmit_date_7" class="<?php echo $document_log->transmit_date_7->headerCellClass() ?>"><div id="elh_document_log_transmit_date_7" class="document_log_transmit_date_7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub5" class="<?php echo $document_log->revision_no_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub5) ?>',2);"><div id="elh_document_log_revision_no_sub5" class="document_log_revision_no_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_7" class="<?php echo $document_log->transmit_date_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_7) ?>',2);"><div id="elh_document_log_transmit_date_7" class="document_log_transmit_date_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub5->Visible) { // direction_out_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub5) == "") { ?>
-		<th data-name="direction_out_sub5" class="<?php echo $document_log->direction_out_sub5->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub5" class="document_log_direction_out_sub5"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub5->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_7->Visible) { // transmit_no_7 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_7) == "") { ?>
+		<th data-name="transmit_no_7" class="<?php echo $document_log->transmit_no_7->headerCellClass() ?>"><div id="elh_document_log_transmit_no_7" class="document_log_transmit_no_7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub5" class="<?php echo $document_log->direction_out_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub5) ?>',2);"><div id="elh_document_log_direction_out_sub5" class="document_log_direction_out_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_7" class="<?php echo $document_log->transmit_no_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_7) ?>',2);"><div id="elh_document_log_transmit_no_7" class="document_log_transmit_no_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub5->Visible) { // planned_date_out_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub5) == "") { ?>
-		<th data-name="planned_date_out_sub5" class="<?php echo $document_log->planned_date_out_sub5->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub5" class="document_log_planned_date_out_sub5"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub5->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_7->Visible) { // approval_status_7 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_7) == "") { ?>
+		<th data-name="approval_status_7" class="<?php echo $document_log->approval_status_7->headerCellClass() ?>"><div id="elh_document_log_approval_status_7" class="document_log_approval_status_7"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_7->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub5" class="<?php echo $document_log->planned_date_out_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub5) ?>',2);"><div id="elh_document_log_planned_date_out_sub5" class="document_log_planned_date_out_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_7" class="<?php echo $document_log->approval_status_7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_7) ?>',2);"><div id="elh_document_log_approval_status_7" class="document_log_approval_status_7">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub5->Visible) { // transmit_date_out_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub5) == "") { ?>
-		<th data-name="transmit_date_out_sub5" class="<?php echo $document_log->transmit_date_out_sub5->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub5" class="document_log_transmit_date_out_sub5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub5->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_8->Visible) { // submit_no_8 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_8) == "") { ?>
+		<th data-name="submit_no_8" class="<?php echo $document_log->submit_no_8->headerCellClass() ?>"><div id="elh_document_log_submit_no_8" class="document_log_submit_no_8"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub5" class="<?php echo $document_log->transmit_date_out_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub5) ?>',2);"><div id="elh_document_log_transmit_date_out_sub5" class="document_log_transmit_date_out_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_8" class="<?php echo $document_log->submit_no_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_8) ?>',2);"><div id="elh_document_log_submit_no_8" class="document_log_submit_no_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub5->Visible) { // transmit_no_out_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub5) == "") { ?>
-		<th data-name="transmit_no_out_sub5" class="<?php echo $document_log->transmit_no_out_sub5->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub5" class="document_log_transmit_no_out_sub5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub5->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_8->Visible) { // revision_no_8 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_8) == "") { ?>
+		<th data-name="revision_no_8" class="<?php echo $document_log->revision_no_8->headerCellClass() ?>"><div id="elh_document_log_revision_no_8" class="document_log_revision_no_8"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub5" class="<?php echo $document_log->transmit_no_out_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub5) ?>',2);"><div id="elh_document_log_transmit_no_out_sub5" class="document_log_transmit_no_out_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_8" class="<?php echo $document_log->revision_no_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_8) ?>',2);"><div id="elh_document_log_revision_no_8" class="document_log_revision_no_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub5->Visible) { // approval_status_out_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub5) == "") { ?>
-		<th data-name="approval_status_out_sub5" class="<?php echo $document_log->approval_status_out_sub5->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub5" class="document_log_approval_status_out_sub5"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub5->caption() ?></div></div></th>
+<?php if ($document_log->direction_8->Visible) { // direction_8 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_8) == "") { ?>
+		<th data-name="direction_8" class="<?php echo $document_log->direction_8->headerCellClass() ?>"><div id="elh_document_log_direction_8" class="document_log_direction_8"><div class="ew-table-header-caption"><?php echo $document_log->direction_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub5" class="<?php echo $document_log->approval_status_out_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub5) ?>',2);"><div id="elh_document_log_approval_status_out_sub5" class="document_log_approval_status_out_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_8" class="<?php echo $document_log->direction_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_8) ?>',2);"><div id="elh_document_log_direction_8" class="document_log_direction_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub5->Visible) { // direction_in_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub5) == "") { ?>
-		<th data-name="direction_in_sub5" class="<?php echo $document_log->direction_in_sub5->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub5" class="document_log_direction_in_sub5"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub5->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_8->Visible) { // planned_date_8 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_8) == "") { ?>
+		<th data-name="planned_date_8" class="<?php echo $document_log->planned_date_8->headerCellClass() ?>"><div id="elh_document_log_planned_date_8" class="document_log_planned_date_8"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub5" class="<?php echo $document_log->direction_in_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub5) ?>',2);"><div id="elh_document_log_direction_in_sub5" class="document_log_direction_in_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_8" class="<?php echo $document_log->planned_date_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_8) ?>',2);"><div id="elh_document_log_planned_date_8" class="document_log_planned_date_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub5->Visible) { // transmit_no_in_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub5) == "") { ?>
-		<th data-name="transmit_no_in_sub5" class="<?php echo $document_log->transmit_no_in_sub5->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub5" class="document_log_transmit_no_in_sub5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub5->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_8->Visible) { // transmit_date_8 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_8) == "") { ?>
+		<th data-name="transmit_date_8" class="<?php echo $document_log->transmit_date_8->headerCellClass() ?>"><div id="elh_document_log_transmit_date_8" class="document_log_transmit_date_8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub5" class="<?php echo $document_log->transmit_no_in_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub5) ?>',2);"><div id="elh_document_log_transmit_no_in_sub5" class="document_log_transmit_no_in_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_8" class="<?php echo $document_log->transmit_date_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_8) ?>',2);"><div id="elh_document_log_transmit_date_8" class="document_log_transmit_date_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub5->Visible) { // approval_status_in_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub5) == "") { ?>
-		<th data-name="approval_status_in_sub5" class="<?php echo $document_log->approval_status_in_sub5->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub5" class="document_log_approval_status_in_sub5"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub5->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_8->Visible) { // transmit_no_8 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_8) == "") { ?>
+		<th data-name="transmit_no_8" class="<?php echo $document_log->transmit_no_8->headerCellClass() ?>"><div id="elh_document_log_transmit_no_8" class="document_log_transmit_no_8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub5" class="<?php echo $document_log->approval_status_in_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub5) ?>',2);"><div id="elh_document_log_approval_status_in_sub5" class="document_log_approval_status_in_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_8" class="<?php echo $document_log->transmit_no_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_8) ?>',2);"><div id="elh_document_log_transmit_no_8" class="document_log_transmit_no_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub5->Visible) { // direction_in_file_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_file_sub5) == "") { ?>
-		<th data-name="direction_in_file_sub5" class="<?php echo $document_log->direction_in_file_sub5->headerCellClass() ?>"><div id="elh_document_log_direction_in_file_sub5" class="document_log_direction_in_file_sub5"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub5->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_8->Visible) { // approval_status_8 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_8) == "") { ?>
+		<th data-name="approval_status_8" class="<?php echo $document_log->approval_status_8->headerCellClass() ?>"><div id="elh_document_log_approval_status_8" class="document_log_approval_status_8"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_8->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_file_sub5" class="<?php echo $document_log->direction_in_file_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_file_sub5) ?>',2);"><div id="elh_document_log_direction_in_file_sub5" class="document_log_direction_in_file_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub5->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_file_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_file_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_8" class="<?php echo $document_log->approval_status_8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_8) ?>',2);"><div id="elh_document_log_approval_status_8" class="document_log_approval_status_8">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub5->Visible) { // transmit_date_in_sub5 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub5) == "") { ?>
-		<th data-name="transmit_date_in_sub5" class="<?php echo $document_log->transmit_date_in_sub5->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub5" class="document_log_transmit_date_in_sub5"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub5->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_9->Visible) { // submit_no_9 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_9) == "") { ?>
+		<th data-name="submit_no_9" class="<?php echo $document_log->submit_no_9->headerCellClass() ?>"><div id="elh_document_log_submit_no_9" class="document_log_submit_no_9"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub5" class="<?php echo $document_log->transmit_date_in_sub5->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub5) ?>',2);"><div id="elh_document_log_transmit_date_in_sub5" class="document_log_transmit_date_in_sub5">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub5->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub5->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub5->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_9" class="<?php echo $document_log->submit_no_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_9) ?>',2);"><div id="elh_document_log_submit_no_9" class="document_log_submit_no_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub6->Visible) { // submit_no_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub6) == "") { ?>
-		<th data-name="submit_no_sub6" class="<?php echo $document_log->submit_no_sub6->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub6" class="document_log_submit_no_sub6"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub6->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_9->Visible) { // revision_no_9 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_9) == "") { ?>
+		<th data-name="revision_no_9" class="<?php echo $document_log->revision_no_9->headerCellClass() ?>"><div id="elh_document_log_revision_no_9" class="document_log_revision_no_9"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub6" class="<?php echo $document_log->submit_no_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub6) ?>',2);"><div id="elh_document_log_submit_no_sub6" class="document_log_submit_no_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_9" class="<?php echo $document_log->revision_no_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_9) ?>',2);"><div id="elh_document_log_revision_no_9" class="document_log_revision_no_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->revision_no_sub6->Visible) { // revision_no_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub6) == "") { ?>
-		<th data-name="revision_no_sub6" class="<?php echo $document_log->revision_no_sub6->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub6" class="document_log_revision_no_sub6"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub6->caption() ?></div></div></th>
+<?php if ($document_log->direction_9->Visible) { // direction_9 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_9) == "") { ?>
+		<th data-name="direction_9" class="<?php echo $document_log->direction_9->headerCellClass() ?>"><div id="elh_document_log_direction_9" class="document_log_direction_9"><div class="ew-table-header-caption"><?php echo $document_log->direction_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="revision_no_sub6" class="<?php echo $document_log->revision_no_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub6) ?>',2);"><div id="elh_document_log_revision_no_sub6" class="document_log_revision_no_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_9" class="<?php echo $document_log->direction_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_9) ?>',2);"><div id="elh_document_log_direction_9" class="document_log_direction_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_out_sub6->Visible) { // direction_out_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub6) == "") { ?>
-		<th data-name="direction_out_sub6" class="<?php echo $document_log->direction_out_sub6->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub6" class="document_log_direction_out_sub6"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub6->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_9->Visible) { // planned_date_9 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_9) == "") { ?>
+		<th data-name="planned_date_9" class="<?php echo $document_log->planned_date_9->headerCellClass() ?>"><div id="elh_document_log_planned_date_9" class="document_log_planned_date_9"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_out_sub6" class="<?php echo $document_log->direction_out_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub6) ?>',2);"><div id="elh_document_log_direction_out_sub6" class="document_log_direction_out_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_9" class="<?php echo $document_log->planned_date_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_9) ?>',2);"><div id="elh_document_log_planned_date_9" class="document_log_planned_date_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_9->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->planned_date_out_sub6->Visible) { // planned_date_out_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub6) == "") { ?>
-		<th data-name="planned_date_out_sub6" class="<?php echo $document_log->planned_date_out_sub6->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub6" class="document_log_planned_date_out_sub6"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub6->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_9->Visible) { // transmit_date_9 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_9) == "") { ?>
+		<th data-name="transmit_date_9" class="<?php echo $document_log->transmit_date_9->headerCellClass() ?>"><div id="elh_document_log_transmit_date_9" class="document_log_transmit_date_9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="planned_date_out_sub6" class="<?php echo $document_log->planned_date_out_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub6) ?>',2);"><div id="elh_document_log_planned_date_out_sub6" class="document_log_planned_date_out_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_9" class="<?php echo $document_log->transmit_date_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_9) ?>',2);"><div id="elh_document_log_transmit_date_9" class="document_log_transmit_date_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_9->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_out_sub6->Visible) { // transmit_date_out_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub6) == "") { ?>
-		<th data-name="transmit_date_out_sub6" class="<?php echo $document_log->transmit_date_out_sub6->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub6" class="document_log_transmit_date_out_sub6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub6->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_9->Visible) { // transmit_no_9 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_9) == "") { ?>
+		<th data-name="transmit_no_9" class="<?php echo $document_log->transmit_no_9->headerCellClass() ?>"><div id="elh_document_log_transmit_no_9" class="document_log_transmit_no_9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_out_sub6" class="<?php echo $document_log->transmit_date_out_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub6) ?>',2);"><div id="elh_document_log_transmit_date_out_sub6" class="document_log_transmit_date_out_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_9" class="<?php echo $document_log->transmit_no_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_9) ?>',2);"><div id="elh_document_log_transmit_no_9" class="document_log_transmit_no_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_out_sub6->Visible) { // transmit_no_out_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub6) == "") { ?>
-		<th data-name="transmit_no_out_sub6" class="<?php echo $document_log->transmit_no_out_sub6->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub6" class="document_log_transmit_no_out_sub6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub6->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_9->Visible) { // approval_status_9 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_9) == "") { ?>
+		<th data-name="approval_status_9" class="<?php echo $document_log->approval_status_9->headerCellClass() ?>"><div id="elh_document_log_approval_status_9" class="document_log_approval_status_9"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_9->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_out_sub6" class="<?php echo $document_log->transmit_no_out_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub6) ?>',2);"><div id="elh_document_log_transmit_no_out_sub6" class="document_log_transmit_no_out_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_9" class="<?php echo $document_log->approval_status_9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_9) ?>',2);"><div id="elh_document_log_approval_status_9" class="document_log_approval_status_9">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_out_sub6->Visible) { // approval_status_out_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub6) == "") { ?>
-		<th data-name="approval_status_out_sub6" class="<?php echo $document_log->approval_status_out_sub6->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub6" class="document_log_approval_status_out_sub6"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub6->caption() ?></div></div></th>
+<?php if ($document_log->submit_no_10->Visible) { // submit_no_10 ?>
+	<?php if ($document_log->sortUrl($document_log->submit_no_10) == "") { ?>
+		<th data-name="submit_no_10" class="<?php echo $document_log->submit_no_10->headerCellClass() ?>"><div id="elh_document_log_submit_no_10" class="document_log_submit_no_10"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_out_sub6" class="<?php echo $document_log->approval_status_out_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub6) ?>',2);"><div id="elh_document_log_approval_status_out_sub6" class="document_log_approval_status_out_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="submit_no_10" class="<?php echo $document_log->submit_no_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_10) ?>',2);"><div id="elh_document_log_submit_no_10" class="document_log_submit_no_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_sub6->Visible) { // direction_in_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub6) == "") { ?>
-		<th data-name="direction_in_sub6" class="<?php echo $document_log->direction_in_sub6->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub6" class="document_log_direction_in_sub6"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub6->caption() ?></div></div></th>
+<?php if ($document_log->revision_no_10->Visible) { // revision_no_10 ?>
+	<?php if ($document_log->sortUrl($document_log->revision_no_10) == "") { ?>
+		<th data-name="revision_no_10" class="<?php echo $document_log->revision_no_10->headerCellClass() ?>"><div id="elh_document_log_revision_no_10" class="document_log_revision_no_10"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_sub6" class="<?php echo $document_log->direction_in_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub6) ?>',2);"><div id="elh_document_log_direction_in_sub6" class="document_log_direction_in_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="revision_no_10" class="<?php echo $document_log->revision_no_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_10) ?>',2);"><div id="elh_document_log_revision_no_10" class="document_log_revision_no_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_no_in_sub6->Visible) { // transmit_no_in_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub6) == "") { ?>
-		<th data-name="transmit_no_in_sub6" class="<?php echo $document_log->transmit_no_in_sub6->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub6" class="document_log_transmit_no_in_sub6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub6->caption() ?></div></div></th>
+<?php if ($document_log->direction_10->Visible) { // direction_10 ?>
+	<?php if ($document_log->sortUrl($document_log->direction_10) == "") { ?>
+		<th data-name="direction_10" class="<?php echo $document_log->direction_10->headerCellClass() ?>"><div id="elh_document_log_direction_10" class="document_log_direction_10"><div class="ew-table-header-caption"><?php echo $document_log->direction_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_no_in_sub6" class="<?php echo $document_log->transmit_no_in_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub6) ?>',2);"><div id="elh_document_log_transmit_no_in_sub6" class="document_log_transmit_no_in_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="direction_10" class="<?php echo $document_log->direction_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_10) ?>',2);"><div id="elh_document_log_direction_10" class="document_log_direction_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->approval_status_in_sub6->Visible) { // approval_status_in_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub6) == "") { ?>
-		<th data-name="approval_status_in_sub6" class="<?php echo $document_log->approval_status_in_sub6->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub6" class="document_log_approval_status_in_sub6"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub6->caption() ?></div></div></th>
+<?php if ($document_log->planned_date_10->Visible) { // planned_date_10 ?>
+	<?php if ($document_log->sortUrl($document_log->planned_date_10) == "") { ?>
+		<th data-name="planned_date_10" class="<?php echo $document_log->planned_date_10->headerCellClass() ?>"><div id="elh_document_log_planned_date_10" class="document_log_planned_date_10"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="approval_status_in_sub6" class="<?php echo $document_log->approval_status_in_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub6) ?>',2);"><div id="elh_document_log_approval_status_in_sub6" class="document_log_approval_status_in_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="planned_date_10" class="<?php echo $document_log->planned_date_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_10) ?>',2);"><div id="elh_document_log_planned_date_10" class="document_log_planned_date_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->direction_in_file_sub6->Visible) { // direction_in_file_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_file_sub6) == "") { ?>
-		<th data-name="direction_in_file_sub6" class="<?php echo $document_log->direction_in_file_sub6->headerCellClass() ?>"><div id="elh_document_log_direction_in_file_sub6" class="document_log_direction_in_file_sub6"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub6->caption() ?></div></div></th>
+<?php if ($document_log->transmit_date_10->Visible) { // transmit_date_10 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_date_10) == "") { ?>
+		<th data-name="transmit_date_10" class="<?php echo $document_log->transmit_date_10->headerCellClass() ?>"><div id="elh_document_log_transmit_date_10" class="document_log_transmit_date_10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="direction_in_file_sub6" class="<?php echo $document_log->direction_in_file_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_file_sub6) ?>',2);"><div id="elh_document_log_direction_in_file_sub6" class="document_log_direction_in_file_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_file_sub6->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_file_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_file_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_date_10" class="<?php echo $document_log->transmit_date_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_10) ?>',2);"><div id="elh_document_log_transmit_date_10" class="document_log_transmit_date_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->transmit_date_in_sub6->Visible) { // transmit_date_in_sub6 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub6) == "") { ?>
-		<th data-name="transmit_date_in_sub6" class="<?php echo $document_log->transmit_date_in_sub6->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub6" class="document_log_transmit_date_in_sub6"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub6->caption() ?></div></div></th>
+<?php if ($document_log->transmit_no_10->Visible) { // transmit_no_10 ?>
+	<?php if ($document_log->sortUrl($document_log->transmit_no_10) == "") { ?>
+		<th data-name="transmit_no_10" class="<?php echo $document_log->transmit_no_10->headerCellClass() ?>"><div id="elh_document_log_transmit_no_10" class="document_log_transmit_no_10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="transmit_date_in_sub6" class="<?php echo $document_log->transmit_date_in_sub6->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub6) ?>',2);"><div id="elh_document_log_transmit_date_in_sub6" class="document_log_transmit_date_in_sub6">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub6->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub6->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub6->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="transmit_no_10" class="<?php echo $document_log->transmit_no_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_10) ?>',2);"><div id="elh_document_log_transmit_no_10" class="document_log_transmit_no_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_log->submit_no_sub7->Visible) { // submit_no_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub7) == "") { ?>
-		<th data-name="submit_no_sub7" class="<?php echo $document_log->submit_no_sub7->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub7" class="document_log_submit_no_sub7"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub7->caption() ?></div></div></th>
+<?php if ($document_log->approval_status_10->Visible) { // approval_status_10 ?>
+	<?php if ($document_log->sortUrl($document_log->approval_status_10) == "") { ?>
+		<th data-name="approval_status_10" class="<?php echo $document_log->approval_status_10->headerCellClass() ?>"><div id="elh_document_log_approval_status_10" class="document_log_approval_status_10"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_10->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="submit_no_sub7" class="<?php echo $document_log->submit_no_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub7) ?>',2);"><div id="elh_document_log_submit_no_sub7" class="document_log_submit_no_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->revision_no_sub7->Visible) { // revision_no_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub7) == "") { ?>
-		<th data-name="revision_no_sub7" class="<?php echo $document_log->revision_no_sub7->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub7" class="document_log_revision_no_sub7"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="revision_no_sub7" class="<?php echo $document_log->revision_no_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub7) ?>',2);"><div id="elh_document_log_revision_no_sub7" class="document_log_revision_no_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_sub7->Visible) { // direction_out_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub7) == "") { ?>
-		<th data-name="direction_out_sub7" class="<?php echo $document_log->direction_out_sub7->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub7" class="document_log_direction_out_sub7"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_sub7" class="<?php echo $document_log->direction_out_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub7) ?>',2);"><div id="elh_document_log_direction_out_sub7" class="document_log_direction_out_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub7->Visible) { // planned_date_out_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub7) == "") { ?>
-		<th data-name="planned_date_out_sub7" class="<?php echo $document_log->planned_date_out_sub7->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub7" class="document_log_planned_date_out_sub7"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="planned_date_out_sub7" class="<?php echo $document_log->planned_date_out_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub7) ?>',2);"><div id="elh_document_log_planned_date_out_sub7" class="document_log_planned_date_out_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub7->Visible) { // transmit_date_out_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub7) == "") { ?>
-		<th data-name="transmit_date_out_sub7" class="<?php echo $document_log->transmit_date_out_sub7->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub7" class="document_log_transmit_date_out_sub7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_out_sub7" class="<?php echo $document_log->transmit_date_out_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub7) ?>',2);"><div id="elh_document_log_transmit_date_out_sub7" class="document_log_transmit_date_out_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub7->Visible) { // transmit_no_out_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub7) == "") { ?>
-		<th data-name="transmit_no_out_sub7" class="<?php echo $document_log->transmit_no_out_sub7->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub7" class="document_log_transmit_no_out_sub7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_out_sub7" class="<?php echo $document_log->transmit_no_out_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub7) ?>',2);"><div id="elh_document_log_transmit_no_out_sub7" class="document_log_transmit_no_out_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub7->Visible) { // approval_status_out_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub7) == "") { ?>
-		<th data-name="approval_status_out_sub7" class="<?php echo $document_log->approval_status_out_sub7->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub7" class="document_log_approval_status_out_sub7"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_out_sub7" class="<?php echo $document_log->approval_status_out_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub7) ?>',2);"><div id="elh_document_log_approval_status_out_sub7" class="document_log_approval_status_out_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_in_sub7->Visible) { // direction_in_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub7) == "") { ?>
-		<th data-name="direction_in_sub7" class="<?php echo $document_log->direction_in_sub7->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub7" class="document_log_direction_in_sub7"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_in_sub7" class="<?php echo $document_log->direction_in_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub7) ?>',2);"><div id="elh_document_log_direction_in_sub7" class="document_log_direction_in_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub7->Visible) { // transmit_no_in_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub7) == "") { ?>
-		<th data-name="transmit_no_in_sub7" class="<?php echo $document_log->transmit_no_in_sub7->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub7" class="document_log_transmit_no_in_sub7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_in_sub7" class="<?php echo $document_log->transmit_no_in_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub7) ?>',2);"><div id="elh_document_log_transmit_no_in_sub7" class="document_log_transmit_no_in_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub7->Visible) { // approval_status_in_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub7) == "") { ?>
-		<th data-name="approval_status_in_sub7" class="<?php echo $document_log->approval_status_in_sub7->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub7" class="document_log_approval_status_in_sub7"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_in_sub7" class="<?php echo $document_log->approval_status_in_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub7) ?>',2);"><div id="elh_document_log_approval_status_in_sub7" class="document_log_approval_status_in_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub7->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub7->Visible) { // transmit_date_in_sub7 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub7) == "") { ?>
-		<th data-name="transmit_date_in_sub7" class="<?php echo $document_log->transmit_date_in_sub7->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub7" class="document_log_transmit_date_in_sub7"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub7->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_in_sub7" class="<?php echo $document_log->transmit_date_in_sub7->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub7) ?>',2);"><div id="elh_document_log_transmit_date_in_sub7" class="document_log_transmit_date_in_sub7">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub7->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub7->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub7->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->submit_no_sub8->Visible) { // submit_no_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub8) == "") { ?>
-		<th data-name="submit_no_sub8" class="<?php echo $document_log->submit_no_sub8->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub8" class="document_log_submit_no_sub8"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="submit_no_sub8" class="<?php echo $document_log->submit_no_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub8) ?>',2);"><div id="elh_document_log_submit_no_sub8" class="document_log_submit_no_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->revision_no_sub8->Visible) { // revision_no_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub8) == "") { ?>
-		<th data-name="revision_no_sub8" class="<?php echo $document_log->revision_no_sub8->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub8" class="document_log_revision_no_sub8"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="revision_no_sub8" class="<?php echo $document_log->revision_no_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub8) ?>',2);"><div id="elh_document_log_revision_no_sub8" class="document_log_revision_no_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_sub8->Visible) { // direction_out_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub8) == "") { ?>
-		<th data-name="direction_out_sub8" class="<?php echo $document_log->direction_out_sub8->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub8" class="document_log_direction_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_sub8" class="<?php echo $document_log->direction_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub8) ?>',2);"><div id="elh_document_log_direction_out_sub8" class="document_log_direction_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub8->Visible) { // planned_date_out_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub8) == "") { ?>
-		<th data-name="planned_date_out_sub8" class="<?php echo $document_log->planned_date_out_sub8->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub8" class="document_log_planned_date_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="planned_date_out_sub8" class="<?php echo $document_log->planned_date_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub8) ?>',2);"><div id="elh_document_log_planned_date_out_sub8" class="document_log_planned_date_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub8->Visible) { // transmit_date_out_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub8) == "") { ?>
-		<th data-name="transmit_date_out_sub8" class="<?php echo $document_log->transmit_date_out_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub8" class="document_log_transmit_date_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_out_sub8" class="<?php echo $document_log->transmit_date_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub8) ?>',2);"><div id="elh_document_log_transmit_date_out_sub8" class="document_log_transmit_date_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub8->Visible) { // transmit_no_out_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub8) == "") { ?>
-		<th data-name="transmit_no_out_sub8" class="<?php echo $document_log->transmit_no_out_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_out_sub8" class="<?php echo $document_log->transmit_no_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub8) ?>',2);"><div id="elh_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub8->Visible) { // approval_status_out_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub8) == "") { ?>
-		<th data-name="approval_status_out_sub8" class="<?php echo $document_log->approval_status_out_sub8->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub8" class="document_log_approval_status_out_sub8"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_out_sub8" class="<?php echo $document_log->approval_status_out_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub8) ?>',2);"><div id="elh_document_log_approval_status_out_sub8" class="document_log_approval_status_out_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_file_sub8->Visible) { // direction_out_file_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_file_sub8) == "") { ?>
-		<th data-name="direction_out_file_sub8" class="<?php echo $document_log->direction_out_file_sub8->headerCellClass() ?>"><div id="elh_document_log_direction_out_file_sub8" class="document_log_direction_out_file_sub8"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_file_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_file_sub8" class="<?php echo $document_log->direction_out_file_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_file_sub8) ?>',2);"><div id="elh_document_log_direction_out_file_sub8" class="document_log_direction_out_file_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_file_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_file_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_file_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_in_sub8->Visible) { // direction_in_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub8) == "") { ?>
-		<th data-name="direction_in_sub8" class="<?php echo $document_log->direction_in_sub8->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub8" class="document_log_direction_in_sub8"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_in_sub8" class="<?php echo $document_log->direction_in_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub8) ?>',2);"><div id="elh_document_log_direction_in_sub8" class="document_log_direction_in_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub8->Visible) { // transmit_no_in_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub8) == "") { ?>
-		<th data-name="transmit_no_in_sub8" class="<?php echo $document_log->transmit_no_in_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub8" class="document_log_transmit_no_in_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_in_sub8" class="<?php echo $document_log->transmit_no_in_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub8) ?>',2);"><div id="elh_document_log_transmit_no_in_sub8" class="document_log_transmit_no_in_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub8->Visible) { // approval_status_in_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub8) == "") { ?>
-		<th data-name="approval_status_in_sub8" class="<?php echo $document_log->approval_status_in_sub8->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub8" class="document_log_approval_status_in_sub8"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_in_sub8" class="<?php echo $document_log->approval_status_in_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub8) ?>',2);"><div id="elh_document_log_approval_status_in_sub8" class="document_log_approval_status_in_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub8->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub8->Visible) { // transmit_date_in_sub8 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub8) == "") { ?>
-		<th data-name="transmit_date_in_sub8" class="<?php echo $document_log->transmit_date_in_sub8->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub8->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_in_sub8" class="<?php echo $document_log->transmit_date_in_sub8->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub8) ?>',2);"><div id="elh_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub8->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub8->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub8->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->submit_no_sub9->Visible) { // submit_no_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub9) == "") { ?>
-		<th data-name="submit_no_sub9" class="<?php echo $document_log->submit_no_sub9->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub9" class="document_log_submit_no_sub9"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="submit_no_sub9" class="<?php echo $document_log->submit_no_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub9) ?>',2);"><div id="elh_document_log_submit_no_sub9" class="document_log_submit_no_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->revision_no_sub9->Visible) { // revision_no_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub9) == "") { ?>
-		<th data-name="revision_no_sub9" class="<?php echo $document_log->revision_no_sub9->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub9" class="document_log_revision_no_sub9"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="revision_no_sub9" class="<?php echo $document_log->revision_no_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub9) ?>',2);"><div id="elh_document_log_revision_no_sub9" class="document_log_revision_no_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_sub9->Visible) { // direction_out_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub9) == "") { ?>
-		<th data-name="direction_out_sub9" class="<?php echo $document_log->direction_out_sub9->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub9" class="document_log_direction_out_sub9"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_sub9" class="<?php echo $document_log->direction_out_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub9) ?>',2);"><div id="elh_document_log_direction_out_sub9" class="document_log_direction_out_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub9->Visible) { // planned_date_out_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub9) == "") { ?>
-		<th data-name="planned_date_out_sub9" class="<?php echo $document_log->planned_date_out_sub9->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub9" class="document_log_planned_date_out_sub9"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="planned_date_out_sub9" class="<?php echo $document_log->planned_date_out_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub9) ?>',2);"><div id="elh_document_log_planned_date_out_sub9" class="document_log_planned_date_out_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub9->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub9->Visible) { // transmit_date_out_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub9) == "") { ?>
-		<th data-name="transmit_date_out_sub9" class="<?php echo $document_log->transmit_date_out_sub9->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub9" class="document_log_transmit_date_out_sub9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_out_sub9" class="<?php echo $document_log->transmit_date_out_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub9) ?>',2);"><div id="elh_document_log_transmit_date_out_sub9" class="document_log_transmit_date_out_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub9->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub9->Visible) { // transmit_no_out_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub9) == "") { ?>
-		<th data-name="transmit_no_out_sub9" class="<?php echo $document_log->transmit_no_out_sub9->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub9" class="document_log_transmit_no_out_sub9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_out_sub9" class="<?php echo $document_log->transmit_no_out_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub9) ?>',2);"><div id="elh_document_log_transmit_no_out_sub9" class="document_log_transmit_no_out_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub9->Visible) { // approval_status_out_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub9) == "") { ?>
-		<th data-name="approval_status_out_sub9" class="<?php echo $document_log->approval_status_out_sub9->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub9" class="document_log_approval_status_out_sub9"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_out_sub9" class="<?php echo $document_log->approval_status_out_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub9) ?>',2);"><div id="elh_document_log_approval_status_out_sub9" class="document_log_approval_status_out_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_in_sub9->Visible) { // direction_in_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub9) == "") { ?>
-		<th data-name="direction_in_sub9" class="<?php echo $document_log->direction_in_sub9->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub9" class="document_log_direction_in_sub9"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_in_sub9" class="<?php echo $document_log->direction_in_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub9) ?>',2);"><div id="elh_document_log_direction_in_sub9" class="document_log_direction_in_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub9->Visible) { // transmit_no_in_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub9) == "") { ?>
-		<th data-name="transmit_no_in_sub9" class="<?php echo $document_log->transmit_no_in_sub9->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub9" class="document_log_transmit_no_in_sub9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_in_sub9" class="<?php echo $document_log->transmit_no_in_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub9) ?>',2);"><div id="elh_document_log_transmit_no_in_sub9" class="document_log_transmit_no_in_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub9->Visible) { // approval_status_in_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub9) == "") { ?>
-		<th data-name="approval_status_in_sub9" class="<?php echo $document_log->approval_status_in_sub9->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub9" class="document_log_approval_status_in_sub9"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_in_sub9" class="<?php echo $document_log->approval_status_in_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub9) ?>',2);"><div id="elh_document_log_approval_status_in_sub9" class="document_log_approval_status_in_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub9->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub9->Visible) { // transmit_date_in_sub9 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub9) == "") { ?>
-		<th data-name="transmit_date_in_sub9" class="<?php echo $document_log->transmit_date_in_sub9->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub9" class="document_log_transmit_date_in_sub9"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub9->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_in_sub9" class="<?php echo $document_log->transmit_date_in_sub9->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub9) ?>',2);"><div id="elh_document_log_transmit_date_in_sub9" class="document_log_transmit_date_in_sub9">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub9->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub9->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub9->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->submit_no_sub10->Visible) { // submit_no_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->submit_no_sub10) == "") { ?>
-		<th data-name="submit_no_sub10" class="<?php echo $document_log->submit_no_sub10->headerCellClass() ?>"><div id="elh_document_log_submit_no_sub10" class="document_log_submit_no_sub10"><div class="ew-table-header-caption"><?php echo $document_log->submit_no_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="submit_no_sub10" class="<?php echo $document_log->submit_no_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->submit_no_sub10) ?>',2);"><div id="elh_document_log_submit_no_sub10" class="document_log_submit_no_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->submit_no_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->submit_no_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->submit_no_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->revision_no_sub10->Visible) { // revision_no_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->revision_no_sub10) == "") { ?>
-		<th data-name="revision_no_sub10" class="<?php echo $document_log->revision_no_sub10->headerCellClass() ?>"><div id="elh_document_log_revision_no_sub10" class="document_log_revision_no_sub10"><div class="ew-table-header-caption"><?php echo $document_log->revision_no_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="revision_no_sub10" class="<?php echo $document_log->revision_no_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->revision_no_sub10) ?>',2);"><div id="elh_document_log_revision_no_sub10" class="document_log_revision_no_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->revision_no_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->revision_no_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->revision_no_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_out_sub10->Visible) { // direction_out_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_out_sub10) == "") { ?>
-		<th data-name="direction_out_sub10" class="<?php echo $document_log->direction_out_sub10->headerCellClass() ?>"><div id="elh_document_log_direction_out_sub10" class="document_log_direction_out_sub10"><div class="ew-table-header-caption"><?php echo $document_log->direction_out_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_out_sub10" class="<?php echo $document_log->direction_out_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_out_sub10) ?>',2);"><div id="elh_document_log_direction_out_sub10" class="document_log_direction_out_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_out_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_out_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_out_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->planned_date_out_sub10->Visible) { // planned_date_out_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->planned_date_out_sub10) == "") { ?>
-		<th data-name="planned_date_out_sub10" class="<?php echo $document_log->planned_date_out_sub10->headerCellClass() ?>"><div id="elh_document_log_planned_date_out_sub10" class="document_log_planned_date_out_sub10"><div class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="planned_date_out_sub10" class="<?php echo $document_log->planned_date_out_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->planned_date_out_sub10) ?>',2);"><div id="elh_document_log_planned_date_out_sub10" class="document_log_planned_date_out_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->planned_date_out_sub10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->planned_date_out_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->planned_date_out_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_out_sub10->Visible) { // transmit_date_out_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_out_sub10) == "") { ?>
-		<th data-name="transmit_date_out_sub10" class="<?php echo $document_log->transmit_date_out_sub10->headerCellClass() ?>"><div id="elh_document_log_transmit_date_out_sub10" class="document_log_transmit_date_out_sub10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_out_sub10" class="<?php echo $document_log->transmit_date_out_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_out_sub10) ?>',2);"><div id="elh_document_log_transmit_date_out_sub10" class="document_log_transmit_date_out_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_out_sub10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_out_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_out_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_out_sub10->Visible) { // transmit_no_out_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_out_sub10) == "") { ?>
-		<th data-name="transmit_no_out_sub10" class="<?php echo $document_log->transmit_no_out_sub10->headerCellClass() ?>"><div id="elh_document_log_transmit_no_out_sub10" class="document_log_transmit_no_out_sub10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_out_sub10" class="<?php echo $document_log->transmit_no_out_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_out_sub10) ?>',2);"><div id="elh_document_log_transmit_no_out_sub10" class="document_log_transmit_no_out_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_out_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_out_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_out_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_out_sub10->Visible) { // approval_status_out_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_out_sub10) == "") { ?>
-		<th data-name="approval_status_out_sub10" class="<?php echo $document_log->approval_status_out_sub10->headerCellClass() ?>"><div id="elh_document_log_approval_status_out_sub10" class="document_log_approval_status_out_sub10"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_out_sub10" class="<?php echo $document_log->approval_status_out_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_out_sub10) ?>',2);"><div id="elh_document_log_approval_status_out_sub10" class="document_log_approval_status_out_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_out_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_out_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_out_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->direction_in_sub10->Visible) { // direction_in_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->direction_in_sub10) == "") { ?>
-		<th data-name="direction_in_sub10" class="<?php echo $document_log->direction_in_sub10->headerCellClass() ?>"><div id="elh_document_log_direction_in_sub10" class="document_log_direction_in_sub10"><div class="ew-table-header-caption"><?php echo $document_log->direction_in_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="direction_in_sub10" class="<?php echo $document_log->direction_in_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->direction_in_sub10) ?>',2);"><div id="elh_document_log_direction_in_sub10" class="document_log_direction_in_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->direction_in_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->direction_in_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->direction_in_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_no_in_sub10->Visible) { // transmit_no_in_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_no_in_sub10) == "") { ?>
-		<th data-name="transmit_no_in_sub10" class="<?php echo $document_log->transmit_no_in_sub10->headerCellClass() ?>"><div id="elh_document_log_transmit_no_in_sub10" class="document_log_transmit_no_in_sub10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_no_in_sub10" class="<?php echo $document_log->transmit_no_in_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_no_in_sub10) ?>',2);"><div id="elh_document_log_transmit_no_in_sub10" class="document_log_transmit_no_in_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_no_in_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_no_in_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_no_in_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->approval_status_in_sub10->Visible) { // approval_status_in_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->approval_status_in_sub10) == "") { ?>
-		<th data-name="approval_status_in_sub10" class="<?php echo $document_log->approval_status_in_sub10->headerCellClass() ?>"><div id="elh_document_log_approval_status_in_sub10" class="document_log_approval_status_in_sub10"><div class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="approval_status_in_sub10" class="<?php echo $document_log->approval_status_in_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_in_sub10) ?>',2);"><div id="elh_document_log_approval_status_in_sub10" class="document_log_approval_status_in_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_in_sub10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_in_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_in_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($document_log->transmit_date_in_sub10->Visible) { // transmit_date_in_sub10 ?>
-	<?php if ($document_log->sortUrl($document_log->transmit_date_in_sub10) == "") { ?>
-		<th data-name="transmit_date_in_sub10" class="<?php echo $document_log->transmit_date_in_sub10->headerCellClass() ?>"><div id="elh_document_log_transmit_date_in_sub10" class="document_log_transmit_date_in_sub10"><div class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub10->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="transmit_date_in_sub10" class="<?php echo $document_log->transmit_date_in_sub10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->transmit_date_in_sub10) ?>',2);"><div id="elh_document_log_transmit_date_in_sub10" class="document_log_transmit_date_in_sub10">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->transmit_date_in_sub10->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->transmit_date_in_sub10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->transmit_date_in_sub10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="approval_status_10" class="<?php echo $document_log->approval_status_10->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->approval_status_10) ?>',2);"><div id="elh_document_log_approval_status_10" class="document_log_approval_status_10">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->approval_status_10->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_log->approval_status_10->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->approval_status_10->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php if ($document_log->log_updatedon->Visible) { // log_updatedon ?>
 	<?php if ($document_log->sortUrl($document_log->log_updatedon) == "") { ?>
-		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon"><div class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></div></div></th>
+		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon"><div class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->log_updatedon) ?>',2);"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon">
+		<th data-name="log_updatedon" class="<?php echo $document_log->log_updatedon->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_log->SortUrl($document_log->log_updatedon) ?>',2);"><div id="elh_document_log_log_updatedon" class="document_log_log_updatedon">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_log->log_updatedon->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_log->log_updatedon->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_log->log_updatedon->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
@@ -1387,925 +991,608 @@ $document_log_list->ListOptions->render("body", "left", $document_log_list->RowC
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub1->Visible) { // submit_no_sub1 ?>
-		<td data-name="submit_no_sub1"<?php echo $document_log->submit_no_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub1" class="document_log_submit_no_sub1">
-<span<?php echo $document_log->submit_no_sub1->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub1->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_1->Visible) { // submit_no_1 ?>
+		<td data-name="submit_no_1"<?php echo $document_log->submit_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_1" class="document_log_submit_no_1">
+<span<?php echo $document_log->submit_no_1->viewAttributes() ?>>
+<?php echo $document_log->submit_no_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub1->Visible) { // revision_no_sub1 ?>
-		<td data-name="revision_no_sub1"<?php echo $document_log->revision_no_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub1" class="document_log_revision_no_sub1">
-<span<?php echo $document_log->revision_no_sub1->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub1->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_1->Visible) { // revision_no_1 ?>
+		<td data-name="revision_no_1"<?php echo $document_log->revision_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_1" class="document_log_revision_no_1">
+<span<?php echo $document_log->revision_no_1->viewAttributes() ?>>
+<?php echo $document_log->revision_no_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_sub1->Visible) { // direction_out_sub1 ?>
-		<td data-name="direction_out_sub1"<?php echo $document_log->direction_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub1" class="document_log_direction_out_sub1">
-<span<?php echo $document_log->direction_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub1->getViewValue() ?></span>
+	<?php if ($document_log->direction_1->Visible) { // direction_1 ?>
+		<td data-name="direction_1"<?php echo $document_log->direction_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_1" class="document_log_direction_1">
+<span<?php echo $document_log->direction_1->viewAttributes() ?>>
+<?php echo $document_log->direction_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub1->Visible) { // planned_date_out_sub1 ?>
-		<td data-name="planned_date_out_sub1"<?php echo $document_log->planned_date_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub1" class="document_log_planned_date_out_sub1">
-<span<?php echo $document_log->planned_date_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub1->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_1->Visible) { // planned_date_1 ?>
+		<td data-name="planned_date_1"<?php echo $document_log->planned_date_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_1" class="document_log_planned_date_1">
+<span<?php echo $document_log->planned_date_1->viewAttributes() ?>>
+<?php echo $document_log->planned_date_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub1->Visible) { // transmit_date_out_sub1 ?>
-		<td data-name="transmit_date_out_sub1"<?php echo $document_log->transmit_date_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub1" class="document_log_transmit_date_out_sub1">
-<span<?php echo $document_log->transmit_date_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub1->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_1->Visible) { // transmit_date_1 ?>
+		<td data-name="transmit_date_1"<?php echo $document_log->transmit_date_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_1" class="document_log_transmit_date_1">
+<span<?php echo $document_log->transmit_date_1->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub1->Visible) { // transmit_no_out_sub1 ?>
-		<td data-name="transmit_no_out_sub1"<?php echo $document_log->transmit_no_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub1" class="document_log_transmit_no_out_sub1">
-<span<?php echo $document_log->transmit_no_out_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub1->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_1->Visible) { // transmit_no_1 ?>
+		<td data-name="transmit_no_1"<?php echo $document_log->transmit_no_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_1" class="document_log_transmit_no_1">
+<span<?php echo $document_log->transmit_no_1->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_1->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub1->Visible) { // approval_status_out_sub1 ?>
-		<td data-name="approval_status_out_sub1"<?php echo $document_log->approval_status_out_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub1" class="document_log_approval_status_out_sub1">
-<span<?php echo $document_log->approval_status_out_sub1->viewAttributes() ?>>
-<?php if ((!EmptyString($document_log->approval_status_out_sub1->getViewValue())) && $document_log->approval_status_out_sub1->linkAttributes() <> "") { ?>
-<a<?php echo $document_log->approval_status_out_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_out_sub1->getViewValue() ?></a>
+	<?php if ($document_log->approval_status_1->Visible) { // approval_status_1 ?>
+		<td data-name="approval_status_1"<?php echo $document_log->approval_status_1->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_1" class="document_log_approval_status_1">
+<span<?php echo $document_log->approval_status_1->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_1->getViewValue())) && $document_log->approval_status_1->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_1->linkAttributes() ?>><?php echo $document_log->approval_status_1->getViewValue() ?></a>
 <?php } else { ?>
-<?php echo $document_log->approval_status_out_sub1->getViewValue() ?>
+<?php echo $document_log->approval_status_1->getViewValue() ?>
 <?php } ?>
 </span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub1->Visible) { // direction_in_sub1 ?>
-		<td data-name="direction_in_sub1"<?php echo $document_log->direction_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub1" class="document_log_direction_in_sub1">
-<span<?php echo $document_log->direction_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub1->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_2->Visible) { // submit_no_2 ?>
+		<td data-name="submit_no_2"<?php echo $document_log->submit_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_2" class="document_log_submit_no_2">
+<span<?php echo $document_log->submit_no_2->viewAttributes() ?>>
+<?php echo $document_log->submit_no_2->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub1->Visible) { // transmit_no_in_sub1 ?>
-		<td data-name="transmit_no_in_sub1"<?php echo $document_log->transmit_no_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub1" class="document_log_transmit_no_in_sub1">
-<span<?php echo $document_log->transmit_no_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub1->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_2->Visible) { // revision_no_2 ?>
+		<td data-name="revision_no_2"<?php echo $document_log->revision_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_2" class="document_log_revision_no_2">
+<span<?php echo $document_log->revision_no_2->viewAttributes() ?>>
+<?php echo $document_log->revision_no_2->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub1->Visible) { // approval_status_in_sub1 ?>
-		<td data-name="approval_status_in_sub1"<?php echo $document_log->approval_status_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub1" class="document_log_approval_status_in_sub1">
-<span<?php echo $document_log->approval_status_in_sub1->viewAttributes() ?>>
-<?php if ((!EmptyString($document_log->approval_status_in_sub1->getViewValue())) && $document_log->approval_status_in_sub1->linkAttributes() <> "") { ?>
-<a<?php echo $document_log->approval_status_in_sub1->linkAttributes() ?>><?php echo $document_log->approval_status_in_sub1->getViewValue() ?></a>
+	<?php if ($document_log->direction_2->Visible) { // direction_2 ?>
+		<td data-name="direction_2"<?php echo $document_log->direction_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_2" class="document_log_direction_2">
+<span<?php echo $document_log->direction_2->viewAttributes() ?>>
+<?php echo $document_log->direction_2->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($document_log->planned_date_2->Visible) { // planned_date_2 ?>
+		<td data-name="planned_date_2"<?php echo $document_log->planned_date_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_2" class="document_log_planned_date_2">
+<span<?php echo $document_log->planned_date_2->viewAttributes() ?>>
+<?php echo $document_log->planned_date_2->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($document_log->transmit_date_2->Visible) { // transmit_date_2 ?>
+		<td data-name="transmit_date_2"<?php echo $document_log->transmit_date_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_2" class="document_log_transmit_date_2">
+<span<?php echo $document_log->transmit_date_2->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_2->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($document_log->transmit_no_2->Visible) { // transmit_no_2 ?>
+		<td data-name="transmit_no_2"<?php echo $document_log->transmit_no_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_2" class="document_log_transmit_no_2">
+<span<?php echo $document_log->transmit_no_2->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_2->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($document_log->approval_status_2->Visible) { // approval_status_2 ?>
+		<td data-name="approval_status_2"<?php echo $document_log->approval_status_2->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_2" class="document_log_approval_status_2">
+<span<?php echo $document_log->approval_status_2->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_2->getViewValue())) && $document_log->approval_status_2->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_2->linkAttributes() ?>><?php echo $document_log->approval_status_2->getViewValue() ?></a>
 <?php } else { ?>
-<?php echo $document_log->approval_status_in_sub1->getViewValue() ?>
+<?php echo $document_log->approval_status_2->getViewValue() ?>
 <?php } ?>
 </span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub1->Visible) { // transmit_date_in_sub1 ?>
-		<td data-name="transmit_date_in_sub1"<?php echo $document_log->transmit_date_in_sub1->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub1" class="document_log_transmit_date_in_sub1">
-<span<?php echo $document_log->transmit_date_in_sub1->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub1->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_3->Visible) { // submit_no_3 ?>
+		<td data-name="submit_no_3"<?php echo $document_log->submit_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_3" class="document_log_submit_no_3">
+<span<?php echo $document_log->submit_no_3->viewAttributes() ?>>
+<?php echo $document_log->submit_no_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub2->Visible) { // submit_no_sub2 ?>
-		<td data-name="submit_no_sub2"<?php echo $document_log->submit_no_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub2" class="document_log_submit_no_sub2">
-<span<?php echo $document_log->submit_no_sub2->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub2->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_3->Visible) { // revision_no_3 ?>
+		<td data-name="revision_no_3"<?php echo $document_log->revision_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_3" class="document_log_revision_no_3">
+<span<?php echo $document_log->revision_no_3->viewAttributes() ?>>
+<?php echo $document_log->revision_no_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub2->Visible) { // revision_no_sub2 ?>
-		<td data-name="revision_no_sub2"<?php echo $document_log->revision_no_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub2" class="document_log_revision_no_sub2">
-<span<?php echo $document_log->revision_no_sub2->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub2->getViewValue() ?></span>
+	<?php if ($document_log->direction_3->Visible) { // direction_3 ?>
+		<td data-name="direction_3"<?php echo $document_log->direction_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_3" class="document_log_direction_3">
+<span<?php echo $document_log->direction_3->viewAttributes() ?>>
+<?php echo $document_log->direction_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_sub2->Visible) { // direction_out_sub2 ?>
-		<td data-name="direction_out_sub2"<?php echo $document_log->direction_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub2" class="document_log_direction_out_sub2">
-<span<?php echo $document_log->direction_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub2->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_3->Visible) { // planned_date_3 ?>
+		<td data-name="planned_date_3"<?php echo $document_log->planned_date_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_3" class="document_log_planned_date_3">
+<span<?php echo $document_log->planned_date_3->viewAttributes() ?>>
+<?php echo $document_log->planned_date_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub2->Visible) { // planned_date_out_sub2 ?>
-		<td data-name="planned_date_out_sub2"<?php echo $document_log->planned_date_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub2" class="document_log_planned_date_out_sub2">
-<span<?php echo $document_log->planned_date_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub2->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_3->Visible) { // transmit_date_3 ?>
+		<td data-name="transmit_date_3"<?php echo $document_log->transmit_date_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_3" class="document_log_transmit_date_3">
+<span<?php echo $document_log->transmit_date_3->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub2->Visible) { // transmit_date_out_sub2 ?>
-		<td data-name="transmit_date_out_sub2"<?php echo $document_log->transmit_date_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub2" class="document_log_transmit_date_out_sub2">
-<span<?php echo $document_log->transmit_date_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub2->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_3->Visible) { // transmit_no_3 ?>
+		<td data-name="transmit_no_3"<?php echo $document_log->transmit_no_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_3" class="document_log_transmit_no_3">
+<span<?php echo $document_log->transmit_no_3->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_3->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub2->Visible) { // transmit_no_out_sub2 ?>
-		<td data-name="transmit_no_out_sub2"<?php echo $document_log->transmit_no_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub2" class="document_log_transmit_no_out_sub2">
-<span<?php echo $document_log->transmit_no_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub2->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_3->Visible) { // approval_status_3 ?>
+		<td data-name="approval_status_3"<?php echo $document_log->approval_status_3->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_3" class="document_log_approval_status_3">
+<span<?php echo $document_log->approval_status_3->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_3->getViewValue())) && $document_log->approval_status_3->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_3->linkAttributes() ?>><?php echo $document_log->approval_status_3->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_3->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub2->Visible) { // approval_status_out_sub2 ?>
-		<td data-name="approval_status_out_sub2"<?php echo $document_log->approval_status_out_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub2" class="document_log_approval_status_out_sub2">
-<span<?php echo $document_log->approval_status_out_sub2->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub2->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_in_sub2->Visible) { // direction_in_sub2 ?>
-		<td data-name="direction_in_sub2"<?php echo $document_log->direction_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub2" class="document_log_direction_in_sub2">
-<span<?php echo $document_log->direction_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub2->Visible) { // transmit_no_in_sub2 ?>
-		<td data-name="transmit_no_in_sub2"<?php echo $document_log->transmit_no_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub2" class="document_log_transmit_no_in_sub2">
-<span<?php echo $document_log->transmit_no_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub2->Visible) { // approval_status_in_sub2 ?>
-		<td data-name="approval_status_in_sub2"<?php echo $document_log->approval_status_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub2" class="document_log_approval_status_in_sub2">
-<span<?php echo $document_log->approval_status_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub2->Visible) { // transmit_date_in_sub2 ?>
-		<td data-name="transmit_date_in_sub2"<?php echo $document_log->transmit_date_in_sub2->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub2" class="document_log_transmit_date_in_sub2">
-<span<?php echo $document_log->transmit_date_in_sub2->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub2->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->submit_no_sub3->Visible) { // submit_no_sub3 ?>
-		<td data-name="submit_no_sub3"<?php echo $document_log->submit_no_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub3" class="document_log_submit_no_sub3">
-<span<?php echo $document_log->submit_no_sub3->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->revision_no_sub3->Visible) { // revision_no_sub3 ?>
-		<td data-name="revision_no_sub3"<?php echo $document_log->revision_no_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub3" class="document_log_revision_no_sub3">
-<span<?php echo $document_log->revision_no_sub3->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_sub3->Visible) { // direction_out_sub3 ?>
-		<td data-name="direction_out_sub3"<?php echo $document_log->direction_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub3" class="document_log_direction_out_sub3">
-<span<?php echo $document_log->direction_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub3->Visible) { // planned_date_out_sub3 ?>
-		<td data-name="planned_date_out_sub3"<?php echo $document_log->planned_date_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub3" class="document_log_planned_date_out_sub3">
-<span<?php echo $document_log->planned_date_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub3->Visible) { // transmit_date_out_sub3 ?>
-		<td data-name="transmit_date_out_sub3"<?php echo $document_log->transmit_date_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub3" class="document_log_transmit_date_out_sub3">
-<span<?php echo $document_log->transmit_date_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub3->Visible) { // transmit_no_out_sub3 ?>
-		<td data-name="transmit_no_out_sub3"<?php echo $document_log->transmit_no_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub3" class="document_log_transmit_no_out_sub3">
-<span<?php echo $document_log->transmit_no_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub3->Visible) { // approval_status_out_sub3 ?>
-		<td data-name="approval_status_out_sub3"<?php echo $document_log->approval_status_out_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub3" class="document_log_approval_status_out_sub3">
-<span<?php echo $document_log->approval_status_out_sub3->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_in_sub3->Visible) { // direction_in_sub3 ?>
-		<td data-name="direction_in_sub3"<?php echo $document_log->direction_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub3" class="document_log_direction_in_sub3">
-<span<?php echo $document_log->direction_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub3->Visible) { // transmit_no_in_sub3 ?>
-		<td data-name="transmit_no_in_sub3"<?php echo $document_log->transmit_no_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub3" class="document_log_transmit_no_in_sub3">
-<span<?php echo $document_log->transmit_no_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub3->Visible) { // approval_status_in_sub3 ?>
-		<td data-name="approval_status_in_sub3"<?php echo $document_log->approval_status_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub3" class="document_log_approval_status_in_sub3">
-<span<?php echo $document_log->approval_status_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub3->Visible) { // transmit_date_in_sub3 ?>
-		<td data-name="transmit_date_in_sub3"<?php echo $document_log->transmit_date_in_sub3->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub3" class="document_log_transmit_date_in_sub3">
-<span<?php echo $document_log->transmit_date_in_sub3->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub3->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->submit_no_sub4->Visible) { // submit_no_sub4 ?>
-		<td data-name="submit_no_sub4"<?php echo $document_log->submit_no_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub4" class="document_log_submit_no_sub4">
-<span<?php echo $document_log->submit_no_sub4->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->revision_no_sub4->Visible) { // revision_no_sub4 ?>
-		<td data-name="revision_no_sub4"<?php echo $document_log->revision_no_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub4" class="document_log_revision_no_sub4">
-<span<?php echo $document_log->revision_no_sub4->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_sub4->Visible) { // direction_out_sub4 ?>
-		<td data-name="direction_out_sub4"<?php echo $document_log->direction_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub4" class="document_log_direction_out_sub4">
-<span<?php echo $document_log->direction_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub4->Visible) { // planned_date_out_sub4 ?>
-		<td data-name="planned_date_out_sub4"<?php echo $document_log->planned_date_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub4" class="document_log_planned_date_out_sub4">
-<span<?php echo $document_log->planned_date_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub4->Visible) { // transmit_date_out_sub4 ?>
-		<td data-name="transmit_date_out_sub4"<?php echo $document_log->transmit_date_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub4" class="document_log_transmit_date_out_sub4">
-<span<?php echo $document_log->transmit_date_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub4->Visible) { // transmit_no_out_sub4 ?>
-		<td data-name="transmit_no_out_sub4"<?php echo $document_log->transmit_no_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub4" class="document_log_transmit_no_out_sub4">
-<span<?php echo $document_log->transmit_no_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub4->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub4->Visible) { // approval_status_out_sub4 ?>
-		<td data-name="approval_status_out_sub4"<?php echo $document_log->approval_status_out_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub4" class="document_log_approval_status_out_sub4">
-<span<?php echo $document_log->approval_status_out_sub4->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub4->Visible) { // direction_in_sub4 ?>
-		<td data-name="direction_in_sub4"<?php echo $document_log->direction_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub4" class="document_log_direction_in_sub4">
-<span<?php echo $document_log->direction_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub4->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_4->Visible) { // submit_no_4 ?>
+		<td data-name="submit_no_4"<?php echo $document_log->submit_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_4" class="document_log_submit_no_4">
+<span<?php echo $document_log->submit_no_4->viewAttributes() ?>>
+<?php echo $document_log->submit_no_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub4->Visible) { // transmit_no_in_sub4 ?>
-		<td data-name="transmit_no_in_sub4"<?php echo $document_log->transmit_no_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub4" class="document_log_transmit_no_in_sub4">
-<span<?php echo $document_log->transmit_no_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub4->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_4->Visible) { // revision_no_4 ?>
+		<td data-name="revision_no_4"<?php echo $document_log->revision_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_4" class="document_log_revision_no_4">
+<span<?php echo $document_log->revision_no_4->viewAttributes() ?>>
+<?php echo $document_log->revision_no_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub4->Visible) { // approval_status_in_sub4 ?>
-		<td data-name="approval_status_in_sub4"<?php echo $document_log->approval_status_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub4" class="document_log_approval_status_in_sub4">
-<span<?php echo $document_log->approval_status_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub4->getViewValue() ?></span>
+	<?php if ($document_log->direction_4->Visible) { // direction_4 ?>
+		<td data-name="direction_4"<?php echo $document_log->direction_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_4" class="document_log_direction_4">
+<span<?php echo $document_log->direction_4->viewAttributes() ?>>
+<?php echo $document_log->direction_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_file_sub4->Visible) { // direction_in_file_sub4 ?>
-		<td data-name="direction_in_file_sub4"<?php echo $document_log->direction_in_file_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_file_sub4" class="document_log_direction_in_file_sub4">
-<span<?php echo $document_log->direction_in_file_sub4->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub4->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_4->Visible) { // planned_date_4 ?>
+		<td data-name="planned_date_4"<?php echo $document_log->planned_date_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_4" class="document_log_planned_date_4">
+<span<?php echo $document_log->planned_date_4->viewAttributes() ?>>
+<?php echo $document_log->planned_date_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub4->Visible) { // transmit_date_in_sub4 ?>
-		<td data-name="transmit_date_in_sub4"<?php echo $document_log->transmit_date_in_sub4->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub4" class="document_log_transmit_date_in_sub4">
-<span<?php echo $document_log->transmit_date_in_sub4->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub4->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_4->Visible) { // transmit_date_4 ?>
+		<td data-name="transmit_date_4"<?php echo $document_log->transmit_date_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_4" class="document_log_transmit_date_4">
+<span<?php echo $document_log->transmit_date_4->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub5->Visible) { // submit_no_sub5 ?>
-		<td data-name="submit_no_sub5"<?php echo $document_log->submit_no_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub5" class="document_log_submit_no_sub5">
-<span<?php echo $document_log->submit_no_sub5->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub5->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_4->Visible) { // transmit_no_4 ?>
+		<td data-name="transmit_no_4"<?php echo $document_log->transmit_no_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_4" class="document_log_transmit_no_4">
+<span<?php echo $document_log->transmit_no_4->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_4->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub5->Visible) { // revision_no_sub5 ?>
-		<td data-name="revision_no_sub5"<?php echo $document_log->revision_no_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub5" class="document_log_revision_no_sub5">
-<span<?php echo $document_log->revision_no_sub5->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub5->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_4->Visible) { // approval_status_4 ?>
+		<td data-name="approval_status_4"<?php echo $document_log->approval_status_4->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_4" class="document_log_approval_status_4">
+<span<?php echo $document_log->approval_status_4->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_4->getViewValue())) && $document_log->approval_status_4->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_4->linkAttributes() ?>><?php echo $document_log->approval_status_4->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_4->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_sub5->Visible) { // direction_out_sub5 ?>
-		<td data-name="direction_out_sub5"<?php echo $document_log->direction_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub5" class="document_log_direction_out_sub5">
-<span<?php echo $document_log->direction_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub5->Visible) { // planned_date_out_sub5 ?>
-		<td data-name="planned_date_out_sub5"<?php echo $document_log->planned_date_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub5" class="document_log_planned_date_out_sub5">
-<span<?php echo $document_log->planned_date_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub5->Visible) { // transmit_date_out_sub5 ?>
-		<td data-name="transmit_date_out_sub5"<?php echo $document_log->transmit_date_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub5" class="document_log_transmit_date_out_sub5">
-<span<?php echo $document_log->transmit_date_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub5->Visible) { // transmit_no_out_sub5 ?>
-		<td data-name="transmit_no_out_sub5"<?php echo $document_log->transmit_no_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub5" class="document_log_transmit_no_out_sub5">
-<span<?php echo $document_log->transmit_no_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub5->Visible) { // approval_status_out_sub5 ?>
-		<td data-name="approval_status_out_sub5"<?php echo $document_log->approval_status_out_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub5" class="document_log_approval_status_out_sub5">
-<span<?php echo $document_log->approval_status_out_sub5->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_in_sub5->Visible) { // direction_in_sub5 ?>
-		<td data-name="direction_in_sub5"<?php echo $document_log->direction_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub5" class="document_log_direction_in_sub5">
-<span<?php echo $document_log->direction_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub5->Visible) { // transmit_no_in_sub5 ?>
-		<td data-name="transmit_no_in_sub5"<?php echo $document_log->transmit_no_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub5" class="document_log_transmit_no_in_sub5">
-<span<?php echo $document_log->transmit_no_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub5->Visible) { // approval_status_in_sub5 ?>
-		<td data-name="approval_status_in_sub5"<?php echo $document_log->approval_status_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub5" class="document_log_approval_status_in_sub5">
-<span<?php echo $document_log->approval_status_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_in_file_sub5->Visible) { // direction_in_file_sub5 ?>
-		<td data-name="direction_in_file_sub5"<?php echo $document_log->direction_in_file_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_file_sub5" class="document_log_direction_in_file_sub5">
-<span<?php echo $document_log->direction_in_file_sub5->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub5->Visible) { // transmit_date_in_sub5 ?>
-		<td data-name="transmit_date_in_sub5"<?php echo $document_log->transmit_date_in_sub5->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub5" class="document_log_transmit_date_in_sub5">
-<span<?php echo $document_log->transmit_date_in_sub5->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub5->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->submit_no_sub6->Visible) { // submit_no_sub6 ?>
-		<td data-name="submit_no_sub6"<?php echo $document_log->submit_no_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub6" class="document_log_submit_no_sub6">
-<span<?php echo $document_log->submit_no_sub6->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->revision_no_sub6->Visible) { // revision_no_sub6 ?>
-		<td data-name="revision_no_sub6"<?php echo $document_log->revision_no_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub6" class="document_log_revision_no_sub6">
-<span<?php echo $document_log->revision_no_sub6->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_sub6->Visible) { // direction_out_sub6 ?>
-		<td data-name="direction_out_sub6"<?php echo $document_log->direction_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub6" class="document_log_direction_out_sub6">
-<span<?php echo $document_log->direction_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub6->Visible) { // planned_date_out_sub6 ?>
-		<td data-name="planned_date_out_sub6"<?php echo $document_log->planned_date_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub6" class="document_log_planned_date_out_sub6">
-<span<?php echo $document_log->planned_date_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub6->Visible) { // transmit_date_out_sub6 ?>
-		<td data-name="transmit_date_out_sub6"<?php echo $document_log->transmit_date_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub6" class="document_log_transmit_date_out_sub6">
-<span<?php echo $document_log->transmit_date_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub6->Visible) { // transmit_no_out_sub6 ?>
-		<td data-name="transmit_no_out_sub6"<?php echo $document_log->transmit_no_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub6" class="document_log_transmit_no_out_sub6">
-<span<?php echo $document_log->transmit_no_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub6->Visible) { // approval_status_out_sub6 ?>
-		<td data-name="approval_status_out_sub6"<?php echo $document_log->approval_status_out_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub6" class="document_log_approval_status_out_sub6">
-<span<?php echo $document_log->approval_status_out_sub6->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_in_sub6->Visible) { // direction_in_sub6 ?>
-		<td data-name="direction_in_sub6"<?php echo $document_log->direction_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub6" class="document_log_direction_in_sub6">
-<span<?php echo $document_log->direction_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub6->Visible) { // transmit_no_in_sub6 ?>
-		<td data-name="transmit_no_in_sub6"<?php echo $document_log->transmit_no_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub6" class="document_log_transmit_no_in_sub6">
-<span<?php echo $document_log->transmit_no_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub6->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub6->Visible) { // approval_status_in_sub6 ?>
-		<td data-name="approval_status_in_sub6"<?php echo $document_log->approval_status_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub6" class="document_log_approval_status_in_sub6">
-<span<?php echo $document_log->approval_status_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_file_sub6->Visible) { // direction_in_file_sub6 ?>
-		<td data-name="direction_in_file_sub6"<?php echo $document_log->direction_in_file_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_file_sub6" class="document_log_direction_in_file_sub6">
-<span<?php echo $document_log->direction_in_file_sub6->viewAttributes() ?>>
-<?php echo $document_log->direction_in_file_sub6->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_5->Visible) { // submit_no_5 ?>
+		<td data-name="submit_no_5"<?php echo $document_log->submit_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_5" class="document_log_submit_no_5">
+<span<?php echo $document_log->submit_no_5->viewAttributes() ?>>
+<?php echo $document_log->submit_no_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub6->Visible) { // transmit_date_in_sub6 ?>
-		<td data-name="transmit_date_in_sub6"<?php echo $document_log->transmit_date_in_sub6->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub6" class="document_log_transmit_date_in_sub6">
-<span<?php echo $document_log->transmit_date_in_sub6->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub6->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_5->Visible) { // revision_no_5 ?>
+		<td data-name="revision_no_5"<?php echo $document_log->revision_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_5" class="document_log_revision_no_5">
+<span<?php echo $document_log->revision_no_5->viewAttributes() ?>>
+<?php echo $document_log->revision_no_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub7->Visible) { // submit_no_sub7 ?>
-		<td data-name="submit_no_sub7"<?php echo $document_log->submit_no_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub7" class="document_log_submit_no_sub7">
-<span<?php echo $document_log->submit_no_sub7->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub7->getViewValue() ?></span>
+	<?php if ($document_log->direction_5->Visible) { // direction_5 ?>
+		<td data-name="direction_5"<?php echo $document_log->direction_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_5" class="document_log_direction_5">
+<span<?php echo $document_log->direction_5->viewAttributes() ?>>
+<?php echo $document_log->direction_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub7->Visible) { // revision_no_sub7 ?>
-		<td data-name="revision_no_sub7"<?php echo $document_log->revision_no_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub7" class="document_log_revision_no_sub7">
-<span<?php echo $document_log->revision_no_sub7->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub7->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_5->Visible) { // planned_date_5 ?>
+		<td data-name="planned_date_5"<?php echo $document_log->planned_date_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_5" class="document_log_planned_date_5">
+<span<?php echo $document_log->planned_date_5->viewAttributes() ?>>
+<?php echo $document_log->planned_date_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_sub7->Visible) { // direction_out_sub7 ?>
-		<td data-name="direction_out_sub7"<?php echo $document_log->direction_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub7" class="document_log_direction_out_sub7">
-<span<?php echo $document_log->direction_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub7->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_5->Visible) { // transmit_date_5 ?>
+		<td data-name="transmit_date_5"<?php echo $document_log->transmit_date_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_5" class="document_log_transmit_date_5">
+<span<?php echo $document_log->transmit_date_5->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub7->Visible) { // planned_date_out_sub7 ?>
-		<td data-name="planned_date_out_sub7"<?php echo $document_log->planned_date_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub7" class="document_log_planned_date_out_sub7">
-<span<?php echo $document_log->planned_date_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub7->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_5->Visible) { // transmit_no_5 ?>
+		<td data-name="transmit_no_5"<?php echo $document_log->transmit_no_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_5" class="document_log_transmit_no_5">
+<span<?php echo $document_log->transmit_no_5->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub7->Visible) { // transmit_date_out_sub7 ?>
-		<td data-name="transmit_date_out_sub7"<?php echo $document_log->transmit_date_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub7" class="document_log_transmit_date_out_sub7">
-<span<?php echo $document_log->transmit_date_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub7->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_5->Visible) { // approval_status_5 ?>
+		<td data-name="approval_status_5"<?php echo $document_log->approval_status_5->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_5" class="document_log_approval_status_5">
+<span<?php echo $document_log->approval_status_5->viewAttributes() ?>>
+<?php echo $document_log->approval_status_5->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub7->Visible) { // transmit_no_out_sub7 ?>
-		<td data-name="transmit_no_out_sub7"<?php echo $document_log->transmit_no_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub7" class="document_log_transmit_no_out_sub7">
-<span<?php echo $document_log->transmit_no_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub7->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_6->Visible) { // submit_no_6 ?>
+		<td data-name="submit_no_6"<?php echo $document_log->submit_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_6" class="document_log_submit_no_6">
+<span<?php echo $document_log->submit_no_6->viewAttributes() ?>>
+<?php echo $document_log->submit_no_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub7->Visible) { // approval_status_out_sub7 ?>
-		<td data-name="approval_status_out_sub7"<?php echo $document_log->approval_status_out_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub7" class="document_log_approval_status_out_sub7">
-<span<?php echo $document_log->approval_status_out_sub7->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub7->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_6->Visible) { // revision_no_6 ?>
+		<td data-name="revision_no_6"<?php echo $document_log->revision_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_6" class="document_log_revision_no_6">
+<span<?php echo $document_log->revision_no_6->viewAttributes() ?>>
+<?php echo $document_log->revision_no_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub7->Visible) { // direction_in_sub7 ?>
-		<td data-name="direction_in_sub7"<?php echo $document_log->direction_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub7" class="document_log_direction_in_sub7">
-<span<?php echo $document_log->direction_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub7->getViewValue() ?></span>
+	<?php if ($document_log->direction_6->Visible) { // direction_6 ?>
+		<td data-name="direction_6"<?php echo $document_log->direction_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_6" class="document_log_direction_6">
+<span<?php echo $document_log->direction_6->viewAttributes() ?>>
+<?php echo $document_log->direction_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub7->Visible) { // transmit_no_in_sub7 ?>
-		<td data-name="transmit_no_in_sub7"<?php echo $document_log->transmit_no_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub7" class="document_log_transmit_no_in_sub7">
-<span<?php echo $document_log->transmit_no_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub7->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_6->Visible) { // planned_date_6 ?>
+		<td data-name="planned_date_6"<?php echo $document_log->planned_date_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_6" class="document_log_planned_date_6">
+<span<?php echo $document_log->planned_date_6->viewAttributes() ?>>
+<?php echo $document_log->planned_date_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub7->Visible) { // approval_status_in_sub7 ?>
-		<td data-name="approval_status_in_sub7"<?php echo $document_log->approval_status_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub7" class="document_log_approval_status_in_sub7">
-<span<?php echo $document_log->approval_status_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub7->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_6->Visible) { // transmit_date_6 ?>
+		<td data-name="transmit_date_6"<?php echo $document_log->transmit_date_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_6" class="document_log_transmit_date_6">
+<span<?php echo $document_log->transmit_date_6->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub7->Visible) { // transmit_date_in_sub7 ?>
-		<td data-name="transmit_date_in_sub7"<?php echo $document_log->transmit_date_in_sub7->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub7" class="document_log_transmit_date_in_sub7">
-<span<?php echo $document_log->transmit_date_in_sub7->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub7->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_6->Visible) { // transmit_no_6 ?>
+		<td data-name="transmit_no_6"<?php echo $document_log->transmit_no_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_6" class="document_log_transmit_no_6">
+<span<?php echo $document_log->transmit_no_6->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_6->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub8->Visible) { // submit_no_sub8 ?>
-		<td data-name="submit_no_sub8"<?php echo $document_log->submit_no_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub8" class="document_log_submit_no_sub8">
-<span<?php echo $document_log->submit_no_sub8->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub8->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_6->Visible) { // approval_status_6 ?>
+		<td data-name="approval_status_6"<?php echo $document_log->approval_status_6->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_6" class="document_log_approval_status_6">
+<span<?php echo $document_log->approval_status_6->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_6->getViewValue())) && $document_log->approval_status_6->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_6->linkAttributes() ?>><?php echo $document_log->approval_status_6->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_6->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->revision_no_sub8->Visible) { // revision_no_sub8 ?>
-		<td data-name="revision_no_sub8"<?php echo $document_log->revision_no_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub8" class="document_log_revision_no_sub8">
-<span<?php echo $document_log->revision_no_sub8->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_sub8->Visible) { // direction_out_sub8 ?>
-		<td data-name="direction_out_sub8"<?php echo $document_log->direction_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub8" class="document_log_direction_out_sub8">
-<span<?php echo $document_log->direction_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub8->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_7->Visible) { // submit_no_7 ?>
+		<td data-name="submit_no_7"<?php echo $document_log->submit_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_7" class="document_log_submit_no_7">
+<span<?php echo $document_log->submit_no_7->viewAttributes() ?>>
+<?php echo $document_log->submit_no_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub8->Visible) { // planned_date_out_sub8 ?>
-		<td data-name="planned_date_out_sub8"<?php echo $document_log->planned_date_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub8" class="document_log_planned_date_out_sub8">
-<span<?php echo $document_log->planned_date_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub8->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_7->Visible) { // revision_no_7 ?>
+		<td data-name="revision_no_7"<?php echo $document_log->revision_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_7" class="document_log_revision_no_7">
+<span<?php echo $document_log->revision_no_7->viewAttributes() ?>>
+<?php echo $document_log->revision_no_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub8->Visible) { // transmit_date_out_sub8 ?>
-		<td data-name="transmit_date_out_sub8"<?php echo $document_log->transmit_date_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub8" class="document_log_transmit_date_out_sub8">
-<span<?php echo $document_log->transmit_date_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub8->getViewValue() ?></span>
+	<?php if ($document_log->direction_7->Visible) { // direction_7 ?>
+		<td data-name="direction_7"<?php echo $document_log->direction_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_7" class="document_log_direction_7">
+<span<?php echo $document_log->direction_7->viewAttributes() ?>>
+<?php echo $document_log->direction_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub8->Visible) { // transmit_no_out_sub8 ?>
-		<td data-name="transmit_no_out_sub8"<?php echo $document_log->transmit_no_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub8" class="document_log_transmit_no_out_sub8">
-<span<?php echo $document_log->transmit_no_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub8->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_7->Visible) { // planned_date_7 ?>
+		<td data-name="planned_date_7"<?php echo $document_log->planned_date_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_7" class="document_log_planned_date_7">
+<span<?php echo $document_log->planned_date_7->viewAttributes() ?>>
+<?php echo $document_log->planned_date_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub8->Visible) { // approval_status_out_sub8 ?>
-		<td data-name="approval_status_out_sub8"<?php echo $document_log->approval_status_out_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub8" class="document_log_approval_status_out_sub8">
-<span<?php echo $document_log->approval_status_out_sub8->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub8->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_7->Visible) { // transmit_date_7 ?>
+		<td data-name="transmit_date_7"<?php echo $document_log->transmit_date_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_7" class="document_log_transmit_date_7">
+<span<?php echo $document_log->transmit_date_7->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_file_sub8->Visible) { // direction_out_file_sub8 ?>
-		<td data-name="direction_out_file_sub8"<?php echo $document_log->direction_out_file_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_file_sub8" class="document_log_direction_out_file_sub8">
-<span<?php echo $document_log->direction_out_file_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_out_file_sub8->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_7->Visible) { // transmit_no_7 ?>
+		<td data-name="transmit_no_7"<?php echo $document_log->transmit_no_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_7" class="document_log_transmit_no_7">
+<span<?php echo $document_log->transmit_no_7->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_7->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub8->Visible) { // direction_in_sub8 ?>
-		<td data-name="direction_in_sub8"<?php echo $document_log->direction_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub8" class="document_log_direction_in_sub8">
-<span<?php echo $document_log->direction_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub8->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_7->Visible) { // approval_status_7 ?>
+		<td data-name="approval_status_7"<?php echo $document_log->approval_status_7->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_7" class="document_log_approval_status_7">
+<span<?php echo $document_log->approval_status_7->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_7->getViewValue())) && $document_log->approval_status_7->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_7->linkAttributes() ?>><?php echo $document_log->approval_status_7->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_7->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub8->Visible) { // transmit_no_in_sub8 ?>
-		<td data-name="transmit_no_in_sub8"<?php echo $document_log->transmit_no_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub8" class="document_log_transmit_no_in_sub8">
-<span<?php echo $document_log->transmit_no_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub8->Visible) { // approval_status_in_sub8 ?>
-		<td data-name="approval_status_in_sub8"<?php echo $document_log->approval_status_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub8" class="document_log_approval_status_in_sub8">
-<span<?php echo $document_log->approval_status_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub8->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_8->Visible) { // submit_no_8 ?>
+		<td data-name="submit_no_8"<?php echo $document_log->submit_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_8" class="document_log_submit_no_8">
+<span<?php echo $document_log->submit_no_8->viewAttributes() ?>>
+<?php echo $document_log->submit_no_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub8->Visible) { // transmit_date_in_sub8 ?>
-		<td data-name="transmit_date_in_sub8"<?php echo $document_log->transmit_date_in_sub8->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub8" class="document_log_transmit_date_in_sub8">
-<span<?php echo $document_log->transmit_date_in_sub8->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub8->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_8->Visible) { // revision_no_8 ?>
+		<td data-name="revision_no_8"<?php echo $document_log->revision_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_8" class="document_log_revision_no_8">
+<span<?php echo $document_log->revision_no_8->viewAttributes() ?>>
+<?php echo $document_log->revision_no_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub9->Visible) { // submit_no_sub9 ?>
-		<td data-name="submit_no_sub9"<?php echo $document_log->submit_no_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub9" class="document_log_submit_no_sub9">
-<span<?php echo $document_log->submit_no_sub9->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub9->getViewValue() ?></span>
+	<?php if ($document_log->direction_8->Visible) { // direction_8 ?>
+		<td data-name="direction_8"<?php echo $document_log->direction_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_8" class="document_log_direction_8">
+<span<?php echo $document_log->direction_8->viewAttributes() ?>>
+<?php echo $document_log->direction_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub9->Visible) { // revision_no_sub9 ?>
-		<td data-name="revision_no_sub9"<?php echo $document_log->revision_no_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub9" class="document_log_revision_no_sub9">
-<span<?php echo $document_log->revision_no_sub9->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub9->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_8->Visible) { // planned_date_8 ?>
+		<td data-name="planned_date_8"<?php echo $document_log->planned_date_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_8" class="document_log_planned_date_8">
+<span<?php echo $document_log->planned_date_8->viewAttributes() ?>>
+<?php echo $document_log->planned_date_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_out_sub9->Visible) { // direction_out_sub9 ?>
-		<td data-name="direction_out_sub9"<?php echo $document_log->direction_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub9" class="document_log_direction_out_sub9">
-<span<?php echo $document_log->direction_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub9->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_8->Visible) { // transmit_date_8 ?>
+		<td data-name="transmit_date_8"<?php echo $document_log->transmit_date_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_8" class="document_log_transmit_date_8">
+<span<?php echo $document_log->transmit_date_8->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub9->Visible) { // planned_date_out_sub9 ?>
-		<td data-name="planned_date_out_sub9"<?php echo $document_log->planned_date_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub9" class="document_log_planned_date_out_sub9">
-<span<?php echo $document_log->planned_date_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub9->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_8->Visible) { // transmit_no_8 ?>
+		<td data-name="transmit_no_8"<?php echo $document_log->transmit_no_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_8" class="document_log_transmit_no_8">
+<span<?php echo $document_log->transmit_no_8->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_8->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub9->Visible) { // transmit_date_out_sub9 ?>
-		<td data-name="transmit_date_out_sub9"<?php echo $document_log->transmit_date_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub9" class="document_log_transmit_date_out_sub9">
-<span<?php echo $document_log->transmit_date_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub9->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_8->Visible) { // approval_status_8 ?>
+		<td data-name="approval_status_8"<?php echo $document_log->approval_status_8->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_8" class="document_log_approval_status_8">
+<span<?php echo $document_log->approval_status_8->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_8->getViewValue())) && $document_log->approval_status_8->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_8->linkAttributes() ?>><?php echo $document_log->approval_status_8->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_8->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub9->Visible) { // transmit_no_out_sub9 ?>
-		<td data-name="transmit_no_out_sub9"<?php echo $document_log->transmit_no_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub9" class="document_log_transmit_no_out_sub9">
-<span<?php echo $document_log->transmit_no_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub9->Visible) { // approval_status_out_sub9 ?>
-		<td data-name="approval_status_out_sub9"<?php echo $document_log->approval_status_out_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub9" class="document_log_approval_status_out_sub9">
-<span<?php echo $document_log->approval_status_out_sub9->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub9->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_9->Visible) { // submit_no_9 ?>
+		<td data-name="submit_no_9"<?php echo $document_log->submit_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_9" class="document_log_submit_no_9">
+<span<?php echo $document_log->submit_no_9->viewAttributes() ?>>
+<?php echo $document_log->submit_no_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub9->Visible) { // direction_in_sub9 ?>
-		<td data-name="direction_in_sub9"<?php echo $document_log->direction_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub9" class="document_log_direction_in_sub9">
-<span<?php echo $document_log->direction_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub9->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_9->Visible) { // revision_no_9 ?>
+		<td data-name="revision_no_9"<?php echo $document_log->revision_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_9" class="document_log_revision_no_9">
+<span<?php echo $document_log->revision_no_9->viewAttributes() ?>>
+<?php echo $document_log->revision_no_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub9->Visible) { // transmit_no_in_sub9 ?>
-		<td data-name="transmit_no_in_sub9"<?php echo $document_log->transmit_no_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub9" class="document_log_transmit_no_in_sub9">
-<span<?php echo $document_log->transmit_no_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub9->getViewValue() ?></span>
+	<?php if ($document_log->direction_9->Visible) { // direction_9 ?>
+		<td data-name="direction_9"<?php echo $document_log->direction_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_9" class="document_log_direction_9">
+<span<?php echo $document_log->direction_9->viewAttributes() ?>>
+<?php echo $document_log->direction_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub9->Visible) { // approval_status_in_sub9 ?>
-		<td data-name="approval_status_in_sub9"<?php echo $document_log->approval_status_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub9" class="document_log_approval_status_in_sub9">
-<span<?php echo $document_log->approval_status_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub9->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_9->Visible) { // planned_date_9 ?>
+		<td data-name="planned_date_9"<?php echo $document_log->planned_date_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_9" class="document_log_planned_date_9">
+<span<?php echo $document_log->planned_date_9->viewAttributes() ?>>
+<?php echo $document_log->planned_date_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub9->Visible) { // transmit_date_in_sub9 ?>
-		<td data-name="transmit_date_in_sub9"<?php echo $document_log->transmit_date_in_sub9->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub9" class="document_log_transmit_date_in_sub9">
-<span<?php echo $document_log->transmit_date_in_sub9->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub9->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_9->Visible) { // transmit_date_9 ?>
+		<td data-name="transmit_date_9"<?php echo $document_log->transmit_date_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_9" class="document_log_transmit_date_9">
+<span<?php echo $document_log->transmit_date_9->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->submit_no_sub10->Visible) { // submit_no_sub10 ?>
-		<td data-name="submit_no_sub10"<?php echo $document_log->submit_no_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_sub10" class="document_log_submit_no_sub10">
-<span<?php echo $document_log->submit_no_sub10->viewAttributes() ?>>
-<?php echo $document_log->submit_no_sub10->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_9->Visible) { // transmit_no_9 ?>
+		<td data-name="transmit_no_9"<?php echo $document_log->transmit_no_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_9" class="document_log_transmit_no_9">
+<span<?php echo $document_log->transmit_no_9->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_9->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->revision_no_sub10->Visible) { // revision_no_sub10 ?>
-		<td data-name="revision_no_sub10"<?php echo $document_log->revision_no_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_sub10" class="document_log_revision_no_sub10">
-<span<?php echo $document_log->revision_no_sub10->viewAttributes() ?>>
-<?php echo $document_log->revision_no_sub10->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_9->Visible) { // approval_status_9 ?>
+		<td data-name="approval_status_9"<?php echo $document_log->approval_status_9->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_9" class="document_log_approval_status_9">
+<span<?php echo $document_log->approval_status_9->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_9->getViewValue())) && $document_log->approval_status_9->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_9->linkAttributes() ?>><?php echo $document_log->approval_status_9->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_9->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->direction_out_sub10->Visible) { // direction_out_sub10 ?>
-		<td data-name="direction_out_sub10"<?php echo $document_log->direction_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_out_sub10" class="document_log_direction_out_sub10">
-<span<?php echo $document_log->direction_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->direction_out_sub10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->planned_date_out_sub10->Visible) { // planned_date_out_sub10 ?>
-		<td data-name="planned_date_out_sub10"<?php echo $document_log->planned_date_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_out_sub10" class="document_log_planned_date_out_sub10">
-<span<?php echo $document_log->planned_date_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->planned_date_out_sub10->getViewValue() ?></span>
+	<?php if ($document_log->submit_no_10->Visible) { // submit_no_10 ?>
+		<td data-name="submit_no_10"<?php echo $document_log->submit_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_submit_no_10" class="document_log_submit_no_10">
+<span<?php echo $document_log->submit_no_10->viewAttributes() ?>>
+<?php echo $document_log->submit_no_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_date_out_sub10->Visible) { // transmit_date_out_sub10 ?>
-		<td data-name="transmit_date_out_sub10"<?php echo $document_log->transmit_date_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_out_sub10" class="document_log_transmit_date_out_sub10">
-<span<?php echo $document_log->transmit_date_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_out_sub10->getViewValue() ?></span>
+	<?php if ($document_log->revision_no_10->Visible) { // revision_no_10 ?>
+		<td data-name="revision_no_10"<?php echo $document_log->revision_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_revision_no_10" class="document_log_revision_no_10">
+<span<?php echo $document_log->revision_no_10->viewAttributes() ?>>
+<?php echo $document_log->revision_no_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_out_sub10->Visible) { // transmit_no_out_sub10 ?>
-		<td data-name="transmit_no_out_sub10"<?php echo $document_log->transmit_no_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_out_sub10" class="document_log_transmit_no_out_sub10">
-<span<?php echo $document_log->transmit_no_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_out_sub10->getViewValue() ?></span>
+	<?php if ($document_log->direction_10->Visible) { // direction_10 ?>
+		<td data-name="direction_10"<?php echo $document_log->direction_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_10" class="document_log_direction_10">
+<span<?php echo $document_log->direction_10->viewAttributes() ?>>
+<?php echo $document_log->direction_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_out_sub10->Visible) { // approval_status_out_sub10 ?>
-		<td data-name="approval_status_out_sub10"<?php echo $document_log->approval_status_out_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_out_sub10" class="document_log_approval_status_out_sub10">
-<span<?php echo $document_log->approval_status_out_sub10->viewAttributes() ?>>
-<?php echo $document_log->approval_status_out_sub10->getViewValue() ?></span>
+	<?php if ($document_log->planned_date_10->Visible) { // planned_date_10 ?>
+		<td data-name="planned_date_10"<?php echo $document_log->planned_date_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_planned_date_10" class="document_log_planned_date_10">
+<span<?php echo $document_log->planned_date_10->viewAttributes() ?>>
+<?php echo $document_log->planned_date_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->direction_in_sub10->Visible) { // direction_in_sub10 ?>
-		<td data-name="direction_in_sub10"<?php echo $document_log->direction_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_direction_in_sub10" class="document_log_direction_in_sub10">
-<span<?php echo $document_log->direction_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->direction_in_sub10->getViewValue() ?></span>
+	<?php if ($document_log->transmit_date_10->Visible) { // transmit_date_10 ?>
+		<td data-name="transmit_date_10"<?php echo $document_log->transmit_date_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_10" class="document_log_transmit_date_10">
+<span<?php echo $document_log->transmit_date_10->viewAttributes() ?>>
+<?php echo $document_log->transmit_date_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->transmit_no_in_sub10->Visible) { // transmit_no_in_sub10 ?>
-		<td data-name="transmit_no_in_sub10"<?php echo $document_log->transmit_no_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_in_sub10" class="document_log_transmit_no_in_sub10">
-<span<?php echo $document_log->transmit_no_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_no_in_sub10->getViewValue() ?></span>
+	<?php if ($document_log->transmit_no_10->Visible) { // transmit_no_10 ?>
+		<td data-name="transmit_no_10"<?php echo $document_log->transmit_no_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_no_10" class="document_log_transmit_no_10">
+<span<?php echo $document_log->transmit_no_10->viewAttributes() ?>>
+<?php echo $document_log->transmit_no_10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($document_log->approval_status_in_sub10->Visible) { // approval_status_in_sub10 ?>
-		<td data-name="approval_status_in_sub10"<?php echo $document_log->approval_status_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_in_sub10" class="document_log_approval_status_in_sub10">
-<span<?php echo $document_log->approval_status_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->approval_status_in_sub10->getViewValue() ?></span>
+	<?php if ($document_log->approval_status_10->Visible) { // approval_status_10 ?>
+		<td data-name="approval_status_10"<?php echo $document_log->approval_status_10->cellAttributes() ?>>
+<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_approval_status_10" class="document_log_approval_status_10">
+<span<?php echo $document_log->approval_status_10->viewAttributes() ?>>
+<?php if ((!EmptyString($document_log->approval_status_10->getViewValue())) && $document_log->approval_status_10->linkAttributes() <> "") { ?>
+<a<?php echo $document_log->approval_status_10->linkAttributes() ?>><?php echo $document_log->approval_status_10->getViewValue() ?></a>
+<?php } else { ?>
+<?php echo $document_log->approval_status_10->getViewValue() ?>
+<?php } ?>
 </span>
-</td>
-	<?php } ?>
-	<?php if ($document_log->transmit_date_in_sub10->Visible) { // transmit_date_in_sub10 ?>
-		<td data-name="transmit_date_in_sub10"<?php echo $document_log->transmit_date_in_sub10->cellAttributes() ?>>
-<span id="el<?php echo $document_log_list->RowCnt ?>_document_log_transmit_date_in_sub10" class="document_log_transmit_date_in_sub10">
-<span<?php echo $document_log->transmit_date_in_sub10->viewAttributes() ?>>
-<?php echo $document_log->transmit_date_in_sub10->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

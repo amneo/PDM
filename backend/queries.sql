@@ -20,8 +20,8 @@ SELECT * FROM document_details where firelink_doc_no = 'FLK-OTH-2019-0169';
 
 
 
-select * from transaction_details where firelink_doc_no = 'SEG-ME-45-MS-FF-001C';
-select count(log_id) from document_log where firelink_doc_no = 'SEG-ME-45-MS-FF-001C';
+select * from transaction_details where firelink_doc_no = 'SEG-ME-45-MS-FF-006';
+select count(log_id) from document_log where firelink_doc_no = 'SEG-ME-45-MS-FF-006';
 
 
 update transaction_details set project_name = document_details.project_name from document_details where document_details.firelink_doc_no = transaction_details.firelink_doc_no;
@@ -59,9 +59,14 @@ FROM crosstab(
     )
 AS ct(row_name text, category_1 text, category_2 text, category_3 text, category_4 text);
 
+select document_sequence from transaction_details where firelink_doc_no = 'SEG-ME-45-MS-FF-001C' group by document_sequence order by document_sequence DESC LIMIT 10;
+select firelink_doc_no from document_details where firelink_doc_no NOT IN (select firelink_doc_no from transaction_details)group by firelink_doc_no
 
+SELECT * FROM transaction_details where firelink_doc_no = 'SEG-ME-45-MS-FF-001C' order by document_sequence desc limit 10;
 --  Crosstab
 
+delete from document_details where project_name not in (select project_name from project_details)
+select * from project_details where project_name = 'FIRE FIGHTING SYSTEM INFRASTRUCTURE AT MAIN CAMPUS - QATAR UNIVERSITY'
 order by document_sequence desc
 select * from crosstab(
 'select firelink_doc_no ,direction,approval_status from transaction_details order by document_sequence,firelink_doc_no')
@@ -75,3 +80,8 @@ delete FROM transaction_details where firelink_doc_no = 'FLK-DWG-2019-0095';
 
 --truncate document_log;
 select om_func_03();
+
+
+
+
+

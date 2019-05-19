@@ -305,7 +305,7 @@ $document_details_list->ListOptions->render("header", "left");
 		<th data-name="project_name" class="<?php echo $document_details->project_name->headerCellClass() ?>"><div id="elh_document_details_project_name" class="document_details_project_name"><div class="ew-table-header-caption"><?php echo $document_details->project_name->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="project_name" class="<?php echo $document_details->project_name->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_details->SortUrl($document_details->project_name) ?>',2);"><div id="elh_document_details_project_name" class="document_details_project_name">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_details->project_name->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_details->project_name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_details->project_name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_details->project_name->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_details->project_name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_details->project_name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
