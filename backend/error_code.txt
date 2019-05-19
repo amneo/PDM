@@ -1,2 +1,3 @@
 error code	| backend / front end	|  Error About
 psi_ravan_001	| backend		| When function does not return the latest version
+psi_ravan_002	| backend 		| When insert statement in function sai_func_03 produces some unknown error 
