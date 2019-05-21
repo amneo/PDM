@@ -1926,7 +1926,7 @@ class userlevels_list extends userlevels
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");

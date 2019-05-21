@@ -1128,7 +1128,7 @@ class document_system_view extends document_system
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");

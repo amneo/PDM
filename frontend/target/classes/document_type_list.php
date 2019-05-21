@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class document_system_list extends document_system
+class document_type_list extends document_type
 {
 
 	// Page ID
@@ -14,13 +14,13 @@ class document_system_list extends document_system
 	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
-	public $TableName = 'document_system';
+	public $TableName = 'document_type';
 
 	// Page object name
-	public $PageObjName = "document_system_list";
+	public $PageObjName = "document_type_list";
 
 	// Grid form hidden field names
-	public $FormName = "fdocument_systemlist";
+	public $FormName = "fdocument_typelist";
 	public $FormActionName = "k_action";
 	public $FormKeyName = "k_key";
 	public $FormOldKeyName = "k_oldkey";
@@ -384,10 +384,10 @@ class document_system_list extends document_system
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (document_system)
-		if (!isset($GLOBALS["document_system"]) || get_class($GLOBALS["document_system"]) == PROJECT_NAMESPACE . "document_system") {
-			$GLOBALS["document_system"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["document_system"];
+		// Table object (document_type)
+		if (!isset($GLOBALS["document_type"]) || get_class($GLOBALS["document_type"]) == PROJECT_NAMESPACE . "document_type") {
+			$GLOBALS["document_type"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["document_type"];
 		}
 
 		// Initialize URLs
@@ -398,12 +398,12 @@ class document_system_list extends document_system
 		$this->ExportXmlUrl = $this->pageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->pageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf";
-		$this->AddUrl = "document_systemadd.php";
+		$this->AddUrl = "document_typeadd.php";
 		$this->InlineAddUrl = $this->pageUrl() . "action=add";
 		$this->GridAddUrl = $this->pageUrl() . "action=gridadd";
 		$this->GridEditUrl = $this->pageUrl() . "action=gridedit";
-		$this->MultiDeleteUrl = "document_systemdelete.php";
-		$this->MultiUpdateUrl = "document_systemupdate.php";
+		$this->MultiDeleteUrl = "document_typedelete.php";
+		$this->MultiUpdateUrl = "document_typeupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
 		// Table object (user_dtls)
@@ -416,7 +416,7 @@ class document_system_list extends document_system
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
-			define(PROJECT_NAMESPACE . "TABLE_NAME", 'document_system');
+			define(PROJECT_NAMESPACE . "TABLE_NAME", 'document_type');
 
 		// Start timer
 		if (!isset($GLOBALS["DebugTimer"]))
@@ -465,7 +465,7 @@ class document_system_list extends document_system
 		// Filter options
 		$this->FilterOptions = new ListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ew-filter-option fdocument_systemlistsrch";
+		$this->FilterOptions->TagClassName = "ew-filter-option fdocument_typelistsrch";
 
 		// List actions
 		$this->ListActions = new ListActions();
@@ -483,14 +483,14 @@ class document_system_list extends document_system
 		Page_Unloaded();
 
 		// Export
-		global $EXPORT, $document_system;
+		global $EXPORT, $document_type;
 		if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EXPORT)) {
 				$content = ob_get_contents();
 			if ($ExportFileName == "")
 				$ExportFileName = $this->TableVar;
 			$class = PROJECT_NAMESPACE . $EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($document_system);
+				$doc = new $class($document_type);
 				$doc->Text = @$content;
 				if ($this->isExport("email"))
 					echo $this->exportEmail($doc->Text);
@@ -761,8 +761,8 @@ class document_system_list extends document_system
 		// Setup export options
 		$this->setupExportOptions();
 		$this->type_id->setVisibility();
-		$this->system_name->setVisibility();
-		$this->system_group->setVisibility();
+		$this->document_type->setVisibility();
+		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1018,10 +1018,10 @@ class document_system_list extends document_system
 
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fdocument_systemlistsrch");
+			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fdocument_typelistsrch");
 		$filterList = Concat($filterList, $this->type_id->AdvancedSearch->toJson(), ","); // Field type_id
-		$filterList = Concat($filterList, $this->system_name->AdvancedSearch->toJson(), ","); // Field system_name
-		$filterList = Concat($filterList, $this->system_group->AdvancedSearch->toJson(), ","); // Field system_group
+		$filterList = Concat($filterList, $this->document_type->AdvancedSearch->toJson(), ","); // Field document_type
+		$filterList = Concat($filterList, $this->document_category->AdvancedSearch->toJson(), ","); // Field document_category
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1041,7 +1041,7 @@ class document_system_list extends document_system
 		global $UserProfile;
 		if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
 			$filters = Post("filters");
-			$UserProfile->setSearchFilters(CurrentUserName(), "fdocument_systemlistsrch", $filters);
+			$UserProfile->setSearchFilters(CurrentUserName(), "fdocument_typelistsrch", $filters);
 			WriteJson([["success" => TRUE]]); // Success
 			return TRUE;
 		} elseif (Post("cmd") == "resetfilter") {
@@ -1068,21 +1068,21 @@ class document_system_list extends document_system
 		$this->type_id->AdvancedSearch->SearchOperator2 = @$filter["w_type_id"];
 		$this->type_id->AdvancedSearch->save();
 
-		// Field system_name
-		$this->system_name->AdvancedSearch->SearchValue = @$filter["x_system_name"];
-		$this->system_name->AdvancedSearch->SearchOperator = @$filter["z_system_name"];
-		$this->system_name->AdvancedSearch->SearchCondition = @$filter["v_system_name"];
-		$this->system_name->AdvancedSearch->SearchValue2 = @$filter["y_system_name"];
-		$this->system_name->AdvancedSearch->SearchOperator2 = @$filter["w_system_name"];
-		$this->system_name->AdvancedSearch->save();
+		// Field document_type
+		$this->document_type->AdvancedSearch->SearchValue = @$filter["x_document_type"];
+		$this->document_type->AdvancedSearch->SearchOperator = @$filter["z_document_type"];
+		$this->document_type->AdvancedSearch->SearchCondition = @$filter["v_document_type"];
+		$this->document_type->AdvancedSearch->SearchValue2 = @$filter["y_document_type"];
+		$this->document_type->AdvancedSearch->SearchOperator2 = @$filter["w_document_type"];
+		$this->document_type->AdvancedSearch->save();
 
-		// Field system_group
-		$this->system_group->AdvancedSearch->SearchValue = @$filter["x_system_group"];
-		$this->system_group->AdvancedSearch->SearchOperator = @$filter["z_system_group"];
-		$this->system_group->AdvancedSearch->SearchCondition = @$filter["v_system_group"];
-		$this->system_group->AdvancedSearch->SearchValue2 = @$filter["y_system_group"];
-		$this->system_group->AdvancedSearch->SearchOperator2 = @$filter["w_system_group"];
-		$this->system_group->AdvancedSearch->save();
+		// Field document_category
+		$this->document_category->AdvancedSearch->SearchValue = @$filter["x_document_category"];
+		$this->document_category->AdvancedSearch->SearchOperator = @$filter["z_document_category"];
+		$this->document_category->AdvancedSearch->SearchCondition = @$filter["v_document_category"];
+		$this->document_category->AdvancedSearch->SearchValue2 = @$filter["y_document_category"];
+		$this->document_category->AdvancedSearch->SearchOperator2 = @$filter["w_document_category"];
+		$this->document_category->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1091,8 +1091,8 @@ class document_system_list extends document_system
 	protected function basicSearchSql($arKeywords, $type)
 	{
 		$where = "";
-		$this->buildBasicSearchSql($where, $this->system_name, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->system_group, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->document_type, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->document_category, $arKeywords, $type);
 		return $where;
 	}
 
@@ -1256,8 +1256,8 @@ class document_system_list extends document_system
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
 			$this->updateSort($this->type_id, $ctrl); // type_id
-			$this->updateSort($this->system_name, $ctrl); // system_name
-			$this->updateSort($this->system_group, $ctrl); // system_group
+			$this->updateSort($this->document_type, $ctrl); // document_type
+			$this->updateSort($this->document_category, $ctrl); // document_category
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1294,8 +1294,8 @@ class document_system_list extends document_system
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
 				$this->type_id->setSort("");
-				$this->system_name->setSort("");
-				$this->system_group->setSort("");
+				$this->document_type->setSort("");
+				$this->document_category->setSort("");
 			}
 
 			// Reset start position
@@ -1483,10 +1483,10 @@ class document_system_list extends document_system
 
 		// Filter button
 		$item = &$this->FilterOptions->add("savecurrentfilter");
-		$item->Body = "<a class=\"ew-save-filter\" data-form=\"fdocument_systemlistsrch\" href=\"#\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ew-save-filter\" data-form=\"fdocument_typelistsrch\" href=\"#\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->add("deletefilter");
-		$item->Body = "<a class=\"ew-delete-filter\" data-form=\"fdocument_systemlistsrch\" href=\"#\">" . $Language->phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ew-delete-filter\" data-form=\"fdocument_typelistsrch\" href=\"#\">" . $Language->phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1511,7 +1511,7 @@ class document_system_list extends document_system
 					$item = &$option->add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<i class=\"" . HtmlEncode($listaction->Icon) . "\" data-caption=\"" . HtmlEncode($caption) . "\"></i> " . $caption : $caption;
-					$item->Body = "<a class=\"ew-action ew-list-action\" title=\"" . HtmlEncode($caption) . "\" data-caption=\"" . HtmlEncode($caption) . "\" href=\"\" onclick=\"ew.submitAction(event,jQuery.extend({f:document.fdocument_systemlist}," . $listaction->toJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ew-action ew-list-action\" title=\"" . HtmlEncode($caption) . "\" data-caption=\"" . HtmlEncode($caption) . "\" href=\"\" onclick=\"ew.submitAction(event,jQuery.extend({f:document.fdocument_typelist}," . $listaction->toJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1618,7 +1618,7 @@ class document_system_list extends document_system
 		// Search button
 		$item = &$this->SearchOptions->add("searchtoggle");
 		$searchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fdocument_systemlistsrch\">" . $Language->phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fdocument_typelistsrch\">" . $Language->phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1763,8 +1763,8 @@ class document_system_list extends document_system
 		if (!$rs || $rs->EOF)
 			return;
 		$this->type_id->setDbValue($row['type_id']);
-		$this->system_name->setDbValue($row['system_name']);
-		$this->system_group->setDbValue($row['system_group']);
+		$this->document_type->setDbValue($row['document_type']);
+		$this->document_category->setDbValue($row['document_category']);
 	}
 
 	// Return a row with default values
@@ -1772,8 +1772,8 @@ class document_system_list extends document_system
 	{
 		$row = [];
 		$row['type_id'] = NULL;
-		$row['system_name'] = NULL;
-		$row['system_group'] = NULL;
+		$row['document_type'] = NULL;
+		$row['document_category'] = NULL;
 		return $row;
 	}
 
@@ -1818,8 +1818,8 @@ class document_system_list extends document_system
 
 		// Common render codes for all row types
 		// type_id
-		// system_name
-		// system_group
+		// document_type
+		// document_category
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1827,28 +1827,28 @@ class document_system_list extends document_system
 			$this->type_id->ViewValue = $this->type_id->CurrentValue;
 			$this->type_id->ViewCustomAttributes = "";
 
-			// system_name
-			$this->system_name->ViewValue = $this->system_name->CurrentValue;
-			$this->system_name->ViewCustomAttributes = "";
+			// document_type
+			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$this->document_type->ViewCustomAttributes = "";
 
-			// system_group
-			$this->system_group->ViewValue = $this->system_group->CurrentValue;
-			$this->system_group->ViewCustomAttributes = "";
+			// document_category
+			$this->document_category->ViewValue = $this->document_category->CurrentValue;
+			$this->document_category->ViewCustomAttributes = "";
 
 			// type_id
 			$this->type_id->LinkCustomAttributes = "";
 			$this->type_id->HrefValue = "";
 			$this->type_id->TooltipValue = "";
 
-			// system_name
-			$this->system_name->LinkCustomAttributes = "";
-			$this->system_name->HrefValue = "";
-			$this->system_name->TooltipValue = "";
+			// document_type
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+			$this->document_type->TooltipValue = "";
 
-			// system_group
-			$this->system_group->LinkCustomAttributes = "";
-			$this->system_group->HrefValue = "";
-			$this->system_group->TooltipValue = "";
+			// document_category
+			$this->document_category->LinkCustomAttributes = "";
+			$this->document_category->HrefValue = "";
+			$this->document_category->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1862,17 +1862,17 @@ class document_system_list extends document_system
 		global $Language;
 		if (SameText($type, "excel")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"ew.export(document.fdocument_systemlist,'" . $this->ExportExcelUrl . "','excel',true);\">" . $Language->phrase("ExportToExcel") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"ew.export(document.fdocument_typelist,'" . $this->ExportExcelUrl . "','excel',true);\">" . $Language->phrase("ExportToExcel") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportExcelUrl . "\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
 		} elseif (SameText($type, "word")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"ew.export(document.fdocument_systemlist,'" . $this->ExportWordUrl . "','word',true);\">" . $Language->phrase("ExportToWord") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"ew.export(document.fdocument_typelist,'" . $this->ExportWordUrl . "','word',true);\">" . $Language->phrase("ExportToWord") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportWordUrl . "\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
 		} elseif (SameText($type, "pdf")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"ew.export(document.fdocument_systemlist,'" . $this->ExportPdfUrl . "','pdf',true);\">" . $Language->phrase("ExportToPDF") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"ew.export(document.fdocument_typelist,'" . $this->ExportPdfUrl . "','pdf',true);\">" . $Language->phrase("ExportToPDF") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\">" . $Language->phrase("ExportToPDF") . "</a>";
 		} elseif (SameText($type, "html")) {
@@ -1929,7 +1929,7 @@ class document_system_list extends document_system
 		// Export to Email
 		$item = &$this->ExportOptions->add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_document_system\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_system',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_systemlist,sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_document_type\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_type',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_typelist,sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export

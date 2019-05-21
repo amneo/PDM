@@ -9221,10 +9221,7 @@ function FormatNumber($amount, $numDigitsAfterDecimal, $includeLeadingDigit = -2
 	}
 
 	// Start by formatting the unsigned number
-	$number = number_format(abs($amount),
-		$frac_digits,
-		$decimal_point,
-		$thousands_sep);
+	$number = number_format(abs($amount), $frac_digits, $decimal_point, $thousands_sep);
 
 	// Check $includeLeadingDigit
 	if ($includeLeadingDigit == 0 && StartsString("0.", $number))
@@ -9284,10 +9281,7 @@ function FormatPercent($amount, $numDigitsAfterDecimal, $includeLeadingDigit = -
 	}
 
 	// Start by formatting the unsigned number
-	$number = number_format(abs($amount)*100,
-							$frac_digits,
-							$decimal_point,
-							$thousands_sep);
+	$number = number_format(abs($amount)*100, $frac_digits, $decimal_point, $thousands_sep);
 
 	// Check $includeLeadingDigit
 	if ($includeLeadingDigit == 0 && StartsString("0.", $number))
@@ -11511,8 +11505,9 @@ function CheckInteger($value) {
 function CheckNumber($value) {
 	global $THOUSANDS_SEP, $DECIMAL_POINT;
 	if (strval($value) == "") return TRUE;
-	$pat = '/^[+-]?(\d{1,3}(' . (($THOUSANDS_SEP) ? '\\' . $THOUSANDS_SEP . '?' : '') . '\d{3})*(\\' .
-		$DECIMAL_POINT . '\d+)?|\\' . $DECIMAL_POINT . '\d+)$/';
+	$ts = preg_quote($THOUSANDS_SEP);
+	$dp = preg_quote($DECIMAL_POINT);
+	$pat = '/^[+-]?(\d{1,3}(' . ($ts ? $ts . '?' : '') . '\d{3})*(' . $dp . '\d+)?|' . $dp . '\d+)$/';
 	return preg_match($pat, $value);
 }
 

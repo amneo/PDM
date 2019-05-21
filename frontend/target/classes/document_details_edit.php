@@ -652,6 +652,7 @@ class document_details_edit extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->document_type);
 
 		// Check modal
 		if ($this->IsModal)
@@ -855,7 +856,7 @@ class document_details_edit extends document_details
 				$this->planned_date->Visible = FALSE; // Disable update for API request
 			else
 				$this->planned_date->setFormValue($val);
-			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		}
 
 		// Check field name 'document_type' first before field var 'x_document_type'
@@ -894,7 +895,7 @@ class document_details_edit extends document_details
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->project_system->CurrentValue = $this->project_system->FormValue;
 		$this->planned_date->CurrentValue = $this->planned_date->FormValue;
-		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		$this->document_type->CurrentValue = $this->document_type->FormValue;
 		$this->expiry_date->CurrentValue = $this->expiry_date->FormValue;
 		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
@@ -949,6 +950,11 @@ class document_details_edit extends document_details
 		$this->create_date->setDbValue($row['create_date']);
 		$this->planned_date->setDbValue($row['planned_date']);
 		$this->document_type->setDbValue($row['document_type']);
+		if (array_key_exists('EV__document_type', $rs->fields)) {
+			$this->document_type->VirtualValue = $rs->fields('EV__document_type'); // Set up virtual field value
+		} else {
+			$this->document_type->VirtualValue = ""; // Clear value
+		}
 		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
@@ -1044,7 +1050,6 @@ class document_details_edit extends document_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1063,16 +1068,40 @@ class document_details_edit extends document_details
 
 			// create_date
 			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 			$this->create_date->ViewCustomAttributes = "";
 
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
-			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			if ($this->document_type->VirtualValue <> "") {
+				$this->document_type->ViewValue = $this->document_type->VirtualValue;
+			} else {
+				$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->ViewValue = $this->document_type->CurrentValue;
+					}
+				}
+			} else {
+				$this->document_type->ViewValue = NULL;
+			}
+			}
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
@@ -1162,7 +1191,6 @@ class document_details_edit extends document_details
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1185,7 +1213,7 @@ class document_details_edit extends document_details
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
 			$this->planned_date->EditCustomAttributes = "";
-			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 8));
+			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
 			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 			// document_type
@@ -1194,6 +1222,26 @@ class document_details_edit extends document_details
 			if (REMOVE_XSS)
 				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
 			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->EditValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+					}
+				}
+			} else {
+				$this->document_type->EditValue = NULL;
+			}
 			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 			// expiry_date
@@ -1295,7 +1343,7 @@ class document_details_edit extends document_details
 				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->planned_date->FormValue)) {
+		if (!CheckStdDate($this->planned_date->FormValue)) {
 			AddMessage($FormError, $this->planned_date->errorMessage());
 		}
 		if ($this->document_type->Required) {
@@ -1402,7 +1450,7 @@ class document_details_edit extends document_details
 			$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", $this->project_system->ReadOnly);
 
 			// planned_date
-			$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 0), CurrentDate(), $this->planned_date->ReadOnly);
+			$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), $this->planned_date->ReadOnly);
 
 			// document_type
 			$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", $this->document_type->ReadOnly);
@@ -1491,6 +1539,8 @@ class document_details_edit extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_document_type":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

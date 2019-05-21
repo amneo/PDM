@@ -4,20 +4,20 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class approval_details_delete extends approval_details
+class document_system_addopt extends document_system
 {
 
 	// Page ID
-	public $PageID = "delete";
+	public $PageID = "addopt";
 
 	// Project ID
 	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
-	public $TableName = 'approval_details';
+	public $TableName = 'document_system';
 
 	// Page object name
-	public $PageObjName = "approval_details_delete";
+	public $PageObjName = "document_system_addopt";
 
 	// Page headings
 	public $Heading = "";
@@ -343,10 +343,10 @@ class approval_details_delete extends approval_details
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (approval_details)
-		if (!isset($GLOBALS["approval_details"]) || get_class($GLOBALS["approval_details"]) == PROJECT_NAMESPACE . "approval_details") {
-			$GLOBALS["approval_details"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["approval_details"];
+		// Table object (document_system)
+		if (!isset($GLOBALS["document_system"]) || get_class($GLOBALS["document_system"]) == PROJECT_NAMESPACE . "document_system") {
+			$GLOBALS["document_system"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["document_system"];
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
@@ -356,11 +356,11 @@ class approval_details_delete extends approval_details
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
-			define(PROJECT_NAMESPACE . "PAGE_ID", 'delete');
+			define(PROJECT_NAMESPACE . "PAGE_ID", 'addopt');
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
-			define(PROJECT_NAMESPACE . "TABLE_NAME", 'approval_details');
+			define(PROJECT_NAMESPACE . "TABLE_NAME", 'document_system');
 
 		// Start timer
 		if (!isset($GLOBALS["DebugTimer"]))
@@ -392,14 +392,14 @@ class approval_details_delete extends approval_details
 		Page_Unloaded();
 
 		// Export
-		global $EXPORT, $approval_details;
+		global $EXPORT, $document_system;
 		if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EXPORT)) {
 				$content = ob_get_contents();
 			if ($ExportFileName == "")
 				$ExportFileName = $this->TableVar;
 			$class = PROJECT_NAMESPACE . $EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($approval_details);
+				$doc = new $class($document_system);
 				$doc->Text = @$content;
 				if ($this->isExport("email"))
 					echo $this->exportEmail($doc->Text);
@@ -503,7 +503,7 @@ class approval_details_delete extends approval_details
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
-			$key .= @$ar['id'];
+			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -516,16 +516,8 @@ class approval_details_delete extends approval_details
 	protected function hideFieldsForAddEdit()
 	{
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
-			$this->id->Visible = FALSE;
+			$this->type_id->Visible = FALSE;
 	}
-	public $DbMasterFilter = "";
-	public $DbDetailFilter = "";
-	public $StartRec;
-	public $TotalRecs = 0;
-	public $RecCnt;
-	public $RecKeys = array();
-	public $StartRowCnt = 1;
-	public $RowCnt = 0;
 
 	//
 	// Page run
@@ -533,7 +525,8 @@ class approval_details_delete extends approval_details
 
 	public function run()
 	{
-		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm;
+		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm,
+			$FormError;
 
 		// Init Session data for API request if token found
 		if (IsApi() && session_status() !== PHP_SESSION_ACTIVE) {
@@ -569,11 +562,11 @@ class approval_details_delete extends approval_details
 			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
 			if ($Security->isLoggedIn())
 				$Security->TablePermission_Loaded();
-			if (!$Security->canDelete()) {
+			if (!$Security->canAdd()) {
 				$Security->saveLastUrl();
 				$this->setFailureMessage(DeniedMessage()); // Set no permission
 				if ($Security->canList())
-					$this->terminate(GetUrl("approval_detailslist.php"));
+					$this->terminate(GetUrl("document_systemlist.php"));
 				else
 					$this->terminate(GetUrl("login.php"));
 				return;
@@ -591,12 +584,13 @@ class approval_details_delete extends approval_details
 			Write($Language->phrase("UserProfileCorrupted"));
 			$this->terminate();
 		}
+
+		// Create form object
+		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->id->setVisibility();
-		$this->short_code->setVisibility();
-		$this->Description->setVisibility();
-		$this->out_status->setVisibility();
-		$this->in_status->setVisibility();
+		$this->type_id->Visible = FALSE;
+		$this->system_name->setVisibility();
+		$this->system_group->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -618,86 +612,65 @@ class approval_details_delete extends approval_details
 		$this->createToken();
 
 		// Set up lookup cache
+		set_error_handler(PROJECT_NAMESPACE . "ErrorHandler");
+
 		// Set up Breadcrumb
+		//$this->setupBreadcrumb(); // Not used
 
-		$this->setupBreadcrumb();
+		$this->loadRowValues(); // Load default values
 
-		// Load key parameters
-		$this->RecKeys = $this->getRecordKeys(); // Load record keys
-		$filter = $this->getFilterFromRecordKeys();
-		if ($filter == "") {
-			$this->terminate("approval_detailslist.php"); // Prevent SQL injection, return to list
-			return;
-		}
-
-		// Set up filter (WHERE Clause)
-		$this->CurrentFilter = $filter;
-
-		// Get action
-		if (IsApi()) {
-			$this->CurrentAction = "delete"; // Delete record directly
-		} elseif (Post("action") !== NULL) {
-			$this->CurrentAction = Post("action");
-		} elseif (Get("action") == "1") {
-			$this->CurrentAction = "delete"; // Delete record directly
-		} else {
-			$this->CurrentAction = "show"; // Display record
-		}
-		if ($this->isDelete()) {
-			$this->SendEmail = TRUE; // Send email on delete success
-			if ($this->deleteRows()) { // Delete rows
-				if ($this->getSuccessMessage() == "")
-					$this->setSuccessMessage($Language->phrase("DeleteSuccess")); // Set up success message
-				if (IsApi()) {
-					$this->terminate(TRUE);
-					return;
-				} else {
-					$this->terminate($this->getReturnUrl()); // Return to caller
-				}
-			} else { // Delete failed
-				if (IsApi()) {
-					$this->terminate();
-					return;
-				}
-				$this->CurrentAction = "show"; // Display record
-			}
-		}
-		if ($this->isShow()) { // Load records for display
-			if ($this->Recordset = $this->loadRecordset())
-				$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
-			if ($this->TotalRecs <= 0) { // No record found, exit
-				if ($this->Recordset)
-					$this->Recordset->close();
-				$this->terminate("approval_detailslist.php"); // Return to list
-			}
-		}
+		// Render row
+		$this->RowType = ROWTYPE_ADD; // Render add type
+		$this->resetAttributes();
+		$this->renderRow();
 	}
 
-	// Load recordset
-	public function loadRecordset($offset = -1, $rowcnt = -1)
+	// Get upload files
+	protected function getUploadFiles()
+	{
+		global $CurrentForm, $Language;
+	}
+
+	// Load default values
+	protected function loadDefaultValues()
+	{
+		$this->type_id->CurrentValue = NULL;
+		$this->type_id->OldValue = $this->type_id->CurrentValue;
+		$this->system_name->CurrentValue = NULL;
+		$this->system_name->OldValue = $this->system_name->CurrentValue;
+		$this->system_group->CurrentValue = NULL;
+		$this->system_group->OldValue = $this->system_group->CurrentValue;
+	}
+
+	// Load form values
+	protected function loadFormValues()
 	{
 
-		// Load List page SQL
-		$sql = $this->getListSql();
-		$conn = &$this->getConnection();
+		// Load from form
+		global $CurrentForm;
 
-		// Load recordset
-		$dbtype = GetConnectionType($this->Dbid);
-		if ($this->UseSelectLimit) {
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			if ($dbtype == "MSSQL") {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())]);
-			} else {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset);
-			}
-			$conn->raiseErrorFn = '';
-		} else {
-			$rs = LoadRecordset($sql, $conn);
+		// Check field name 'system_name' first before field var 'x_system_name'
+		$val = $CurrentForm->hasValue("system_name") ? $CurrentForm->getValue("system_name") : $CurrentForm->getValue("x_system_name");
+		if (!$this->system_name->IsDetailKey) {
+			$this->system_name->setFormValue(ConvertFromUtf8($val));
 		}
 
-		// Call Recordset Selected event
-		$this->Recordset_Selected($rs);
-		return $rs;
+		// Check field name 'system_group' first before field var 'x_system_group'
+		$val = $CurrentForm->hasValue("system_group") ? $CurrentForm->getValue("system_group") : $CurrentForm->getValue("x_system_group");
+		if (!$this->system_group->IsDetailKey) {
+			$this->system_group->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		$this->system_name->CurrentValue = ConvertToUtf8($this->system_name->FormValue);
+		$this->system_group->CurrentValue = ConvertToUtf8($this->system_group->FormValue);
 	}
 
 	// Load row based on key values
@@ -735,22 +708,19 @@ class approval_details_delete extends approval_details
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->id->setDbValue($row['id']);
-		$this->short_code->setDbValue($row['short_code']);
-		$this->Description->setDbValue($row['Description']);
-		$this->out_status->setDbValue($row['out_status']);
-		$this->in_status->setDbValue($row['in_status']);
+		$this->type_id->setDbValue($row['type_id']);
+		$this->system_name->setDbValue($row['system_name']);
+		$this->system_group->setDbValue($row['system_group']);
 	}
 
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['id'] = NULL;
-		$row['short_code'] = NULL;
-		$row['Description'] = NULL;
-		$row['out_status'] = NULL;
-		$row['in_status'] = NULL;
+		$row['type_id'] = $this->type_id->CurrentValue;
+		$row['system_name'] = $this->system_name->CurrentValue;
+		$row['system_group'] = $this->system_group->CurrentValue;
 		return $row;
 	}
 
@@ -765,126 +735,147 @@ class approval_details_delete extends approval_details
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// id
-		// short_code
-		// Description
-		// out_status
-		// in_status
+		// type_id
+		// system_name
+		// system_group
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// id
-			$this->id->ViewValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
+			// type_id
+			$this->type_id->ViewValue = $this->type_id->CurrentValue;
+			$this->type_id->ViewCustomAttributes = "";
 
-			// short_code
-			$this->short_code->ViewValue = $this->short_code->CurrentValue;
-			$this->short_code->ViewCustomAttributes = "";
+			// system_name
+			$this->system_name->ViewValue = $this->system_name->CurrentValue;
+			$this->system_name->ViewCustomAttributes = "";
 
-			// Description
-			$this->Description->ViewValue = $this->Description->CurrentValue;
-			$this->Description->ViewCustomAttributes = "";
+			// system_group
+			$this->system_group->ViewValue = $this->system_group->CurrentValue;
+			$this->system_group->ViewCustomAttributes = "";
 
-			// out_status
-			$this->out_status->ViewValue = $this->out_status->CurrentValue;
-			$this->out_status->ViewValue = strtoupper($this->out_status->ViewValue);
-			$this->out_status->ViewCustomAttributes = "";
+			// system_name
+			$this->system_name->LinkCustomAttributes = "";
+			$this->system_name->HrefValue = "";
+			$this->system_name->TooltipValue = "";
 
-			// in_status
-			$this->in_status->ViewValue = $this->in_status->CurrentValue;
-			$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
-			$this->in_status->ViewCustomAttributes = "";
+			// system_group
+			$this->system_group->LinkCustomAttributes = "";
+			$this->system_group->HrefValue = "";
+			$this->system_group->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
+			// system_name
+			$this->system_name->EditAttrs["class"] = "form-control";
+			$this->system_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->system_name->CurrentValue = HtmlDecode($this->system_name->CurrentValue);
+			$this->system_name->EditValue = HtmlEncode($this->system_name->CurrentValue);
+			$this->system_name->PlaceHolder = RemoveHtml($this->system_name->caption());
 
-			// short_code
-			$this->short_code->LinkCustomAttributes = "";
-			$this->short_code->HrefValue = "";
-			$this->short_code->TooltipValue = "";
+			// system_group
+			$this->system_group->EditAttrs["class"] = "form-control";
+			$this->system_group->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->system_group->CurrentValue = HtmlDecode($this->system_group->CurrentValue);
+			$this->system_group->EditValue = HtmlEncode($this->system_group->CurrentValue);
+			$this->system_group->PlaceHolder = RemoveHtml($this->system_group->caption());
 
-			// Description
-			$this->Description->LinkCustomAttributes = "";
-			$this->Description->HrefValue = "";
-			$this->Description->TooltipValue = "";
+			// Add refer script
+			// system_name
 
-			// out_status
-			$this->out_status->LinkCustomAttributes = "";
-			$this->out_status->HrefValue = "";
-			$this->out_status->TooltipValue = "";
+			$this->system_name->LinkCustomAttributes = "";
+			$this->system_name->HrefValue = "";
 
-			// in_status
-			$this->in_status->LinkCustomAttributes = "";
-			$this->in_status->HrefValue = "";
-			$this->in_status->TooltipValue = "";
+			// system_group
+			$this->system_group->LinkCustomAttributes = "";
+			$this->system_group->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
 	}
 
-	// Delete records based on current filter
-	protected function deleteRows()
+	// Validate form
+	protected function validateForm()
+	{
+		global $Language, $FormError;
+
+		// Initialize form error message
+		$FormError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->type_id->Required) {
+			if (!$this->type_id->IsDetailKey && $this->type_id->FormValue != NULL && $this->type_id->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->type_id->caption(), $this->type_id->RequiredErrorMessage));
+			}
+		}
+		if ($this->system_name->Required) {
+			if (!$this->system_name->IsDetailKey && $this->system_name->FormValue != NULL && $this->system_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->system_name->caption(), $this->system_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->system_group->Required) {
+			if (!$this->system_group->IsDetailKey && $this->system_group->FormValue != NULL && $this->system_group->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->system_group->caption(), $this->system_group->RequiredErrorMessage));
+			}
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
-		if (!$Security->canDelete()) {
-			$this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
-			return FALSE;
+		if ($this->system_name->CurrentValue <> "") { // Check field with unique index
+			$filter = "(system_name = '" . AdjustSql($this->system_name->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->system_name->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->system_name->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
 		}
-		$deleteRows = TRUE;
-		$sql = $this->getCurrentSql();
 		$conn = &$this->getConnection();
-		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-		$rs = $conn->execute($sql);
-		$conn->raiseErrorFn = '';
-		if ($rs === FALSE) {
-			return FALSE;
-		} elseif ($rs->EOF) {
-			$this->setFailureMessage($Language->phrase("NoRecord")); // No record found
-			$rs->close();
-			return FALSE;
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
 		}
-		$rows = ($rs) ? $rs->getRows() : [];
-		$conn->beginTrans();
+		$rsnew = [];
 
-		// Clone old rows
-		$rsold = $rows;
-		if ($rs)
-			$rs->close();
+		// system_name
+		$this->system_name->setDbValueDef($rsnew, $this->system_name->CurrentValue, "", FALSE);
 
-		// Call row deleting event
-		if ($deleteRows) {
-			foreach ($rsold as $row) {
-				$deleteRows = $this->Row_Deleting($row);
-				if (!$deleteRows)
-					break;
+		// system_group
+		$this->system_group->setDbValueDef($rsnew, $this->system_group->CurrentValue, "", FALSE);
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
 			}
-		}
-		if ($deleteRows) {
-			$key = "";
-			foreach ($rsold as $row) {
-				$thisKey = "";
-				if ($thisKey <> "")
-					$thisKey .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
-				$thisKey .= $row['id'];
-				if (DELETE_UPLOADED_FILES) // Delete old files
-					$this->deleteUploadedFiles($row);
-				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-				$deleteRows = $this->delete($row); // Delete
-				$conn->raiseErrorFn = '';
-				if ($deleteRows === FALSE)
-					break;
-				if ($key <> "")
-					$key .= ", ";
-				$key .= $thisKey;
-			}
-		}
-		if (!$deleteRows) {
-
-			// Set up error message
+		} else {
 			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
 
 				// Use the message, do nothing
@@ -892,28 +883,23 @@ class approval_details_delete extends approval_details
 				$this->setFailureMessage($this->CancelMessage);
 				$this->CancelMessage = "";
 			} else {
-				$this->setFailureMessage($Language->phrase("DeleteCancelled"));
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
 			}
+			$addRow = FALSE;
 		}
-		if ($deleteRows) {
-			$conn->commitTrans(); // Commit the changes
-		} else {
-			$conn->rollbackTrans(); // Rollback changes
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
 		}
 
-		// Call Row Deleted event
-		if ($deleteRows) {
-			foreach ($rsold as $row) {
-				$this->Row_Deleted($row);
-			}
-		}
-
-		// Write JSON for API request (Support single row only)
-		if (IsApi() && $deleteRows) {
-			$row = $this->getRecordsFromRecordset($rsold, TRUE);
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
-		return $deleteRows;
+		return $addRow;
 	}
 
 	// Set up Breadcrumb
@@ -922,9 +908,9 @@ class approval_details_delete extends approval_details
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new Breadcrumb();
 		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
-		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("approval_detailslist.php"), "", $this->TableVar, TRUE);
-		$pageId = "delete";
-		$Breadcrumb->add("delete", $pageId, $url);
+		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("document_systemlist.php"), "", $this->TableVar, TRUE);
+		$pageId = "addopt";
+		$Breadcrumb->add("addopt", $pageId, $url);
 	}
 
 	// Setup lookup options

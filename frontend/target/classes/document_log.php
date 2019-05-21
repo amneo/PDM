@@ -216,15 +216,15 @@ class document_log extends DbTable
 		$this->fields['direction_1'] = &$this->direction_1;
 
 		// planned_date_1
-		$this->planned_date_1 = new DbField('document_log', 'document_log', 'x_planned_date_1', 'planned_date_1', '"planned_date_1"', CastDateFieldForLike('"planned_date_1"', 0, "DB"), 133, 0, FALSE, '"planned_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_1 = new DbField('document_log', 'document_log', 'x_planned_date_1', 'planned_date_1', '"planned_date_1"', CastDateFieldForLike('"planned_date_1"', 5, "DB"), 133, 5, FALSE, '"planned_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_1->Sortable = FALSE; // Allow sort
-		$this->planned_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_1'] = &$this->planned_date_1;
 
 		// transmit_date_1
-		$this->transmit_date_1 = new DbField('document_log', 'document_log', 'x_transmit_date_1', 'transmit_date_1', '"transmit_date_1"', CastDateFieldForLike('"transmit_date_1"', 0, "DB"), 133, 0, FALSE, '"transmit_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_1 = new DbField('document_log', 'document_log', 'x_transmit_date_1', 'transmit_date_1', '"transmit_date_1"', CastDateFieldForLike('"transmit_date_1"', 5, "DB"), 133, 5, FALSE, '"transmit_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_1->Sortable = FALSE; // Allow sort
-		$this->transmit_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_1'] = &$this->transmit_date_1;
 
 		// transmit_no_1
@@ -235,6 +235,7 @@ class document_log extends DbTable
 		// approval_status_1
 		$this->approval_status_1 = new DbField('document_log', 'document_log', 'x_approval_status_1', 'approval_status_1', '"approval_status_1"', '"approval_status_1"', 200, -1, FALSE, '"approval_status_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_1->Sortable = TRUE; // Allow sort
+		$this->approval_status_1->Lookup = new Lookup('approval_status_1', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_1'] = &$this->approval_status_1;
 
 		// direction_file_1
@@ -259,15 +260,15 @@ class document_log extends DbTable
 		$this->fields['direction_2'] = &$this->direction_2;
 
 		// planned_date_2
-		$this->planned_date_2 = new DbField('document_log', 'document_log', 'x_planned_date_2', 'planned_date_2', '"planned_date_2"', CastDateFieldForLike('"planned_date_2"', 0, "DB"), 133, 0, FALSE, '"planned_date_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_2 = new DbField('document_log', 'document_log', 'x_planned_date_2', 'planned_date_2', '"planned_date_2"', CastDateFieldForLike('"planned_date_2"', 5, "DB"), 133, 5, FALSE, '"planned_date_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_2->Sortable = TRUE; // Allow sort
-		$this->planned_date_2->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_2->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_2'] = &$this->planned_date_2;
 
 		// transmit_date_2
-		$this->transmit_date_2 = new DbField('document_log', 'document_log', 'x_transmit_date_2', 'transmit_date_2', '"transmit_date_2"', CastDateFieldForLike('"transmit_date_2"', 0, "DB"), 133, 0, FALSE, '"transmit_date_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_2 = new DbField('document_log', 'document_log', 'x_transmit_date_2', 'transmit_date_2', '"transmit_date_2"', CastDateFieldForLike('"transmit_date_2"', 5, "DB"), 133, 5, FALSE, '"transmit_date_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_2->Sortable = TRUE; // Allow sort
-		$this->transmit_date_2->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_2->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_2'] = &$this->transmit_date_2;
 
 		// transmit_no_2
@@ -302,15 +303,15 @@ class document_log extends DbTable
 		$this->fields['direction_3'] = &$this->direction_3;
 
 		// planned_date_3
-		$this->planned_date_3 = new DbField('document_log', 'document_log', 'x_planned_date_3', 'planned_date_3', '"planned_date_3"', CastDateFieldForLike('"planned_date_3"', 0, "DB"), 133, 0, FALSE, '"planned_date_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_3 = new DbField('document_log', 'document_log', 'x_planned_date_3', 'planned_date_3', '"planned_date_3"', CastDateFieldForLike('"planned_date_3"', 5, "DB"), 133, 5, FALSE, '"planned_date_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_3->Sortable = TRUE; // Allow sort
-		$this->planned_date_3->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_3->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_3'] = &$this->planned_date_3;
 
 		// transmit_date_3
-		$this->transmit_date_3 = new DbField('document_log', 'document_log', 'x_transmit_date_3', 'transmit_date_3', '"transmit_date_3"', CastDateFieldForLike('"transmit_date_3"', 0, "DB"), 133, 0, FALSE, '"transmit_date_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_3 = new DbField('document_log', 'document_log', 'x_transmit_date_3', 'transmit_date_3', '"transmit_date_3"', CastDateFieldForLike('"transmit_date_3"', 5, "DB"), 133, 5, FALSE, '"transmit_date_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_3->Sortable = TRUE; // Allow sort
-		$this->transmit_date_3->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_3->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_3'] = &$this->transmit_date_3;
 
 		// transmit_no_3
@@ -345,15 +346,15 @@ class document_log extends DbTable
 		$this->fields['direction_4'] = &$this->direction_4;
 
 		// planned_date_4
-		$this->planned_date_4 = new DbField('document_log', 'document_log', 'x_planned_date_4', 'planned_date_4', '"planned_date_4"', CastDateFieldForLike('"planned_date_4"', 0, "DB"), 133, 0, FALSE, '"planned_date_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_4 = new DbField('document_log', 'document_log', 'x_planned_date_4', 'planned_date_4', '"planned_date_4"', CastDateFieldForLike('"planned_date_4"', 5, "DB"), 133, 5, FALSE, '"planned_date_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_4->Sortable = TRUE; // Allow sort
-		$this->planned_date_4->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_4->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_4'] = &$this->planned_date_4;
 
 		// transmit_date_4
-		$this->transmit_date_4 = new DbField('document_log', 'document_log', 'x_transmit_date_4', 'transmit_date_4', '"transmit_date_4"', CastDateFieldForLike('"transmit_date_4"', 0, "DB"), 133, 0, FALSE, '"transmit_date_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_4 = new DbField('document_log', 'document_log', 'x_transmit_date_4', 'transmit_date_4', '"transmit_date_4"', CastDateFieldForLike('"transmit_date_4"', 5, "DB"), 133, 5, FALSE, '"transmit_date_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_4->Sortable = TRUE; // Allow sort
-		$this->transmit_date_4->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_4->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_4'] = &$this->transmit_date_4;
 
 		// transmit_no_4
@@ -388,15 +389,15 @@ class document_log extends DbTable
 		$this->fields['direction_5'] = &$this->direction_5;
 
 		// planned_date_5
-		$this->planned_date_5 = new DbField('document_log', 'document_log', 'x_planned_date_5', 'planned_date_5', '"planned_date_5"', CastDateFieldForLike('"planned_date_5"', 0, "DB"), 133, 0, FALSE, '"planned_date_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_5 = new DbField('document_log', 'document_log', 'x_planned_date_5', 'planned_date_5', '"planned_date_5"', CastDateFieldForLike('"planned_date_5"', 5, "DB"), 133, 5, FALSE, '"planned_date_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_5->Sortable = TRUE; // Allow sort
-		$this->planned_date_5->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_5->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_5'] = &$this->planned_date_5;
 
 		// transmit_date_5
-		$this->transmit_date_5 = new DbField('document_log', 'document_log', 'x_transmit_date_5', 'transmit_date_5', '"transmit_date_5"', CastDateFieldForLike('"transmit_date_5"', 0, "DB"), 133, 0, FALSE, '"transmit_date_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_5 = new DbField('document_log', 'document_log', 'x_transmit_date_5', 'transmit_date_5', '"transmit_date_5"', CastDateFieldForLike('"transmit_date_5"', 5, "DB"), 133, 5, FALSE, '"transmit_date_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_5->Sortable = TRUE; // Allow sort
-		$this->transmit_date_5->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_5->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_5'] = &$this->transmit_date_5;
 
 		// transmit_no_5
@@ -431,15 +432,15 @@ class document_log extends DbTable
 		$this->fields['direction_6'] = &$this->direction_6;
 
 		// planned_date_6
-		$this->planned_date_6 = new DbField('document_log', 'document_log', 'x_planned_date_6', 'planned_date_6', '"planned_date_6"', CastDateFieldForLike('"planned_date_6"', 0, "DB"), 133, 0, FALSE, '"planned_date_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_6 = new DbField('document_log', 'document_log', 'x_planned_date_6', 'planned_date_6', '"planned_date_6"', CastDateFieldForLike('"planned_date_6"', 5, "DB"), 133, 5, FALSE, '"planned_date_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_6->Sortable = TRUE; // Allow sort
-		$this->planned_date_6->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_6->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_6'] = &$this->planned_date_6;
 
 		// transmit_date_6
-		$this->transmit_date_6 = new DbField('document_log', 'document_log', 'x_transmit_date_6', 'transmit_date_6', '"transmit_date_6"', CastDateFieldForLike('"transmit_date_6"', 0, "DB"), 133, 0, FALSE, '"transmit_date_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_6 = new DbField('document_log', 'document_log', 'x_transmit_date_6', 'transmit_date_6', '"transmit_date_6"', CastDateFieldForLike('"transmit_date_6"', 5, "DB"), 133, 5, FALSE, '"transmit_date_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_6->Sortable = TRUE; // Allow sort
-		$this->transmit_date_6->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_6->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_6'] = &$this->transmit_date_6;
 
 		// transmit_no_6
@@ -474,15 +475,15 @@ class document_log extends DbTable
 		$this->fields['direction_7'] = &$this->direction_7;
 
 		// planned_date_7
-		$this->planned_date_7 = new DbField('document_log', 'document_log', 'x_planned_date_7', 'planned_date_7', '"planned_date_7"', CastDateFieldForLike('"planned_date_7"', 0, "DB"), 133, 0, FALSE, '"planned_date_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_7 = new DbField('document_log', 'document_log', 'x_planned_date_7', 'planned_date_7', '"planned_date_7"', CastDateFieldForLike('"planned_date_7"', 5, "DB"), 133, 5, FALSE, '"planned_date_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_7->Sortable = TRUE; // Allow sort
-		$this->planned_date_7->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_7->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_7'] = &$this->planned_date_7;
 
 		// transmit_date_7
-		$this->transmit_date_7 = new DbField('document_log', 'document_log', 'x_transmit_date_7', 'transmit_date_7', '"transmit_date_7"', CastDateFieldForLike('"transmit_date_7"', 0, "DB"), 133, 0, FALSE, '"transmit_date_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_7 = new DbField('document_log', 'document_log', 'x_transmit_date_7', 'transmit_date_7', '"transmit_date_7"', CastDateFieldForLike('"transmit_date_7"', 5, "DB"), 133, 5, FALSE, '"transmit_date_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_7->Sortable = TRUE; // Allow sort
-		$this->transmit_date_7->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_7->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_7'] = &$this->transmit_date_7;
 
 		// transmit_no_7
@@ -517,15 +518,15 @@ class document_log extends DbTable
 		$this->fields['direction_8'] = &$this->direction_8;
 
 		// planned_date_8
-		$this->planned_date_8 = new DbField('document_log', 'document_log', 'x_planned_date_8', 'planned_date_8', '"planned_date_8"', CastDateFieldForLike('"planned_date_8"', 0, "DB"), 133, 0, FALSE, '"planned_date_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_8 = new DbField('document_log', 'document_log', 'x_planned_date_8', 'planned_date_8', '"planned_date_8"', CastDateFieldForLike('"planned_date_8"', 5, "DB"), 133, 5, FALSE, '"planned_date_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_8->Sortable = TRUE; // Allow sort
-		$this->planned_date_8->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_8->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_8'] = &$this->planned_date_8;
 
 		// transmit_date_8
-		$this->transmit_date_8 = new DbField('document_log', 'document_log', 'x_transmit_date_8', 'transmit_date_8', '"transmit_date_8"', CastDateFieldForLike('"transmit_date_8"', 0, "DB"), 133, 0, FALSE, '"transmit_date_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_8 = new DbField('document_log', 'document_log', 'x_transmit_date_8', 'transmit_date_8', '"transmit_date_8"', CastDateFieldForLike('"transmit_date_8"', 5, "DB"), 133, 5, FALSE, '"transmit_date_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_8->Sortable = TRUE; // Allow sort
-		$this->transmit_date_8->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_8->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_8'] = &$this->transmit_date_8;
 
 		// transmit_no_8
@@ -560,15 +561,15 @@ class document_log extends DbTable
 		$this->fields['direction_9'] = &$this->direction_9;
 
 		// planned_date_9
-		$this->planned_date_9 = new DbField('document_log', 'document_log', 'x_planned_date_9', 'planned_date_9', '"planned_date_9"', CastDateFieldForLike('"planned_date_9"', 0, "DB"), 133, 0, FALSE, '"planned_date_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_9 = new DbField('document_log', 'document_log', 'x_planned_date_9', 'planned_date_9', '"planned_date_9"', CastDateFieldForLike('"planned_date_9"', 5, "DB"), 133, 5, FALSE, '"planned_date_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_9->Sortable = TRUE; // Allow sort
-		$this->planned_date_9->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_9->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_9'] = &$this->planned_date_9;
 
 		// transmit_date_9
-		$this->transmit_date_9 = new DbField('document_log', 'document_log', 'x_transmit_date_9', 'transmit_date_9', '"transmit_date_9"', CastDateFieldForLike('"transmit_date_9"', 0, "DB"), 133, 0, FALSE, '"transmit_date_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_9 = new DbField('document_log', 'document_log', 'x_transmit_date_9', 'transmit_date_9', '"transmit_date_9"', CastDateFieldForLike('"transmit_date_9"', 5, "DB"), 133, 5, FALSE, '"transmit_date_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_9->Sortable = TRUE; // Allow sort
-		$this->transmit_date_9->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_9->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_9'] = &$this->transmit_date_9;
 
 		// transmit_no_9
@@ -603,15 +604,15 @@ class document_log extends DbTable
 		$this->fields['direction_10'] = &$this->direction_10;
 
 		// planned_date_10
-		$this->planned_date_10 = new DbField('document_log', 'document_log', 'x_planned_date_10', 'planned_date_10', '"planned_date_10"', CastDateFieldForLike('"planned_date_10"', 0, "DB"), 133, 0, FALSE, '"planned_date_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date_10 = new DbField('document_log', 'document_log', 'x_planned_date_10', 'planned_date_10', '"planned_date_10"', CastDateFieldForLike('"planned_date_10"', 5, "DB"), 133, 5, FALSE, '"planned_date_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date_10->Sortable = TRUE; // Allow sort
-		$this->planned_date_10->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date_10->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_10'] = &$this->planned_date_10;
 
 		// transmit_date_10
-		$this->transmit_date_10 = new DbField('document_log', 'document_log', 'x_transmit_date_10', 'transmit_date_10', '"transmit_date_10"', CastDateFieldForLike('"transmit_date_10"', 0, "DB"), 133, 0, FALSE, '"transmit_date_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->transmit_date_10 = new DbField('document_log', 'document_log', 'x_transmit_date_10', 'transmit_date_10', '"transmit_date_10"', CastDateFieldForLike('"transmit_date_10"', 5, "DB"), 133, 5, FALSE, '"transmit_date_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->transmit_date_10->Sortable = TRUE; // Allow sort
-		$this->transmit_date_10->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->transmit_date_10->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_10'] = &$this->transmit_date_10;
 
 		// transmit_no_10
@@ -1580,12 +1581,12 @@ class document_log extends DbTable
 
 		// planned_date_1
 		$this->planned_date_1->ViewValue = $this->planned_date_1->CurrentValue;
-		$this->planned_date_1->ViewValue = FormatDateTime($this->planned_date_1->ViewValue, 0);
+		$this->planned_date_1->ViewValue = FormatDateTime($this->planned_date_1->ViewValue, 5);
 		$this->planned_date_1->ViewCustomAttributes = "";
 
 		// transmit_date_1
 		$this->transmit_date_1->ViewValue = $this->transmit_date_1->CurrentValue;
-		$this->transmit_date_1->ViewValue = FormatDateTime($this->transmit_date_1->ViewValue, 0);
+		$this->transmit_date_1->ViewValue = FormatDateTime($this->transmit_date_1->ViewValue, 5);
 		$this->transmit_date_1->ViewCustomAttributes = "";
 
 		// transmit_no_1
@@ -1594,6 +1595,26 @@ class document_log extends DbTable
 
 		// approval_status_1
 		$this->approval_status_1->ViewValue = $this->approval_status_1->CurrentValue;
+		$curVal = strval($this->approval_status_1->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_1->ViewValue = $this->approval_status_1->lookupCacheOption($curVal);
+			if ($this->approval_status_1->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_1->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_1->ViewValue = $this->approval_status_1->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_1->ViewValue = $this->approval_status_1->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_1->ViewValue = NULL;
+		}
 		$this->approval_status_1->ViewCustomAttributes = "";
 
 		// direction_file_1
@@ -1614,12 +1635,12 @@ class document_log extends DbTable
 
 		// planned_date_2
 		$this->planned_date_2->ViewValue = $this->planned_date_2->CurrentValue;
-		$this->planned_date_2->ViewValue = FormatDateTime($this->planned_date_2->ViewValue, 0);
+		$this->planned_date_2->ViewValue = FormatDateTime($this->planned_date_2->ViewValue, 5);
 		$this->planned_date_2->ViewCustomAttributes = "";
 
 		// transmit_date_2
 		$this->transmit_date_2->ViewValue = $this->transmit_date_2->CurrentValue;
-		$this->transmit_date_2->ViewValue = FormatDateTime($this->transmit_date_2->ViewValue, 0);
+		$this->transmit_date_2->ViewValue = FormatDateTime($this->transmit_date_2->ViewValue, 5);
 		$this->transmit_date_2->ViewCustomAttributes = "";
 
 		// transmit_no_2
@@ -1648,12 +1669,12 @@ class document_log extends DbTable
 
 		// planned_date_3
 		$this->planned_date_3->ViewValue = $this->planned_date_3->CurrentValue;
-		$this->planned_date_3->ViewValue = FormatDateTime($this->planned_date_3->ViewValue, 0);
+		$this->planned_date_3->ViewValue = FormatDateTime($this->planned_date_3->ViewValue, 5);
 		$this->planned_date_3->ViewCustomAttributes = "";
 
 		// transmit_date_3
 		$this->transmit_date_3->ViewValue = $this->transmit_date_3->CurrentValue;
-		$this->transmit_date_3->ViewValue = FormatDateTime($this->transmit_date_3->ViewValue, 0);
+		$this->transmit_date_3->ViewValue = FormatDateTime($this->transmit_date_3->ViewValue, 5);
 		$this->transmit_date_3->ViewCustomAttributes = "";
 
 		// transmit_no_3
@@ -1682,12 +1703,12 @@ class document_log extends DbTable
 
 		// planned_date_4
 		$this->planned_date_4->ViewValue = $this->planned_date_4->CurrentValue;
-		$this->planned_date_4->ViewValue = FormatDateTime($this->planned_date_4->ViewValue, 0);
+		$this->planned_date_4->ViewValue = FormatDateTime($this->planned_date_4->ViewValue, 5);
 		$this->planned_date_4->ViewCustomAttributes = "";
 
 		// transmit_date_4
 		$this->transmit_date_4->ViewValue = $this->transmit_date_4->CurrentValue;
-		$this->transmit_date_4->ViewValue = FormatDateTime($this->transmit_date_4->ViewValue, 0);
+		$this->transmit_date_4->ViewValue = FormatDateTime($this->transmit_date_4->ViewValue, 5);
 		$this->transmit_date_4->ViewCustomAttributes = "";
 
 		// transmit_no_4
@@ -1716,12 +1737,12 @@ class document_log extends DbTable
 
 		// planned_date_5
 		$this->planned_date_5->ViewValue = $this->planned_date_5->CurrentValue;
-		$this->planned_date_5->ViewValue = FormatDateTime($this->planned_date_5->ViewValue, 0);
+		$this->planned_date_5->ViewValue = FormatDateTime($this->planned_date_5->ViewValue, 5);
 		$this->planned_date_5->ViewCustomAttributes = "";
 
 		// transmit_date_5
 		$this->transmit_date_5->ViewValue = $this->transmit_date_5->CurrentValue;
-		$this->transmit_date_5->ViewValue = FormatDateTime($this->transmit_date_5->ViewValue, 0);
+		$this->transmit_date_5->ViewValue = FormatDateTime($this->transmit_date_5->ViewValue, 5);
 		$this->transmit_date_5->ViewCustomAttributes = "";
 
 		// transmit_no_5
@@ -1750,12 +1771,12 @@ class document_log extends DbTable
 
 		// planned_date_6
 		$this->planned_date_6->ViewValue = $this->planned_date_6->CurrentValue;
-		$this->planned_date_6->ViewValue = FormatDateTime($this->planned_date_6->ViewValue, 0);
+		$this->planned_date_6->ViewValue = FormatDateTime($this->planned_date_6->ViewValue, 5);
 		$this->planned_date_6->ViewCustomAttributes = "";
 
 		// transmit_date_6
 		$this->transmit_date_6->ViewValue = $this->transmit_date_6->CurrentValue;
-		$this->transmit_date_6->ViewValue = FormatDateTime($this->transmit_date_6->ViewValue, 0);
+		$this->transmit_date_6->ViewValue = FormatDateTime($this->transmit_date_6->ViewValue, 5);
 		$this->transmit_date_6->ViewCustomAttributes = "";
 
 		// transmit_no_6
@@ -1784,12 +1805,12 @@ class document_log extends DbTable
 
 		// planned_date_7
 		$this->planned_date_7->ViewValue = $this->planned_date_7->CurrentValue;
-		$this->planned_date_7->ViewValue = FormatDateTime($this->planned_date_7->ViewValue, 0);
+		$this->planned_date_7->ViewValue = FormatDateTime($this->planned_date_7->ViewValue, 5);
 		$this->planned_date_7->ViewCustomAttributes = "";
 
 		// transmit_date_7
 		$this->transmit_date_7->ViewValue = $this->transmit_date_7->CurrentValue;
-		$this->transmit_date_7->ViewValue = FormatDateTime($this->transmit_date_7->ViewValue, 0);
+		$this->transmit_date_7->ViewValue = FormatDateTime($this->transmit_date_7->ViewValue, 5);
 		$this->transmit_date_7->ViewCustomAttributes = "";
 
 		// transmit_no_7
@@ -1818,12 +1839,12 @@ class document_log extends DbTable
 
 		// planned_date_8
 		$this->planned_date_8->ViewValue = $this->planned_date_8->CurrentValue;
-		$this->planned_date_8->ViewValue = FormatDateTime($this->planned_date_8->ViewValue, 0);
+		$this->planned_date_8->ViewValue = FormatDateTime($this->planned_date_8->ViewValue, 5);
 		$this->planned_date_8->ViewCustomAttributes = "";
 
 		// transmit_date_8
 		$this->transmit_date_8->ViewValue = $this->transmit_date_8->CurrentValue;
-		$this->transmit_date_8->ViewValue = FormatDateTime($this->transmit_date_8->ViewValue, 0);
+		$this->transmit_date_8->ViewValue = FormatDateTime($this->transmit_date_8->ViewValue, 5);
 		$this->transmit_date_8->ViewCustomAttributes = "";
 
 		// transmit_no_8
@@ -1852,12 +1873,12 @@ class document_log extends DbTable
 
 		// planned_date_9
 		$this->planned_date_9->ViewValue = $this->planned_date_9->CurrentValue;
-		$this->planned_date_9->ViewValue = FormatDateTime($this->planned_date_9->ViewValue, 0);
+		$this->planned_date_9->ViewValue = FormatDateTime($this->planned_date_9->ViewValue, 5);
 		$this->planned_date_9->ViewCustomAttributes = "";
 
 		// transmit_date_9
 		$this->transmit_date_9->ViewValue = $this->transmit_date_9->CurrentValue;
-		$this->transmit_date_9->ViewValue = FormatDateTime($this->transmit_date_9->ViewValue, 0);
+		$this->transmit_date_9->ViewValue = FormatDateTime($this->transmit_date_9->ViewValue, 5);
 		$this->transmit_date_9->ViewCustomAttributes = "";
 
 		// transmit_no_9
@@ -1886,12 +1907,13 @@ class document_log extends DbTable
 
 		// planned_date_10
 		$this->planned_date_10->ViewValue = $this->planned_date_10->CurrentValue;
-		$this->planned_date_10->ViewValue = FormatDateTime($this->planned_date_10->ViewValue, 0);
+		$this->planned_date_10->ViewValue = FormatDateTime($this->planned_date_10->ViewValue, 5);
 		$this->planned_date_10->ViewCustomAttributes = "";
 
 		// transmit_date_10
 		$this->transmit_date_10->ViewValue = $this->transmit_date_10->CurrentValue;
-		$this->transmit_date_10->ViewValue = FormatDateTime($this->transmit_date_10->ViewValue, 0);
+		$this->transmit_date_10->ViewValue = FormatDateTime($this->transmit_date_10->ViewValue, 5);
+		$this->transmit_date_10->CssClass = "font-italic";
 		$this->transmit_date_10->ViewCustomAttributes = "";
 
 		// transmit_no_10
@@ -2524,13 +2546,13 @@ class document_log extends DbTable
 		// planned_date_1
 		$this->planned_date_1->EditAttrs["class"] = "form-control";
 		$this->planned_date_1->EditCustomAttributes = "";
-		$this->planned_date_1->EditValue = FormatDateTime($this->planned_date_1->CurrentValue, 8);
+		$this->planned_date_1->EditValue = FormatDateTime($this->planned_date_1->CurrentValue, 5);
 		$this->planned_date_1->PlaceHolder = RemoveHtml($this->planned_date_1->caption());
 
 		// transmit_date_1
 		$this->transmit_date_1->EditAttrs["class"] = "form-control";
 		$this->transmit_date_1->EditCustomAttributes = "";
-		$this->transmit_date_1->EditValue = FormatDateTime($this->transmit_date_1->CurrentValue, 8);
+		$this->transmit_date_1->EditValue = FormatDateTime($this->transmit_date_1->CurrentValue, 5);
 		$this->transmit_date_1->PlaceHolder = RemoveHtml($this->transmit_date_1->caption());
 
 		// transmit_no_1
@@ -2582,13 +2604,13 @@ class document_log extends DbTable
 		// planned_date_2
 		$this->planned_date_2->EditAttrs["class"] = "form-control";
 		$this->planned_date_2->EditCustomAttributes = "";
-		$this->planned_date_2->EditValue = FormatDateTime($this->planned_date_2->CurrentValue, 8);
+		$this->planned_date_2->EditValue = FormatDateTime($this->planned_date_2->CurrentValue, 5);
 		$this->planned_date_2->PlaceHolder = RemoveHtml($this->planned_date_2->caption());
 
 		// transmit_date_2
 		$this->transmit_date_2->EditAttrs["class"] = "form-control";
 		$this->transmit_date_2->EditCustomAttributes = "";
-		$this->transmit_date_2->EditValue = FormatDateTime($this->transmit_date_2->CurrentValue, 8);
+		$this->transmit_date_2->EditValue = FormatDateTime($this->transmit_date_2->CurrentValue, 5);
 		$this->transmit_date_2->PlaceHolder = RemoveHtml($this->transmit_date_2->caption());
 
 		// transmit_no_2
@@ -2640,13 +2662,13 @@ class document_log extends DbTable
 		// planned_date_3
 		$this->planned_date_3->EditAttrs["class"] = "form-control";
 		$this->planned_date_3->EditCustomAttributes = "";
-		$this->planned_date_3->EditValue = FormatDateTime($this->planned_date_3->CurrentValue, 8);
+		$this->planned_date_3->EditValue = FormatDateTime($this->planned_date_3->CurrentValue, 5);
 		$this->planned_date_3->PlaceHolder = RemoveHtml($this->planned_date_3->caption());
 
 		// transmit_date_3
 		$this->transmit_date_3->EditAttrs["class"] = "form-control";
 		$this->transmit_date_3->EditCustomAttributes = "";
-		$this->transmit_date_3->EditValue = FormatDateTime($this->transmit_date_3->CurrentValue, 8);
+		$this->transmit_date_3->EditValue = FormatDateTime($this->transmit_date_3->CurrentValue, 5);
 		$this->transmit_date_3->PlaceHolder = RemoveHtml($this->transmit_date_3->caption());
 
 		// transmit_no_3
@@ -2698,13 +2720,13 @@ class document_log extends DbTable
 		// planned_date_4
 		$this->planned_date_4->EditAttrs["class"] = "form-control";
 		$this->planned_date_4->EditCustomAttributes = "";
-		$this->planned_date_4->EditValue = FormatDateTime($this->planned_date_4->CurrentValue, 8);
+		$this->planned_date_4->EditValue = FormatDateTime($this->planned_date_4->CurrentValue, 5);
 		$this->planned_date_4->PlaceHolder = RemoveHtml($this->planned_date_4->caption());
 
 		// transmit_date_4
 		$this->transmit_date_4->EditAttrs["class"] = "form-control";
 		$this->transmit_date_4->EditCustomAttributes = "";
-		$this->transmit_date_4->EditValue = FormatDateTime($this->transmit_date_4->CurrentValue, 8);
+		$this->transmit_date_4->EditValue = FormatDateTime($this->transmit_date_4->CurrentValue, 5);
 		$this->transmit_date_4->PlaceHolder = RemoveHtml($this->transmit_date_4->caption());
 
 		// transmit_no_4
@@ -2756,13 +2778,13 @@ class document_log extends DbTable
 		// planned_date_5
 		$this->planned_date_5->EditAttrs["class"] = "form-control";
 		$this->planned_date_5->EditCustomAttributes = "";
-		$this->planned_date_5->EditValue = FormatDateTime($this->planned_date_5->CurrentValue, 8);
+		$this->planned_date_5->EditValue = FormatDateTime($this->planned_date_5->CurrentValue, 5);
 		$this->planned_date_5->PlaceHolder = RemoveHtml($this->planned_date_5->caption());
 
 		// transmit_date_5
 		$this->transmit_date_5->EditAttrs["class"] = "form-control";
 		$this->transmit_date_5->EditCustomAttributes = "";
-		$this->transmit_date_5->EditValue = FormatDateTime($this->transmit_date_5->CurrentValue, 8);
+		$this->transmit_date_5->EditValue = FormatDateTime($this->transmit_date_5->CurrentValue, 5);
 		$this->transmit_date_5->PlaceHolder = RemoveHtml($this->transmit_date_5->caption());
 
 		// transmit_no_5
@@ -2814,13 +2836,13 @@ class document_log extends DbTable
 		// planned_date_6
 		$this->planned_date_6->EditAttrs["class"] = "form-control";
 		$this->planned_date_6->EditCustomAttributes = "";
-		$this->planned_date_6->EditValue = FormatDateTime($this->planned_date_6->CurrentValue, 8);
+		$this->planned_date_6->EditValue = FormatDateTime($this->planned_date_6->CurrentValue, 5);
 		$this->planned_date_6->PlaceHolder = RemoveHtml($this->planned_date_6->caption());
 
 		// transmit_date_6
 		$this->transmit_date_6->EditAttrs["class"] = "form-control";
 		$this->transmit_date_6->EditCustomAttributes = "";
-		$this->transmit_date_6->EditValue = FormatDateTime($this->transmit_date_6->CurrentValue, 8);
+		$this->transmit_date_6->EditValue = FormatDateTime($this->transmit_date_6->CurrentValue, 5);
 		$this->transmit_date_6->PlaceHolder = RemoveHtml($this->transmit_date_6->caption());
 
 		// transmit_no_6
@@ -2872,13 +2894,13 @@ class document_log extends DbTable
 		// planned_date_7
 		$this->planned_date_7->EditAttrs["class"] = "form-control";
 		$this->planned_date_7->EditCustomAttributes = "";
-		$this->planned_date_7->EditValue = FormatDateTime($this->planned_date_7->CurrentValue, 8);
+		$this->planned_date_7->EditValue = FormatDateTime($this->planned_date_7->CurrentValue, 5);
 		$this->planned_date_7->PlaceHolder = RemoveHtml($this->planned_date_7->caption());
 
 		// transmit_date_7
 		$this->transmit_date_7->EditAttrs["class"] = "form-control";
 		$this->transmit_date_7->EditCustomAttributes = "";
-		$this->transmit_date_7->EditValue = FormatDateTime($this->transmit_date_7->CurrentValue, 8);
+		$this->transmit_date_7->EditValue = FormatDateTime($this->transmit_date_7->CurrentValue, 5);
 		$this->transmit_date_7->PlaceHolder = RemoveHtml($this->transmit_date_7->caption());
 
 		// transmit_no_7
@@ -2930,13 +2952,13 @@ class document_log extends DbTable
 		// planned_date_8
 		$this->planned_date_8->EditAttrs["class"] = "form-control";
 		$this->planned_date_8->EditCustomAttributes = "";
-		$this->planned_date_8->EditValue = FormatDateTime($this->planned_date_8->CurrentValue, 8);
+		$this->planned_date_8->EditValue = FormatDateTime($this->planned_date_8->CurrentValue, 5);
 		$this->planned_date_8->PlaceHolder = RemoveHtml($this->planned_date_8->caption());
 
 		// transmit_date_8
 		$this->transmit_date_8->EditAttrs["class"] = "form-control";
 		$this->transmit_date_8->EditCustomAttributes = "";
-		$this->transmit_date_8->EditValue = FormatDateTime($this->transmit_date_8->CurrentValue, 8);
+		$this->transmit_date_8->EditValue = FormatDateTime($this->transmit_date_8->CurrentValue, 5);
 		$this->transmit_date_8->PlaceHolder = RemoveHtml($this->transmit_date_8->caption());
 
 		// transmit_no_8
@@ -2988,13 +3010,13 @@ class document_log extends DbTable
 		// planned_date_9
 		$this->planned_date_9->EditAttrs["class"] = "form-control";
 		$this->planned_date_9->EditCustomAttributes = "";
-		$this->planned_date_9->EditValue = FormatDateTime($this->planned_date_9->CurrentValue, 8);
+		$this->planned_date_9->EditValue = FormatDateTime($this->planned_date_9->CurrentValue, 5);
 		$this->planned_date_9->PlaceHolder = RemoveHtml($this->planned_date_9->caption());
 
 		// transmit_date_9
 		$this->transmit_date_9->EditAttrs["class"] = "form-control";
 		$this->transmit_date_9->EditCustomAttributes = "";
-		$this->transmit_date_9->EditValue = FormatDateTime($this->transmit_date_9->CurrentValue, 8);
+		$this->transmit_date_9->EditValue = FormatDateTime($this->transmit_date_9->CurrentValue, 5);
 		$this->transmit_date_9->PlaceHolder = RemoveHtml($this->transmit_date_9->caption());
 
 		// transmit_no_9
@@ -3046,13 +3068,13 @@ class document_log extends DbTable
 		// planned_date_10
 		$this->planned_date_10->EditAttrs["class"] = "form-control";
 		$this->planned_date_10->EditCustomAttributes = "";
-		$this->planned_date_10->EditValue = FormatDateTime($this->planned_date_10->CurrentValue, 8);
+		$this->planned_date_10->EditValue = FormatDateTime($this->planned_date_10->CurrentValue, 5);
 		$this->planned_date_10->PlaceHolder = RemoveHtml($this->planned_date_10->caption());
 
 		// transmit_date_10
 		$this->transmit_date_10->EditAttrs["class"] = "form-control";
 		$this->transmit_date_10->EditCustomAttributes = "";
-		$this->transmit_date_10->EditValue = FormatDateTime($this->transmit_date_10->CurrentValue, 8);
+		$this->transmit_date_10->EditValue = FormatDateTime($this->transmit_date_10->CurrentValue, 5);
 		$this->transmit_date_10->PlaceHolder = RemoveHtml($this->transmit_date_10->caption());
 
 		// transmit_no_10

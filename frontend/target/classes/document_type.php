@@ -2,9 +2,9 @@
 namespace PHPMaker2019\pdm;
 
 /**
- * Table class for approval_details
+ * Table class for document_type
  */
-class approval_details extends DbTable
+class document_type extends DbTable
 {
 	protected $SqlFrom = "";
 	protected $SqlSelect = "";
@@ -25,11 +25,9 @@ class approval_details extends DbTable
 	public $ExportDoc;
 
 	// Fields
-	public $id;
-	public $short_code;
-	public $Description;
-	public $out_status;
-	public $in_status;
+	public $type_id;
+	public $document_type;
+	public $document_category;
 
 	// Constructor
 	public function __construct()
@@ -39,12 +37,12 @@ class approval_details extends DbTable
 		// Language object
 		if (!isset($Language))
 			$Language = new Language();
-		$this->TableVar = 'approval_details';
-		$this->TableName = 'approval_details';
+		$this->TableVar = 'document_type';
+		$this->TableName = 'document_type';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "\"public\".\"approval_details\"";
+		$this->UpdateTable = "\"public\".\"document_type\"";
 		$this->Dbid = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -60,43 +58,31 @@ class approval_details extends DbTable
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 5;
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
-		$this->UserIDAllowSecurity = 104; // User ID Allow
+		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new BasicSearch($this->TableVar);
 
-		// id
-		$this->id = new DbField('approval_details', 'approval_details', 'x_id', 'id', '"id"', 'CAST("id" AS varchar(255))', 3, -1, FALSE, '"id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->id->IsAutoIncrement = TRUE; // Autoincrement field
-		$this->id->IsPrimaryKey = TRUE; // Primary key field
-		$this->id->Nullable = FALSE; // NOT NULL field
-		$this->id->Sortable = TRUE; // Allow sort
-		$this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-		$this->fields['id'] = &$this->id;
+		// type_id
+		$this->type_id = new DbField('document_type', 'document_type', 'x_type_id', 'type_id', '"type_id"', 'CAST("type_id" AS varchar(255))', 3, -1, FALSE, '"type_id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->type_id->IsAutoIncrement = TRUE; // Autoincrement field
+		$this->type_id->IsPrimaryKey = TRUE; // Primary key field
+		$this->type_id->Nullable = FALSE; // NOT NULL field
+		$this->type_id->Sortable = TRUE; // Allow sort
+		$this->type_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+		$this->fields['type_id'] = &$this->type_id;
 
-		// short_code
-		$this->short_code = new DbField('approval_details', 'approval_details', 'x_short_code', 'short_code', '"short_code"', '"short_code"', 200, -1, FALSE, '"short_code"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->short_code->Nullable = FALSE; // NOT NULL field
-		$this->short_code->Required = TRUE; // Required field
-		$this->short_code->Sortable = TRUE; // Allow sort
-		$this->fields['short_code'] = &$this->short_code;
+		// document_type
+		$this->document_type = new DbField('document_type', 'document_type', 'x_document_type', 'document_type', '"document_type"', '"document_type"', 200, -1, FALSE, '"document_type"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->document_type->Nullable = FALSE; // NOT NULL field
+		$this->document_type->Required = TRUE; // Required field
+		$this->document_type->Sortable = TRUE; // Allow sort
+		$this->fields['document_type'] = &$this->document_type;
 
-		// Description
-		$this->Description = new DbField('approval_details', 'approval_details', 'x_Description', 'Description', '"Description"', '"Description"', 201, -1, FALSE, '"Description"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->Description->Nullable = FALSE; // NOT NULL field
-		$this->Description->Required = TRUE; // Required field
-		$this->Description->Sortable = TRUE; // Allow sort
-		$this->fields['Description'] = &$this->Description;
-
-		// out_status
-		$this->out_status = new DbField('approval_details', 'approval_details', 'x_out_status', 'out_status', '"out_status"', '"out_status"', 200, -1, FALSE, '"out_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->out_status->Required = TRUE; // Required field
-		$this->out_status->Sortable = FALSE; // Allow sort
-		$this->fields['out_status'] = &$this->out_status;
-
-		// in_status
-		$this->in_status = new DbField('approval_details', 'approval_details', 'x_in_status', 'in_status', '"in_status"', '"in_status"', 200, -1, FALSE, '"in_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->in_status->Required = TRUE; // Required field
-		$this->in_status->Sortable = TRUE; // Allow sort
-		$this->fields['in_status'] = &$this->in_status;
+		// document_category
+		$this->document_category = new DbField('document_type', 'document_type', 'x_document_category', 'document_category', '"document_category"', '"document_category"', 200, -1, FALSE, '"document_category"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->document_category->Nullable = FALSE; // NOT NULL field
+		$this->document_category->Required = TRUE; // Required field
+		$this->document_category->Sortable = TRUE; // Allow sort
+		$this->fields['document_category'] = &$this->document_category;
 	}
 
 	// Field Visibility
@@ -151,7 +137,7 @@ class approval_details extends DbTable
 	// Table level SQL
 	public function getSqlFrom() // From
 	{
-		return ($this->SqlFrom <> "") ? $this->SqlFrom : "\"public\".\"approval_details\"";
+		return ($this->SqlFrom <> "") ? $this->SqlFrom : "\"public\".\"document_type\"";
 	}
 	public function sqlFrom() // For backward compatibility
 	{
@@ -383,8 +369,8 @@ class approval_details extends DbTable
 		if ($success) {
 
 			// Get insert id if necessary
-			$this->id->setDbValue($conn->getOne("SELECT currval('approval_details_id_seq'::regclass)"));
-			$rs['id'] = $this->id->DbValue;
+			$this->type_id->setDbValue($conn->getOne("SELECT currval('table_type_id_seq'::regclass)"));
+			$rs['type_id'] = $this->type_id->DbValue;
 		}
 		return $success;
 	}
@@ -424,8 +410,8 @@ class approval_details extends DbTable
 		if (is_array($where))
 			$where = $this->arrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('id', $rs))
-				AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+			if (array_key_exists('type_id', $rs))
+				AddFilter($where, QuotedName('type_id', $this->Dbid) . '=' . QuotedValue($rs['type_id'], $this->type_id->DataType, $this->Dbid));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		AddFilter($filter, $where);
@@ -452,11 +438,9 @@ class approval_details extends DbTable
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->id->DbValue = $row['id'];
-		$this->short_code->DbValue = $row['short_code'];
-		$this->Description->DbValue = $row['Description'];
-		$this->out_status->DbValue = $row['out_status'];
-		$this->in_status->DbValue = $row['in_status'];
+		$this->type_id->DbValue = $row['type_id'];
+		$this->document_type->DbValue = $row['document_type'];
+		$this->document_category->DbValue = $row['document_category'];
 	}
 
 	// Delete uploaded files
@@ -468,20 +452,20 @@ class approval_details extends DbTable
 	// Record filter WHERE clause
 	protected function sqlKeyFilter()
 	{
-		return "\"id\" = @id@";
+		return "\"type_id\" = @type_id@";
 	}
 
 	// Get record filter
 	public function getRecordFilter($row = NULL)
 	{
 		$keyFilter = $this->sqlKeyFilter();
-		$val = is_array($row) ? (array_key_exists('id', $row) ? $row['id'] : NULL) : $this->id->CurrentValue;
+		$val = is_array($row) ? (array_key_exists('type_id', $row) ? $row['type_id'] : NULL) : $this->type_id->CurrentValue;
 		if (!is_numeric($val))
 			return "0=1"; // Invalid key
 		if ($val == NULL)
 			return "0=1"; // Invalid key
 		else
-			$keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+			$keyFilter = str_replace("@type_id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
 		return $keyFilter;
 	}
 
@@ -496,7 +480,7 @@ class approval_details extends DbTable
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "approval_detailslist.php";
+			return "document_typelist.php";
 		}
 	}
 	public function setReturnUrl($v)
@@ -508,11 +492,11 @@ class approval_details extends DbTable
 	public function getModalCaption($pageName)
 	{
 		global $Language;
-		if ($pageName == "approval_detailsview.php")
+		if ($pageName == "document_typeview.php")
 			return $Language->phrase("View");
-		elseif ($pageName == "approval_detailsedit.php")
+		elseif ($pageName == "document_typeedit.php")
 			return $Language->phrase("Edit");
-		elseif ($pageName == "approval_detailsadd.php")
+		elseif ($pageName == "document_typeadd.php")
 			return $Language->phrase("Add");
 		else
 			return "";
@@ -521,16 +505,16 @@ class approval_details extends DbTable
 	// List URL
 	public function getListUrl()
 	{
-		return "approval_detailslist.php";
+		return "document_typelist.php";
 	}
 
 	// View URL
 	public function getViewUrl($parm = "")
 	{
 		if ($parm <> "")
-			$url = $this->keyUrl("approval_detailsview.php", $this->getUrlParm($parm));
+			$url = $this->keyUrl("document_typeview.php", $this->getUrlParm($parm));
 		else
-			$url = $this->keyUrl("approval_detailsview.php", $this->getUrlParm(TABLE_SHOW_DETAIL . "="));
+			$url = $this->keyUrl("document_typeview.php", $this->getUrlParm(TABLE_SHOW_DETAIL . "="));
 		return $this->addMasterUrl($url);
 	}
 
@@ -538,16 +522,16 @@ class approval_details extends DbTable
 	public function getAddUrl($parm = "")
 	{
 		if ($parm <> "")
-			$url = "approval_detailsadd.php?" . $this->getUrlParm($parm);
+			$url = "document_typeadd.php?" . $this->getUrlParm($parm);
 		else
-			$url = "approval_detailsadd.php";
+			$url = "document_typeadd.php";
 		return $this->addMasterUrl($url);
 	}
 
 	// Edit URL
 	public function getEditUrl($parm = "")
 	{
-		$url = $this->keyUrl("approval_detailsedit.php", $this->getUrlParm($parm));
+		$url = $this->keyUrl("document_typeedit.php", $this->getUrlParm($parm));
 		return $this->addMasterUrl($url);
 	}
 
@@ -561,7 +545,7 @@ class approval_details extends DbTable
 	// Copy URL
 	public function getCopyUrl($parm = "")
 	{
-		$url = $this->keyUrl("approval_detailsadd.php", $this->getUrlParm($parm));
+		$url = $this->keyUrl("document_typeadd.php", $this->getUrlParm($parm));
 		return $this->addMasterUrl($url);
 	}
 
@@ -575,7 +559,7 @@ class approval_details extends DbTable
 	// Delete URL
 	public function getDeleteUrl()
 	{
-		return $this->keyUrl("approval_detailsdelete.php", $this->getUrlParm());
+		return $this->keyUrl("document_typedelete.php", $this->getUrlParm());
 	}
 
 	// Add master url
@@ -586,7 +570,7 @@ class approval_details extends DbTable
 	public function keyToJson($htmlEncode = FALSE)
 	{
 		$json = "";
-		$json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
+		$json .= "type_id:" . JsonEncode($this->type_id->CurrentValue, "number");
 		$json = "{" . $json . "}";
 		if ($htmlEncode)
 			$json = HtmlEncode($json);
@@ -599,8 +583,8 @@ class approval_details extends DbTable
 		$url = $url . "?";
 		if ($parm <> "")
 			$url .= $parm . "&";
-		if ($this->id->CurrentValue != NULL) {
-			$url .= "id=" . urlencode($this->id->CurrentValue);
+		if ($this->type_id->CurrentValue != NULL) {
+			$url .= "type_id=" . urlencode($this->type_id->CurrentValue);
 		} else {
 			return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
 		}
@@ -631,8 +615,8 @@ class approval_details extends DbTable
 			$arKeys = Param("key_m");
 			$cnt = count($arKeys);
 		} else {
-			if (Param("id") !== NULL)
-				$arKeys[] = Param("id");
+			if (Param("type_id") !== NULL)
+				$arKeys[] = Param("type_id");
 			elseif (IsApi() && Key(0) !== NULL)
 				$arKeys[] = Key(0);
 			elseif (IsApi() && Route(2) !== NULL)
@@ -662,7 +646,7 @@ class approval_details extends DbTable
 		$keyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($keyFilter <> "") $keyFilter .= " OR ";
-			$this->id->CurrentValue = $key;
+			$this->type_id->CurrentValue = $key;
 			$keyFilter .= "(" . $this->getRecordFilter() . ")";
 		}
 		return $keyFilter;
@@ -682,11 +666,9 @@ class approval_details extends DbTable
 	// Load row values from recordset
 	public function loadListRowValues(&$rs)
 	{
-		$this->id->setDbValue($rs->fields('id'));
-		$this->short_code->setDbValue($rs->fields('short_code'));
-		$this->Description->setDbValue($rs->fields('Description'));
-		$this->out_status->setDbValue($rs->fields('out_status'));
-		$this->in_status->setDbValue($rs->fields('in_status'));
+		$this->type_id->setDbValue($rs->fields('type_id'));
+		$this->document_type->setDbValue($rs->fields('document_type'));
+		$this->document_category->setDbValue($rs->fields('document_category'));
 	}
 
 	// Render list row values
@@ -698,58 +680,36 @@ class approval_details extends DbTable
 		$this->Row_Rendering();
 
 		// Common render codes
-		// id
-		// short_code
-		// Description
-		// out_status
-		// in_status
-		// id
+		// type_id
+		// document_type
+		// document_category
+		// type_id
 
-		$this->id->ViewValue = $this->id->CurrentValue;
-		$this->id->ViewCustomAttributes = "";
+		$this->type_id->ViewValue = $this->type_id->CurrentValue;
+		$this->type_id->ViewCustomAttributes = "";
 
-		// short_code
-		$this->short_code->ViewValue = $this->short_code->CurrentValue;
-		$this->short_code->ViewCustomAttributes = "";
+		// document_type
+		$this->document_type->ViewValue = $this->document_type->CurrentValue;
+		$this->document_type->ViewCustomAttributes = "";
 
-		// Description
-		$this->Description->ViewValue = $this->Description->CurrentValue;
-		$this->Description->ViewCustomAttributes = "";
+		// document_category
+		$this->document_category->ViewValue = $this->document_category->CurrentValue;
+		$this->document_category->ViewCustomAttributes = "";
 
-		// out_status
-		$this->out_status->ViewValue = $this->out_status->CurrentValue;
-		$this->out_status->ViewValue = strtoupper($this->out_status->ViewValue);
-		$this->out_status->ViewCustomAttributes = "";
+		// type_id
+		$this->type_id->LinkCustomAttributes = "";
+		$this->type_id->HrefValue = "";
+		$this->type_id->TooltipValue = "";
 
-		// in_status
-		$this->in_status->ViewValue = $this->in_status->CurrentValue;
-		$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
-		$this->in_status->ViewCustomAttributes = "";
+		// document_type
+		$this->document_type->LinkCustomAttributes = "";
+		$this->document_type->HrefValue = "";
+		$this->document_type->TooltipValue = "";
 
-		// id
-		$this->id->LinkCustomAttributes = "";
-		$this->id->HrefValue = "";
-		$this->id->TooltipValue = "";
-
-		// short_code
-		$this->short_code->LinkCustomAttributes = "";
-		$this->short_code->HrefValue = "";
-		$this->short_code->TooltipValue = "";
-
-		// Description
-		$this->Description->LinkCustomAttributes = "";
-		$this->Description->HrefValue = "";
-		$this->Description->TooltipValue = "";
-
-		// out_status
-		$this->out_status->LinkCustomAttributes = "";
-		$this->out_status->HrefValue = "";
-		$this->out_status->TooltipValue = "";
-
-		// in_status
-		$this->in_status->LinkCustomAttributes = "";
-		$this->in_status->HrefValue = "";
-		$this->in_status->TooltipValue = "";
+		// document_category
+		$this->document_category->LinkCustomAttributes = "";
+		$this->document_category->HrefValue = "";
+		$this->document_category->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -766,41 +726,27 @@ class approval_details extends DbTable
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// id
-		$this->id->EditAttrs["class"] = "form-control";
-		$this->id->EditCustomAttributes = "";
-		$this->id->EditValue = $this->id->CurrentValue;
-		$this->id->ViewCustomAttributes = "";
+		// type_id
+		$this->type_id->EditAttrs["class"] = "form-control";
+		$this->type_id->EditCustomAttributes = "";
+		$this->type_id->EditValue = $this->type_id->CurrentValue;
+		$this->type_id->ViewCustomAttributes = "";
 
-		// short_code
-		$this->short_code->EditAttrs["class"] = "form-control";
-		$this->short_code->EditCustomAttributes = "";
+		// document_type
+		$this->document_type->EditAttrs["class"] = "form-control";
+		$this->document_type->EditCustomAttributes = "";
 		if (REMOVE_XSS)
-			$this->short_code->CurrentValue = HtmlDecode($this->short_code->CurrentValue);
-		$this->short_code->EditValue = $this->short_code->CurrentValue;
-		$this->short_code->PlaceHolder = RemoveHtml($this->short_code->caption());
+			$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
+		$this->document_type->EditValue = $this->document_type->CurrentValue;
+		$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
-		// Description
-		$this->Description->EditAttrs["class"] = "form-control";
-		$this->Description->EditCustomAttributes = "";
-		$this->Description->EditValue = $this->Description->CurrentValue;
-		$this->Description->PlaceHolder = RemoveHtml($this->Description->caption());
-
-		// out_status
-		$this->out_status->EditAttrs["class"] = "form-control";
-		$this->out_status->EditCustomAttributes = "";
+		// document_category
+		$this->document_category->EditAttrs["class"] = "form-control";
+		$this->document_category->EditCustomAttributes = "";
 		if (REMOVE_XSS)
-			$this->out_status->CurrentValue = HtmlDecode($this->out_status->CurrentValue);
-		$this->out_status->EditValue = $this->out_status->CurrentValue;
-		$this->out_status->PlaceHolder = RemoveHtml($this->out_status->caption());
-
-		// in_status
-		$this->in_status->EditAttrs["class"] = "form-control";
-		$this->in_status->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->in_status->CurrentValue = HtmlDecode($this->in_status->CurrentValue);
-		$this->in_status->EditValue = $this->in_status->CurrentValue;
-		$this->in_status->PlaceHolder = RemoveHtml($this->in_status->caption());
+			$this->document_category->CurrentValue = HtmlDecode($this->document_category->CurrentValue);
+		$this->document_category->EditValue = $this->document_category->CurrentValue;
+		$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -831,10 +777,13 @@ class approval_details extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
+					$doc->exportCaption($this->type_id);
+					$doc->exportCaption($this->document_type);
+					$doc->exportCaption($this->document_category);
 				} else {
-					$doc->exportCaption($this->id);
-					$doc->exportCaption($this->short_code);
-					$doc->exportCaption($this->in_status);
+					$doc->exportCaption($this->type_id);
+					$doc->exportCaption($this->document_type);
+					$doc->exportCaption($this->document_category);
 				}
 				$doc->endExportRow();
 			}
@@ -866,10 +815,13 @@ class approval_details extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
+						$doc->exportField($this->type_id);
+						$doc->exportField($this->document_type);
+						$doc->exportField($this->document_category);
 					} else {
-						$doc->exportField($this->id);
-						$doc->exportField($this->short_code);
-						$doc->exportField($this->in_status);
+						$doc->exportField($this->type_id);
+						$doc->exportField($this->document_type);
+						$doc->exportField($this->document_category);
 					}
 					$doc->endExportRow($rowCnt);
 				}

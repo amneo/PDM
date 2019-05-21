@@ -630,7 +630,7 @@ class document_details_add extends document_details
 		$this->document_tittle->setVisibility();
 		$this->project_name->setVisibility();
 		$this->project_system->setVisibility();
-		$this->create_date->setVisibility();
+		$this->create_date->Visible = FALSE;
 		$this->planned_date->setVisibility();
 		$this->document_type->setVisibility();
 		$this->expiry_date->setVisibility();
@@ -656,6 +656,7 @@ class document_details_add extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->document_type);
 
 		// Check modal
 		if ($this->IsModal)
@@ -750,7 +751,11 @@ class document_details_add extends document_details
 		$this->setupBreadcrumb();
 
 		// Render row based on row type
-		$this->RowType = ROWTYPE_ADD; // Render add type
+		if ($this->isConfirm()) { // Confirm page
+			$this->RowType = ROWTYPE_VIEW; // Render view type
+		} else {
+			$this->RowType = ROWTYPE_ADD; // Render add type
+		}
 
 		// Render row
 		$this->resetAttributes();
@@ -840,16 +845,6 @@ class document_details_add extends document_details
 				$this->project_system->setFormValue($val);
 		}
 
-		// Check field name 'create_date' first before field var 'x_create_date'
-		$val = $CurrentForm->hasValue("create_date") ? $CurrentForm->getValue("create_date") : $CurrentForm->getValue("x_create_date");
-		if (!$this->create_date->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->create_date->Visible = FALSE; // Disable update for API request
-			else
-				$this->create_date->setFormValue($val);
-			$this->create_date->CurrentValue = UnFormatDateTime($this->create_date->CurrentValue, 0);
-		}
-
 		// Check field name 'planned_date' first before field var 'x_planned_date'
 		$val = $CurrentForm->hasValue("planned_date") ? $CurrentForm->getValue("planned_date") : $CurrentForm->getValue("x_planned_date");
 		if (!$this->planned_date->IsDetailKey) {
@@ -857,7 +852,7 @@ class document_details_add extends document_details
 				$this->planned_date->Visible = FALSE; // Disable update for API request
 			else
 				$this->planned_date->setFormValue($val);
-			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		}
 
 		// Check field name 'document_type' first before field var 'x_document_type'
@@ -892,10 +887,8 @@ class document_details_add extends document_details
 		$this->document_tittle->CurrentValue = $this->document_tittle->FormValue;
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->project_system->CurrentValue = $this->project_system->FormValue;
-		$this->create_date->CurrentValue = $this->create_date->FormValue;
-		$this->create_date->CurrentValue = UnFormatDateTime($this->create_date->CurrentValue, 0);
 		$this->planned_date->CurrentValue = $this->planned_date->FormValue;
-		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		$this->document_type->CurrentValue = $this->document_type->FormValue;
 		$this->expiry_date->CurrentValue = $this->expiry_date->FormValue;
 		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
@@ -950,6 +943,11 @@ class document_details_add extends document_details
 		$this->create_date->setDbValue($row['create_date']);
 		$this->planned_date->setDbValue($row['planned_date']);
 		$this->document_type->setDbValue($row['document_type']);
+		if (array_key_exists('EV__document_type', $rs->fields)) {
+			$this->document_type->VirtualValue = $rs->fields('EV__document_type'); // Set up virtual field value
+		} else {
+			$this->document_type->VirtualValue = ""; // Clear value
+		}
 		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
@@ -1046,7 +1044,6 @@ class document_details_add extends document_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1065,16 +1062,40 @@ class document_details_add extends document_details
 
 			// create_date
 			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 			$this->create_date->ViewCustomAttributes = "";
 
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
-			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			if ($this->document_type->VirtualValue <> "") {
+				$this->document_type->ViewValue = $this->document_type->VirtualValue;
+			} else {
+				$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->ViewValue = $this->document_type->CurrentValue;
+					}
+				}
+			} else {
+				$this->document_type->ViewValue = NULL;
+			}
+			}
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
@@ -1106,11 +1127,6 @@ class document_details_add extends document_details
 			$this->project_system->LinkCustomAttributes = "";
 			$this->project_system->HrefValue = "";
 			$this->project_system->TooltipValue = "";
-
-			// create_date
-			$this->create_date->LinkCustomAttributes = "";
-			$this->create_date->HrefValue = "";
-			$this->create_date->TooltipValue = "";
 
 			// planned_date
 			$this->planned_date->LinkCustomAttributes = "";
@@ -1169,7 +1185,6 @@ class document_details_add extends document_details
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1189,16 +1204,10 @@ class document_details_add extends document_details
 			$this->project_system->EditValue = HtmlEncode($this->project_system->CurrentValue);
 			$this->project_system->PlaceHolder = RemoveHtml($this->project_system->caption());
 
-			// create_date
-			$this->create_date->EditAttrs["class"] = "form-control";
-			$this->create_date->EditCustomAttributes = "";
-			$this->create_date->EditValue = HtmlEncode(FormatDateTime($this->create_date->CurrentValue, 8));
-			$this->create_date->PlaceHolder = RemoveHtml($this->create_date->caption());
-
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
 			$this->planned_date->EditCustomAttributes = "";
-			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 8));
+			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
 			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 			// document_type
@@ -1207,6 +1216,26 @@ class document_details_add extends document_details
 			if (REMOVE_XSS)
 				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
 			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->EditValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+					}
+				}
+			} else {
+				$this->document_type->EditValue = NULL;
+			}
 			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 			// expiry_date
@@ -1236,10 +1265,6 @@ class document_details_add extends document_details
 			// project_system
 			$this->project_system->LinkCustomAttributes = "";
 			$this->project_system->HrefValue = "";
-
-			// create_date
-			$this->create_date->LinkCustomAttributes = "";
-			$this->create_date->HrefValue = "";
 
 			// planned_date
 			$this->planned_date->LinkCustomAttributes = "";
@@ -1312,7 +1337,7 @@ class document_details_add extends document_details
 				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->planned_date->FormValue)) {
+		if (!CheckStdDate($this->planned_date->FormValue)) {
 			AddMessage($FormError, $this->planned_date->errorMessage());
 		}
 		if ($this->document_type->Required) {
@@ -1390,11 +1415,8 @@ class document_details_add extends document_details
 		// project_system
 		$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", FALSE);
 
-		// create_date
-		$this->create_date->setDbValueDef($rsnew, UnFormatDateTime($this->create_date->CurrentValue, 0), NULL, FALSE);
-
 		// planned_date
-		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 0), CurrentDate(), FALSE);
+		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), FALSE);
 
 		// document_type
 		$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", FALSE);
@@ -1481,6 +1503,8 @@ class document_details_add extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_document_type":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

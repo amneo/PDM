@@ -145,8 +145,6 @@ ftransaction_detailsadd.autoSuggests["x_firelink_doc_no"] = <?php echo json_enco
 ftransaction_detailsadd.lists["x_transmit_no"] = <?php echo $transaction_details_add->transmit_no->Lookup->toClientList() ?>;
 ftransaction_detailsadd.lists["x_transmit_no"].options = <?php echo JsonEncode($transaction_details_add->transmit_no->lookupOptions()) ?>;
 ftransaction_detailsadd.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
-ftransaction_detailsadd.lists["x_direction"] = <?php echo $transaction_details_add->direction->Lookup->toClientList() ?>;
-ftransaction_detailsadd.lists["x_direction"].options = <?php echo JsonEncode($transaction_details_add->direction->options(FALSE, TRUE)) ?>;
 ftransaction_detailsadd.lists["x_approval_status"] = <?php echo $transaction_details_add->approval_status->Lookup->toClientList() ?>;
 ftransaction_detailsadd.lists["x_approval_status"].options = <?php echo JsonEncode($transaction_details_add->approval_status->lookupOptions()) ?>;
 
@@ -466,10 +464,7 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_transmit_date", {"ignoreRe
 		<div class="<?php echo $transaction_details_add->RightColumnClass ?>"><div<?php echo $transaction_details->direction->cellAttributes() ?>>
 <?php if (!$transaction_details->isConfirm()) { ?>
 <span id="el_transaction_details_direction">
-<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-page="1" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
-<div id="dsl_x_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction", 1) ?>
-</div></div>
+<input type="text" data-table="transaction_details" data-field="x_direction" data-page="1" name="x_direction" id="x_direction" size="30" placeholder="<?php echo HtmlEncode($transaction_details->direction->getPlaceHolder()) ?>" value="<?php echo $transaction_details->direction->EditValue ?>"<?php echo $transaction_details->direction->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_transaction_details_direction">
@@ -486,10 +481,7 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_transmit_date", {"ignoreRe
 		<td<?php echo $transaction_details->direction->cellAttributes() ?>>
 <?php if (!$transaction_details->isConfirm()) { ?>
 <span id="el_transaction_details_direction">
-<div id="tp_x_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-page="1" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x_direction" id="x_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
-<div id="dsl_x_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x_direction", 1) ?>
-</div></div>
+<input type="text" data-table="transaction_details" data-field="x_direction" data-page="1" name="x_direction" id="x_direction" size="30" placeholder="<?php echo HtmlEncode($transaction_details->direction->getPlaceHolder()) ?>" value="<?php echo $transaction_details->direction->EditValue ?>"<?php echo $transaction_details->direction->editAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el_transaction_details_direction">

@@ -446,6 +446,8 @@ class index
 			$this->terminate("document_loglist.php");
 		if ($Security->allowList(CurrentProjectID() . 'cron_file.php'))
 			$this->terminate("./cron_file.php");
+		if ($Security->allowList(CurrentProjectID() . 'document_type'))
+			$this->terminate("document_typelist.php");
 		if ($Security->isLoggedIn()) {
 			$this->setFailureMessage(DeniedMessage() . "<br><br><a href=\"logout.php\">" . $Language->phrase("BackToLogin") . "</a>");
 		} else {

@@ -52,10 +52,8 @@ fapproval_detailslist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE TH
 fapproval_detailslist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fapproval_detailslist.lists["x_document_status"] = <?php echo $approval_details_list->document_status->Lookup->toClientList() ?>;
-fapproval_detailslist.lists["x_document_status"].options = <?php echo JsonEncode($approval_details_list->document_status->options(FALSE, TRUE)) ?>;
-
 // Form object for search
+
 var fapproval_detailslistsrch = currentSearchForm = new ew.Form("fapproval_detailslistsrch");
 
 // Filters
@@ -208,12 +206,21 @@ $approval_details_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($approval_details->document_status->Visible) { // document_status ?>
-	<?php if ($approval_details->sortUrl($approval_details->document_status) == "") { ?>
-		<th data-name="document_status" class="<?php echo $approval_details->document_status->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_approval_details_document_status" class="approval_details_document_status"><div class="ew-table-header-caption"><?php echo $approval_details->document_status->caption() ?></div></div></th>
+<?php if ($approval_details->out_status->Visible) { // out_status ?>
+	<?php if ($approval_details->sortUrl($approval_details->out_status) == "") { ?>
+		<th data-name="out_status" class="<?php echo $approval_details->out_status->headerCellClass() ?>"><div id="elh_approval_details_out_status" class="approval_details_out_status"><div class="ew-table-header-caption"><?php echo $approval_details->out_status->caption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="document_status" class="<?php echo $approval_details->document_status->headerCellClass() ?>" style="white-space: nowrap;"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->document_status) ?>',2);"><div id="elh_approval_details_document_status" class="approval_details_document_status">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->document_status->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->document_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->document_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		<th data-name="out_status" class="<?php echo $approval_details->out_status->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->out_status) ?>',2);"><div id="elh_approval_details_out_status" class="approval_details_out_status">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->out_status->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->out_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->out_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($approval_details->in_status->Visible) { // in_status ?>
+	<?php if ($approval_details->sortUrl($approval_details->in_status) == "") { ?>
+		<th data-name="in_status" class="<?php echo $approval_details->in_status->headerCellClass() ?>"><div id="elh_approval_details_in_status" class="approval_details_in_status"><div class="ew-table-header-caption"><?php echo $approval_details->in_status->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="in_status" class="<?php echo $approval_details->in_status->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->in_status) ?>',2);"><div id="elh_approval_details_in_status" class="approval_details_in_status">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->in_status->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->in_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->in_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -306,11 +313,19 @@ $approval_details_list->ListOptions->render("body", "left", $approval_details_li
 </span>
 </td>
 	<?php } ?>
-	<?php if ($approval_details->document_status->Visible) { // document_status ?>
-		<td data-name="document_status"<?php echo $approval_details->document_status->cellAttributes() ?>>
-<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_document_status" class="approval_details_document_status">
-<span<?php echo $approval_details->document_status->viewAttributes() ?>>
-<?php echo $approval_details->document_status->getViewValue() ?></span>
+	<?php if ($approval_details->out_status->Visible) { // out_status ?>
+		<td data-name="out_status"<?php echo $approval_details->out_status->cellAttributes() ?>>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_out_status" class="approval_details_out_status">
+<span<?php echo $approval_details->out_status->viewAttributes() ?>>
+<?php echo $approval_details->out_status->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($approval_details->in_status->Visible) { // in_status ?>
+		<td data-name="in_status"<?php echo $approval_details->in_status->cellAttributes() ?>>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_in_status" class="approval_details_in_status">
+<span<?php echo $approval_details->in_status->viewAttributes() ?>>
+<?php echo $approval_details->in_status->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

@@ -777,7 +777,7 @@ class document_details_list extends document_details
 		$this->document_tittle->setVisibility();
 		$this->project_name->setVisibility();
 		$this->project_system->setVisibility();
-		$this->create_date->Visible = FALSE;
+		$this->create_date->setVisibility();
 		$this->planned_date->setVisibility();
 		$this->document_type->setVisibility();
 		$this->expiry_date->setVisibility();
@@ -815,6 +815,7 @@ class document_details_list extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->document_type);
 
 		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
@@ -1217,6 +1218,8 @@ class document_details_list extends document_details
 			return FALSE;
 		if ($CurrentForm->hasValue("x_project_system") && $CurrentForm->hasValue("o_project_system") && $this->project_system->CurrentValue <> $this->project_system->OldValue)
 			return FALSE;
+		if ($CurrentForm->hasValue("x_create_date") && $CurrentForm->hasValue("o_create_date") && $this->create_date->CurrentValue <> $this->create_date->OldValue)
+			return FALSE;
 		if ($CurrentForm->hasValue("x_planned_date") && $CurrentForm->hasValue("o_planned_date") && $this->planned_date->CurrentValue <> $this->planned_date->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_document_type") && $CurrentForm->hasValue("o_document_type") && $this->document_type->CurrentValue <> $this->document_type->OldValue)
@@ -1314,7 +1317,6 @@ class document_details_list extends document_details
 		$filterList = Concat($filterList, $this->document_tittle->AdvancedSearch->toJson(), ","); // Field document_tittle
 		$filterList = Concat($filterList, $this->project_name->AdvancedSearch->toJson(), ","); // Field project_name
 		$filterList = Concat($filterList, $this->project_system->AdvancedSearch->toJson(), ","); // Field project_system
-		$filterList = Concat($filterList, $this->create_date->AdvancedSearch->toJson(), ","); // Field create_date
 		$filterList = Concat($filterList, $this->planned_date->AdvancedSearch->toJson(), ","); // Field planned_date
 		$filterList = Concat($filterList, $this->document_type->AdvancedSearch->toJson(), ","); // Field document_type
 		$filterList = Concat($filterList, $this->expiry_date->AdvancedSearch->toJson(), ","); // Field expiry_date
@@ -1396,14 +1398,6 @@ class document_details_list extends document_details
 		$this->project_system->AdvancedSearch->SearchOperator2 = @$filter["w_project_system"];
 		$this->project_system->AdvancedSearch->save();
 
-		// Field create_date
-		$this->create_date->AdvancedSearch->SearchValue = @$filter["x_create_date"];
-		$this->create_date->AdvancedSearch->SearchOperator = @$filter["z_create_date"];
-		$this->create_date->AdvancedSearch->SearchCondition = @$filter["v_create_date"];
-		$this->create_date->AdvancedSearch->SearchValue2 = @$filter["y_create_date"];
-		$this->create_date->AdvancedSearch->SearchOperator2 = @$filter["w_create_date"];
-		$this->create_date->AdvancedSearch->save();
-
 		// Field planned_date
 		$this->planned_date->AdvancedSearch->SearchValue = @$filter["x_planned_date"];
 		$this->planned_date->AdvancedSearch->SearchOperator = @$filter["z_planned_date"];
@@ -1443,7 +1437,6 @@ class document_details_list extends document_details
 		$this->buildSearchSql($where, $this->document_tittle, $default, FALSE); // document_tittle
 		$this->buildSearchSql($where, $this->project_name, $default, FALSE); // project_name
 		$this->buildSearchSql($where, $this->project_system, $default, FALSE); // project_system
-		$this->buildSearchSql($where, $this->create_date, $default, FALSE); // create_date
 		$this->buildSearchSql($where, $this->planned_date, $default, FALSE); // planned_date
 		$this->buildSearchSql($where, $this->document_type, $default, FALSE); // document_type
 		$this->buildSearchSql($where, $this->expiry_date, $default, FALSE); // expiry_date
@@ -1458,7 +1451,6 @@ class document_details_list extends document_details
 			$this->document_tittle->AdvancedSearch->save(); // document_tittle
 			$this->project_name->AdvancedSearch->save(); // project_name
 			$this->project_system->AdvancedSearch->save(); // project_system
-			$this->create_date->AdvancedSearch->save(); // create_date
 			$this->planned_date->AdvancedSearch->save(); // planned_date
 			$this->document_type->AdvancedSearch->save(); // document_type
 			$this->expiry_date->AdvancedSearch->save(); // expiry_date
@@ -1652,8 +1644,6 @@ class document_details_list extends document_details
 			return TRUE;
 		if ($this->project_system->AdvancedSearch->issetSession())
 			return TRUE;
-		if ($this->create_date->AdvancedSearch->issetSession())
-			return TRUE;
 		if ($this->planned_date->AdvancedSearch->issetSession())
 			return TRUE;
 		if ($this->document_type->AdvancedSearch->issetSession())
@@ -1698,7 +1688,6 @@ class document_details_list extends document_details
 		$this->document_tittle->AdvancedSearch->unsetSession();
 		$this->project_name->AdvancedSearch->unsetSession();
 		$this->project_system->AdvancedSearch->unsetSession();
-		$this->create_date->AdvancedSearch->unsetSession();
 		$this->planned_date->AdvancedSearch->unsetSession();
 		$this->document_type->AdvancedSearch->unsetSession();
 		$this->expiry_date->AdvancedSearch->unsetSession();
@@ -1718,7 +1707,6 @@ class document_details_list extends document_details
 		$this->document_tittle->AdvancedSearch->load();
 		$this->project_name->AdvancedSearch->load();
 		$this->project_system->AdvancedSearch->load();
-		$this->create_date->AdvancedSearch->load();
 		$this->planned_date->AdvancedSearch->load();
 		$this->document_type->AdvancedSearch->load();
 		$this->expiry_date->AdvancedSearch->load();
@@ -1740,6 +1728,7 @@ class document_details_list extends document_details
 			$this->updateSort($this->document_tittle, $ctrl); // document_tittle
 			$this->updateSort($this->project_name, $ctrl); // project_name
 			$this->updateSort($this->project_system, $ctrl); // project_system
+			$this->updateSort($this->create_date, $ctrl); // create_date
 			$this->updateSort($this->planned_date, $ctrl); // planned_date
 			$this->updateSort($this->document_type, $ctrl); // document_type
 			$this->updateSort($this->expiry_date, $ctrl); // expiry_date
@@ -1784,6 +1773,7 @@ class document_details_list extends document_details
 				$this->document_tittle->setSort("");
 				$this->project_name->setSort("");
 				$this->project_system->setSort("");
+				$this->create_date->setSort("");
 				$this->planned_date->setSort("");
 				$this->document_type->setSort("");
 				$this->expiry_date->setSort("");
@@ -1930,10 +1920,7 @@ class document_details_list extends document_details
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
-			if (IsMobile())
-				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
-			else
-				$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"document_details\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->CopyUrl) . "'});\">" . $Language->phrase("CopyLink") . "</a>";
+			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1993,10 +1980,7 @@ class document_details_list extends document_details
 		// Add
 		$item = &$option->add("add");
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
-		if (IsMobile())
-			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"document_details\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("AddLink") . "</a>";
+		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 		$item = &$option->add("gridadd");
 		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
@@ -2339,13 +2323,6 @@ class document_details_list extends document_details
 			$this->Command = "search";
 		$this->project_system->AdvancedSearch->setSearchOperator(Get("z_project_system", ""));
 
-		// create_date
-		if (!$this->isAddOrEdit())
-			$this->create_date->AdvancedSearch->setSearchValue(Get("x_create_date", Get("create_date", "")));
-		if ($this->create_date->AdvancedSearch->SearchValue <> "" && $this->Command == "")
-			$this->Command = "search";
-		$this->create_date->AdvancedSearch->setSearchOperator(Get("z_create_date", ""));
-
 		// planned_date
 		if (!$this->isAddOrEdit())
 			$this->planned_date->AdvancedSearch->setSearchValue(Get("x_planned_date", Get("planned_date", "")));
@@ -2425,6 +2402,17 @@ class document_details_list extends document_details
 		}
 		$this->project_system->setOldValue($CurrentForm->getValue("o_project_system"));
 
+		// Check field name 'create_date' first before field var 'x_create_date'
+		$val = $CurrentForm->hasValue("create_date") ? $CurrentForm->getValue("create_date") : $CurrentForm->getValue("x_create_date");
+		if (!$this->create_date->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->create_date->Visible = FALSE; // Disable update for API request
+			else
+				$this->create_date->setFormValue($val);
+			$this->create_date->CurrentValue = UnFormatDateTime($this->create_date->CurrentValue, 5);
+		}
+		$this->create_date->setOldValue($CurrentForm->getValue("o_create_date"));
+
 		// Check field name 'planned_date' first before field var 'x_planned_date'
 		$val = $CurrentForm->hasValue("planned_date") ? $CurrentForm->getValue("planned_date") : $CurrentForm->getValue("x_planned_date");
 		if (!$this->planned_date->IsDetailKey) {
@@ -2432,7 +2420,7 @@ class document_details_list extends document_details
 				$this->planned_date->Visible = FALSE; // Disable update for API request
 			else
 				$this->planned_date->setFormValue($val);
-			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		}
 		$this->planned_date->setOldValue($CurrentForm->getValue("o_planned_date"));
 
@@ -2474,8 +2462,10 @@ class document_details_list extends document_details
 		$this->document_tittle->CurrentValue = $this->document_tittle->FormValue;
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->project_system->CurrentValue = $this->project_system->FormValue;
+		$this->create_date->CurrentValue = $this->create_date->FormValue;
+		$this->create_date->CurrentValue = UnFormatDateTime($this->create_date->CurrentValue, 5);
 		$this->planned_date->CurrentValue = $this->planned_date->FormValue;
-		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
+		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
 		$this->document_type->CurrentValue = $this->document_type->FormValue;
 		$this->expiry_date->CurrentValue = $this->expiry_date->FormValue;
 		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
@@ -2557,6 +2547,11 @@ class document_details_list extends document_details
 		$this->create_date->setDbValue($row['create_date']);
 		$this->planned_date->setDbValue($row['planned_date']);
 		$this->document_type->setDbValue($row['document_type']);
+		if (array_key_exists('EV__document_type', $rs->fields)) {
+			$this->document_type->VirtualValue = $rs->fields('EV__document_type'); // Set up virtual field value
+		} else {
+			$this->document_type->VirtualValue = ""; // Clear value
+		}
 		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
@@ -2662,7 +2657,6 @@ class document_details_list extends document_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2681,16 +2675,40 @@ class document_details_list extends document_details
 
 			// create_date
 			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 			$this->create_date->ViewCustomAttributes = "";
 
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
-			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			if ($this->document_type->VirtualValue <> "") {
+				$this->document_type->ViewValue = $this->document_type->VirtualValue;
+			} else {
+				$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->ViewValue = $this->document_type->CurrentValue;
+					}
+				}
+			} else {
+				$this->document_type->ViewValue = NULL;
+			}
+			}
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
@@ -2722,6 +2740,11 @@ class document_details_list extends document_details
 			$this->project_system->LinkCustomAttributes = "";
 			$this->project_system->HrefValue = "";
 			$this->project_system->TooltipValue = "";
+
+			// create_date
+			$this->create_date->LinkCustomAttributes = "";
+			$this->create_date->HrefValue = "";
+			$this->create_date->TooltipValue = "";
 
 			// planned_date
 			$this->planned_date->LinkCustomAttributes = "";
@@ -2780,7 +2803,6 @@ class document_details_list extends document_details
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2800,10 +2822,16 @@ class document_details_list extends document_details
 			$this->project_system->EditValue = HtmlEncode($this->project_system->CurrentValue);
 			$this->project_system->PlaceHolder = RemoveHtml($this->project_system->caption());
 
+			// create_date
+			$this->create_date->EditAttrs["class"] = "form-control";
+			$this->create_date->EditCustomAttributes = "";
+			$this->create_date->EditValue = HtmlEncode(FormatDateTime($this->create_date->CurrentValue, 5));
+			$this->create_date->PlaceHolder = RemoveHtml($this->create_date->caption());
+
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
 			$this->planned_date->EditCustomAttributes = "";
-			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 8));
+			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
 			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 			// document_type
@@ -2812,6 +2840,26 @@ class document_details_list extends document_details
 			if (REMOVE_XSS)
 				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
 			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->EditValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+					}
+				}
+			} else {
+				$this->document_type->EditValue = NULL;
+			}
 			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
 
 			// expiry_date
@@ -2841,6 +2889,10 @@ class document_details_list extends document_details
 			// project_system
 			$this->project_system->LinkCustomAttributes = "";
 			$this->project_system->HrefValue = "";
+
+			// create_date
+			$this->create_date->LinkCustomAttributes = "";
+			$this->create_date->HrefValue = "";
 
 			// planned_date
 			$this->planned_date->LinkCustomAttributes = "";
@@ -2932,12 +2984,15 @@ class document_details_list extends document_details
 				AddMessage($FormError, str_replace("%s", $this->create_date->caption(), $this->create_date->RequiredErrorMessage));
 			}
 		}
+		if (!CheckStdDate($this->create_date->FormValue)) {
+			AddMessage($FormError, $this->create_date->errorMessage());
+		}
 		if ($this->planned_date->Required) {
 			if (!$this->planned_date->IsDetailKey && $this->planned_date->FormValue != NULL && $this->planned_date->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
 			}
 		}
-		if (!CheckDate($this->planned_date->FormValue)) {
+		if (!CheckStdDate($this->planned_date->FormValue)) {
 			AddMessage($FormError, $this->planned_date->errorMessage());
 		}
 		if ($this->document_type->Required) {
@@ -3101,8 +3156,11 @@ class document_details_list extends document_details
 		// project_system
 		$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", FALSE);
 
+		// create_date
+		$this->create_date->setDbValueDef($rsnew, UnFormatDateTime($this->create_date->CurrentValue, 5), NULL, FALSE);
+
 		// planned_date
-		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 0), CurrentDate(), FALSE);
+		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), FALSE);
 
 		// document_type
 		$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", FALSE);
@@ -3154,7 +3212,6 @@ class document_details_list extends document_details
 		$this->document_tittle->AdvancedSearch->load();
 		$this->project_name->AdvancedSearch->load();
 		$this->project_system->AdvancedSearch->load();
-		$this->create_date->AdvancedSearch->load();
 		$this->planned_date->AdvancedSearch->load();
 		$this->document_type->AdvancedSearch->load();
 		$this->expiry_date->AdvancedSearch->load();
@@ -3223,7 +3280,7 @@ class document_details_list extends document_details
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");
@@ -3394,6 +3451,8 @@ class document_details_list extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_document_type":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

@@ -53,6 +53,9 @@ fdocument_detailsdelete.validateRequired = <?php echo json_encode(CLIENT_VALIDAT
 fdocument_detailsdelete.lists["x_project_name"] = <?php echo $document_details_delete->project_name->Lookup->toClientList() ?>;
 fdocument_detailsdelete.lists["x_project_name"].options = <?php echo JsonEncode($document_details_delete->project_name->lookupOptions()) ?>;
 fdocument_detailsdelete.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailsdelete.lists["x_document_type"] = <?php echo $document_details_delete->document_type->Lookup->toClientList() ?>;
+fdocument_detailsdelete.lists["x_document_type"].options = <?php echo JsonEncode($document_details_delete->document_type->lookupOptions()) ?>;
+fdocument_detailsdelete.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Form object for search
 </script>
@@ -93,6 +96,9 @@ $document_details_delete->showMessage();
 <?php } ?>
 <?php if ($document_details->project_system->Visible) { // project_system ?>
 		<th class="<?php echo $document_details->project_system->headerCellClass() ?>"><span id="elh_document_details_project_system" class="document_details_project_system"><?php echo $document_details->project_system->caption() ?></span></th>
+<?php } ?>
+<?php if ($document_details->create_date->Visible) { // create_date ?>
+		<th class="<?php echo $document_details->create_date->headerCellClass() ?>"><span id="elh_document_details_create_date" class="document_details_create_date"><?php echo $document_details->create_date->caption() ?></span></th>
 <?php } ?>
 <?php if ($document_details->planned_date->Visible) { // planned_date ?>
 		<th class="<?php echo $document_details->planned_date->headerCellClass() ?>"><span id="elh_document_details_planned_date" class="document_details_planned_date"><?php echo $document_details->planned_date->caption() ?></span></th>
@@ -161,6 +167,14 @@ while (!$document_details_delete->Recordset->EOF) {
 <span id="el<?php echo $document_details_delete->RowCnt ?>_document_details_project_system" class="document_details_project_system">
 <span<?php echo $document_details->project_system->viewAttributes() ?>>
 <?php echo $document_details->project_system->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($document_details->create_date->Visible) { // create_date ?>
+		<td<?php echo $document_details->create_date->cellAttributes() ?>>
+<span id="el<?php echo $document_details_delete->RowCnt ?>_document_details_create_date" class="document_details_create_date">
+<span<?php echo $document_details->create_date->viewAttributes() ?>>
+<?php echo $document_details->create_date->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

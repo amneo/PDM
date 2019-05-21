@@ -2178,7 +2178,7 @@ class user_dtls_list extends user_dtls
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");

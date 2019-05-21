@@ -111,7 +111,7 @@ class document_details extends DbTable
 		$this->project_name->Nullable = FALSE; // NOT NULL field
 		$this->project_name->Required = TRUE; // Required field
 		$this->project_name->Sortable = TRUE; // Allow sort
-		$this->project_name->Lookup = new Lookup('project_name', 'project_details', FALSE, 'project_id', ["project_name","project_id","project_our_client",""], [], [], [], [], [], [], '"project_id" DESC', '');
+		$this->project_name->Lookup = new Lookup('project_name', 'project_details', FALSE, 'project_id', ["project_name","order_number","",""], [], [], [], [], [], [], '"project_id" DESC', '');
 		$this->fields['project_name'] = &$this->project_name;
 
 		// project_system
@@ -122,24 +122,26 @@ class document_details extends DbTable
 		$this->fields['project_system'] = &$this->project_system;
 
 		// create_date
-		$this->create_date = new DbField('document_details', 'document_details', 'x_create_date', 'create_date', '"create_date"', CastDateFieldForLike('"create_date"', 0, "DB"), 135, 0, FALSE, '"create_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->create_date = new DbField('document_details', 'document_details', 'x_create_date', 'create_date', '"create_date"', CastDateFieldForLike('"create_date"', 5, "DB"), 135, 5, FALSE, '"create_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->create_date->Required = TRUE; // Required field
 		$this->create_date->Sortable = FALSE; // Allow sort
-		$this->create_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->create_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['create_date'] = &$this->create_date;
 
 		// planned_date
-		$this->planned_date = new DbField('document_details', 'document_details', 'x_planned_date', 'planned_date', '"planned_date"', CastDateFieldForLike('"planned_date"', 0, "DB"), 133, 0, FALSE, '"planned_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date = new DbField('document_details', 'document_details', 'x_planned_date', 'planned_date', '"planned_date"', CastDateFieldForLike('"planned_date"', 5, "DB"), 133, 5, FALSE, '"planned_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date->Nullable = FALSE; // NOT NULL field
 		$this->planned_date->Required = TRUE; // Required field
 		$this->planned_date->Sortable = TRUE; // Allow sort
-		$this->planned_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+		$this->planned_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date'] = &$this->planned_date;
 
 		// document_type
-		$this->document_type = new DbField('document_details', 'document_details', 'x_document_type', 'document_type', '"document_type"', '"document_type"', 200, -1, FALSE, '"document_type"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->document_type = new DbField('document_details', 'document_details', 'x_document_type', 'document_type', '"document_type"', '"document_type"', 200, -1, FALSE, '"EV__document_type"', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
 		$this->document_type->Nullable = FALSE; // NOT NULL field
 		$this->document_type->Required = TRUE; // Required field
 		$this->document_type->Sortable = TRUE; // Allow sort
+		$this->document_type->Lookup = new Lookup('document_type', 'document_type', FALSE, 'document_type', ["document_type","document_category","",""], [], [], [], [], [], [], '', '');
 		$this->fields['document_type'] = &$this->document_type;
 
 		// expiry_date
@@ -251,7 +253,7 @@ class document_details extends DbTable
 	{
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT \"project_name\" || '" . ValueSeparator(1, $this->project_name) . "' || \"project_id\" || '" . ValueSeparator(2, $this->project_name) . "' || \"project_our_client\" FROM \"public\".\"project_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"project_id\" = \"document_details\".\"project_name\" LIMIT 1) AS \"EV__project_name\" FROM \"public\".\"document_details\"" .
+			"SELECT *, (SELECT \"project_name\" || '" . ValueSeparator(1, $this->project_name) . "' || \"order_number\" FROM \"public\".\"project_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"project_id\" = \"document_details\".\"project_name\" LIMIT 1) AS \"EV__project_name\", (SELECT \"document_type\" || '" . ValueSeparator(1, $this->document_type) . "' || \"document_category\" FROM \"public\".\"document_type\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"document_type\" = \"document_details\".\"document_type\" LIMIT 1) AS \"EV__document_type\" FROM \"public\".\"document_details\"" .
 			") \"TMP_TABLE\"";
 		return ($this->SqlSelectList <> "") ? $this->SqlSelectList : $select;
 	}
@@ -405,6 +407,14 @@ class document_details extends DbTable
 			ContainsString($where, " " . $this->project_name->VirtualExpression . " "))
 			return TRUE;
 		if (ContainsString($orderBy, " " . $this->project_name->VirtualExpression . " "))
+			return TRUE;
+		if ($this->BasicSearch->getKeyword() <> "")
+			return TRUE;
+		if ($this->document_type->AdvancedSearch->SearchValue <> "" ||
+			$this->document_type->AdvancedSearch->SearchValue2 <> "" ||
+			ContainsString($where, " " . $this->document_type->VirtualExpression . " "))
+			return TRUE;
+		if (ContainsString($orderBy, " " . $this->document_type->VirtualExpression . " "))
 			return TRUE;
 		return FALSE;
 	}
@@ -881,7 +891,6 @@ class document_details extends DbTable
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
 					$arwrk[2] = $rswrk->fields('df2');
-					$arwrk[3] = $rswrk->fields('df3');
 					$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -900,16 +909,40 @@ class document_details extends DbTable
 
 		// create_date
 		$this->create_date->ViewValue = $this->create_date->CurrentValue;
-		$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+		$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 		$this->create_date->ViewCustomAttributes = "";
 
 		// planned_date
 		$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-		$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+		$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 		$this->planned_date->ViewCustomAttributes = "";
 
 		// document_type
-		$this->document_type->ViewValue = $this->document_type->CurrentValue;
+		if ($this->document_type->VirtualValue <> "") {
+			$this->document_type->ViewValue = $this->document_type->VirtualValue;
+		} else {
+			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+		$curVal = strval($this->document_type->CurrentValue);
+		if ($curVal <> "") {
+			$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+			if ($this->document_type->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->document_type->ViewValue = $this->document_type->CurrentValue;
+				}
+			}
+		} else {
+			$this->document_type->ViewValue = NULL;
+		}
+		}
 		$this->document_type->ViewCustomAttributes = "";
 
 		// expiry_date
@@ -1031,13 +1064,13 @@ class document_details extends DbTable
 		// create_date
 		$this->create_date->EditAttrs["class"] = "form-control";
 		$this->create_date->EditCustomAttributes = "";
-		$this->create_date->EditValue = FormatDateTime($this->create_date->CurrentValue, 8);
+		$this->create_date->EditValue = FormatDateTime($this->create_date->CurrentValue, 5);
 		$this->create_date->PlaceHolder = RemoveHtml($this->create_date->caption());
 
 		// planned_date
 		$this->planned_date->EditAttrs["class"] = "form-control";
 		$this->planned_date->EditCustomAttributes = "";
-		$this->planned_date->EditValue = FormatDateTime($this->planned_date->CurrentValue, 8);
+		$this->planned_date->EditValue = FormatDateTime($this->planned_date->CurrentValue, 5);
 		$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 		// document_type

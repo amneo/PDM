@@ -85,7 +85,7 @@ fdocument_detailsedit.validate = function() {
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->planned_date->caption(), $document_details->planned_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
 			elm = this.getElements("x" + infix + "_planned_date");
-			if (elm && !ew.checkDateDef(elm.value))
+			if (elm && !ew.checkDate(elm.value))
 				return this.onError(elm, "<?php echo JsEncode($document_details->planned_date->errorMessage()) ?>");
 		<?php if ($document_details_edit->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
@@ -131,6 +131,9 @@ fdocument_detailsedit.validateRequired = <?php echo json_encode(CLIENT_VALIDATE)
 fdocument_detailsedit.lists["x_project_name"] = <?php echo $document_details_edit->project_name->Lookup->toClientList() ?>;
 fdocument_detailsedit.lists["x_project_name"].options = <?php echo JsonEncode($document_details_edit->project_name->lookupOptions()) ?>;
 fdocument_detailsedit.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailsedit.lists["x_document_type"] = <?php echo $document_details_edit->document_type->Lookup->toClientList() ?>;
+fdocument_detailsedit.lists["x_document_type"].options = <?php echo JsonEncode($document_details_edit->document_type->lookupOptions()) ?>;
+fdocument_detailsedit.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Form object for search
 </script>
@@ -292,10 +295,10 @@ fdocument_detailsedit.createAutoSuggest({"id":"x_project_name","forceSelect":tru
 		<label id="elh_document_details_planned_date" for="x_planned_date" class="<?php echo $document_details_edit->LeftColumnClass ?>"><?php echo $document_details->planned_date->caption() ?><?php echo ($document_details->planned_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_details_edit->RightColumnClass ?>"><div<?php echo $document_details->planned_date->cellAttributes() ?>>
 <span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
 </script>
 <?php } ?>
 </span>
@@ -306,10 +309,10 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 		<td class="<?php echo $document_details_edit->TableLeftColumnClass ?>"><span id="elh_document_details_planned_date"><?php echo $document_details->planned_date->caption() ?><?php echo ($document_details->planned_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_details->planned_date->cellAttributes() ?>>
 <span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
 </script>
 <?php } ?>
 </span>
@@ -320,10 +323,27 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 <?php if ($document_details->document_type->Visible) { // document_type ?>
 <?php if ($document_details_edit->IsMobileOrModal) { ?>
 	<div id="r_document_type" class="form-group row">
-		<label id="elh_document_details_document_type" for="x_document_type" class="<?php echo $document_details_edit->LeftColumnClass ?>"><?php echo $document_details->document_type->caption() ?><?php echo ($document_details->document_type->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label id="elh_document_details_document_type" class="<?php echo $document_details_edit->LeftColumnClass ?>"><?php echo $document_details->document_type->caption() ?><?php echo ($document_details->document_type->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_details_edit->RightColumnClass ?>"><div<?php echo $document_details->document_type->cellAttributes() ?>>
 <span id="el_document_details_document_type">
-<input type="text" data-table="document_details" data-field="x_document_type" name="x_document_type" id="x_document_type" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" value="<?php echo $document_details->document_type->EditValue ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
+<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailsedit.createAutoSuggest({"id":"x_document_type","forceSelect":true});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x_document_type") ?>
 </span>
 <?php echo $document_details->document_type->CustomMsg ?></div></div>
 	</div>
@@ -332,7 +352,24 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 		<td class="<?php echo $document_details_edit->TableLeftColumnClass ?>"><span id="elh_document_details_document_type"><?php echo $document_details->document_type->caption() ?><?php echo ($document_details->document_type->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_details->document_type->cellAttributes() ?>>
 <span id="el_document_details_document_type">
-<input type="text" data-table="document_details" data-field="x_document_type" name="x_document_type" id="x_document_type" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" value="<?php echo $document_details->document_type->EditValue ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
+<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<?php } ?>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailsedit.createAutoSuggest({"id":"x_document_type","forceSelect":true});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x_document_type") ?>
 </span>
 <?php echo $document_details->document_type->CustomMsg ?></td>
 	</tr>

@@ -57,6 +57,9 @@ fdocument_detailssearch.validateRequired = <?php echo json_encode(CLIENT_VALIDAT
 fdocument_detailssearch.lists["x_project_name"] = <?php echo $document_details_search->project_name->Lookup->toClientList() ?>;
 fdocument_detailssearch.lists["x_project_name"].options = <?php echo JsonEncode($document_details_search->project_name->lookupOptions()) ?>;
 fdocument_detailssearch.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailssearch.lists["x_document_type"] = <?php echo $document_details_search->document_type->Lookup->toClientList() ?>;
+fdocument_detailssearch.lists["x_document_type"].options = <?php echo JsonEncode($document_details_search->document_type->lookupOptions()) ?>;
+fdocument_detailssearch.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 // Form object for search
 // Validate function for search
@@ -66,11 +69,8 @@ fdocument_detailssearch.validate = function(fobj) {
 		return true; // Ignore validation
 	fobj = fobj || this._form;
 	var infix = "";
-	elm = this.getElements("x" + infix + "_create_date");
-	if (elm && !ew.checkDateDef(elm.value))
-		return this.onError(elm, "<?php echo JsEncode($document_details->create_date->errorMessage()) ?>");
 	elm = this.getElements("x" + infix + "_planned_date");
-	if (elm && !ew.checkDateDef(elm.value))
+	if (elm && !ew.checkDate(elm.value))
 		return this.onError(elm, "<?php echo JsEncode($document_details->planned_date->errorMessage()) ?>");
 	elm = this.getElements("x" + infix + "_expiry_date");
 	if (elm && !ew.checkDateDef(elm.value))
@@ -259,32 +259,6 @@ fdocument_detailssearch.createAutoSuggest({"id":"x_project_name","forceSelect":f
 	</tr>
 <?php } ?>
 <?php } ?>
-<?php if ($document_details->create_date->Visible) { // create_date ?>
-<?php if ($document_details_search->IsMobileOrModal) { ?>
-	<div id="r_create_date" class="form-group row">
-		<label for="x_create_date" class="<?php echo $document_details_search->LeftColumnClass ?>"><span id="elh_document_details_create_date"><?php echo $document_details->create_date->caption() ?></span>
-		<span class="ew-search-operator"><?php echo $Language->phrase("=") ?><input type="hidden" name="z_create_date" id="z_create_date" value="="></span>
-		</label>
-		<div class="<?php echo $document_details_search->RightColumnClass ?>"><div<?php echo $document_details->create_date->cellAttributes() ?>>
-			<span id="el_document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" name="x_create_date" id="x_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-</span>
-		</div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_create_date">
-		<td class="<?php echo $document_details_search->TableLeftColumnClass ?>"><span id="elh_document_details_create_date"><?php echo $document_details->create_date->caption() ?></span></td>
-		<td class="w-col-1"><span class="ew-search-operator"><?php echo $Language->phrase("=") ?><input type="hidden" name="z_create_date" id="z_create_date" value="="></span></td>
-		<td<?php echo $document_details->create_date->cellAttributes() ?>>
-			<div class="text-nowrap">
-				<span id="el_document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" name="x_create_date" id="x_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-</span>
-			</div>
-		</td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($document_details->planned_date->Visible) { // planned_date ?>
 <?php if ($document_details_search->IsMobileOrModal) { ?>
 	<div id="r_planned_date" class="form-group row">
@@ -293,10 +267,10 @@ fdocument_detailssearch.createAutoSuggest({"id":"x_project_name","forceSelect":f
 		</label>
 		<div class="<?php echo $document_details_search->RightColumnClass ?>"><div<?php echo $document_details->planned_date->cellAttributes() ?>>
 			<span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
 </script>
 <?php } ?>
 </span>
@@ -309,10 +283,10 @@ ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreRea
 		<td<?php echo $document_details->planned_date->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
 </script>
 <?php } ?>
 </span>
@@ -324,12 +298,24 @@ ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreRea
 <?php if ($document_details->document_type->Visible) { // document_type ?>
 <?php if ($document_details_search->IsMobileOrModal) { ?>
 	<div id="r_document_type" class="form-group row">
-		<label for="x_document_type" class="<?php echo $document_details_search->LeftColumnClass ?>"><span id="elh_document_details_document_type"><?php echo $document_details->document_type->caption() ?></span>
+		<label class="<?php echo $document_details_search->LeftColumnClass ?>"><span id="elh_document_details_document_type"><?php echo $document_details->document_type->caption() ?></span>
 		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_type" id="z_document_type" value="LIKE"></span>
 		</label>
 		<div class="<?php echo $document_details_search->RightColumnClass ?>"><div<?php echo $document_details->document_type->cellAttributes() ?>>
 			<span id="el_document_details_document_type">
-<input type="text" data-table="document_details" data-field="x_document_type" name="x_document_type" id="x_document_type" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" value="<?php echo $document_details->document_type->EditValue ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
+	<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailssearch.createAutoSuggest({"id":"x_document_type","forceSelect":false});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x_document_type") ?>
 </span>
 		</div></div>
 	</div>
@@ -340,7 +326,19 @@ ew.createDateTimePicker("fdocument_detailssearch", "x_planned_date", {"ignoreRea
 		<td<?php echo $document_details->document_type->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_document_details_document_type">
-<input type="text" data-table="document_details" data-field="x_document_type" name="x_document_type" id="x_document_type" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" value="<?php echo $document_details->document_type->EditValue ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
+	<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailssearch.createAutoSuggest({"id":"x_document_type","forceSelect":false});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x_document_type") ?>
 </span>
 			</div>
 		</td>

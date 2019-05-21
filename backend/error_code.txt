@@ -1,3 +1,6 @@
 error code	| backend / front end	|  Error About
 psi_ravan_001	| backend		| When function does not return the latest version
 psi_ravan_002	| backend 		| When insert statement in function sai_func_03 produces some unknown error 
+psi_ravan_003	| backend 		| When insert statement in function sai_func_04 produces some unknown error IN ELSE BLOCK SOME NEW CONDITION HAS BEEN REACHED.
+psi_ravan_004	| backend 		| When insert statement in function sai_func_04 produces some unknown error IN ELSE BLOCK SOME NEW CONDITION HAS BEEN REACHED.
+psi_ravan_005	| backend 		| While query in the overall status in sai_func_06

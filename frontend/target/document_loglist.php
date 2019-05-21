@@ -52,8 +52,11 @@ fdocument_loglist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS L
 fdocument_loglist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+fdocument_loglist.lists["x_approval_status_1"] = <?php echo $document_log_list->approval_status_1->Lookup->toClientList() ?>;
+fdocument_loglist.lists["x_approval_status_1"].options = <?php echo JsonEncode($document_log_list->approval_status_1->lookupOptions()) ?>;
+fdocument_loglist.autoSuggests["x_approval_status_1"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
+// Form object for search
 var fdocument_loglistsrch = currentSearchForm = new ew.Form("fdocument_loglistsrch");
 
 // Filters

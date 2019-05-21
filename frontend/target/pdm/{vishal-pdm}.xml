@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2019/05/20" author="e.World Technology Ltd.">
-  <project id="{vishal-pdm}" file="E:\PDM\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/05/20 02:18:11" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2019/05/21" author="e.World Technology Ltd.">
+  <project id="{vishal-pdm}" file="E:\PDM\frontend\PDM.pmp" name="pdm" product="PHPMaker" version="15.0" datetime="2019/05/21 23:18:08" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="transaction_details" name="transaction_details" caption="Transaction Log" userlevel="-2,&quot;Anonymous&quot;,104;0,&quot;Default&quot;,0" priv="1" />
     <table id="distribution_details" name="distribution_details" caption="Distribution" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="inbox" name="inbox" caption="Inbox" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -15,7 +15,8 @@
     <table id="userlevels" name="userlevels" caption="User Levels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="userlevelpermissions" name="userlevelpermissions" caption="User Level Permission" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="xmit_details" name="xmit_details" caption="Tramit Modes" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="document_log" name="document_log" caption="Consolidated Log" userlevel="-2,&quot;Anonymous&quot;,72;0,&quot;Default&quot;,0" priv="1" />
+    <table id="document_log" name="document_log" caption="Consolidated Report" userlevel="-2,&quot;Anonymous&quot;,72;0,&quot;Default&quot;,0" priv="1" />
     <table id="cron_file" name="cron_file.php" caption="cron" userlevel="-2,&quot;Anonymous&quot;,72;0,&quot;Default&quot;,0" priv="1" />
+    <table id="document_type" name="document_type" caption="table" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

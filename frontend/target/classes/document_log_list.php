@@ -882,8 +882,9 @@ class document_log_list extends document_log
 		}
 
 		// Set up lookup cache
-		// Search filters
+		$this->setupLookupOptions($this->approval_status_1);
 
+		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
 		$srchBasic = ""; // Basic search filter
 		$filter = "";
@@ -3069,12 +3070,12 @@ class document_log_list extends document_log
 
 			// planned_date_1
 			$this->planned_date_1->ViewValue = $this->planned_date_1->CurrentValue;
-			$this->planned_date_1->ViewValue = FormatDateTime($this->planned_date_1->ViewValue, 0);
+			$this->planned_date_1->ViewValue = FormatDateTime($this->planned_date_1->ViewValue, 5);
 			$this->planned_date_1->ViewCustomAttributes = "";
 
 			// transmit_date_1
 			$this->transmit_date_1->ViewValue = $this->transmit_date_1->CurrentValue;
-			$this->transmit_date_1->ViewValue = FormatDateTime($this->transmit_date_1->ViewValue, 0);
+			$this->transmit_date_1->ViewValue = FormatDateTime($this->transmit_date_1->ViewValue, 5);
 			$this->transmit_date_1->ViewCustomAttributes = "";
 
 			// transmit_no_1
@@ -3083,6 +3084,26 @@ class document_log_list extends document_log
 
 			// approval_status_1
 			$this->approval_status_1->ViewValue = $this->approval_status_1->CurrentValue;
+			$curVal = strval($this->approval_status_1->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_1->ViewValue = $this->approval_status_1->lookupCacheOption($curVal);
+				if ($this->approval_status_1->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_1->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_1->ViewValue = $this->approval_status_1->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_1->ViewValue = $this->approval_status_1->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_1->ViewValue = NULL;
+			}
 			$this->approval_status_1->ViewCustomAttributes = "";
 
 			// submit_no_2
@@ -3099,12 +3120,12 @@ class document_log_list extends document_log
 
 			// planned_date_2
 			$this->planned_date_2->ViewValue = $this->planned_date_2->CurrentValue;
-			$this->planned_date_2->ViewValue = FormatDateTime($this->planned_date_2->ViewValue, 0);
+			$this->planned_date_2->ViewValue = FormatDateTime($this->planned_date_2->ViewValue, 5);
 			$this->planned_date_2->ViewCustomAttributes = "";
 
 			// transmit_date_2
 			$this->transmit_date_2->ViewValue = $this->transmit_date_2->CurrentValue;
-			$this->transmit_date_2->ViewValue = FormatDateTime($this->transmit_date_2->ViewValue, 0);
+			$this->transmit_date_2->ViewValue = FormatDateTime($this->transmit_date_2->ViewValue, 5);
 			$this->transmit_date_2->ViewCustomAttributes = "";
 
 			// transmit_no_2
@@ -3129,12 +3150,12 @@ class document_log_list extends document_log
 
 			// planned_date_3
 			$this->planned_date_3->ViewValue = $this->planned_date_3->CurrentValue;
-			$this->planned_date_3->ViewValue = FormatDateTime($this->planned_date_3->ViewValue, 0);
+			$this->planned_date_3->ViewValue = FormatDateTime($this->planned_date_3->ViewValue, 5);
 			$this->planned_date_3->ViewCustomAttributes = "";
 
 			// transmit_date_3
 			$this->transmit_date_3->ViewValue = $this->transmit_date_3->CurrentValue;
-			$this->transmit_date_3->ViewValue = FormatDateTime($this->transmit_date_3->ViewValue, 0);
+			$this->transmit_date_3->ViewValue = FormatDateTime($this->transmit_date_3->ViewValue, 5);
 			$this->transmit_date_3->ViewCustomAttributes = "";
 
 			// transmit_no_3
@@ -3159,12 +3180,12 @@ class document_log_list extends document_log
 
 			// planned_date_4
 			$this->planned_date_4->ViewValue = $this->planned_date_4->CurrentValue;
-			$this->planned_date_4->ViewValue = FormatDateTime($this->planned_date_4->ViewValue, 0);
+			$this->planned_date_4->ViewValue = FormatDateTime($this->planned_date_4->ViewValue, 5);
 			$this->planned_date_4->ViewCustomAttributes = "";
 
 			// transmit_date_4
 			$this->transmit_date_4->ViewValue = $this->transmit_date_4->CurrentValue;
-			$this->transmit_date_4->ViewValue = FormatDateTime($this->transmit_date_4->ViewValue, 0);
+			$this->transmit_date_4->ViewValue = FormatDateTime($this->transmit_date_4->ViewValue, 5);
 			$this->transmit_date_4->ViewCustomAttributes = "";
 
 			// transmit_no_4
@@ -3189,12 +3210,12 @@ class document_log_list extends document_log
 
 			// planned_date_5
 			$this->planned_date_5->ViewValue = $this->planned_date_5->CurrentValue;
-			$this->planned_date_5->ViewValue = FormatDateTime($this->planned_date_5->ViewValue, 0);
+			$this->planned_date_5->ViewValue = FormatDateTime($this->planned_date_5->ViewValue, 5);
 			$this->planned_date_5->ViewCustomAttributes = "";
 
 			// transmit_date_5
 			$this->transmit_date_5->ViewValue = $this->transmit_date_5->CurrentValue;
-			$this->transmit_date_5->ViewValue = FormatDateTime($this->transmit_date_5->ViewValue, 0);
+			$this->transmit_date_5->ViewValue = FormatDateTime($this->transmit_date_5->ViewValue, 5);
 			$this->transmit_date_5->ViewCustomAttributes = "";
 
 			// transmit_no_5
@@ -3219,12 +3240,12 @@ class document_log_list extends document_log
 
 			// planned_date_6
 			$this->planned_date_6->ViewValue = $this->planned_date_6->CurrentValue;
-			$this->planned_date_6->ViewValue = FormatDateTime($this->planned_date_6->ViewValue, 0);
+			$this->planned_date_6->ViewValue = FormatDateTime($this->planned_date_6->ViewValue, 5);
 			$this->planned_date_6->ViewCustomAttributes = "";
 
 			// transmit_date_6
 			$this->transmit_date_6->ViewValue = $this->transmit_date_6->CurrentValue;
-			$this->transmit_date_6->ViewValue = FormatDateTime($this->transmit_date_6->ViewValue, 0);
+			$this->transmit_date_6->ViewValue = FormatDateTime($this->transmit_date_6->ViewValue, 5);
 			$this->transmit_date_6->ViewCustomAttributes = "";
 
 			// transmit_no_6
@@ -3249,12 +3270,12 @@ class document_log_list extends document_log
 
 			// planned_date_7
 			$this->planned_date_7->ViewValue = $this->planned_date_7->CurrentValue;
-			$this->planned_date_7->ViewValue = FormatDateTime($this->planned_date_7->ViewValue, 0);
+			$this->planned_date_7->ViewValue = FormatDateTime($this->planned_date_7->ViewValue, 5);
 			$this->planned_date_7->ViewCustomAttributes = "";
 
 			// transmit_date_7
 			$this->transmit_date_7->ViewValue = $this->transmit_date_7->CurrentValue;
-			$this->transmit_date_7->ViewValue = FormatDateTime($this->transmit_date_7->ViewValue, 0);
+			$this->transmit_date_7->ViewValue = FormatDateTime($this->transmit_date_7->ViewValue, 5);
 			$this->transmit_date_7->ViewCustomAttributes = "";
 
 			// transmit_no_7
@@ -3279,12 +3300,12 @@ class document_log_list extends document_log
 
 			// planned_date_8
 			$this->planned_date_8->ViewValue = $this->planned_date_8->CurrentValue;
-			$this->planned_date_8->ViewValue = FormatDateTime($this->planned_date_8->ViewValue, 0);
+			$this->planned_date_8->ViewValue = FormatDateTime($this->planned_date_8->ViewValue, 5);
 			$this->planned_date_8->ViewCustomAttributes = "";
 
 			// transmit_date_8
 			$this->transmit_date_8->ViewValue = $this->transmit_date_8->CurrentValue;
-			$this->transmit_date_8->ViewValue = FormatDateTime($this->transmit_date_8->ViewValue, 0);
+			$this->transmit_date_8->ViewValue = FormatDateTime($this->transmit_date_8->ViewValue, 5);
 			$this->transmit_date_8->ViewCustomAttributes = "";
 
 			// transmit_no_8
@@ -3309,12 +3330,12 @@ class document_log_list extends document_log
 
 			// planned_date_9
 			$this->planned_date_9->ViewValue = $this->planned_date_9->CurrentValue;
-			$this->planned_date_9->ViewValue = FormatDateTime($this->planned_date_9->ViewValue, 0);
+			$this->planned_date_9->ViewValue = FormatDateTime($this->planned_date_9->ViewValue, 5);
 			$this->planned_date_9->ViewCustomAttributes = "";
 
 			// transmit_date_9
 			$this->transmit_date_9->ViewValue = $this->transmit_date_9->CurrentValue;
-			$this->transmit_date_9->ViewValue = FormatDateTime($this->transmit_date_9->ViewValue, 0);
+			$this->transmit_date_9->ViewValue = FormatDateTime($this->transmit_date_9->ViewValue, 5);
 			$this->transmit_date_9->ViewCustomAttributes = "";
 
 			// transmit_no_9
@@ -3339,12 +3360,13 @@ class document_log_list extends document_log
 
 			// planned_date_10
 			$this->planned_date_10->ViewValue = $this->planned_date_10->CurrentValue;
-			$this->planned_date_10->ViewValue = FormatDateTime($this->planned_date_10->ViewValue, 0);
+			$this->planned_date_10->ViewValue = FormatDateTime($this->planned_date_10->ViewValue, 5);
 			$this->planned_date_10->ViewCustomAttributes = "";
 
 			// transmit_date_10
 			$this->transmit_date_10->ViewValue = $this->transmit_date_10->CurrentValue;
-			$this->transmit_date_10->ViewValue = FormatDateTime($this->transmit_date_10->ViewValue, 0);
+			$this->transmit_date_10->ViewValue = FormatDateTime($this->transmit_date_10->ViewValue, 5);
+			$this->transmit_date_10->CssClass = "font-italic";
 			$this->transmit_date_10->ViewCustomAttributes = "";
 
 			// transmit_no_10
@@ -3874,7 +3896,7 @@ class document_log_list extends document_log
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");
@@ -4044,6 +4066,8 @@ class document_log_list extends document_log
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x_approval_status_1":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

@@ -25,6 +25,7 @@ $topMenu->addMenuItem(3, "mi_inbox", $MenuLanguage->MenuPhrase("3", "MenuText"),
 $topMenu->addMenuItem(34, "mi_xmit_details", $MenuLanguage->MenuPhrase("34", "MenuText"), "xmit_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}xmit_details'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(19, "mi_approval_details", $MenuLanguage->MenuPhrase("19", "MenuText"), "approval_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}approval_details'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(33, "mi_document_system", $MenuLanguage->MenuPhrase("33", "MenuText"), "document_systemlist.php", 10, "", AllowListMenu('{vishal-pdm}document_system'), FALSE, FALSE, "", "", TRUE);
+$topMenu->addMenuItem(37, "mi_document_type", $MenuLanguage->MenuPhrase("37", "MenuText"), "document_typelist.php", 10, "", AllowListMenu('{vishal-pdm}document_type'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(6, "mi_app_version", $MenuLanguage->MenuPhrase("6", "MenuText"), "app_versionlist.php", 10, "", AllowListMenu('{vishal-pdm}app_version'), FALSE, FALSE, "", "", TRUE);
 echo $topMenu->toScript();
 
@@ -46,6 +47,7 @@ $sideMenu->addMenuItem(3, "mi_inbox", $MenuLanguage->MenuPhrase("3", "MenuText")
 $sideMenu->addMenuItem(34, "mi_xmit_details", $MenuLanguage->MenuPhrase("34", "MenuText"), "xmit_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}xmit_details'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(19, "mi_approval_details", $MenuLanguage->MenuPhrase("19", "MenuText"), "approval_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}approval_details'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(33, "mi_document_system", $MenuLanguage->MenuPhrase("33", "MenuText"), "document_systemlist.php", 10, "", AllowListMenu('{vishal-pdm}document_system'), FALSE, FALSE, "", "", TRUE);
+$sideMenu->addMenuItem(37, "mi_document_type", $MenuLanguage->MenuPhrase("37", "MenuText"), "document_typelist.php", 10, "", AllowListMenu('{vishal-pdm}document_type'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(6, "mi_app_version", $MenuLanguage->MenuPhrase("6", "MenuText"), "app_versionlist.php", 10, "", AllowListMenu('{vishal-pdm}app_version'), FALSE, FALSE, "", "", TRUE);
 echo $sideMenu->toScript();
 ?>

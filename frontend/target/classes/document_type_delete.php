@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class approval_details_delete extends approval_details
+class document_type_delete extends document_type
 {
 
 	// Page ID
@@ -14,10 +14,10 @@ class approval_details_delete extends approval_details
 	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
-	public $TableName = 'approval_details';
+	public $TableName = 'document_type';
 
 	// Page object name
-	public $PageObjName = "approval_details_delete";
+	public $PageObjName = "document_type_delete";
 
 	// Page headings
 	public $Heading = "";
@@ -343,10 +343,10 @@ class approval_details_delete extends approval_details
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (approval_details)
-		if (!isset($GLOBALS["approval_details"]) || get_class($GLOBALS["approval_details"]) == PROJECT_NAMESPACE . "approval_details") {
-			$GLOBALS["approval_details"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["approval_details"];
+		// Table object (document_type)
+		if (!isset($GLOBALS["document_type"]) || get_class($GLOBALS["document_type"]) == PROJECT_NAMESPACE . "document_type") {
+			$GLOBALS["document_type"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["document_type"];
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
@@ -360,7 +360,7 @@ class approval_details_delete extends approval_details
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
-			define(PROJECT_NAMESPACE . "TABLE_NAME", 'approval_details');
+			define(PROJECT_NAMESPACE . "TABLE_NAME", 'document_type');
 
 		// Start timer
 		if (!isset($GLOBALS["DebugTimer"]))
@@ -392,14 +392,14 @@ class approval_details_delete extends approval_details
 		Page_Unloaded();
 
 		// Export
-		global $EXPORT, $approval_details;
+		global $EXPORT, $document_type;
 		if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EXPORT)) {
 				$content = ob_get_contents();
 			if ($ExportFileName == "")
 				$ExportFileName = $this->TableVar;
 			$class = PROJECT_NAMESPACE . $EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($approval_details);
+				$doc = new $class($document_type);
 				$doc->Text = @$content;
 				if ($this->isExport("email"))
 					echo $this->exportEmail($doc->Text);
@@ -503,7 +503,7 @@ class approval_details_delete extends approval_details
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
-			$key .= @$ar['id'];
+			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -516,7 +516,7 @@ class approval_details_delete extends approval_details
 	protected function hideFieldsForAddEdit()
 	{
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
-			$this->id->Visible = FALSE;
+			$this->type_id->Visible = FALSE;
 	}
 	public $DbMasterFilter = "";
 	public $DbDetailFilter = "";
@@ -573,7 +573,7 @@ class approval_details_delete extends approval_details
 				$Security->saveLastUrl();
 				$this->setFailureMessage(DeniedMessage()); // Set no permission
 				if ($Security->canList())
-					$this->terminate(GetUrl("approval_detailslist.php"));
+					$this->terminate(GetUrl("document_typelist.php"));
 				else
 					$this->terminate(GetUrl("login.php"));
 				return;
@@ -592,11 +592,9 @@ class approval_details_delete extends approval_details
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->id->setVisibility();
-		$this->short_code->setVisibility();
-		$this->Description->setVisibility();
-		$this->out_status->setVisibility();
-		$this->in_status->setVisibility();
+		$this->type_id->setVisibility();
+		$this->document_type->setVisibility();
+		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -626,7 +624,7 @@ class approval_details_delete extends approval_details
 		$this->RecKeys = $this->getRecordKeys(); // Load record keys
 		$filter = $this->getFilterFromRecordKeys();
 		if ($filter == "") {
-			$this->terminate("approval_detailslist.php"); // Prevent SQL injection, return to list
+			$this->terminate("document_typelist.php"); // Prevent SQL injection, return to list
 			return;
 		}
 
@@ -668,7 +666,7 @@ class approval_details_delete extends approval_details
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->close();
-				$this->terminate("approval_detailslist.php"); // Return to list
+				$this->terminate("document_typelist.php"); // Return to list
 			}
 		}
 	}
@@ -735,22 +733,18 @@ class approval_details_delete extends approval_details
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->id->setDbValue($row['id']);
-		$this->short_code->setDbValue($row['short_code']);
-		$this->Description->setDbValue($row['Description']);
-		$this->out_status->setDbValue($row['out_status']);
-		$this->in_status->setDbValue($row['in_status']);
+		$this->type_id->setDbValue($row['type_id']);
+		$this->document_type->setDbValue($row['document_type']);
+		$this->document_category->setDbValue($row['document_category']);
 	}
 
 	// Return a row with default values
 	protected function newRow()
 	{
 		$row = [];
-		$row['id'] = NULL;
-		$row['short_code'] = NULL;
-		$row['Description'] = NULL;
-		$row['out_status'] = NULL;
-		$row['in_status'] = NULL;
+		$row['type_id'] = NULL;
+		$row['document_type'] = NULL;
+		$row['document_category'] = NULL;
 		return $row;
 	}
 
@@ -765,60 +759,38 @@ class approval_details_delete extends approval_details
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// id
-		// short_code
-		// Description
-		// out_status
-		// in_status
+		// type_id
+		// document_type
+		// document_category
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// id
-			$this->id->ViewValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
+			// type_id
+			$this->type_id->ViewValue = $this->type_id->CurrentValue;
+			$this->type_id->ViewCustomAttributes = "";
 
-			// short_code
-			$this->short_code->ViewValue = $this->short_code->CurrentValue;
-			$this->short_code->ViewCustomAttributes = "";
+			// document_type
+			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$this->document_type->ViewCustomAttributes = "";
 
-			// Description
-			$this->Description->ViewValue = $this->Description->CurrentValue;
-			$this->Description->ViewCustomAttributes = "";
+			// document_category
+			$this->document_category->ViewValue = $this->document_category->CurrentValue;
+			$this->document_category->ViewCustomAttributes = "";
 
-			// out_status
-			$this->out_status->ViewValue = $this->out_status->CurrentValue;
-			$this->out_status->ViewValue = strtoupper($this->out_status->ViewValue);
-			$this->out_status->ViewCustomAttributes = "";
+			// type_id
+			$this->type_id->LinkCustomAttributes = "";
+			$this->type_id->HrefValue = "";
+			$this->type_id->TooltipValue = "";
 
-			// in_status
-			$this->in_status->ViewValue = $this->in_status->CurrentValue;
-			$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
-			$this->in_status->ViewCustomAttributes = "";
+			// document_type
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+			$this->document_type->TooltipValue = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
-			// short_code
-			$this->short_code->LinkCustomAttributes = "";
-			$this->short_code->HrefValue = "";
-			$this->short_code->TooltipValue = "";
-
-			// Description
-			$this->Description->LinkCustomAttributes = "";
-			$this->Description->HrefValue = "";
-			$this->Description->TooltipValue = "";
-
-			// out_status
-			$this->out_status->LinkCustomAttributes = "";
-			$this->out_status->HrefValue = "";
-			$this->out_status->TooltipValue = "";
-
-			// in_status
-			$this->in_status->LinkCustomAttributes = "";
-			$this->in_status->HrefValue = "";
-			$this->in_status->TooltipValue = "";
+			// document_category
+			$this->document_category->LinkCustomAttributes = "";
+			$this->document_category->HrefValue = "";
+			$this->document_category->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -869,7 +841,7 @@ class approval_details_delete extends approval_details
 				$thisKey = "";
 				if ($thisKey <> "")
 					$thisKey .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
-				$thisKey .= $row['id'];
+				$thisKey .= $row['type_id'];
 				if (DELETE_UPLOADED_FILES) // Delete old files
 					$this->deleteUploadedFiles($row);
 				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
@@ -922,7 +894,7 @@ class approval_details_delete extends approval_details
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new Breadcrumb();
 		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
-		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("approval_detailslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("document_typelist.php"), "", $this->TableVar, TRUE);
 		$pageId = "delete";
 		$Breadcrumb->add("delete", $pageId, $url);
 	}

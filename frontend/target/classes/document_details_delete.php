@@ -606,7 +606,7 @@ class document_details_delete extends document_details
 		$this->document_tittle->setVisibility();
 		$this->project_name->setVisibility();
 		$this->project_system->setVisibility();
-		$this->create_date->Visible = FALSE;
+		$this->create_date->setVisibility();
 		$this->planned_date->setVisibility();
 		$this->document_type->setVisibility();
 		$this->expiry_date->setVisibility();
@@ -632,6 +632,7 @@ class document_details_delete extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->document_type);
 
 		// Set up Breadcrumb
 		$this->setupBreadcrumb();
@@ -763,6 +764,11 @@ class document_details_delete extends document_details
 		$this->create_date->setDbValue($row['create_date']);
 		$this->planned_date->setDbValue($row['planned_date']);
 		$this->document_type->setDbValue($row['document_type']);
+		if (array_key_exists('EV__document_type', $rs->fields)) {
+			$this->document_type->VirtualValue = $rs->fields('EV__document_type'); // Set up virtual field value
+		} else {
+			$this->document_type->VirtualValue = ""; // Clear value
+		}
 		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
@@ -838,7 +844,6 @@ class document_details_delete extends document_details
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -857,16 +862,40 @@ class document_details_delete extends document_details
 
 			// create_date
 			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 			$this->create_date->ViewCustomAttributes = "";
 
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
-			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			if ($this->document_type->VirtualValue <> "") {
+				$this->document_type->ViewValue = $this->document_type->VirtualValue;
+			} else {
+				$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->ViewValue = $this->document_type->CurrentValue;
+					}
+				}
+			} else {
+				$this->document_type->ViewValue = NULL;
+			}
+			}
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
@@ -898,6 +927,11 @@ class document_details_delete extends document_details
 			$this->project_system->LinkCustomAttributes = "";
 			$this->project_system->HrefValue = "";
 			$this->project_system->TooltipValue = "";
+
+			// create_date
+			$this->create_date->LinkCustomAttributes = "";
+			$this->create_date->HrefValue = "";
+			$this->create_date->TooltipValue = "";
 
 			// planned_date
 			$this->planned_date->LinkCustomAttributes = "";
@@ -1059,6 +1093,8 @@ class document_details_delete extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_document_type":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

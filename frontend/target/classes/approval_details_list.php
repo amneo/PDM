@@ -763,7 +763,8 @@ class approval_details_list extends approval_details
 		$this->id->setVisibility();
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
-		$this->document_status->setVisibility();
+		$this->out_status->setVisibility();
+		$this->in_status->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1020,6 +1021,7 @@ class approval_details_list extends approval_details
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fapproval_detailslistsrch");
+		$filterList = Concat($filterList, $this->in_status->AdvancedSearch->toJson(), ","); // Field in_status
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1057,6 +1059,14 @@ class approval_details_list extends approval_details
 			return FALSE;
 		$filter = json_decode(Post("filter"), TRUE);
 		$this->Command = "search";
+
+		// Field in_status
+		$this->in_status->AdvancedSearch->SearchValue = @$filter["x_in_status"];
+		$this->in_status->AdvancedSearch->SearchOperator = @$filter["z_in_status"];
+		$this->in_status->AdvancedSearch->SearchCondition = @$filter["v_in_status"];
+		$this->in_status->AdvancedSearch->SearchValue2 = @$filter["y_in_status"];
+		$this->in_status->AdvancedSearch->SearchOperator2 = @$filter["w_in_status"];
+		$this->in_status->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1067,6 +1077,8 @@ class approval_details_list extends approval_details
 		$where = "";
 		$this->buildBasicSearchSql($where, $this->short_code, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Description, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->out_status, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->in_status, $arKeywords, $type);
 		return $where;
 	}
 
@@ -1232,7 +1244,8 @@ class approval_details_list extends approval_details
 			$this->updateSort($this->id, $ctrl); // id
 			$this->updateSort($this->short_code, $ctrl); // short_code
 			$this->updateSort($this->Description, $ctrl); // Description
-			$this->updateSort($this->document_status, $ctrl); // document_status
+			$this->updateSort($this->out_status, $ctrl); // out_status
+			$this->updateSort($this->in_status, $ctrl); // in_status
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1271,7 +1284,8 @@ class approval_details_list extends approval_details
 				$this->id->setSort("");
 				$this->short_code->setSort("");
 				$this->Description->setSort("");
-				$this->document_status->setSort("");
+				$this->out_status->setSort("");
+				$this->in_status->setSort("");
 			}
 
 			// Reset start position
@@ -1726,7 +1740,8 @@ class approval_details_list extends approval_details
 		$this->id->setDbValue($row['id']);
 		$this->short_code->setDbValue($row['short_code']);
 		$this->Description->setDbValue($row['Description']);
-		$this->document_status->setDbValue($row['document_status']);
+		$this->out_status->setDbValue($row['out_status']);
+		$this->in_status->setDbValue($row['in_status']);
 	}
 
 	// Return a row with default values
@@ -1736,7 +1751,8 @@ class approval_details_list extends approval_details
 		$row['id'] = NULL;
 		$row['short_code'] = NULL;
 		$row['Description'] = NULL;
-		$row['document_status'] = NULL;
+		$row['out_status'] = NULL;
+		$row['in_status'] = NULL;
 		return $row;
 	}
 
@@ -1783,9 +1799,9 @@ class approval_details_list extends approval_details
 		// id
 		// short_code
 		// Description
-		// document_status
+		// out_status
+		// in_status
 
-		$this->document_status->CellCssStyle = "white-space: nowrap;";
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// id
@@ -1800,13 +1816,15 @@ class approval_details_list extends approval_details
 			$this->Description->ViewValue = $this->Description->CurrentValue;
 			$this->Description->ViewCustomAttributes = "";
 
-			// document_status
-			if (strval($this->document_status->CurrentValue) <> "") {
-				$this->document_status->ViewValue = $this->document_status->optionCaption($this->document_status->CurrentValue);
-			} else {
-				$this->document_status->ViewValue = NULL;
-			}
-			$this->document_status->ViewCustomAttributes = "";
+			// out_status
+			$this->out_status->ViewValue = $this->out_status->CurrentValue;
+			$this->out_status->ViewValue = strtoupper($this->out_status->ViewValue);
+			$this->out_status->ViewCustomAttributes = "";
+
+			// in_status
+			$this->in_status->ViewValue = $this->in_status->CurrentValue;
+			$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
+			$this->in_status->ViewCustomAttributes = "";
 
 			// id
 			$this->id->LinkCustomAttributes = "";
@@ -1823,10 +1841,15 @@ class approval_details_list extends approval_details
 			$this->Description->HrefValue = "";
 			$this->Description->TooltipValue = "";
 
-			// document_status
-			$this->document_status->LinkCustomAttributes = "";
-			$this->document_status->HrefValue = "";
-			$this->document_status->TooltipValue = "";
+			// out_status
+			$this->out_status->LinkCustomAttributes = "";
+			$this->out_status->HrefValue = "";
+			$this->out_status->TooltipValue = "";
+
+			// in_status
+			$this->in_status->LinkCustomAttributes = "";
+			$this->in_status->HrefValue = "";
+			$this->in_status->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1897,7 +1920,7 @@ class approval_details_list extends approval_details
 		// Export to Csv
 		$item = &$this->ExportOptions->add("csv");
 		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");

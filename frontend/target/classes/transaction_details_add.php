@@ -1148,11 +1148,7 @@ class transaction_details_add extends transaction_details
 			$this->transmit_date->ViewCustomAttributes = "";
 
 			// direction
-			if (strval($this->direction->CurrentValue) <> "") {
-				$this->direction->ViewValue = $this->direction->optionCaption($this->direction->CurrentValue);
-			} else {
-				$this->direction->ViewValue = NULL;
-			}
+			$this->direction->ViewValue = $this->direction->CurrentValue;
 			$this->direction->ViewCustomAttributes = "";
 
 			// approval_status
@@ -1348,8 +1344,12 @@ class transaction_details_add extends transaction_details
 			$this->transmit_date->PlaceHolder = RemoveHtml($this->transmit_date->caption());
 
 			// direction
+			$this->direction->EditAttrs["class"] = "form-control";
 			$this->direction->EditCustomAttributes = "";
-			$this->direction->EditValue = $this->direction->options(FALSE);
+			if (REMOVE_XSS)
+				$this->direction->CurrentValue = HtmlDecode($this->direction->CurrentValue);
+			$this->direction->EditValue = HtmlEncode($this->direction->CurrentValue);
+			$this->direction->PlaceHolder = RemoveHtml($this->direction->caption());
 
 			// approval_status
 			$this->approval_status->EditCustomAttributes = "";
@@ -1526,7 +1526,7 @@ class transaction_details_add extends transaction_details
 			AddMessage($FormError, $this->transmit_date->errorMessage());
 		}
 		if ($this->direction->Required) {
-			if ($this->direction->FormValue == "") {
+			if (!$this->direction->IsDetailKey && $this->direction->FormValue != NULL && $this->direction->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->direction->caption(), $this->direction->RequiredErrorMessage));
 			}
 		}

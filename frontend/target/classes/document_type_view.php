@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class xmit_details_view extends xmit_details
+class document_type_view extends document_type
 {
 
 	// Page ID
@@ -14,10 +14,10 @@ class xmit_details_view extends xmit_details
 	public $ProjectID = "{vishal-pdm}";
 
 	// Table name
-	public $TableName = 'xmit_details';
+	public $TableName = 'document_type';
 
 	// Page object name
-	public $PageObjName = "xmit_details_view";
+	public $PageObjName = "document_type_view";
 
 	// Page URLs
 	public $AddUrl;
@@ -376,15 +376,15 @@ class xmit_details_view extends xmit_details
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (xmit_details)
-		if (!isset($GLOBALS["xmit_details"]) || get_class($GLOBALS["xmit_details"]) == PROJECT_NAMESPACE . "xmit_details") {
-			$GLOBALS["xmit_details"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["xmit_details"];
+		// Table object (document_type)
+		if (!isset($GLOBALS["document_type"]) || get_class($GLOBALS["document_type"]) == PROJECT_NAMESPACE . "document_type") {
+			$GLOBALS["document_type"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["document_type"];
 		}
 		$keyUrl = "";
-		if (Get("xmit_id") !== NULL) {
-			$this->RecKey["xmit_id"] = Get("xmit_id");
-			$keyUrl .= "&amp;xmit_id=" . urlencode($this->RecKey["xmit_id"]);
+		if (Get("type_id") !== NULL) {
+			$this->RecKey["type_id"] = Get("type_id");
+			$keyUrl .= "&amp;type_id=" . urlencode($this->RecKey["type_id"]);
 		}
 		$this->ExportPrintUrl = $this->pageUrl() . "export=print" . $keyUrl;
 		$this->ExportHtmlUrl = $this->pageUrl() . "export=html" . $keyUrl;
@@ -405,7 +405,7 @@ class xmit_details_view extends xmit_details
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
-			define(PROJECT_NAMESPACE . "TABLE_NAME", 'xmit_details');
+			define(PROJECT_NAMESPACE . "TABLE_NAME", 'document_type');
 
 		// Start timer
 		if (!isset($GLOBALS["DebugTimer"]))
@@ -452,14 +452,14 @@ class xmit_details_view extends xmit_details
 		Page_Unloaded();
 
 		// Export
-		global $EXPORT, $xmit_details;
+		global $EXPORT, $document_type;
 		if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EXPORT)) {
 				$content = ob_get_contents();
 			if ($ExportFileName == "")
 				$ExportFileName = $this->TableVar;
 			$class = PROJECT_NAMESPACE . $EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($xmit_details);
+				$doc = new $class($document_type);
 				$doc->Text = @$content;
 				if ($this->isExport("email"))
 					echo $this->exportEmail($doc->Text);
@@ -494,7 +494,7 @@ class xmit_details_view extends xmit_details
 				$pageName = GetPageName($url);
 				if ($pageName != $this->getListUrl()) { // Not List page
 					$row["caption"] = $this->getModalCaption($pageName);
-					if ($pageName == "xmit_detailsview.php")
+					if ($pageName == "document_typeview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -579,7 +579,7 @@ class xmit_details_view extends xmit_details
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
-			$key .= @$ar['xmit_id'];
+			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -592,7 +592,7 @@ class xmit_details_view extends xmit_details
 	protected function hideFieldsForAddEdit()
 	{
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
-			$this->xmit_id->Visible = FALSE;
+			$this->type_id->Visible = FALSE;
 	}
 	public $ExportOptions; // Export options
 	public $OtherOptions; // Other options
@@ -659,7 +659,7 @@ class xmit_details_view extends xmit_details
 				$Security->saveLastUrl();
 				$this->setFailureMessage(DeniedMessage()); // Set no permission
 				if ($Security->canList())
-					$this->terminate(GetUrl("xmit_detailslist.php"));
+					$this->terminate(GetUrl("document_typelist.php"));
 				else
 					$this->terminate(GetUrl("login.php"));
 				return;
@@ -693,10 +693,10 @@ class xmit_details_view extends xmit_details
 			$this->setExportReturnUrl(CurrentUrl());
 		}
 		$ExportFileName = $this->TableVar; // Get export file, used in header
-		if (Get("xmit_id") !== NULL) {
+		if (Get("type_id") !== NULL) {
 			if ($ExportFileName <> "")
 				$ExportFileName .= "_";
-			$ExportFileName .= Get("xmit_id");
+			$ExportFileName .= Get("type_id");
 		}
 
 		// Get custom export parameters
@@ -722,8 +722,9 @@ class xmit_details_view extends xmit_details
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->xmit_id->setVisibility();
-		$this->xmit_mode->setVisibility();
+		$this->type_id->setVisibility();
+		$this->document_type->setVisibility();
+		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -755,18 +756,18 @@ class xmit_details_view extends xmit_details
 		$returnUrl = "";
 		$matchRecord = FALSE;
 		if ($this->isPageRequest()) { // Validate request
-			if (Get("xmit_id") !== NULL) {
-				$this->xmit_id->setQueryStringValue(Get("xmit_id"));
-				$this->RecKey["xmit_id"] = $this->xmit_id->QueryStringValue;
+			if (Get("type_id") !== NULL) {
+				$this->type_id->setQueryStringValue(Get("type_id"));
+				$this->RecKey["type_id"] = $this->type_id->QueryStringValue;
 			} elseif (IsApi() && Key(0) != NULL) {
-				$this->xmit_id->setQueryStringValue(Key(0));
-				$this->RecKey["xmit_id"] = $this->xmit_id->QueryStringValue;
-			} elseif (Post("xmit_id") !== NULL) {
-				$this->xmit_id->setFormValue(Post("xmit_id"));
-				$this->RecKey["xmit_id"] = $this->xmit_id->FormValue;
+				$this->type_id->setQueryStringValue(Key(0));
+				$this->RecKey["type_id"] = $this->type_id->QueryStringValue;
+			} elseif (Post("type_id") !== NULL) {
+				$this->type_id->setFormValue(Post("type_id"));
+				$this->RecKey["type_id"] = $this->type_id->FormValue;
 			} elseif (IsApi() && Route(2) != NULL) {
-				$this->xmit_id->setFormValue(Route(2));
-				$this->RecKey["xmit_id"] = $this->xmit_id->FormValue;
+				$this->type_id->setFormValue(Route(2));
+				$this->RecKey["type_id"] = $this->type_id->FormValue;
 			} else {
 				$loadCurrentRecord = TRUE;
 			}
@@ -781,7 +782,7 @@ class xmit_details_view extends xmit_details
 					if ($this->TotalRecs <= 0) { // No record found
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-						$this->terminate("xmit_detailslist.php"); // Return to list page
+						$this->terminate("document_typelist.php"); // Return to list page
 					} elseif ($loadCurrentRecord) { // Load current record position
 						$this->setupStartRec(); // Set up start record position
 
@@ -792,7 +793,7 @@ class xmit_details_view extends xmit_details
 						}
 					} else { // Match key values
 						while (!$this->Recordset->EOF) {
-							if (SameString($this->xmit_id->CurrentValue, $this->Recordset->fields('xmit_id'))) {
+							if (SameString($this->type_id->CurrentValue, $this->Recordset->fields('type_id'))) {
 								$this->setStartRecordNumber($this->StartRec); // Save record position
 								$matchRecord = TRUE;
 								break;
@@ -805,7 +806,7 @@ class xmit_details_view extends xmit_details
 					if (!$matchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-						$returnUrl = "xmit_detailslist.php"; // No matching record, return to list
+						$returnUrl = "document_typelist.php"; // No matching record, return to list
 					} else {
 						$this->loadRowValues($this->Recordset); // Load row values
 					}
@@ -817,7 +818,7 @@ class xmit_details_view extends xmit_details
 				$this->terminate();
 			}
 		} else {
-			$returnUrl = "xmit_detailslist.php"; // Not page request, return to list
+			$returnUrl = "document_typelist.php"; // Not page request, return to list
 		}
 		if ($returnUrl <> "") {
 			$this->terminate($returnUrl);
@@ -993,16 +994,18 @@ class xmit_details_view extends xmit_details
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->xmit_id->setDbValue($row['xmit_id']);
-		$this->xmit_mode->setDbValue($row['xmit_mode']);
+		$this->type_id->setDbValue($row['type_id']);
+		$this->document_type->setDbValue($row['document_type']);
+		$this->document_category->setDbValue($row['document_category']);
 	}
 
 	// Return a row with default values
 	protected function newRow()
 	{
 		$row = [];
-		$row['xmit_id'] = NULL;
-		$row['xmit_mode'] = NULL;
+		$row['type_id'] = NULL;
+		$row['document_type'] = NULL;
+		$row['document_category'] = NULL;
 		return $row;
 	}
 
@@ -1023,28 +1026,38 @@ class xmit_details_view extends xmit_details
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// xmit_id
-		// xmit_mode
+		// type_id
+		// document_type
+		// document_category
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// xmit_id
-			$this->xmit_id->ViewValue = $this->xmit_id->CurrentValue;
-			$this->xmit_id->ViewCustomAttributes = "";
+			// type_id
+			$this->type_id->ViewValue = $this->type_id->CurrentValue;
+			$this->type_id->ViewCustomAttributes = "";
 
-			// xmit_mode
-			$this->xmit_mode->ViewValue = $this->xmit_mode->CurrentValue;
-			$this->xmit_mode->ViewCustomAttributes = "";
+			// document_type
+			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$this->document_type->ViewCustomAttributes = "";
 
-			// xmit_id
-			$this->xmit_id->LinkCustomAttributes = "";
-			$this->xmit_id->HrefValue = "";
-			$this->xmit_id->TooltipValue = "";
+			// document_category
+			$this->document_category->ViewValue = $this->document_category->CurrentValue;
+			$this->document_category->ViewCustomAttributes = "";
 
-			// xmit_mode
-			$this->xmit_mode->LinkCustomAttributes = "";
-			$this->xmit_mode->HrefValue = "";
-			$this->xmit_mode->TooltipValue = "";
+			// type_id
+			$this->type_id->LinkCustomAttributes = "";
+			$this->type_id->HrefValue = "";
+			$this->type_id->TooltipValue = "";
+
+			// document_type
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+			$this->document_type->TooltipValue = "";
+
+			// document_category
+			$this->document_category->LinkCustomAttributes = "";
+			$this->document_category->HrefValue = "";
+			$this->document_category->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1058,17 +1071,17 @@ class xmit_details_view extends xmit_details
 		global $Language;
 		if (SameText($type, "excel")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"ew.export(document.fxmit_detailsview,'" . $this->ExportExcelUrl . "','excel',true);\">" . $Language->phrase("ExportToExcel") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"ew.export(document.fdocument_typeview,'" . $this->ExportExcelUrl . "','excel',true);\">" . $Language->phrase("ExportToExcel") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportExcelUrl . "\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
 		} elseif (SameText($type, "word")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"ew.export(document.fxmit_detailsview,'" . $this->ExportWordUrl . "','word',true);\">" . $Language->phrase("ExportToWord") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"ew.export(document.fdocument_typeview,'" . $this->ExportWordUrl . "','word',true);\">" . $Language->phrase("ExportToWord") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportWordUrl . "\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
 		} elseif (SameText($type, "pdf")) {
 			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"ew.export(document.fxmit_detailsview,'" . $this->ExportPdfUrl . "','pdf',true);\">" . $Language->phrase("ExportToPDF") . "</a>";
+				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"ew.export(document.fdocument_typeview,'" . $this->ExportPdfUrl . "','pdf',true);\">" . $Language->phrase("ExportToPDF") . "</a>";
 			else
 				return "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\">" . $Language->phrase("ExportToPDF") . "</a>";
 		} elseif (SameText($type, "html")) {
@@ -1125,7 +1138,7 @@ class xmit_details_view extends xmit_details
 		// Export to Email
 		$item = &$this->ExportOptions->add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_xmit_details\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_xmit_details',hdr:ew.language.phrase('ExportToEmailText'),f:document.fxmit_detailsview,key:" . ArrayToJsonAttribute($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_document_type\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_type',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_typeview,key:" . ArrayToJsonAttribute($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1244,7 +1257,7 @@ class xmit_details_view extends xmit_details
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new Breadcrumb();
 		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
-		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("xmit_detailslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("document_typelist.php"), "", $this->TableVar, TRUE);
 		$pageId = "view";
 		$Breadcrumb->add("view", $pageId, $url);
 	}

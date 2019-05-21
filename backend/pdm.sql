@@ -8,6 +8,9 @@
 
 SET search_path = public, pg_catalog;
 DROP TRIGGER IF EXISTS transaction_details_project ON public.transaction_details;
+DROP FUNCTION IF EXISTS public.om_func_06 (f_short_code varchar, f_direction varchar, out f_overall_status varchar);
+DROP TABLE IF EXISTS public.document_type;
+DROP FUNCTION IF EXISTS public.om_func_05 (f_firelink_doc_no varchar, f_submit_no inet, f_direction varchar);
 DROP TABLE IF EXISTS public.document_log;
 DROP INDEX IF EXISTS public.project_details_project_name_order_number_key;
 DROP FUNCTION IF EXISTS public.om_func_03 ();
@@ -69,14 +72,16 @@ DECLARE
 v_project_name VARCHAR;
 v_document_tittle VARCHAR;
 v_firelink_doc_no VARCHAR ;
+f_error_check BOOLEAN := FALSE; -- to check the variable
 BEGIN
 v_firelink_doc_no := NEW.firelink_doc_no;
 select project_name,document_tittle into v_project_name , v_document_tittle from document_details where firelink_doc_no = v_firelink_doc_no ;
 NEW.project_name := v_project_name;
 NEW.document_tittle := v_document_tittle;
-/*IF v_project_name = NULL
-RAISE EXCEPTION Contact Admin with code sai_ravan_001;
-END if;*/
+f_error_check := om_func_05(v_firelink_doc_no,NEW.submit_no,NEW.direction);
+IF f_error_check = FALSE THEN
+RAISE EXCEPTION 'Contact Admin with code sai_ravan_001';
+END if;
 RETURN NEW;
 END;
 $body$
@@ -198,7 +203,8 @@ select into f_transaction_details * from transaction_details where firelink_doc_
 select into f_document_details * from document_details where firelink_doc_no = f_firelink_doc_no;
 --Preparing to insert for the first condition i.e Document exists only in transaction_details but not in document_log
 IF f_firelink_doc_no_count = 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
-  select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+  --select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+  f_document_status := om_func_06(f_transaction_details.approval_status,f_transaction_details.direction);
   select into f_order_number order_number from project_details where project_name = f_transaction_details.project_name;
   insert into document_log(
     firelink_doc_no,
@@ -243,7 +249,8 @@ ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
     LOOP
 		--inserting the first instance
         IF f_counter_no = 1 THEN
-        	select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+        	--select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+            f_document_status := om_func_06(f_transaction_details.approval_status,f_transaction_details.direction); -- this function would get the overall status
 			select into f_order_number order_number from project_details where project_name = f_transaction_details.project_name;
             f_firelink_doc_no	:=	  f_firelink_doc_no;
             f_client_doc_no	:=	  f_document_details.client_doc_no;
@@ -606,6 +613,61 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
+-- Definition for function om_func_05 (OID = 62943) :
+--
+CREATE FUNCTION public.om_func_05 (
+  f_firelink_doc_no character varying = NULL::character varying,
+  f_submit_no inet = NULL::inet,
+  f_direction character varying = NULL::character varying
+)
+RETURNS boolean[]
+AS
+$body$
+DECLARE
+f_transaction_details transaction_details%ROWTYPE;
+BEGIN
+select into f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no order by document_sequence desc limit 1; -- get the last entry for the document in question
+--Logic to determine to accept the entry or raise exception
+--check out direction document
+IF f_direction = 'OUT' THEN
+	IF f_transaction_details.submit_no = NULL and f_submit_no != 1 THEN
+    	RAISE EXCEPTION '<br> Please recheck the sbmit number should be 1 for first ever transmittal. error code psi_ravan_004 provided is % <br>',f_submit_no;
+        RETURN FALSE;
+    END IF;
+END IF;
+END;
+$body$
+LANGUAGE plpgsql;
+--
+-- Definition for function om_func_06 (OID = 62964) :
+--
+CREATE FUNCTION public.om_func_06 (
+  f_short_code character varying,
+  f_direction character varying,
+  out f_overall_status character varying
+)
+RETURNS varchar
+AS
+$body$
+DECLARE
+--
+BEGIN
+IF	f_direction = 'OUT' THEN
+select into f_overall_status out_status from approval_details where short_code  = f_short_code;
+RAISE NOTICE 'INSIDE OUT STATUS VALUE IS %',f_overall_status;
+ELSIF f_direction = 'IN' THEN
+select into f_overall_status in_status from approval_details where short_code  = f_short_code;
+RAISE NOTICE 'INSIDE in STATUS VALUE IS %',f_overall_status;
+--RETURN f_overall_status;
+ELSE
+RAISE EXCEPTION '<br> Unknown Status requested Error code psi_ravan_005';
+f_overall_status := 'NOT KNOWN';
+END IF;
+RETURN ;
+END;
+$body$
+LANGUAGE plpgsql;
+--
 -- Structure for table app_version (OID = 25384) :
 --
 CREATE TABLE public.app_version (
@@ -710,7 +772,8 @@ CREATE TABLE public.approval_details (
     id serial NOT NULL,
     short_code varchar NOT NULL,
     "Description" text NOT NULL,
-    document_status varchar
+    out_status varchar,
+    in_status varchar
 )
 WITH (oids = false);
 --
@@ -902,6 +965,16 @@ CREATE TABLE public.document_log (
 )
 WITH (oids = false);
 --
+-- Structure for table document_type (OID = 62951) :
+--
+CREATE TABLE public.document_type (
+    type_id integer DEFAULT nextval('table_type_id_seq'::regclass) NOT NULL,
+    document_type varchar NOT NULL,
+    document_category varchar NOT NULL
+)
+WITH (oids = false);
+ALTER TABLE ONLY public.document_type ALTER COLUMN document_category SET STATISTICS 0;
+--
 -- Definition for index project_details_project_name_order_number_key (OID = 62602) :
 --
 CREATE UNIQUE INDEX project_details_project_name_order_number_key ON public.project_details USING btree (project_name, order_number);
@@ -1074,6 +1147,12 @@ ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_fk
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
+-- Definition for index table_pkey (OID = 62958) :
+--
+ALTER TABLE ONLY document_type
+    ADD CONSTRAINT table_pkey
+    PRIMARY KEY (type_id);
+--
 -- Definition for trigger transaction_details_project (OID = 61779) :
 --
 CREATE TRIGGER transaction_details_project
@@ -1087,6 +1166,8 @@ COMMENT ON SCHEMA public IS 'standard public schema';
 COMMENT ON COLUMN public.transmit_details.ack_rcvd IS 'Aknowledgement Received';
 COMMENT ON COLUMN public.transmit_details.ack_document IS 'SMB file location of the acknolwdgement received';
 COMMENT ON COLUMN public.transmit_details.transmital_date IS 'Time stamp for transmittal creation';
+COMMENT ON COLUMN public.approval_details.out_status IS 'Document status when it is out';
+COMMENT ON COLUMN public.approval_details.in_status IS 'Document status when it is in';
 COMMENT ON COLUMN public.user_dtls.reports_to IS 'The User ID this guy reports to';
 COMMENT ON COLUMN public.transaction_details.document_native IS 'SMB url of the native file';
 COMMENT ON COLUMN public.transaction_details.username IS 'frontend user who made the entry';
@@ -1097,3 +1178,4 @@ COMMENT ON FUNCTION public.om_func_04 (f_firelink_doc_no varchar) IS 'Function t
 COMMENT ON FUNCTION public.om_func_03 () IS 'This function is used to decide which documents does not already exists in table documet_log ad then insert them or update with latest updates
  ';
 COMMENT ON COLUMN public.document_log.log_updatedon IS 'Last update when the query was ran';
+COMMENT ON FUNCTION public.om_func_06 (f_short_code varchar, f_direction varchar, out f_overall_status varchar) IS 'This function gets the overall latest status for a document';
