@@ -1129,7 +1129,11 @@ class transaction_details_edit extends transaction_details
 			$this->transmit_date->ViewCustomAttributes = "";
 
 			// direction
-			$this->direction->ViewValue = $this->direction->CurrentValue;
+			if (strval($this->direction->CurrentValue) <> "") {
+				$this->direction->ViewValue = $this->direction->optionCaption($this->direction->CurrentValue);
+			} else {
+				$this->direction->ViewValue = NULL;
+			}
 			$this->direction->ViewCustomAttributes = "";
 
 			// approval_status
@@ -1414,7 +1418,7 @@ class transaction_details_edit extends transaction_details
 			}
 		}
 		if ($this->direction->Required) {
-			if (!$this->direction->IsDetailKey && $this->direction->FormValue != NULL && $this->direction->FormValue == "") {
+			if ($this->direction->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->direction->caption(), $this->direction->RequiredErrorMessage));
 			}
 		}

@@ -8,9 +8,10 @@
 
 SET search_path = public, pg_catalog;
 DROP TRIGGER IF EXISTS transaction_details_project ON public.transaction_details;
+DROP FUNCTION IF EXISTS public.om_func_07 (f_firelink_doc_no varchar, out f_approval_status varchar, out f_direction varchar);
+DROP FUNCTION IF EXISTS public.om_func_05 (f_firelink_doc_no varchar, f_submit_no integer, f_approval_status varchar, f_direction varchar);
 DROP FUNCTION IF EXISTS public.om_func_06 (f_short_code varchar, f_direction varchar, out f_overall_status varchar);
 DROP TABLE IF EXISTS public.document_type;
-DROP FUNCTION IF EXISTS public.om_func_05 (f_firelink_doc_no varchar, f_submit_no inet, f_direction varchar);
 DROP TABLE IF EXISTS public.document_log;
 DROP INDEX IF EXISTS public.project_details_project_name_order_number_key;
 DROP FUNCTION IF EXISTS public.om_func_03 ();
@@ -35,18 +36,18 @@ DROP TABLE IF EXISTS public.project_details;
 DROP TABLE IF EXISTS public.app_version;
 SET check_function_bodies = false;
 --
--- Definition for function om_func_01 (OID = 25697) :
+-- Definition for function om_func_01 (OID = 25697) : 
 --
 CREATE FUNCTION public.om_func_01 (
 )
 RETURNS varchar
-AS
+AS 
 $body$
 DECLARE
 --Frontend_Version VARCHAR;
 --Backend_Version VARCHAR;
 --Release_Date DATE;
-f_version app_version%ROWTYPE;
+f_version app_version%ROWTYPE; 
 BEGIN
 SELECT INTO f_version * FROM app_version order by sequence_no desc limit 1;
 --Frontend_Version := f_version.frontend_version;
@@ -61,12 +62,12 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function om_func_02 (OID = 61778) :
+-- Definition for function om_func_02 (OID = 61778) : 
 --
 CREATE FUNCTION public.om_func_02 (
 )
 RETURNS trigger
-AS
+AS 
 $body$
 DECLARE
 v_project_name VARCHAR;
@@ -87,13 +88,13 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function om_func_04 (OID = 62545) :
+-- Definition for function om_func_04 (OID = 62545) : 
 --
 CREATE FUNCTION public.om_func_04 (
   f_firelink_doc_no character varying
 )
 RETURNS boolean
-AS
+AS 
 $body$
 DECLARE
 f_transaction_details transaction_details%ROWTYPE; -- get the complete record
@@ -201,9 +202,9 @@ select into f_firelink_doc_no_count_doc_log count(log_id) from document_log wher
 select into f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no;
 --Getting the client document number from document document_details table
 select into f_document_details * from document_details where firelink_doc_no = f_firelink_doc_no;
---Preparing to insert for the first condition i.e Document exists only in transaction_details but not in document_log
+--Preparing to insert for the first condition i.e Document exists only in transaction_details but not in document_log 
 IF f_firelink_doc_no_count = 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
-  --select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+  --select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status; 
   f_document_status := om_func_06(f_transaction_details.approval_status,f_transaction_details.direction);
   select into f_order_number order_number from project_details where project_name = f_transaction_details.project_name;
   insert into document_log(
@@ -244,12 +245,12 @@ RAISE NOTICE'COUNTERIS AT SINGLE VALUE AUTO INCREMENT IS AT % ',f_counter_no;
 RETURN TRUE;
 -- In case more than 1 no of documentcount in transaction_details and none in document_log then insert them too
 ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
-    --limit the transaction to 20 only i.e 10 out 10 in
+    --limit the transaction to 20 only i.e 10 out 10 in 
     FOR f_transaction_details IN SELECT * FROM transaction_details where firelink_doc_no = f_firelink_doc_no order by document_sequence DESC limit 10
     LOOP
-		--inserting the first instance
+		--inserting the first instance 
         IF f_counter_no = 1 THEN
-        	--select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status;
+        	--select into f_document_status document_status from approval_details where short_code  = f_transaction_details.approval_status; 
             f_document_status := om_func_06(f_transaction_details.approval_status,f_transaction_details.direction); -- this function would get the overall status
 			select into f_order_number order_number from project_details where project_name = f_transaction_details.project_name;
             f_firelink_doc_no	:=	  f_firelink_doc_no;
@@ -327,7 +328,7 @@ ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
             f_transmit_no_7	:=	  f_transaction_details.transmit_no;
             f_approval_status_7	:=	  f_transaction_details.approval_status;
             f_direction_file_7	:=	  f_transaction_details.document_link;
-            RAISE NOTICE'COUNTERIS AT 7 AUTO INCREMENT IS AT % ',f_counter_no;
+            RAISE NOTICE'COUNTERIS AT 7 AUTO INCREMENT IS AT % ',f_counter_no;	
 		ELSIF f_counter_no = 8  THEN
 			f_submit_no_8	:=	  f_transaction_details.submit_no;
             f_revision_no_8	:=	  f_transaction_details.revision_no;
@@ -336,7 +337,7 @@ ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
             f_transmit_date_8	:=	  f_transaction_details.transmit_date;
             f_transmit_no_8	:=	  f_transaction_details.transmit_no;
             f_approval_status_8	:=	  f_transaction_details.approval_status;
-            f_direction_file_8	:=	  f_transaction_details.document_link;
+            f_direction_file_8	:=	  f_transaction_details.document_link;	
             RAISE NOTICE'COUNTERIS AT 8 AUTO INCREMENT IS AT %1 ',f_counter_no;
 		ELSIF f_counter_no = 9  THEN
 			f_submit_no_9	:=	  f_transaction_details.submit_no;
@@ -347,7 +348,7 @@ ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
             f_transmit_no_9	:=	  f_transaction_details.transmit_no;
             f_approval_status_9	:=	  f_transaction_details.approval_status;
             f_direction_file_9	:=	  f_transaction_details.document_link;
-            RAISE NOTICE'COUNTERIS AT 9 AUTO INCREMENT IS AT % ',f_counter_no;
+            RAISE NOTICE'COUNTERIS AT 9 AUTO INCREMENT IS AT % ',f_counter_no;					
 		ELSIF f_counter_no = 10  THEN
 			f_submit_no_10	:=	  f_transaction_details.submit_no;
             f_revision_no_10	:=	  f_transaction_details.revision_no;
@@ -356,17 +357,17 @@ ELSIF f_firelink_doc_no_count > 1 AND f_firelink_doc_no_count_doc_log = 0 THEN
             f_transmit_date_10	:=	  f_transaction_details.transmit_date;
             f_transmit_no_10	:=	  f_transaction_details.transmit_no;
             f_approval_status_10	:=	  f_transaction_details.approval_status;
-            f_direction_file_10	:=	  f_transaction_details.document_link;
+            f_direction_file_10	:=	  f_transaction_details.document_link;		    
   			RAISE NOTICE'COUNTERIS AT 10 AUTO INCREMENT IS AT % ',f_counter_no;
         ELSE
         RAISE EXCEPTION '<br>UNEXPECTED ERROR OCCURED REPORT WITH ERROR CODE psi_ravan_003 Document number is %',f_firelink_doc_no;
-
+  
 		END IF;
         f_counter_no := f_counter_no + 1::integer; --Increment the counter by 1 to collect the next record
-
+        
     END LOOP;
   /***Insert starts here***/
-INSERT INTO
+INSERT INTO 
   public.document_log
 (
   firelink_doc_no,
@@ -557,12 +558,12 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function om_func_03 (OID = 62551) :
+-- Definition for function om_func_03 (OID = 62551) : 
 --
 CREATE FUNCTION public.om_func_03 (
 )
 RETURNS boolean
-AS
+AS 
 $body$
 DECLARE
 f_no_firelink_doc_no VARCHAR ='NO DOCUMENT'; -- documents that has not been transactioned ever i.e no entry in transaction_details table.
@@ -613,33 +614,7 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Definition for function om_func_05 (OID = 62943) :
---
-CREATE FUNCTION public.om_func_05 (
-  f_firelink_doc_no character varying = NULL::character varying,
-  f_submit_no inet = NULL::inet,
-  f_direction character varying = NULL::character varying
-)
-RETURNS boolean[]
-AS
-$body$
-DECLARE
-f_transaction_details transaction_details%ROWTYPE;
-BEGIN
-select into f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no order by document_sequence desc limit 1; -- get the last entry for the document in question
---Logic to determine to accept the entry or raise exception
---check out direction document
-IF f_direction = 'OUT' THEN
-	IF f_transaction_details.submit_no = NULL and f_submit_no != 1 THEN
-    	RAISE EXCEPTION '<br> Please recheck the sbmit number should be 1 for first ever transmittal. error code psi_ravan_004 provided is % <br>',f_submit_no;
-        RETURN FALSE;
-    END IF;
-END IF;
-END;
-$body$
-LANGUAGE plpgsql;
---
--- Definition for function om_func_06 (OID = 62964) :
+-- Definition for function om_func_06 (OID = 62964) : 
 --
 CREATE FUNCTION public.om_func_06 (
   f_short_code character varying,
@@ -647,7 +622,7 @@ CREATE FUNCTION public.om_func_06 (
   out f_overall_status character varying
 )
 RETURNS varchar
-AS
+AS 
 $body$
 DECLARE
 --
@@ -668,7 +643,96 @@ END;
 $body$
 LANGUAGE plpgsql;
 --
--- Structure for table app_version (OID = 25384) :
+-- Definition for function om_func_05 (OID = 62996) : 
+--
+CREATE FUNCTION public.om_func_05 (
+  f_firelink_doc_no character varying,
+  f_submit_no integer,
+  f_approval_status character varying,
+  f_direction character varying
+)
+RETURNS boolean
+AS 
+$body$
+DECLARE
+f_transaction_details transaction_details%ROWTYPE; 
+f_om_func_07 RECORD; 
+BEGIN
+select into f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no order by document_sequence desc limit 1; -- get the last entry for the document in question
+--Logic to determine to accept the entry or raise exception
+--check out direction document
+IF f_direction = 'OUT' THEN
+	IF f_transaction_details.submit_no IS NULL THEN /**** not doing and for now since many back submittals would be imported and f_submit_no != 1 THEN
+    	RAISE EXCEPTION '<br> Please recheck the submit number should be 1 for first ever transmittal. error code psi_ravan_004 provided is % <br>',f_submit_no;
+        RAISE NOTICE 'INSIDE OUT CONDITION 1';
+        RETURN FALSE;**/
+        RETURN TRUE;
+    ELSIF f_submit_no != 1 + f_transaction_details.submit_no THEN	-- This is to check not too many submit numbers has been incremented incorrectly
+    	RAISE EXCEPTION '<br> Please recheck the submit number should be 1 more than the previous submit number. Error code psi_ravan_006 provided is % <br>',f_submit_no;
+		RAISE NOTICE 'INSIDE OUT CONDITION 2';       
+    	RETURN FALSE;
+    ELSIF (f_approval_status !=  f_transaction_details.approval_status OR f_transaction_details.direction != 'IN') AND f_submit_no = 1 + f_transaction_details.submit_no THEN
+     	RAISE EXCEPTION '<br> Either No IN document was found or approval status mismatch for previous IN document: Error code psi_ravan_010 provided is % %<br>',f_transaction_details.direction,f_transaction_details.approval_status;
+		RAISE NOTICE 'INSIDE OUT CONDITION 3';       
+    	RETURN FALSE;   
+    ELSIF f_approval_status =  f_transaction_details.approval_status AND f_transaction_details.direction = 'IN' AND f_submit_no = 1 + f_transaction_details.submit_no THEN -- this is to check if the previous approval status is keyed in correctly
+        RAISE NOTICE 'INSIDE OUT CONDITION 4 THE DESIRED CONDITION';
+        RETURN TRUE;
+	ELSIF f_transaction_details.submit_no IS NULL and f_submit_no = 1 AND f_approval_status = 'P' THEN
+        RAISE NOTICE 'INSIDE OUT CONDITION 5';
+        RETURN TRUE;
+    ELSE      
+    	-- Unexpected condition has been reached.
+   		RAISE EXCEPTION '<br> UnPredictable condition reached. Error code psi_ravan_008 document provided is % Verify if previous In document has been provided <br>',f_firelink_doc_no;	
+       	RETURN FALSE;
+   END IF;
+ELSIF f_direction = 'IN' THEN
+	IF f_transaction_details.submit_no IS NULL THEN 	 -- This document has no previous record and has been recived as it is this can be a letter too.
+		RETURN TRUE;
+    ELSIF f_transaction_details.submit_no != f_submit_no THEN -- The -1 submit number is not being recorded hence return a false condition.
+   		RAISE EXCEPTION '<br> The submit number for the in document should be same as out document previous submit number is % <br>',f_transaction_details.submit_no;	
+       	RETURN FALSE;
+    ELSIF f_transaction_details.submit_no = f_submit_no AND f_transaction_details.direction = 'OUT' THEN
+    	RETURN TRUE;
+    ELSE
+    	-- Unexpected condition has been reached.
+   		RAISE EXCEPTION '<br> Un Predictable condition reached. Error code psi_ravan_009 document provided is % <br>',f_firelink_doc_no;	
+       	RETURN FALSE;        
+	END IF;
+END IF;
+--RETURN FALSE;
+END;
+$body$
+LANGUAGE plpgsql;
+--
+-- Definition for function om_func_07 (OID = 63007) : 
+--
+CREATE FUNCTION public.om_func_07 (
+  f_firelink_doc_no character varying,
+  out f_approval_status character varying,
+  out f_direction character varying
+)
+RETURNS SETOF record
+AS 
+$body$
+DECLARE
+f_transaction_details transaction_details%ROWTYPE;
+f_document_details document_details%ROWTYPE;
+BEGIN
+SELECT INTO f_transaction_details * from transaction_details where firelink_doc_no = f_firelink_doc_no order by document_sequence desc limit 1; -- get the latest document
+SELECT INTO f_document_details * from document_details where firelink_doc_no = f_firelink_doc_no; -- get the latest document 
+
+IF f_transaction_details.direction ISNULL AND f_document_details.firelink_doc_no IS NOT NULL THEN --No document returned and hence needs to be looked up in document details.
+    f_approval_status := 'P'::"varchar"; --hard coded.
+    f_direction := 'OUT'::"varchar"; --hard coded.
+    RAISE NOTICE 'INSIDE IF CONDITION';
+END IF;  
+RETURN NEXT;  
+END;
+$body$
+LANGUAGE plpgsql;
+--
+-- Structure for table app_version (OID = 25384) : 
 --
 CREATE TABLE public.app_version (
     sequence_no integer DEFAULT nextval(('public.app_version_sequence_no_seq'::text)::regclass) NOT NULL,
@@ -680,7 +744,7 @@ CREATE TABLE public.app_version (
 )
 WITH (oids = false);
 --
--- Structure for table project_details (OID = 25427) :
+-- Structure for table project_details (OID = 25427) : 
 --
 CREATE TABLE public.project_details (
     project_id serial NOT NULL,
@@ -694,7 +758,7 @@ CREATE TABLE public.project_details (
 )
 WITH (oids = true);
 --
--- Structure for table distribution_details (OID = 25440) :
+-- Structure for table distribution_details (OID = 25440) : 
 --
 CREATE TABLE public.distribution_details (
     distribution_id serial NOT NULL,
@@ -705,7 +769,7 @@ CREATE TABLE public.distribution_details (
 )
 WITH (oids = true);
 --
--- Structure for table inbox (OID = 25452) :
+-- Structure for table inbox (OID = 25452) : 
 --
 CREATE TABLE public.inbox (
     inbox_id serial NOT NULL,
@@ -719,7 +783,7 @@ CREATE TABLE public.inbox (
 )
 WITH (oids = true);
 --
--- Structure for table audittrail (OID = 25480) :
+-- Structure for table audittrail (OID = 25480) : 
 --
 CREATE TABLE public.audittrail (
     id serial NOT NULL,
@@ -735,7 +799,7 @@ CREATE TABLE public.audittrail (
 )
 WITH (oids = false);
 --
--- Structure for table transmit_details (OID = 25559) :
+-- Structure for table transmit_details (OID = 25559) : 
 --
 CREATE TABLE public.transmit_details (
     transmit_id bigserial NOT NULL,
@@ -750,7 +814,7 @@ CREATE TABLE public.transmit_details (
 )
 WITH (oids = false);
 --
--- Structure for table document_details (OID = 25615) :
+-- Structure for table document_details (OID = 25615) : 
 --
 CREATE TABLE public.document_details (
     document_sequence serial NOT NULL,
@@ -766,7 +830,7 @@ CREATE TABLE public.document_details (
 )
 WITH (oids = true);
 --
--- Structure for table approval_details (OID = 25632) :
+-- Structure for table approval_details (OID = 25632) : 
 --
 CREATE TABLE public.approval_details (
     id serial NOT NULL,
@@ -777,7 +841,7 @@ CREATE TABLE public.approval_details (
 )
 WITH (oids = false);
 --
--- Definition for sequence app_version_sequence_no_seq (OID = 25643) :
+-- Definition for sequence app_version_sequence_no_seq (OID = 25643) : 
 --
 CREATE SEQUENCE public.app_version_sequence_no_seq
     START WITH 1
@@ -786,7 +850,7 @@ CREATE SEQUENCE public.app_version_sequence_no_seq
     NO MINVALUE
     CACHE 1;
 --
--- Structure for table f_version (OID = 25684) :
+-- Structure for table f_version (OID = 25684) : 
 --
 CREATE TABLE public.f_version (
     sequence_no integer,
@@ -798,7 +862,7 @@ CREATE TABLE public.f_version (
 )
 WITH (oids = false);
 --
--- Structure for table document_system (OID = 25741) :
+-- Structure for table document_system (OID = 25741) : 
 --
 CREATE TABLE public.document_system (
     type_id serial NOT NULL,
@@ -807,7 +871,7 @@ CREATE TABLE public.document_system (
 )
 WITH (oids = false);
 --
--- Structure for table userlevels (OID = 25780) :
+-- Structure for table userlevels (OID = 25780) : 
 --
 CREATE TABLE public.userlevels (
     userlevelid integer NOT NULL,
@@ -815,7 +879,7 @@ CREATE TABLE public.userlevels (
 )
 WITH (oids = false);
 --
--- Structure for table userlevelpermissions (OID = 25785) :
+-- Structure for table userlevelpermissions (OID = 25785) : 
 --
 CREATE TABLE public.userlevelpermissions (
     userlevelid integer NOT NULL,
@@ -824,7 +888,7 @@ CREATE TABLE public.userlevelpermissions (
 )
 WITH (oids = false);
 --
--- Structure for table user_dtls (OID = 33912) :
+-- Structure for table user_dtls (OID = 33912) : 
 --
 CREATE TABLE public.user_dtls (
     user_id serial NOT NULL,
@@ -841,7 +905,7 @@ CREATE TABLE public.user_dtls (
 )
 WITH (oids = false);
 --
--- Structure for table xmit_details (OID = 53124) :
+-- Structure for table xmit_details (OID = 53124) : 
 --
 CREATE TABLE public.xmit_details (
     xmit_id bigserial NOT NULL,
@@ -849,7 +913,7 @@ CREATE TABLE public.xmit_details (
 )
 WITH (oids = false);
 --
--- Structure for table transaction_details (OID = 60675) :
+-- Structure for table transaction_details (OID = 60675) : 
 --
 CREATE TABLE public.transaction_details (
     document_sequence serial NOT NULL,
@@ -870,7 +934,7 @@ CREATE TABLE public.transaction_details (
 )
 WITH (oids = true);
 --
--- Structure for table document_log (OID = 62730) :
+-- Structure for table document_log (OID = 62730) : 
 --
 CREATE TABLE public.document_log (
     log_id bigserial NOT NULL,
@@ -965,7 +1029,7 @@ CREATE TABLE public.document_log (
 )
 WITH (oids = false);
 --
--- Structure for table document_type (OID = 62951) :
+-- Structure for table document_type (OID = 62951) : 
 --
 CREATE TABLE public.document_type (
     type_id integer DEFAULT nextval('table_type_id_seq'::regclass) NOT NULL,
@@ -975,185 +1039,185 @@ CREATE TABLE public.document_type (
 WITH (oids = false);
 ALTER TABLE ONLY public.document_type ALTER COLUMN document_category SET STATISTICS 0;
 --
--- Definition for index project_details_project_name_order_number_key (OID = 62602) :
+-- Definition for index project_details_project_name_order_number_key (OID = 62602) : 
 --
 CREATE UNIQUE INDEX project_details_project_name_order_number_key ON public.project_details USING btree (project_name, order_number);
 --
--- Definition for index project_details_pk (OID = 25434) :
+-- Definition for index project_details_pk (OID = 25434) : 
 --
 ALTER TABLE ONLY project_details
     ADD CONSTRAINT project_details_pk
     PRIMARY KEY (project_id);
 --
--- Definition for index project_details_project_name_key (OID = 25436) :
+-- Definition for index project_details_project_name_key (OID = 25436) : 
 --
 ALTER TABLE ONLY project_details
     ADD CONSTRAINT project_details_project_name_key
     UNIQUE (project_name);
 --
--- Definition for index distribution_details_pk (OID = 25448) :
+-- Definition for index distribution_details_pk (OID = 25448) : 
 --
 ALTER TABLE ONLY distribution_details
     ADD CONSTRAINT distribution_details_pk
     PRIMARY KEY (distribution_id);
 --
--- Definition for index inbox_pk (OID = 25459) :
+-- Definition for index inbox_pk (OID = 25459) : 
 --
 ALTER TABLE ONLY inbox
     ADD CONSTRAINT inbox_pk
     PRIMARY KEY (inbox_id);
 --
--- Definition for index pkaudittrail (OID = 25487) :
+-- Definition for index pkaudittrail (OID = 25487) : 
 --
 ALTER TABLE ONLY audittrail
     ADD CONSTRAINT pkaudittrail
     PRIMARY KEY (id);
 --
--- Definition for index transmit_details_pkey (OID = 25568) :
+-- Definition for index transmit_details_pkey (OID = 25568) : 
 --
 ALTER TABLE ONLY transmit_details
     ADD CONSTRAINT transmit_details_pkey
     PRIMARY KEY (transmit_id);
 --
--- Definition for index transmit_details_transmittal_no_key (OID = 25570) :
+-- Definition for index transmit_details_transmittal_no_key (OID = 25570) : 
 --
 ALTER TABLE ONLY transmit_details
     ADD CONSTRAINT transmit_details_transmittal_no_key
     UNIQUE (transmittal_no);
 --
--- Definition for index document_details_pk (OID = 25623) :
+-- Definition for index document_details_pk (OID = 25623) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_pk
     PRIMARY KEY (document_sequence);
 --
--- Definition for index document_details_client_doc_no_key (OID = 25625) :
+-- Definition for index document_details_client_doc_no_key (OID = 25625) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_client_doc_no_key
     UNIQUE (client_doc_no);
 --
--- Definition for index document_details_firelink_doc_no_key (OID = 25627) :
+-- Definition for index document_details_firelink_doc_no_key (OID = 25627) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_firelink_doc_no_key
     UNIQUE (firelink_doc_no);
 --
--- Definition for index approval_details_pkey (OID = 25639) :
+-- Definition for index approval_details_pkey (OID = 25639) : 
 --
 ALTER TABLE ONLY approval_details
     ADD CONSTRAINT approval_details_pkey
     PRIMARY KEY (id);
 --
--- Definition for index app_version_pkey (OID = 25645) :
+-- Definition for index app_version_pkey (OID = 25645) : 
 --
 ALTER TABLE ONLY app_version
     ADD CONSTRAINT app_version_pkey
     PRIMARY KEY (sequence_no);
 --
--- Definition for index document_system_pkey (OID = 25748) :
+-- Definition for index document_system_pkey (OID = 25748) : 
 --
 ALTER TABLE ONLY document_system
     ADD CONSTRAINT document_system_pkey
     PRIMARY KEY (type_id);
 --
--- Definition for index document_system_system_name_key (OID = 25750) :
+-- Definition for index document_system_system_name_key (OID = 25750) : 
 --
 ALTER TABLE ONLY document_system
     ADD CONSTRAINT document_system_system_name_key
     UNIQUE (system_name);
 --
--- Definition for index pkuserlevels (OID = 25783) :
+-- Definition for index pkuserlevels (OID = 25783) : 
 --
 ALTER TABLE ONLY userlevels
     ADD CONSTRAINT pkuserlevels
     PRIMARY KEY (userlevelid);
 --
--- Definition for index pkuserlevelpermissions (OID = 25788) :
+-- Definition for index pkuserlevelpermissions (OID = 25788) : 
 --
 ALTER TABLE ONLY userlevelpermissions
     ADD CONSTRAINT pkuserlevelpermissions
     PRIMARY KEY (userlevelid, tablename);
 --
--- Definition for index user_dtls_pkey (OID = 33922) :
+-- Definition for index user_dtls_pkey (OID = 33922) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_pkey
     PRIMARY KEY (user_id);
 --
--- Definition for index user_dtls_email_addreess_key (OID = 33924) :
+-- Definition for index user_dtls_email_addreess_key (OID = 33924) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_email_addreess_key
     UNIQUE (email_addreess);
 --
--- Definition for index user_dtls_username_key (OID = 33926) :
+-- Definition for index user_dtls_username_key (OID = 33926) : 
 --
 ALTER TABLE ONLY user_dtls
     ADD CONSTRAINT user_dtls_username_key
     UNIQUE (username);
 --
--- Definition for index xmit_details_pkey (OID = 53131) :
+-- Definition for index xmit_details_pkey (OID = 53131) : 
 --
 ALTER TABLE ONLY xmit_details
     ADD CONSTRAINT xmit_details_pkey
     PRIMARY KEY (xmit_id);
 --
--- Definition for index transaction_details_pk (OID = 60684) :
+-- Definition for index transaction_details_pk (OID = 60684) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_pk
     PRIMARY KEY (document_sequence);
 --
--- Definition for index transaction_details_document_link_key (OID = 60686) :
+-- Definition for index transaction_details_document_link_key (OID = 60686) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_document_link_key
     UNIQUE (document_link);
 --
--- Definition for index transaction_details_fk (OID = 60688) :
+-- Definition for index transaction_details_fk (OID = 60688) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_fk
     FOREIGN KEY (firelink_doc_no) REFERENCES document_details(firelink_doc_no) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 --
--- Definition for index transaction_details_project_name (OID = 60693) :
+-- Definition for index transaction_details_project_name (OID = 60693) : 
 --
 ALTER TABLE ONLY transaction_details
     ADD CONSTRAINT transaction_details_project_name
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
--- Definition for index document_log_pkey (OID = 62740) :
+-- Definition for index document_log_pkey (OID = 62740) : 
 --
 ALTER TABLE ONLY document_log
     ADD CONSTRAINT document_log_pkey
     PRIMARY KEY (log_id);
 --
--- Definition for index document_log_firelink_doc_no_key (OID = 62742) :
+-- Definition for index document_log_firelink_doc_no_key (OID = 62742) : 
 --
 ALTER TABLE ONLY document_log
     ADD CONSTRAINT document_log_firelink_doc_no_key
     UNIQUE (firelink_doc_no);
 --
--- Definition for index document_log_fk (OID = 62744) :
+-- Definition for index document_log_fk (OID = 62744) : 
 --
 ALTER TABLE ONLY document_log
     ADD CONSTRAINT document_log_fk
     FOREIGN KEY (project_name, order_number) REFERENCES project_details(project_name, order_number) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
--- Definition for index document_details_fk (OID = 62914) :
+-- Definition for index document_details_fk (OID = 62914) : 
 --
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_fk
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 --
--- Definition for index table_pkey (OID = 62958) :
+-- Definition for index table_pkey (OID = 62958) : 
 --
 ALTER TABLE ONLY document_type
     ADD CONSTRAINT table_pkey
     PRIMARY KEY (type_id);
 --
--- Definition for trigger transaction_details_project (OID = 61779) :
+-- Definition for trigger transaction_details_project (OID = 61779) : 
 --
 CREATE TRIGGER transaction_details_project
     BEFORE INSERT ON transaction_details
@@ -1179,3 +1243,4 @@ COMMENT ON FUNCTION public.om_func_03 () IS 'This function is used to decide whi
  ';
 COMMENT ON COLUMN public.document_log.log_updatedon IS 'Last update when the query was ran';
 COMMENT ON FUNCTION public.om_func_06 (f_short_code varchar, f_direction varchar, out f_overall_status varchar) IS 'This function gets the overall latest status for a document';
+COMMENT ON FUNCTION public.om_func_07 (f_firelink_doc_no varchar, out f_approval_status varchar, out f_direction varchar) IS 'Function that returns the latest status, direction and approval status';

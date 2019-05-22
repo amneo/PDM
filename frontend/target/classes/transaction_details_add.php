@@ -1148,7 +1148,11 @@ class transaction_details_add extends transaction_details
 			$this->transmit_date->ViewCustomAttributes = "";
 
 			// direction
-			$this->direction->ViewValue = $this->direction->CurrentValue;
+			if (strval($this->direction->CurrentValue) <> "") {
+				$this->direction->ViewValue = $this->direction->optionCaption($this->direction->CurrentValue);
+			} else {
+				$this->direction->ViewValue = NULL;
+			}
 			$this->direction->ViewCustomAttributes = "";
 
 			// approval_status
@@ -1344,12 +1348,8 @@ class transaction_details_add extends transaction_details
 			$this->transmit_date->PlaceHolder = RemoveHtml($this->transmit_date->caption());
 
 			// direction
-			$this->direction->EditAttrs["class"] = "form-control";
 			$this->direction->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->direction->CurrentValue = HtmlDecode($this->direction->CurrentValue);
-			$this->direction->EditValue = HtmlEncode($this->direction->CurrentValue);
-			$this->direction->PlaceHolder = RemoveHtml($this->direction->caption());
+			$this->direction->EditValue = $this->direction->options(FALSE);
 
 			// approval_status
 			$this->approval_status->EditCustomAttributes = "";
@@ -1507,6 +1507,9 @@ class transaction_details_add extends transaction_details
 				AddMessage($FormError, str_replace("%s", $this->submit_no->caption(), $this->submit_no->RequiredErrorMessage));
 			}
 		}
+		if (!CheckInteger($this->submit_no->FormValue)) {
+			AddMessage($FormError, $this->submit_no->errorMessage());
+		}
 		if ($this->revision_no->Required) {
 			if (!$this->revision_no->IsDetailKey && $this->revision_no->FormValue != NULL && $this->revision_no->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->revision_no->caption(), $this->revision_no->RequiredErrorMessage));
@@ -1526,7 +1529,7 @@ class transaction_details_add extends transaction_details
 			AddMessage($FormError, $this->transmit_date->errorMessage());
 		}
 		if ($this->direction->Required) {
-			if (!$this->direction->IsDetailKey && $this->direction->FormValue != NULL && $this->direction->FormValue == "") {
+			if ($this->direction->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->direction->caption(), $this->direction->RequiredErrorMessage));
 			}
 		}

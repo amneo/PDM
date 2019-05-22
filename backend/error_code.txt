@@ -4,3 +4,8 @@ psi_ravan_002	| backend 		| When insert statement in function sai_func_03 produc
 psi_ravan_003	| backend 		| When insert statement in function sai_func_04 produces some unknown error IN ELSE BLOCK SOME NEW CONDITION HAS BEEN REACHED.
 psi_ravan_004	| backend 		| When insert statement in function sai_func_04 produces some unknown error IN ELSE BLOCK SOME NEW CONDITION HAS BEEN REACHED.
 psi_ravan_005	| backend 		| While query in the overall status in sai_func_06
+psi_ravan_006	| backend		| In om_func_05 when submit number for an out document has been incremented by 1 digit for an out.
+psi_ravan_007	| backend		|
+psi_ravan_008 	| backend		| When unknown condition reached for a OUT document. In function om_func_05
+psi_ravan_009	| backend		| When unknown condition reached for a IN document. In function om_func_05
+psi_ravan_010	| backend		| When previous in document has not been submitted. In function om_func_05

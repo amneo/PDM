@@ -164,6 +164,8 @@ ftransaction_detailslist.autoSuggests["x_firelink_doc_no"] = <?php echo json_enc
 ftransaction_detailslist.lists["x_transmit_no"] = <?php echo $transaction_details_list->transmit_no->Lookup->toClientList() ?>;
 ftransaction_detailslist.lists["x_transmit_no"].options = <?php echo JsonEncode($transaction_details_list->transmit_no->lookupOptions()) ?>;
 ftransaction_detailslist.autoSuggests["x_transmit_no"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+ftransaction_detailslist.lists["x_direction"] = <?php echo $transaction_details_list->direction->Lookup->toClientList() ?>;
+ftransaction_detailslist.lists["x_direction"].options = <?php echo JsonEncode($transaction_details_list->direction->options(FALSE, TRUE)) ?>;
 ftransaction_detailslist.lists["x_approval_status"] = <?php echo $transaction_details_list->approval_status->Lookup->toClientList() ?>;
 ftransaction_detailslist.lists["x_approval_status"].options = <?php echo JsonEncode($transaction_details_list->approval_status->lookupOptions()) ?>;
 
@@ -439,7 +441,7 @@ $transaction_details_list->ListOptions->render("header", "left");
 		<th data-name="direction" class="<?php echo $transaction_details->direction->headerCellClass() ?>"><div id="elh_transaction_details_direction" class="transaction_details_direction"><div class="ew-table-header-caption"><?php echo $transaction_details->direction->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="direction" class="<?php echo $transaction_details->direction->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $transaction_details->SortUrl($transaction_details->direction) ?>',2);"><div id="elh_transaction_details_direction" class="transaction_details_direction">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->direction->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->direction->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->direction->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $transaction_details->direction->caption() ?></span><span class="ew-table-header-sort"><?php if ($transaction_details->direction->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($transaction_details->direction->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -727,7 +729,10 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 		<td data-name="direction"<?php echo $transaction_details->direction->cellAttributes() ?>>
 <?php if ($transaction_details->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_direction" class="form-group transaction_details_direction">
-<input type="text" data-table="transaction_details" data-field="x_direction" name="x<?php echo $transaction_details_list->RowIndex ?>_direction" id="x<?php echo $transaction_details_list->RowIndex ?>_direction" size="30" placeholder="<?php echo HtmlEncode($transaction_details->direction->getPlaceHolder()) ?>" value="<?php echo $transaction_details->direction->EditValue ?>"<?php echo $transaction_details->direction->editAttributes() ?>>
+<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_direction" id="x<?php echo $transaction_details_list->RowIndex ?>_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $transaction_details_list->RowIndex ?>_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x{$transaction_details_list->RowIndex}_direction") ?>
+</div></div>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_direction" name="o<?php echo $transaction_details_list->RowIndex ?>_direction" id="o<?php echo $transaction_details_list->RowIndex ?>_direction" value="<?php echo HtmlEncode($transaction_details->direction->OldValue) ?>">
 <?php } ?>
@@ -959,7 +964,10 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 	<?php if ($transaction_details->direction->Visible) { // direction ?>
 		<td data-name="direction">
 <span id="el$rowindex$_transaction_details_direction" class="form-group transaction_details_direction">
-<input type="text" data-table="transaction_details" data-field="x_direction" name="x<?php echo $transaction_details_list->RowIndex ?>_direction" id="x<?php echo $transaction_details_list->RowIndex ?>_direction" size="30" placeholder="<?php echo HtmlEncode($transaction_details->direction->getPlaceHolder()) ?>" value="<?php echo $transaction_details->direction->EditValue ?>"<?php echo $transaction_details->direction->editAttributes() ?>>
+<div id="tp_x<?php echo $transaction_details_list->RowIndex ?>_direction" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_direction" data-value-separator="<?php echo $transaction_details->direction->displayValueSeparatorAttribute() ?>" name="x<?php echo $transaction_details_list->RowIndex ?>_direction" id="x<?php echo $transaction_details_list->RowIndex ?>_direction" value="{value}"<?php echo $transaction_details->direction->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $transaction_details_list->RowIndex ?>_direction" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transaction_details->direction->radioButtonListHtml(FALSE, "x{$transaction_details_list->RowIndex}_direction") ?>
+</div></div>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_direction" name="o<?php echo $transaction_details_list->RowIndex ?>_direction" id="o<?php echo $transaction_details_list->RowIndex ?>_direction" value="<?php echo HtmlEncode($transaction_details->direction->OldValue) ?>">
 </td>

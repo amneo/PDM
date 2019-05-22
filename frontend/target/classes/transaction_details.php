@@ -114,6 +114,7 @@ class transaction_details extends DbTable
 		$this->submit_no->Nullable = FALSE; // NOT NULL field
 		$this->submit_no->Required = TRUE; // Required field
 		$this->submit_no->Sortable = TRUE; // Allow sort
+		$this->submit_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['submit_no'] = &$this->submit_no;
 
 		// revision_no
@@ -140,9 +141,12 @@ class transaction_details extends DbTable
 		$this->fields['transmit_date'] = &$this->transmit_date;
 
 		// direction
-		$this->direction = new DbField('transaction_details', 'transaction_details', 'x_direction', 'direction', '"direction"', '"direction"', 200, -1, FALSE, '"direction"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->direction = new DbField('transaction_details', 'transaction_details', 'x_direction', 'direction', '"direction"', '"direction"', 200, -1, FALSE, '"direction"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
 		$this->direction->Nullable = FALSE; // NOT NULL field
+		$this->direction->Required = TRUE; // Required field
 		$this->direction->Sortable = TRUE; // Allow sort
+		$this->direction->Lookup = new Lookup('direction', 'transaction_details', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
+		$this->direction->OptionCount = 2;
 		$this->fields['direction'] = &$this->direction;
 
 		// approval_status
@@ -175,7 +179,7 @@ class transaction_details extends DbTable
 		$this->fields['document_native'] = &$this->document_native;
 
 		// username
-		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'HIDDEN');
+		$this->username = new DbField('transaction_details', 'transaction_details', 'x_username', 'username', '"username"', '"username"', 200, -1, FALSE, '"username"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->username->Sortable = FALSE; // Allow sort
 		$this->fields['username'] = &$this->username;
 
@@ -1002,7 +1006,11 @@ class transaction_details extends DbTable
 		$this->transmit_date->ViewCustomAttributes = "";
 
 		// direction
-		$this->direction->ViewValue = $this->direction->CurrentValue;
+		if (strval($this->direction->CurrentValue) <> "") {
+			$this->direction->ViewValue = $this->direction->optionCaption($this->direction->CurrentValue);
+		} else {
+			$this->direction->ViewValue = NULL;
+		}
 		$this->direction->ViewCustomAttributes = "";
 
 		// approval_status
@@ -1271,12 +1279,8 @@ class transaction_details extends DbTable
 		$this->transmit_date->ViewCustomAttributes = "";
 
 		// direction
-		$this->direction->EditAttrs["class"] = "form-control";
 		$this->direction->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction->CurrentValue = HtmlDecode($this->direction->CurrentValue);
-		$this->direction->EditValue = $this->direction->CurrentValue;
-		$this->direction->PlaceHolder = RemoveHtml($this->direction->caption());
+		$this->direction->EditValue = $this->direction->options(FALSE);
 
 		// approval_status
 		$this->approval_status->EditCustomAttributes = "";
