@@ -358,9 +358,9 @@ class userlevels_edit extends userlevels
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class userlevels_edit extends userlevels
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -618,9 +618,10 @@ class userlevels_edit extends userlevels
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->userlevelid->Visible = FALSE;
+		$this->userlevelid->setVisibility();
 		$this->userlevelname->setVisibility();
 		$this->hideFieldsForAddEdit();
+		$this->userlevelid->Required = FALSE;
 
 		// Do not use lookup cache
 		$this->setUseLookupCache(FALSE);
@@ -792,6 +793,15 @@ class userlevels_edit extends userlevels
 		// Load from form
 		global $CurrentForm;
 
+		// Check field name 'userlevelid' first before field var 'x_userlevelid'
+		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
+		if (!$this->userlevelid->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->userlevelid->Visible = FALSE; // Disable update for API request
+			else
+				$this->userlevelid->setFormValue($val);
+		}
+
 		// Check field name 'userlevelname' first before field var 'x_userlevelname'
 		$val = $CurrentForm->hasValue("userlevelname") ? $CurrentForm->getValue("userlevelname") : $CurrentForm->getValue("x_userlevelname");
 		if (!$this->userlevelname->IsDetailKey) {
@@ -800,11 +810,6 @@ class userlevels_edit extends userlevels
 			else
 				$this->userlevelname->setFormValue($val);
 		}
-
-		// Check field name 'userlevelid' first before field var 'x_userlevelid'
-		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
-		if (!$this->userlevelid->IsDetailKey)
-			$this->userlevelid->setFormValue($val);
 	}
 
 	// Restore form values
@@ -914,11 +919,23 @@ class userlevels_edit extends userlevels
 				$this->userlevelname->ViewValue = $Security->getUserLevelName($this->userlevelid->CurrentValue);
 			$this->userlevelname->ViewCustomAttributes = "";
 
+			// userlevelid
+			$this->userlevelid->LinkCustomAttributes = "";
+			$this->userlevelid->HrefValue = "";
+			$this->userlevelid->TooltipValue = "";
+
 			// userlevelname
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 			$this->userlevelname->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// userlevelid
+			$this->userlevelid->EditAttrs["class"] = "form-control";
+			$this->userlevelid->EditCustomAttributes = "";
+			$this->userlevelid->EditValue = $this->userlevelid->CurrentValue;
+			$this->userlevelid->EditValue = FormatNumber($this->userlevelid->EditValue, 0, -2, -2, -2);
+			$this->userlevelid->ViewCustomAttributes = "";
 
 			// userlevelname
 			$this->userlevelname->EditAttrs["class"] = "form-control";
@@ -930,8 +947,13 @@ class userlevels_edit extends userlevels
 			$this->userlevelname->PlaceHolder = RemoveHtml($this->userlevelname->caption());
 
 			// Edit refer script
-			// userlevelname
+			// userlevelid
 
+			$this->userlevelid->LinkCustomAttributes = "";
+			$this->userlevelid->HrefValue = "";
+			$this->userlevelid->TooltipValue = "";
+
+			// userlevelname
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 		}

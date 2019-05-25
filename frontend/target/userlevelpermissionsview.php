@@ -51,10 +51,8 @@ fuserlevelpermissionsview.Form_CustomValidate = function(fobj) { // DO NOT CHANG
 fuserlevelpermissionsview.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fuserlevelpermissionsview.lists["x__tablename"] = <?php echo $userlevelpermissions_view->_tablename->Lookup->toClientList() ?>;
-fuserlevelpermissionsview.lists["x__tablename"].options = <?php echo JsonEncode($userlevelpermissions_view->_tablename->lookupOptions()) ?>;
-
 // Form object for search
+
 </script>
 <script>
 
@@ -108,39 +106,6 @@ $userlevelpermissions_view->showMessage();
 <input type="hidden" name="t" value="userlevelpermissions">
 <input type="hidden" name="modal" value="<?php echo (int)$userlevelpermissions_view->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-	<tr id="r_userlevelid">
-		<td class="<?php echo $userlevelpermissions_view->TableLeftColumnClass ?>"><span id="elh_userlevelpermissions_userlevelid"><?php echo $userlevelpermissions->userlevelid->caption() ?></span></td>
-		<td data-name="userlevelid"<?php echo $userlevelpermissions->userlevelid->cellAttributes() ?>>
-<span id="el_userlevelpermissions_userlevelid">
-<span<?php echo $userlevelpermissions->userlevelid->viewAttributes() ?>>
-<?php echo $userlevelpermissions->userlevelid->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
-	<tr id="r__tablename">
-		<td class="<?php echo $userlevelpermissions_view->TableLeftColumnClass ?>"><span id="elh_userlevelpermissions__tablename"><?php echo $userlevelpermissions->_tablename->caption() ?></span></td>
-		<td data-name="_tablename"<?php echo $userlevelpermissions->_tablename->cellAttributes() ?>>
-<span id="el_userlevelpermissions__tablename">
-<span<?php echo $userlevelpermissions->_tablename->viewAttributes() ?>>
-<?php echo $userlevelpermissions->_tablename->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($userlevelpermissions->permission->Visible) { // permission ?>
-	<tr id="r_permission">
-		<td class="<?php echo $userlevelpermissions_view->TableLeftColumnClass ?>"><span id="elh_userlevelpermissions_permission"><?php echo $userlevelpermissions->permission->caption() ?></span></td>
-		<td data-name="permission"<?php echo $userlevelpermissions->permission->cellAttributes() ?>>
-<span id="el_userlevelpermissions_permission">
-<span<?php echo $userlevelpermissions->permission->viewAttributes() ?>>
-<?php echo $userlevelpermissions->permission->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 </table>
 <?php if (!$userlevelpermissions_view->IsModal) { ?>
 <?php if (!$userlevelpermissions->isExport()) { ?>

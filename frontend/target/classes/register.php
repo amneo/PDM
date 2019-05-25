@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class register extends user_dtls
+class register extends users
 {
 
 	// Page ID
@@ -329,13 +329,13 @@ class register extends user_dtls
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS["user_dtls"]) || get_class($GLOBALS["user_dtls"]) == PROJECT_NAMESPACE . "user_dtls") {
-			$GLOBALS["user_dtls"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["user_dtls"];
+		// Table object (users)
+		if (!isset($GLOBALS["users"]) || get_class($GLOBALS["users"]) == PROJECT_NAMESPACE . "users") {
+			$GLOBALS["users"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["users"];
 		}
-		if (!isset($GLOBALS["user_dtls"]))
-			$GLOBALS["user_dtls"] = new user_dtls();
+		if (!isset($GLOBALS["users"]))
+			$GLOBALS["users"] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -352,9 +352,9 @@ class register extends user_dtls
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -501,7 +501,7 @@ class register extends user_dtls
 		if ($this->isInsert()) {
 
 			// Check for duplicate User ID
-			$filter = str_replace("%u", AdjustSql($this->username->CurrentValue, USER_TABLE_DBID), USER_NAME_FILTER);
+			$filter = str_replace("%u", AdjustSql($this->userLoginId->CurrentValue, USER_TABLE_DBID), USER_NAME_FILTER);
 
 			// Set up filter (WHERE Clause)
 			$this->CurrentFilter = $filter;
@@ -567,11 +567,11 @@ class register extends user_dtls
 			$rsnew = $rs->fields;
 			$this->loadRowValues($rs); // Load row values
 			$rs->close();
-			$rsact = array('account_valid' => true); // Auto register
+			$rsact = array('uActivated' => true); // Auto register
 			$this->CurrentFilter = $filter;
 			$res = $this->update($rsact);
 			if ($res) { // Call User Activated event
-				$rsnew['account_valid'] = true;
+				$rsnew['uActivated'] = true;
 				$this->User_Activated($rsnew);
 			}
 			return $res;
@@ -591,26 +591,23 @@ class register extends user_dtls
 	// Load default values
 	protected function loadDefaultValues()
 	{
-		$this->user_id->CurrentValue = NULL;
-		$this->user_id->OldValue = $this->user_id->CurrentValue;
-		$this->username->CurrentValue = NULL;
-		$this->username->OldValue = $this->username->CurrentValue;
-		$this->password->CurrentValue = NULL;
-		$this->password->OldValue = $this->password->CurrentValue;
-		$this->create_login->CurrentValue = NULL;
-		$this->create_login->OldValue = $this->create_login->CurrentValue;
-		$this->account_valid->CurrentValue = false;
-		$this->last_login->CurrentValue = NULL;
-		$this->last_login->OldValue = $this->last_login->CurrentValue;
-		$this->email_addreess->CurrentValue = NULL;
-		$this->email_addreess->OldValue = $this->email_addreess->CurrentValue;
-		$this->UserLevel->CurrentValue = 10;
-		$this->history->CurrentValue = NULL;
-		$this->history->OldValue = $this->history->CurrentValue;
-		$this->reports_to->CurrentValue = NULL;
-		$this->reports_to->OldValue = $this->reports_to->CurrentValue;
-		$this->name->CurrentValue = NULL;
-		$this->name->OldValue = $this->name->CurrentValue;
+		$this->seqid->CurrentValue = NULL;
+		$this->seqid->OldValue = $this->seqid->CurrentValue;
+		$this->userName->CurrentValue = NULL;
+		$this->userName->OldValue = $this->userName->CurrentValue;
+		$this->userLoginId->CurrentValue = NULL;
+		$this->userLoginId->OldValue = $this->userLoginId->CurrentValue;
+		$this->uEmail->CurrentValue = NULL;
+		$this->uEmail->OldValue = $this->uEmail->CurrentValue;
+		$this->uLevel->CurrentValue = -2;
+		$this->uPassword->CurrentValue = NULL;
+		$this->uPassword->OldValue = $this->uPassword->CurrentValue;
+		$this->uReportsTo->CurrentValue = "1";
+		$this->uActivated->CurrentValue = true;
+		$this->uParentUserID->CurrentValue = NULL;
+		$this->uParentUserID->OldValue = $this->uParentUserID->CurrentValue;
+		$this->uProfile->CurrentValue = NULL;
+		$this->uProfile->OldValue = $this->uProfile->CurrentValue;
 	}
 
 	// Load form values
@@ -620,45 +617,55 @@ class register extends user_dtls
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'user_id' first before field var 'x_user_id'
-		$val = $CurrentForm->hasValue("user_id") ? $CurrentForm->getValue("user_id") : $CurrentForm->getValue("x_user_id");
-
-		// Check field name 'username' first before field var 'x_username'
-		$val = $CurrentForm->hasValue("username") ? $CurrentForm->getValue("username") : $CurrentForm->getValue("x_username");
-		if (!$this->username->IsDetailKey) {
+		// Check field name 'userName' first before field var 'x_userName'
+		$val = $CurrentForm->hasValue("userName") ? $CurrentForm->getValue("userName") : $CurrentForm->getValue("x_userName");
+		if (!$this->userName->IsDetailKey) {
 			if (IsApi() && $val == NULL)
-				$this->username->Visible = FALSE; // Disable update for API request
+				$this->userName->Visible = FALSE; // Disable update for API request
 			else
-				$this->username->setFormValue($val);
+				$this->userName->setFormValue($val);
 		}
 
-		// Check field name 'password' first before field var 'x_password'
-		$val = $CurrentForm->hasValue("password") ? $CurrentForm->getValue("password") : $CurrentForm->getValue("x_password");
-		if (!$this->password->IsDetailKey) {
+		// Check field name 'userLoginId' first before field var 'x_userLoginId'
+		$val = $CurrentForm->hasValue("userLoginId") ? $CurrentForm->getValue("userLoginId") : $CurrentForm->getValue("x_userLoginId");
+		if (!$this->userLoginId->IsDetailKey) {
 			if (IsApi() && $val == NULL)
-				$this->password->Visible = FALSE; // Disable update for API request
+				$this->userLoginId->Visible = FALSE; // Disable update for API request
 			else
-				$this->password->setFormValue($val);
+				$this->userLoginId->setFormValue($val);
 		}
-		$this->password->ConfirmValue = $CurrentForm->getValue("c_password");
 
-		// Check field name 'email_addreess' first before field var 'x_email_addreess'
-		$val = $CurrentForm->hasValue("email_addreess") ? $CurrentForm->getValue("email_addreess") : $CurrentForm->getValue("x_email_addreess");
-		if (!$this->email_addreess->IsDetailKey) {
+		// Check field name 'uEmail' first before field var 'x_uEmail'
+		$val = $CurrentForm->hasValue("uEmail") ? $CurrentForm->getValue("uEmail") : $CurrentForm->getValue("x_uEmail");
+		if (!$this->uEmail->IsDetailKey) {
 			if (IsApi() && $val == NULL)
-				$this->email_addreess->Visible = FALSE; // Disable update for API request
+				$this->uEmail->Visible = FALSE; // Disable update for API request
 			else
-				$this->email_addreess->setFormValue($val);
+				$this->uEmail->setFormValue($val);
 		}
+
+		// Check field name 'uPassword' first before field var 'x_uPassword'
+		$val = $CurrentForm->hasValue("uPassword") ? $CurrentForm->getValue("uPassword") : $CurrentForm->getValue("x_uPassword");
+		if (!$this->uPassword->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->uPassword->Visible = FALSE; // Disable update for API request
+			else
+				$this->uPassword->setFormValue($val);
+		}
+		$this->uPassword->ConfirmValue = $CurrentForm->getValue("c_uPassword");
+
+		// Check field name 'seqid' first before field var 'x_seqid'
+		$val = $CurrentForm->hasValue("seqid") ? $CurrentForm->getValue("seqid") : $CurrentForm->getValue("x_seqid");
 	}
 
 	// Restore form values
 	public function restoreFormValues()
 	{
 		global $CurrentForm;
-		$this->username->CurrentValue = $this->username->FormValue;
-		$this->password->CurrentValue = $this->password->FormValue;
-		$this->email_addreess->CurrentValue = $this->email_addreess->FormValue;
+		$this->userName->CurrentValue = $this->userName->FormValue;
+		$this->userLoginId->CurrentValue = $this->userLoginId->FormValue;
+		$this->uEmail->CurrentValue = $this->uEmail->FormValue;
+		$this->uPassword->CurrentValue = $this->uPassword->FormValue;
 	}
 
 	// Load row based on key values
@@ -696,22 +703,16 @@ class register extends user_dtls
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->user_id->setDbValue($row['user_id']);
-		$this->username->setDbValue($row['username']);
-		$this->password->setDbValue($row['password']);
-		$this->create_login->setDbValue($row['create_login']);
-		$this->account_valid->setDbValue((ConvertToBool($row['account_valid']) ? "1" : "0"));
-		$this->last_login->setDbValue($row['last_login']);
-		$this->email_addreess->setDbValue($row['email_addreess']);
-		$this->UserLevel->setDbValue($row['UserLevel']);
-		$this->history->setDbValue($row['history']);
-		$this->reports_to->setDbValue($row['reports_to']);
-		if (array_key_exists('EV__reports_to', $rs->fields)) {
-			$this->reports_to->VirtualValue = $rs->fields('EV__reports_to'); // Set up virtual field value
-		} else {
-			$this->reports_to->VirtualValue = ""; // Clear value
-		}
-		$this->name->setDbValue($row['name']);
+		$this->seqid->setDbValue($row['seqid']);
+		$this->userName->setDbValue($row['userName']);
+		$this->userLoginId->setDbValue($row['userLoginId']);
+		$this->uEmail->setDbValue($row['uEmail']);
+		$this->uLevel->setDbValue($row['uLevel']);
+		$this->uPassword->setDbValue($row['uPassword']);
+		$this->uReportsTo->setDbValue($row['uReportsTo']);
+		$this->uActivated->setDbValue((ConvertToBool($row['uActivated']) ? "1" : "0"));
+		$this->uParentUserID->setDbValue($row['uParentUserID']);
+		$this->uProfile->setDbValue($row['uProfile']);
 	}
 
 	// Return a row with default values
@@ -719,17 +720,16 @@ class register extends user_dtls
 	{
 		$this->loadDefaultValues();
 		$row = [];
-		$row['user_id'] = $this->user_id->CurrentValue;
-		$row['username'] = $this->username->CurrentValue;
-		$row['password'] = $this->password->CurrentValue;
-		$row['create_login'] = $this->create_login->CurrentValue;
-		$row['account_valid'] = $this->account_valid->CurrentValue;
-		$row['last_login'] = $this->last_login->CurrentValue;
-		$row['email_addreess'] = $this->email_addreess->CurrentValue;
-		$row['UserLevel'] = $this->UserLevel->CurrentValue;
-		$row['history'] = $this->history->CurrentValue;
-		$row['reports_to'] = $this->reports_to->CurrentValue;
-		$row['name'] = $this->name->CurrentValue;
+		$row['seqid'] = $this->seqid->CurrentValue;
+		$row['userName'] = $this->userName->CurrentValue;
+		$row['userLoginId'] = $this->userLoginId->CurrentValue;
+		$row['uEmail'] = $this->uEmail->CurrentValue;
+		$row['uLevel'] = $this->uLevel->CurrentValue;
+		$row['uPassword'] = $this->uPassword->CurrentValue;
+		$row['uReportsTo'] = $this->uReportsTo->CurrentValue;
+		$row['uActivated'] = $this->uActivated->CurrentValue;
+		$row['uParentUserID'] = $this->uParentUserID->CurrentValue;
+		$row['uProfile'] = $this->uProfile->CurrentValue;
 		return $row;
 	}
 
@@ -744,174 +744,164 @@ class register extends user_dtls
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// user_id
-		// username
-		// password
-		// create_login
-		// account_valid
-		// last_login
-		// email_addreess
-		// UserLevel
-		// history
-		// reports_to
-		// name
+		// seqid
+		// userName
+		// userLoginId
+		// uEmail
+		// uLevel
+		// uPassword
+		// uReportsTo
+		// uActivated
+		// uParentUserID
+		// uProfile
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// user_id
-			$this->user_id->ViewValue = $this->user_id->CurrentValue;
-			$this->user_id->ViewCustomAttributes = "";
+			// userName
+			$this->userName->ViewValue = $this->userName->CurrentValue;
+			$this->userName->ViewCustomAttributes = "";
 
-			// username
-			$this->username->ViewValue = $this->username->CurrentValue;
-			$this->username->ViewCustomAttributes = "";
+			// userLoginId
+			$this->userLoginId->ViewValue = $this->userLoginId->CurrentValue;
+			$this->userLoginId->ViewCustomAttributes = "";
 
-			// password
-			$this->password->ViewValue = $Language->phrase("PasswordMask");
-			$this->password->ViewCustomAttributes = "";
+			// uEmail
+			$this->uEmail->ViewValue = $this->uEmail->CurrentValue;
+			$this->uEmail->ViewCustomAttributes = "";
 
-			// create_login
-			$this->create_login->ViewValue = $this->create_login->CurrentValue;
-			$this->create_login->ViewValue = FormatDateTime($this->create_login->ViewValue, 0);
-			$this->create_login->ViewCustomAttributes = "";
-
-			// account_valid
-			if (ConvertToBool($this->account_valid->CurrentValue)) {
-				$this->account_valid->ViewValue = $this->account_valid->tagCaption(1) <> "" ? $this->account_valid->tagCaption(1) : "Yes";
-			} else {
-				$this->account_valid->ViewValue = $this->account_valid->tagCaption(2) <> "" ? $this->account_valid->tagCaption(2) : "No";
-			}
-			$this->account_valid->ViewCustomAttributes = "";
-
-			// last_login
-			$this->last_login->ViewValue = $this->last_login->CurrentValue;
-			$this->last_login->ViewValue = FormatDateTime($this->last_login->ViewValue, 0);
-			$this->last_login->ViewCustomAttributes = "";
-
-			// email_addreess
-			$this->email_addreess->ViewValue = $this->email_addreess->CurrentValue;
-			$this->email_addreess->ViewCustomAttributes = "";
-
-			// UserLevel
+			// uLevel
 			if ($Security->canAdmin()) { // System admin
-			$curVal = strval($this->UserLevel->CurrentValue);
+			$curVal = strval($this->uLevel->CurrentValue);
 			if ($curVal <> "") {
-				$this->UserLevel->ViewValue = $this->UserLevel->lookupCacheOption($curVal);
-				if ($this->UserLevel->ViewValue === NULL) { // Lookup from database
+				$this->uLevel->ViewValue = $this->uLevel->lookupCacheOption($curVal);
+				if ($this->uLevel->ViewValue === NULL) { // Lookup from database
 					$filterWrk = "\"userlevelid\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-					$sqlWrk = $this->UserLevel->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$sqlWrk = $this->uLevel->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$this->UserLevel->ViewValue = $this->UserLevel->displayValue($arwrk);
+						$this->uLevel->ViewValue = $this->uLevel->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
-						$this->UserLevel->ViewValue = $this->UserLevel->CurrentValue;
+						$this->uLevel->ViewValue = $this->uLevel->CurrentValue;
 					}
 				}
 			} else {
-				$this->UserLevel->ViewValue = NULL;
+				$this->uLevel->ViewValue = NULL;
 			}
 			} else {
-				$this->UserLevel->ViewValue = $Language->phrase("PasswordMask");
+				$this->uLevel->ViewValue = $Language->phrase("PasswordMask");
 			}
-			$this->UserLevel->ViewCustomAttributes = "";
+			$this->uLevel->ViewCustomAttributes = "";
 
-			// reports_to
-			if ($this->reports_to->VirtualValue <> "") {
-				$this->reports_to->ViewValue = $this->reports_to->VirtualValue;
+			// uPassword
+			$this->uPassword->ViewValue = $Language->phrase("PasswordMask");
+			$this->uPassword->ViewCustomAttributes = "";
+
+			// uActivated
+			if (ConvertToBool($this->uActivated->CurrentValue)) {
+				$this->uActivated->ViewValue = $this->uActivated->tagCaption(1) <> "" ? $this->uActivated->tagCaption(1) : "Yes";
 			} else {
-				$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
-			$curVal = strval($this->reports_to->CurrentValue);
+				$this->uActivated->ViewValue = $this->uActivated->tagCaption(2) <> "" ? $this->uActivated->tagCaption(2) : "No";
+			}
+			$this->uActivated->ViewCustomAttributes = "";
+
+			// uParentUserID
+			$curVal = strval($this->uParentUserID->CurrentValue);
 			if ($curVal <> "") {
-				$this->reports_to->ViewValue = $this->reports_to->lookupCacheOption($curVal);
-				if ($this->reports_to->ViewValue === NULL) { // Lookup from database
-					$filterWrk = "\"user_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-					$sqlWrk = $this->reports_to->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$this->uParentUserID->ViewValue = $this->uParentUserID->lookupCacheOption($curVal);
+				if ($this->uParentUserID->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"seqid\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->uParentUserID->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$this->reports_to->ViewValue = $this->reports_to->displayValue($arwrk);
+						$this->uParentUserID->ViewValue = $this->uParentUserID->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
-						$this->reports_to->ViewValue = $this->reports_to->CurrentValue;
+						$this->uParentUserID->ViewValue = $this->uParentUserID->CurrentValue;
 					}
 				}
 			} else {
-				$this->reports_to->ViewValue = NULL;
+				$this->uParentUserID->ViewValue = NULL;
 			}
-			}
-			$this->reports_to->ViewCustomAttributes = "";
+			$this->uParentUserID->ViewCustomAttributes = "";
 
-			// name
-			$this->name->ViewValue = $this->name->CurrentValue;
-			$this->name->ViewCustomAttributes = "";
+			// uProfile
+			$this->uProfile->ViewValue = $this->uProfile->CurrentValue;
+			$this->uProfile->ViewCustomAttributes = "";
 
-			// user_id
-			$this->user_id->LinkCustomAttributes = "";
-			$this->user_id->HrefValue = "";
-			$this->user_id->TooltipValue = "";
+			// userName
+			$this->userName->LinkCustomAttributes = "";
+			$this->userName->HrefValue = "";
+			$this->userName->TooltipValue = "";
 
-			// username
-			$this->username->LinkCustomAttributes = "";
-			$this->username->HrefValue = "";
-			$this->username->TooltipValue = "";
+			// userLoginId
+			$this->userLoginId->LinkCustomAttributes = "";
+			$this->userLoginId->HrefValue = "";
+			$this->userLoginId->TooltipValue = "";
 
-			// password
-			$this->password->LinkCustomAttributes = "";
-			$this->password->HrefValue = "";
-			$this->password->TooltipValue = "";
+			// uEmail
+			$this->uEmail->LinkCustomAttributes = "";
+			$this->uEmail->HrefValue = "";
+			$this->uEmail->TooltipValue = "";
 
-			// email_addreess
-			$this->email_addreess->LinkCustomAttributes = "";
-			$this->email_addreess->HrefValue = "";
-			$this->email_addreess->TooltipValue = "";
+			// uPassword
+			$this->uPassword->LinkCustomAttributes = "";
+			$this->uPassword->HrefValue = "";
+			$this->uPassword->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
-			// user_id
-			// username
-
-			$this->username->EditAttrs["class"] = "form-control";
-			$this->username->EditCustomAttributes = "";
+			// userName
+			$this->userName->EditAttrs["class"] = "form-control";
+			$this->userName->EditCustomAttributes = "";
 			if (REMOVE_XSS)
-				$this->username->CurrentValue = HtmlDecode($this->username->CurrentValue);
-			$this->username->EditValue = HtmlEncode($this->username->CurrentValue);
-			$this->username->PlaceHolder = RemoveHtml($this->username->caption());
+				$this->userName->CurrentValue = HtmlDecode($this->userName->CurrentValue);
+			$this->userName->EditValue = HtmlEncode($this->userName->CurrentValue);
+			$this->userName->PlaceHolder = RemoveHtml($this->userName->caption());
 
-			// password
-			$this->password->EditAttrs["class"] = "form-control";
-			$this->password->EditCustomAttributes = "";
-			$this->password->EditValue = HtmlEncode($this->password->CurrentValue);
-			$this->password->PlaceHolder = RemoveHtml($this->password->caption());
-
-			// email_addreess
-			$this->email_addreess->EditAttrs["class"] = "form-control";
-			$this->email_addreess->EditCustomAttributes = "";
+			// userLoginId
+			$this->userLoginId->EditAttrs["class"] = "form-control";
+			$this->userLoginId->EditCustomAttributes = "";
 			if (REMOVE_XSS)
-				$this->email_addreess->CurrentValue = HtmlDecode($this->email_addreess->CurrentValue);
-			$this->email_addreess->EditValue = HtmlEncode($this->email_addreess->CurrentValue);
-			$this->email_addreess->PlaceHolder = RemoveHtml($this->email_addreess->caption());
+				$this->userLoginId->CurrentValue = HtmlDecode($this->userLoginId->CurrentValue);
+			$this->userLoginId->EditValue = HtmlEncode($this->userLoginId->CurrentValue);
+			$this->userLoginId->PlaceHolder = RemoveHtml($this->userLoginId->caption());
+
+			// uEmail
+			$this->uEmail->EditAttrs["class"] = "form-control";
+			$this->uEmail->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->uEmail->CurrentValue = HtmlDecode($this->uEmail->CurrentValue);
+			$this->uEmail->EditValue = HtmlEncode($this->uEmail->CurrentValue);
+			$this->uEmail->PlaceHolder = RemoveHtml($this->uEmail->caption());
+
+			// uPassword
+			$this->uPassword->EditAttrs["class"] = "form-control";
+			$this->uPassword->EditCustomAttributes = "";
+			$this->uPassword->EditValue = HtmlEncode($this->uPassword->CurrentValue);
+			$this->uPassword->PlaceHolder = RemoveHtml($this->uPassword->caption());
 
 			// Add refer script
-			// user_id
+			// userName
 
-			$this->user_id->LinkCustomAttributes = "";
-			$this->user_id->HrefValue = "";
+			$this->userName->LinkCustomAttributes = "";
+			$this->userName->HrefValue = "";
 
-			// username
-			$this->username->LinkCustomAttributes = "";
-			$this->username->HrefValue = "";
+			// userLoginId
+			$this->userLoginId->LinkCustomAttributes = "";
+			$this->userLoginId->HrefValue = "";
 
-			// password
-			$this->password->LinkCustomAttributes = "";
-			$this->password->HrefValue = "";
+			// uEmail
+			$this->uEmail->LinkCustomAttributes = "";
+			$this->uEmail->HrefValue = "";
 
-			// email_addreess
-			$this->email_addreess->LinkCustomAttributes = "";
-			$this->email_addreess->HrefValue = "";
+			// uPassword
+			$this->uPassword->LinkCustomAttributes = "";
+			$this->uPassword->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -932,65 +922,57 @@ class register extends user_dtls
 		// Check if validation required
 		if (!SERVER_VALIDATE)
 			return ($FormError == "");
-		if ($this->user_id->Required) {
-			if (!$this->user_id->IsDetailKey && $this->user_id->FormValue != NULL && $this->user_id->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->user_id->caption(), $this->user_id->RequiredErrorMessage));
+		if ($this->seqid->Required) {
+			if (!$this->seqid->IsDetailKey && $this->seqid->FormValue != NULL && $this->seqid->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->seqid->caption(), $this->seqid->RequiredErrorMessage));
 			}
 		}
-		if ($this->username->Required) {
-			if (!$this->username->IsDetailKey && $this->username->FormValue != NULL && $this->username->FormValue == "") {
+		if ($this->userName->Required) {
+			if (!$this->userName->IsDetailKey && $this->userName->FormValue != NULL && $this->userName->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->userName->caption(), $this->userName->RequiredErrorMessage));
+			}
+		}
+		if ($this->userLoginId->Required) {
+			if (!$this->userLoginId->IsDetailKey && $this->userLoginId->FormValue != NULL && $this->userLoginId->FormValue == "") {
 				AddMessage($FormError, $Language->phrase("EnterUserName"));
 			}
 		}
-		if ($this->password->Required) {
-			if (!$this->password->IsDetailKey && $this->password->FormValue != NULL && $this->password->FormValue == "") {
+		if ($this->uEmail->Required) {
+			if (!$this->uEmail->IsDetailKey && $this->uEmail->FormValue != NULL && $this->uEmail->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uEmail->caption(), $this->uEmail->RequiredErrorMessage));
+			}
+		}
+		if ($this->uLevel->Required) {
+			if (!$this->uLevel->IsDetailKey && $this->uLevel->FormValue != NULL && $this->uLevel->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uLevel->caption(), $this->uLevel->RequiredErrorMessage));
+			}
+		}
+		if ($this->uPassword->Required) {
+			if (!$this->uPassword->IsDetailKey && $this->uPassword->FormValue != NULL && $this->uPassword->FormValue == "") {
 				AddMessage($FormError, $Language->phrase("EnterPassword"));
 			}
 		}
-		if ($this->password->ConfirmValue <> $this->password->FormValue) {
+		if ($this->uPassword->ConfirmValue <> $this->uPassword->FormValue) {
 			AddMessage($FormError, $Language->phrase("MismatchPassword"));
 		}
-		if ($this->create_login->Required) {
-			if (!$this->create_login->IsDetailKey && $this->create_login->FormValue != NULL && $this->create_login->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->create_login->caption(), $this->create_login->RequiredErrorMessage));
+		if ($this->uReportsTo->Required) {
+			if (!$this->uReportsTo->IsDetailKey && $this->uReportsTo->FormValue != NULL && $this->uReportsTo->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uReportsTo->caption(), $this->uReportsTo->RequiredErrorMessage));
 			}
 		}
-		if ($this->account_valid->Required) {
-			if ($this->account_valid->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->account_valid->caption(), $this->account_valid->RequiredErrorMessage));
+		if ($this->uActivated->Required) {
+			if ($this->uActivated->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uActivated->caption(), $this->uActivated->RequiredErrorMessage));
 			}
 		}
-		if ($this->last_login->Required) {
-			if (!$this->last_login->IsDetailKey && $this->last_login->FormValue != NULL && $this->last_login->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->last_login->caption(), $this->last_login->RequiredErrorMessage));
+		if ($this->uParentUserID->Required) {
+			if (!$this->uParentUserID->IsDetailKey && $this->uParentUserID->FormValue != NULL && $this->uParentUserID->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uParentUserID->caption(), $this->uParentUserID->RequiredErrorMessage));
 			}
 		}
-		if ($this->email_addreess->Required) {
-			if (!$this->email_addreess->IsDetailKey && $this->email_addreess->FormValue != NULL && $this->email_addreess->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->email_addreess->caption(), $this->email_addreess->RequiredErrorMessage));
-			}
-		}
-		if (!CheckEmail($this->email_addreess->FormValue)) {
-			AddMessage($FormError, $this->email_addreess->errorMessage());
-		}
-		if ($this->UserLevel->Required) {
-			if (!$this->UserLevel->IsDetailKey && $this->UserLevel->FormValue != NULL && $this->UserLevel->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->UserLevel->caption(), $this->UserLevel->RequiredErrorMessage));
-			}
-		}
-		if ($this->history->Required) {
-			if (!$this->history->IsDetailKey && $this->history->FormValue != NULL && $this->history->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->history->caption(), $this->history->RequiredErrorMessage));
-			}
-		}
-		if ($this->reports_to->Required) {
-			if (!$this->reports_to->IsDetailKey && $this->reports_to->FormValue != NULL && $this->reports_to->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->reports_to->caption(), $this->reports_to->RequiredErrorMessage));
-			}
-		}
-		if ($this->name->Required) {
-			if (!$this->name->IsDetailKey && $this->name->FormValue != NULL && $this->name->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->name->caption(), $this->name->RequiredErrorMessage));
+		if ($this->uProfile->Required) {
+			if (!$this->uProfile->IsDetailKey && $this->uProfile->FormValue != NULL && $this->uProfile->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->uProfile->caption(), $this->uProfile->RequiredErrorMessage));
 			}
 		}
 
@@ -1013,11 +995,11 @@ class register extends user_dtls
 
 		// Check if valid User ID
 		$validUser = FALSE;
-		if ($Security->currentUserID() <> "" && !EmptyValue($this->user_id->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-			$validUser = $Security->isValidUserID($this->user_id->CurrentValue);
+		if ($Security->currentUserID() <> "" && !EmptyValue($this->seqid->CurrentValue) && !$Security->isAdmin()) { // Non system admin
+			$validUser = $Security->isValidUserID($this->seqid->CurrentValue);
 			if (!$validUser) {
 				$userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-				$userIdMsg = str_replace("%u", $this->user_id->CurrentValue, $userIdMsg);
+				$userIdMsg = str_replace("%u", $this->seqid->CurrentValue, $userIdMsg);
 				$this->setFailureMessage($userIdMsg);
 				return FALSE;
 			}
@@ -1025,32 +1007,32 @@ class register extends user_dtls
 
 		// Check if valid Parent User ID
 		$validParentUser = FALSE;
-		if ($Security->currentUserID() <> "" && !EmptyValue($this->reports_to->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-			$validParentUser = $Security->isValidUserID($this->reports_to->CurrentValue);
+		if ($Security->currentUserID() <> "" && !EmptyValue($this->uParentUserID->CurrentValue) && !$Security->isAdmin()) { // Non system admin
+			$validParentUser = $Security->isValidUserID($this->uParentUserID->CurrentValue);
 			if (!$validParentUser) {
 				$parentUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedParentUserID"));
-				$parentUserIdMsg = str_replace("%p", $this->reports_to->CurrentValue, $parentUserIdMsg);
+				$parentUserIdMsg = str_replace("%p", $this->uParentUserID->CurrentValue, $parentUserIdMsg);
 				$this->setFailureMessage($parentUserIdMsg);
 				return FALSE;
 			}
 		}
-		if ($this->username->CurrentValue <> "") { // Check field with unique index
-			$filter = "(username = '" . AdjustSql($this->username->CurrentValue, $this->Dbid) . "')";
+		if ($this->userLoginId->CurrentValue <> "") { // Check field with unique index
+			$filter = "(userLoginId = '" . AdjustSql($this->userLoginId->CurrentValue, $this->Dbid) . "')";
 			$rsChk = $this->loadRs($filter);
 			if ($rsChk && !$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->username->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->username->CurrentValue, $idxErrMsg);
+				$idxErrMsg = str_replace("%f", $this->userLoginId->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->userLoginId->CurrentValue, $idxErrMsg);
 				$this->setFailureMessage($idxErrMsg);
 				$rsChk->close();
 				return FALSE;
 			}
 		}
-		if ($this->email_addreess->CurrentValue <> "") { // Check field with unique index
-			$filter = "(email_addreess = '" . AdjustSql($this->email_addreess->CurrentValue, $this->Dbid) . "')";
+		if ($this->uEmail->CurrentValue <> "") { // Check field with unique index
+			$filter = "(uEmail = '" . AdjustSql($this->uEmail->CurrentValue, $this->Dbid) . "')";
 			$rsChk = $this->loadRs($filter);
 			if ($rsChk && !$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->email_addreess->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->email_addreess->CurrentValue, $idxErrMsg);
+				$idxErrMsg = str_replace("%f", $this->uEmail->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->uEmail->CurrentValue, $idxErrMsg);
 				$this->setFailureMessage($idxErrMsg);
 				$rsChk->close();
 				return FALSE;
@@ -1064,16 +1046,20 @@ class register extends user_dtls
 		}
 		$rsnew = [];
 
-		// username
-		$this->username->setDbValueDef($rsnew, $this->username->CurrentValue, NULL, FALSE);
+		// userName
+		$this->userName->setDbValueDef($rsnew, $this->userName->CurrentValue, "", FALSE);
 
-		// password
-		$this->password->setDbValueDef($rsnew, $this->password->CurrentValue, NULL, FALSE);
+		// userLoginId
+		$this->userLoginId->setDbValueDef($rsnew, $this->userLoginId->CurrentValue, "", FALSE);
 
-		// email_addreess
-		$this->email_addreess->setDbValueDef($rsnew, $this->email_addreess->CurrentValue, NULL, FALSE);
+		// uEmail
+		$this->uEmail->setDbValueDef($rsnew, $this->uEmail->CurrentValue, "", FALSE);
 
-		// reports_to
+		// uPassword
+		$this->uPassword->setDbValueDef($rsnew, $this->uPassword->CurrentValue, "", FALSE);
+
+		// seqid
+		// uParentUserID
 		// Call Row Inserting event
 
 		$rs = ($rsold) ? $rsold->fields : NULL;
@@ -1152,9 +1138,9 @@ class register extends user_dtls
 
 					// Format the field values
 					switch ($fld->FieldVar) {
-						case "x_UserLevel":
+						case "x_uLevel":
 							break;
-						case "x_reports_to":
+						case "x_uParentUserID":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

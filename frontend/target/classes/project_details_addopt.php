@@ -358,9 +358,9 @@ class project_details_addopt extends project_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class project_details_addopt extends project_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -596,7 +596,7 @@ class project_details_addopt extends project_details
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->project_id->setVisibility();
+		$this->project_id->Visible = FALSE;
 		$this->project_name->setVisibility();
 		$this->project_our_client->setVisibility();
 		$this->project_end_user->setVisibility();
@@ -672,9 +672,6 @@ class project_details_addopt extends project_details
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'project_id' first before field var 'x_project_id'
-		$val = $CurrentForm->hasValue("project_id") ? $CurrentForm->getValue("project_id") : $CurrentForm->getValue("x_project_id");
-
 		// Check field name 'project_name' first before field var 'x_project_name'
 		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
 		if (!$this->project_name->IsDetailKey) {
@@ -716,6 +713,9 @@ class project_details_addopt extends project_details
 		if (!$this->order_number->IsDetailKey) {
 			$this->order_number->setFormValue(ConvertFromUtf8($val));
 		}
+
+		// Check field name 'project_id' first before field var 'x_project_id'
+		$val = $CurrentForm->hasValue("project_id") ? $CurrentForm->getValue("project_id") : $CurrentForm->getValue("x_project_id");
 	}
 
 	// Restore form values
@@ -846,11 +846,6 @@ class project_details_addopt extends project_details
 			$this->order_number->ViewValue = $this->order_number->CurrentValue;
 			$this->order_number->ViewCustomAttributes = "";
 
-			// project_id
-			$this->project_id->LinkCustomAttributes = "";
-			$this->project_id->HrefValue = "";
-			$this->project_id->TooltipValue = "";
-
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
@@ -887,9 +882,7 @@ class project_details_addopt extends project_details
 			$this->order_number->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
-			// project_id
 			// project_name
-
 			$this->project_name->EditAttrs["class"] = "form-control";
 			$this->project_name->EditCustomAttributes = "";
 			if (REMOVE_XSS)
@@ -946,12 +939,8 @@ class project_details_addopt extends project_details
 			$this->order_number->PlaceHolder = RemoveHtml($this->order_number->caption());
 
 			// Add refer script
-			// project_id
-
-			$this->project_id->LinkCustomAttributes = "";
-			$this->project_id->HrefValue = "";
-
 			// project_name
+
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
 

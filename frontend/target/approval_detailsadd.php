@@ -118,7 +118,12 @@ $approval_details_add->showMessage();
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $approval_details_add->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="approval_details">
+<?php if ($approval_details->isConfirm()) { // Confirm page ?>
 <input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="confirm" id="confirm" value="confirm">
+<?php } else { ?>
+<input type="hidden" name="action" id="action" value="confirm">
+<?php } ?>
 <input type="hidden" name="modal" value="<?php echo (int)$approval_details_add->IsModal ?>">
 <?php if (!$approval_details_add->IsMobileOrModal) { ?>
 <div class="ew-desktop"><!-- desktop -->
@@ -133,18 +138,34 @@ $approval_details_add->showMessage();
 	<div id="r_short_code" class="form-group row">
 		<label id="elh_approval_details_short_code" for="x_short_code" class="<?php echo $approval_details_add->LeftColumnClass ?>"><?php echo $approval_details->short_code->caption() ?><?php echo ($approval_details->short_code->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $approval_details_add->RightColumnClass ?>"><div<?php echo $approval_details->short_code->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_short_code">
 <input type="text" data-table="approval_details" data-field="x_short_code" name="x_short_code" id="x_short_code" size="30" placeholder="<?php echo HtmlEncode($approval_details->short_code->getPlaceHolder()) ?>" value="<?php echo $approval_details->short_code->EditValue ?>"<?php echo $approval_details->short_code->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_short_code">
+<span<?php echo $approval_details->short_code->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->short_code->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_short_code" name="x_short_code" id="x_short_code" value="<?php echo HtmlEncode($approval_details->short_code->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->short_code->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_short_code">
 		<td class="<?php echo $approval_details_add->TableLeftColumnClass ?>"><span id="elh_approval_details_short_code"><?php echo $approval_details->short_code->caption() ?><?php echo ($approval_details->short_code->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $approval_details->short_code->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_short_code">
 <input type="text" data-table="approval_details" data-field="x_short_code" name="x_short_code" id="x_short_code" size="30" placeholder="<?php echo HtmlEncode($approval_details->short_code->getPlaceHolder()) ?>" value="<?php echo $approval_details->short_code->EditValue ?>"<?php echo $approval_details->short_code->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_short_code">
+<span<?php echo $approval_details->short_code->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->short_code->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_short_code" name="x_short_code" id="x_short_code" value="<?php echo HtmlEncode($approval_details->short_code->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->short_code->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -154,18 +175,34 @@ $approval_details_add->showMessage();
 	<div id="r_Description" class="form-group row">
 		<label id="elh_approval_details_Description" for="x_Description" class="<?php echo $approval_details_add->LeftColumnClass ?>"><?php echo $approval_details->Description->caption() ?><?php echo ($approval_details->Description->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $approval_details_add->RightColumnClass ?>"><div<?php echo $approval_details->Description->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_Description">
 <textarea data-table="approval_details" data-field="x_Description" name="x_Description" id="x_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_Description">
+<span<?php echo $approval_details->Description->viewAttributes() ?>>
+<?php echo $approval_details->Description->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_Description" name="x_Description" id="x_Description" value="<?php echo HtmlEncode($approval_details->Description->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->Description->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_Description">
 		<td class="<?php echo $approval_details_add->TableLeftColumnClass ?>"><span id="elh_approval_details_Description"><?php echo $approval_details->Description->caption() ?><?php echo ($approval_details->Description->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $approval_details->Description->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_Description">
 <textarea data-table="approval_details" data-field="x_Description" name="x_Description" id="x_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_Description">
+<span<?php echo $approval_details->Description->viewAttributes() ?>>
+<?php echo $approval_details->Description->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_Description" name="x_Description" id="x_Description" value="<?php echo HtmlEncode($approval_details->Description->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->Description->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -175,18 +212,34 @@ $approval_details_add->showMessage();
 	<div id="r_out_status" class="form-group row">
 		<label id="elh_approval_details_out_status" for="x_out_status" class="<?php echo $approval_details_add->LeftColumnClass ?>"><?php echo $approval_details->out_status->caption() ?><?php echo ($approval_details->out_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $approval_details_add->RightColumnClass ?>"><div<?php echo $approval_details->out_status->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_out_status">
 <input type="text" data-table="approval_details" data-field="x_out_status" name="x_out_status" id="x_out_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->out_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->out_status->EditValue ?>"<?php echo $approval_details->out_status->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_out_status">
+<span<?php echo $approval_details->out_status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->out_status->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_out_status" name="x_out_status" id="x_out_status" value="<?php echo HtmlEncode($approval_details->out_status->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->out_status->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_out_status">
 		<td class="<?php echo $approval_details_add->TableLeftColumnClass ?>"><span id="elh_approval_details_out_status"><?php echo $approval_details->out_status->caption() ?><?php echo ($approval_details->out_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $approval_details->out_status->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_out_status">
 <input type="text" data-table="approval_details" data-field="x_out_status" name="x_out_status" id="x_out_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->out_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->out_status->EditValue ?>"<?php echo $approval_details->out_status->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_out_status">
+<span<?php echo $approval_details->out_status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->out_status->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_out_status" name="x_out_status" id="x_out_status" value="<?php echo HtmlEncode($approval_details->out_status->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->out_status->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -196,18 +249,34 @@ $approval_details_add->showMessage();
 	<div id="r_in_status" class="form-group row">
 		<label id="elh_approval_details_in_status" for="x_in_status" class="<?php echo $approval_details_add->LeftColumnClass ?>"><?php echo $approval_details->in_status->caption() ?><?php echo ($approval_details->in_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $approval_details_add->RightColumnClass ?>"><div<?php echo $approval_details->in_status->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_in_status">
 <input type="text" data-table="approval_details" data-field="x_in_status" name="x_in_status" id="x_in_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->in_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->in_status->EditValue ?>"<?php echo $approval_details->in_status->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_in_status">
+<span<?php echo $approval_details->in_status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->in_status->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_in_status" name="x_in_status" id="x_in_status" value="<?php echo HtmlEncode($approval_details->in_status->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->in_status->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_in_status">
 		<td class="<?php echo $approval_details_add->TableLeftColumnClass ?>"><span id="elh_approval_details_in_status"><?php echo $approval_details->in_status->caption() ?><?php echo ($approval_details->in_status->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $approval_details->in_status->cellAttributes() ?>>
+<?php if (!$approval_details->isConfirm()) { ?>
 <span id="el_approval_details_in_status">
 <input type="text" data-table="approval_details" data-field="x_in_status" name="x_in_status" id="x_in_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->in_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->in_status->EditValue ?>"<?php echo $approval_details->in_status->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_approval_details_in_status">
+<span<?php echo $approval_details->in_status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->in_status->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_in_status" name="x_in_status" id="x_in_status" value="<?php echo HtmlEncode($approval_details->in_status->FormValue) ?>">
+<?php } ?>
 <?php echo $approval_details->in_status->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -220,8 +289,13 @@ $approval_details_add->showMessage();
 <?php if (!$approval_details_add->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $approval_details_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("AddBtn") ?></button>
+<?php if (!$approval_details->isConfirm()) { // Confirm page ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" onclick="this.form.action.value='confirm';"><?php echo $Language->phrase("AddBtn") ?></button>
 <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?php echo $approval_details_add->getReturnUrl() ?>"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("ConfirmBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="submit" onclick="this.form.action.value='cancel';"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } ?>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>

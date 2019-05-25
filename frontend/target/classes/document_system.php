@@ -66,7 +66,7 @@ class document_system extends DbTable
 		$this->type_id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->type_id->IsPrimaryKey = TRUE; // Primary key field
 		$this->type_id->Nullable = FALSE; // NOT NULL field
-		$this->type_id->Sortable = TRUE; // Allow sort
+		$this->type_id->Sortable = FALSE; // Allow sort
 		$this->type_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['type_id'] = &$this->type_id;
 
@@ -681,6 +681,9 @@ class document_system extends DbTable
 
 		// Common render codes
 		// type_id
+
+		$this->type_id->CellCssStyle = "white-space: nowrap;";
+
 		// system_name
 		// system_group
 		// type_id
@@ -735,10 +738,8 @@ class document_system extends DbTable
 		// system_name
 		$this->system_name->EditAttrs["class"] = "form-control";
 		$this->system_name->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->system_name->CurrentValue = HtmlDecode($this->system_name->CurrentValue);
 		$this->system_name->EditValue = $this->system_name->CurrentValue;
-		$this->system_name->PlaceHolder = RemoveHtml($this->system_name->caption());
+		$this->system_name->ViewCustomAttributes = "";
 
 		// system_group
 		$this->system_group->EditAttrs["class"] = "form-control";
@@ -777,11 +778,7 @@ class document_system extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->type_id);
-					$doc->exportCaption($this->system_name);
-					$doc->exportCaption($this->system_group);
 				} else {
-					$doc->exportCaption($this->type_id);
 					$doc->exportCaption($this->system_name);
 					$doc->exportCaption($this->system_group);
 				}
@@ -815,11 +812,7 @@ class document_system extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->type_id);
-						$doc->exportField($this->system_name);
-						$doc->exportField($this->system_group);
 					} else {
-						$doc->exportField($this->type_id);
 						$doc->exportField($this->system_name);
 						$doc->exportField($this->system_group);
 					}

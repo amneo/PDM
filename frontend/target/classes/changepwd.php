@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class changepwd extends user_dtls
+class changepwd extends users
 {
 
 	// Page ID
@@ -329,13 +329,13 @@ class changepwd extends user_dtls
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS["user_dtls"]) || get_class($GLOBALS["user_dtls"]) == PROJECT_NAMESPACE . "user_dtls") {
-			$GLOBALS["user_dtls"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["user_dtls"];
+		// Table object (users)
+		if (!isset($GLOBALS["users"]) || get_class($GLOBALS["users"]) == PROJECT_NAMESPACE . "users") {
+			$GLOBALS["users"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["users"];
 		}
-		if (!isset($GLOBALS["user_dtls"]))
-			$GLOBALS["user_dtls"] = &$this;
+		if (!isset($GLOBALS["users"]))
+			$GLOBALS["users"] = &$this;
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -352,9 +352,9 @@ class changepwd extends user_dtls
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -433,7 +433,7 @@ class changepwd extends user_dtls
 			if (!$Security->isLoggedIn()) $Security->autoLogin();
 			if (!$Security->isLoggedIn() || $Security->isSysAdmin())
 				$this->terminate(GetUrl("login.php"));
-			$Security->loadCurrentUserLevel($this->ProjectID . 'user_dtls');
+			$Security->loadCurrentUserLevel($this->ProjectID . 'users');
 			}
 		}
 
@@ -490,13 +490,13 @@ class changepwd extends user_dtls
 			if ($rs = $UserTableConn->execute($sql)) {
 				if (!$rs->EOF) {
 					$rsold = $rs->fields;
-					if (IsPasswordReset() || ComparePassword($rsold['password'], $oldPassword)) {
+					if (IsPasswordReset() || ComparePassword($rsold['uPassword'], $oldPassword)) {
 						$validPwd = TRUE;
 						if (!IsPasswordReset())
 							$validPwd = $this->User_ChangePassword($rsold, $userName, $oldPassword, $newPassword);
 						if ($validPwd) {
-							$rsnew = array('password' => $newPassword); // Change Password
-							$emailAddress = $rsold['email_addreess'];
+							$rsnew = array('uPassword' => $newPassword); // Change Password
+							$emailAddress = $rsold['uEmail'];
 							$rs->close();
 							$UserTableConn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
 							$validPwd = $this->update($rsnew);

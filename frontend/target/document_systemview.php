@@ -106,17 +106,6 @@ $document_system_view->showMessage();
 <input type="hidden" name="t" value="document_system">
 <input type="hidden" name="modal" value="<?php echo (int)$document_system_view->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($document_system->type_id->Visible) { // type_id ?>
-	<tr id="r_type_id">
-		<td class="<?php echo $document_system_view->TableLeftColumnClass ?>"><span id="elh_document_system_type_id"><?php echo $document_system->type_id->caption() ?></span></td>
-		<td data-name="type_id"<?php echo $document_system->type_id->cellAttributes() ?>>
-<span id="el_document_system_type_id">
-<span<?php echo $document_system->type_id->viewAttributes() ?>>
-<?php echo $document_system->type_id->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($document_system->system_name->Visible) { // system_name ?>
 	<tr id="r_system_name">
 		<td class="<?php echo $document_system_view->TableLeftColumnClass ?>"><span id="elh_document_system_system_name"><?php echo $document_system->system_name->caption() ?></span></td>

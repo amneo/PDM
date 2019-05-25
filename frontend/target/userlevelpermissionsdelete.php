@@ -78,9 +78,6 @@ $userlevelpermissions_delete->showMessage();
 <table class="table ew-table">
 	<thead>
 	<tr class="ew-table-header">
-<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-		<th class="<?php echo $userlevelpermissions->userlevelid->headerCellClass() ?>"><span id="elh_userlevelpermissions_userlevelid" class="userlevelpermissions_userlevelid"><?php echo $userlevelpermissions->userlevelid->caption() ?></span></th>
-<?php } ?>
 <?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
 		<th class="<?php echo $userlevelpermissions->_tablename->headerCellClass() ?>"><span id="elh_userlevelpermissions__tablename" class="userlevelpermissions__tablename"><?php echo $userlevelpermissions->_tablename->caption() ?></span></th>
 <?php } ?>
@@ -108,14 +105,6 @@ while (!$userlevelpermissions_delete->Recordset->EOF) {
 	$userlevelpermissions_delete->renderRow();
 ?>
 	<tr<?php echo $userlevelpermissions->rowAttributes() ?>>
-<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-		<td<?php echo $userlevelpermissions->userlevelid->cellAttributes() ?>>
-<span id="el<?php echo $userlevelpermissions_delete->RowCnt ?>_userlevelpermissions_userlevelid" class="userlevelpermissions_userlevelid">
-<span<?php echo $userlevelpermissions->userlevelid->viewAttributes() ?>>
-<?php echo $userlevelpermissions->userlevelid->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
 		<td<?php echo $userlevelpermissions->_tablename->cellAttributes() ?>>
 <span id="el<?php echo $userlevelpermissions_delete->RowCnt ?>_userlevelpermissions__tablename" class="userlevelpermissions__tablename">

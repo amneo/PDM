@@ -350,9 +350,9 @@ class document_system_delete extends document_system
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class document_system_delete extends document_system
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -592,7 +592,7 @@ class document_system_delete extends document_system
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->system_name->setVisibility();
 		$this->system_group->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -760,14 +760,13 @@ class document_system_delete extends document_system
 
 		// Common render codes for all row types
 		// type_id
+
+		$this->type_id->CellCssStyle = "white-space: nowrap;";
+
 		// system_name
 		// system_group
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
 
 			// system_name
 			$this->system_name->ViewValue = $this->system_name->CurrentValue;
@@ -776,11 +775,6 @@ class document_system_delete extends document_system
 			// system_group
 			$this->system_group->ViewValue = $this->system_group->CurrentValue;
 			$this->system_group->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// system_name
 			$this->system_name->LinkCustomAttributes = "";

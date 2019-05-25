@@ -350,9 +350,9 @@ class xmit_details_edit extends xmit_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class xmit_details_edit extends xmit_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -612,7 +612,7 @@ class xmit_details_edit extends xmit_details
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->xmit_id->setVisibility();
+		$this->xmit_id->Visible = FALSE;
 		$this->xmit_mode->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -786,11 +786,6 @@ class xmit_details_edit extends xmit_details
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'xmit_id' first before field var 'x_xmit_id'
-		$val = $CurrentForm->hasValue("xmit_id") ? $CurrentForm->getValue("xmit_id") : $CurrentForm->getValue("x_xmit_id");
-		if (!$this->xmit_id->IsDetailKey)
-			$this->xmit_id->setFormValue($val);
-
 		// Check field name 'xmit_mode' first before field var 'x_xmit_mode'
 		$val = $CurrentForm->hasValue("xmit_mode") ? $CurrentForm->getValue("xmit_mode") : $CurrentForm->getValue("x_xmit_mode");
 		if (!$this->xmit_mode->IsDetailKey) {
@@ -799,6 +794,11 @@ class xmit_details_edit extends xmit_details
 			else
 				$this->xmit_mode->setFormValue($val);
 		}
+
+		// Check field name 'xmit_id' first before field var 'x_xmit_id'
+		$val = $CurrentForm->hasValue("xmit_id") ? $CurrentForm->getValue("xmit_id") : $CurrentForm->getValue("x_xmit_id");
+		if (!$this->xmit_id->IsDetailKey)
+			$this->xmit_id->setFormValue($val);
 	}
 
 	// Restore form values
@@ -896,30 +896,15 @@ class xmit_details_edit extends xmit_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// xmit_id
-			$this->xmit_id->ViewValue = $this->xmit_id->CurrentValue;
-			$this->xmit_id->ViewCustomAttributes = "";
-
 			// xmit_mode
 			$this->xmit_mode->ViewValue = $this->xmit_mode->CurrentValue;
 			$this->xmit_mode->ViewCustomAttributes = "";
-
-			// xmit_id
-			$this->xmit_id->LinkCustomAttributes = "";
-			$this->xmit_id->HrefValue = "";
-			$this->xmit_id->TooltipValue = "";
 
 			// xmit_mode
 			$this->xmit_mode->LinkCustomAttributes = "";
 			$this->xmit_mode->HrefValue = "";
 			$this->xmit_mode->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// xmit_id
-			$this->xmit_id->EditAttrs["class"] = "form-control";
-			$this->xmit_id->EditCustomAttributes = "";
-			$this->xmit_id->EditValue = $this->xmit_id->CurrentValue;
-			$this->xmit_id->ViewCustomAttributes = "";
 
 			// xmit_mode
 			$this->xmit_mode->EditAttrs["class"] = "form-control";
@@ -930,12 +915,8 @@ class xmit_details_edit extends xmit_details
 			$this->xmit_mode->PlaceHolder = RemoveHtml($this->xmit_mode->caption());
 
 			// Edit refer script
-			// xmit_id
-
-			$this->xmit_id->LinkCustomAttributes = "";
-			$this->xmit_id->HrefValue = "";
-
 			// xmit_mode
+
 			$this->xmit_mode->LinkCustomAttributes = "";
 			$this->xmit_mode->HrefValue = "";
 		}

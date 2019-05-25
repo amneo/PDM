@@ -406,9 +406,9 @@ class xmit_details_list extends xmit_details
 		$this->MultiUpdateUrl = "xmit_detailsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -429,9 +429,9 @@ class xmit_details_list extends xmit_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -620,7 +620,7 @@ class xmit_details_list extends xmit_details
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -760,7 +760,7 @@ class xmit_details_list extends xmit_details
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->xmit_id->setVisibility();
+		$this->xmit_id->Visible = FALSE;
 		$this->xmit_mode->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -838,66 +838,20 @@ class xmit_details_list extends xmit_details
 			if ($this->isExport())
 				$this->OtherOptions->hideAllOptions();
 
-			// Get default search criteria
-			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
-
-			// Get basic search values
-			$this->loadBasicSearchValues();
-
-			// Process filter list
-			if ($this->processFilterList())
-				$this->terminate();
-
-			// Restore search parms from Session if not searching / reset / export
-			if (($this->isExport() || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->checkSearchParms())
-				$this->restoreSearchParms();
-
-			// Call Recordset SearchValidated event
-			$this->Recordset_SearchValidated();
-
 			// Set up sorting order
 			$this->setupSortOrder();
-
-			// Get basic search criteria
-			if ($SearchError == "")
-				$srchBasic = $this->basicSearchWhere();
 		}
 
 		// Restore display records
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
 		if ($this->Command <> "json")
 			$this->loadSortOrder();
-
-		// Load search default if no existing search criteria
-		if (!$this->checkSearchParms()) {
-
-			// Load basic search from default
-			$this->BasicSearch->loadDefault();
-			if ($this->BasicSearch->Keyword != "")
-				$srchBasic = $this->basicSearchWhere();
-		}
-
-		// Build search criteria
-		AddFilter($this->SearchWhere, $srchAdvanced);
-		AddFilter($this->SearchWhere, $srchBasic);
-
-		// Call Recordset_Searching event
-		$this->Recordset_Searching($this->SearchWhere);
-
-		// Save search criteria
-		if ($this->Command == "search" && !$this->RestoreSearch) {
-			$this->setSearchWhere($this->SearchWhere); // Save to Session
-			$this->StartRec = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRec);
-		} elseif ($this->Command <> "json") {
-			$this->SearchWhere = $this->getSearchWhere();
-		}
 
 		// Build filter
 		$filter = "";
@@ -1006,233 +960,6 @@ class xmit_details_list extends xmit_details
 		return TRUE;
 	}
 
-	// Get list of filters
-	public function getFilterList()
-	{
-		global $UserProfile;
-
-		// Initialize
-		$filterList = "";
-		$savedFilterList = "";
-
-		// Load server side filters
-		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fxmit_detailslistsrch");
-		$filterList = Concat($filterList, $this->xmit_id->AdvancedSearch->toJson(), ","); // Field xmit_id
-		$filterList = Concat($filterList, $this->xmit_mode->AdvancedSearch->toJson(), ","); // Field xmit_mode
-		if ($this->BasicSearch->Keyword <> "") {
-			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
-			$filterList = Concat($filterList, $wrk, ",");
-		}
-
-		// Return filter list in JSON
-		if ($filterList <> "")
-			$filterList = "\"data\":{" . $filterList . "}";
-		if ($savedFilterList <> "")
-			$filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
-		return ($filterList <> "") ? "{" . $filterList . "}" : "null";
-	}
-
-	// Process filter list
-	protected function processFilterList()
-	{
-		global $UserProfile;
-		if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
-			$filters = Post("filters");
-			$UserProfile->setSearchFilters(CurrentUserName(), "fxmit_detailslistsrch", $filters);
-			WriteJson([["success" => TRUE]]); // Success
-			return TRUE;
-		} elseif (Post("cmd") == "resetfilter") {
-			$this->restoreFilterList();
-		}
-		return FALSE;
-	}
-
-	// Restore list of filters
-	protected function restoreFilterList()
-	{
-
-		// Return if not reset filter
-		if (Post("cmd") !== "resetfilter")
-			return FALSE;
-		$filter = json_decode(Post("filter"), TRUE);
-		$this->Command = "search";
-
-		// Field xmit_id
-		$this->xmit_id->AdvancedSearch->SearchValue = @$filter["x_xmit_id"];
-		$this->xmit_id->AdvancedSearch->SearchOperator = @$filter["z_xmit_id"];
-		$this->xmit_id->AdvancedSearch->SearchCondition = @$filter["v_xmit_id"];
-		$this->xmit_id->AdvancedSearch->SearchValue2 = @$filter["y_xmit_id"];
-		$this->xmit_id->AdvancedSearch->SearchOperator2 = @$filter["w_xmit_id"];
-		$this->xmit_id->AdvancedSearch->save();
-
-		// Field xmit_mode
-		$this->xmit_mode->AdvancedSearch->SearchValue = @$filter["x_xmit_mode"];
-		$this->xmit_mode->AdvancedSearch->SearchOperator = @$filter["z_xmit_mode"];
-		$this->xmit_mode->AdvancedSearch->SearchCondition = @$filter["v_xmit_mode"];
-		$this->xmit_mode->AdvancedSearch->SearchValue2 = @$filter["y_xmit_mode"];
-		$this->xmit_mode->AdvancedSearch->SearchOperator2 = @$filter["w_xmit_mode"];
-		$this->xmit_mode->AdvancedSearch->save();
-		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
-		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
-	}
-
-	// Return basic search SQL
-	protected function basicSearchSql($arKeywords, $type)
-	{
-		$where = "";
-		$this->buildBasicSearchSql($where, $this->xmit_mode, $arKeywords, $type);
-		return $where;
-	}
-
-	// Build basic search SQL
-	protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
-	{
-		global $BASIC_SEARCH_IGNORE_PATTERN;
-		$defCond = ($type == "OR") ? "OR" : "AND";
-		$arSql = array(); // Array for SQL parts
-		$arCond = array(); // Array for search conditions
-		$cnt = count($arKeywords);
-		$j = 0; // Number of SQL parts
-		for ($i = 0; $i < $cnt; $i++) {
-			$keyword = $arKeywords[$i];
-			$keyword = trim($keyword);
-			if ($BASIC_SEARCH_IGNORE_PATTERN <> "") {
-				$keyword = preg_replace($BASIC_SEARCH_IGNORE_PATTERN, "\\", $keyword);
-				$ar = explode("\\", $keyword);
-			} else {
-				$ar = array($keyword);
-			}
-			foreach ($ar as $keyword) {
-				if ($keyword <> "") {
-					$wrk = "";
-					if ($keyword == "OR" && $type == "") {
-						if ($j > 0)
-							$arCond[$j - 1] = "OR";
-					} elseif ($keyword == NULL_VALUE) {
-						$wrk = $fld->Expression . " IS NULL";
-					} elseif ($keyword == NOT_NULL_VALUE) {
-						$wrk = $fld->Expression . " IS NOT NULL";
-					} elseif ($fld->IsVirtual) {
-						$wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-					} elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
-						$wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-					}
-					if ($wrk <> "") {
-						$arSql[$j] = $wrk;
-						$arCond[$j] = $defCond;
-						$j += 1;
-					}
-				}
-			}
-		}
-		$cnt = count($arSql);
-		$quoted = FALSE;
-		$sql = "";
-		if ($cnt > 0) {
-			for ($i = 0; $i < $cnt - 1; $i++) {
-				if ($arCond[$i] == "OR") {
-					if (!$quoted)
-						$sql .= "(";
-					$quoted = TRUE;
-				}
-				$sql .= $arSql[$i];
-				if ($quoted && $arCond[$i] <> "OR") {
-					$sql .= ")";
-					$quoted = FALSE;
-				}
-				$sql .= " " . $arCond[$i] . " ";
-			}
-			$sql .= $arSql[$cnt - 1];
-			if ($quoted)
-				$sql .= ")";
-		}
-		if ($sql <> "") {
-			if ($where <> "")
-				$where .= " OR ";
-			$where .= "(" . $sql . ")";
-		}
-	}
-
-	// Return basic search WHERE clause based on search keyword and type
-	protected function basicSearchWhere($default = FALSE)
-	{
-		global $Security;
-		$searchStr = "";
-		if (!$Security->canSearch())
-			return "";
-		$searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-		$searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-		// Get search SQL
-		if ($searchKeyword <> "") {
-			$ar = $this->BasicSearch->keywordList($default);
-
-			// Search keyword in any fields
-			if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
-				foreach ($ar as $keyword) {
-					if ($keyword <> "") {
-						if ($searchStr <> "")
-							$searchStr .= " " . $searchType . " ";
-						$searchStr .= "(" . $this->basicSearchSql(array($keyword), $searchType) . ")";
-					}
-				}
-			} else {
-				$searchStr = $this->basicSearchSql($ar, $searchType);
-			}
-			if (!$default && in_array($this->Command, array("", "reset", "resetall")))
-				$this->Command = "search";
-		}
-		if (!$default && $this->Command == "search") {
-			$this->BasicSearch->setKeyword($searchKeyword);
-			$this->BasicSearch->setType($searchType);
-		}
-		return $searchStr;
-	}
-
-	// Check if search parm exists
-	protected function checkSearchParms()
-	{
-
-		// Check basic search
-		if ($this->BasicSearch->issetSession())
-			return TRUE;
-		return FALSE;
-	}
-
-	// Clear all search parameters
-	protected function resetSearchParms()
-	{
-
-		// Clear search WHERE clause
-		$this->SearchWhere = "";
-		$this->setSearchWhere($this->SearchWhere);
-
-		// Clear basic search parameters
-		$this->resetBasicSearchParms();
-	}
-
-	// Load advanced search default values
-	protected function loadAdvancedSearchDefault()
-	{
-		return FALSE;
-	}
-
-	// Clear all basic search parameters
-	protected function resetBasicSearchParms()
-	{
-		$this->BasicSearch->unsetSession();
-	}
-
-	// Restore all search parameters
-	protected function restoreSearchParms()
-	{
-		$this->RestoreSearch = TRUE;
-
-		// Restore basic search values
-		$this->BasicSearch->load();
-	}
-
 	// Set up sort parameters
 	protected function setupSortOrder()
 	{
@@ -1244,7 +971,6 @@ class xmit_details_list extends xmit_details
 		if (Get("order") !== NULL) {
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
-			$this->updateSort($this->xmit_id, $ctrl); // xmit_id
 			$this->updateSort($this->xmit_mode, $ctrl); // xmit_mode
 			$this->setStartRecordNumber(1); // Reset start position
 		}
@@ -1273,15 +999,10 @@ class xmit_details_list extends xmit_details
 		// Check if reset command
 		if (substr($this->Command,0,5) == "reset") {
 
-			// Reset search criteria
-			if ($this->Command == "reset" || $this->Command == "resetall")
-				$this->resetSearchParms();
-
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
-				$this->xmit_id->setSort("");
 				$this->xmit_mode->setSort("");
 			}
 
@@ -1302,12 +1023,6 @@ class xmit_details_list extends xmit_details
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = TRUE;
-
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
@@ -1318,12 +1033,6 @@ class xmit_details_list extends xmit_details
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canAdd();
-		$item->OnLeft = TRUE;
-
-		// "delete"
-		$item = &$this->ListOptions->add("delete");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canDelete();
 		$item->OnLeft = TRUE;
 
 		// List actions
@@ -1368,15 +1077,6 @@ class xmit_details_list extends xmit_details
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
 
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView()) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
-		}
-
 		// "edit"
 		$opt = &$this->ListOptions->Items["edit"];
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
@@ -1394,13 +1094,6 @@ class xmit_details_list extends xmit_details
 		} else {
 			$opt->Body = "";
 		}
-
-		// "delete"
-		$opt = &$this->ListOptions->Items["delete"];
-		if ($Security->canDelete())
-			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-		else
-			$opt->Body = "";
 
 		// Set up list action buttons
 		$opt = &$this->ListOptions->getItem("listactions");
@@ -1471,10 +1164,10 @@ class xmit_details_list extends xmit_details
 		// Filter button
 		$item = &$this->FilterOptions->add("savecurrentfilter");
 		$item->Body = "<a class=\"ew-save-filter\" data-form=\"fxmit_detailslistsrch\" href=\"#\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 		$item = &$this->FilterOptions->add("deletefilter");
 		$item->Body = "<a class=\"ew-delete-filter\" data-form=\"fxmit_detailslistsrch\" href=\"#\">" . $Language->phrase("DeleteFilter") . "</a>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
 		$this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1602,17 +1295,6 @@ class xmit_details_list extends xmit_details
 		$this->SearchOptions->Tag = "div";
 		$this->SearchOptions->TagClassName = "ew-search-option";
 
-		// Search button
-		$item = &$this->SearchOptions->add("searchtoggle");
-		$searchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fxmit_detailslistsrch\">" . $Language->phrase("SearchLink") . "</button>";
-		$item->Visible = TRUE;
-
-		// Show all button
-		$item = &$this->SearchOptions->add("showall");
-		$item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $this->pageUrl() . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
-		$item->Visible = ($this->SearchWhere <> $this->DefaultSearchWhere && $this->SearchWhere <> "0=101");
-
 		// Button group for search
 		$this->SearchOptions->UseDropDownButton = FALSE;
 		$this->SearchOptions->UseButtonGroup = TRUE;
@@ -1676,15 +1358,6 @@ class xmit_details_list extends xmit_details
 			$this->StartRec = (int)(($this->StartRec - 1)/$this->DisplayRecs) * $this->DisplayRecs + 1; // Point to page boundary
 			$this->setStartRecordNumber($this->StartRec);
 		}
-	}
-
-	// Load basic search values
-	protected function loadBasicSearchValues()
-	{
-		$this->BasicSearch->setKeyword(Get(TABLE_BASIC_SEARCH, ""), FALSE);
-		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
-			$this->Command = "search";
-		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
 	}
 
 	// Load recordset
@@ -1807,18 +1480,9 @@ class xmit_details_list extends xmit_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// xmit_id
-			$this->xmit_id->ViewValue = $this->xmit_id->CurrentValue;
-			$this->xmit_id->ViewCustomAttributes = "";
-
 			// xmit_mode
 			$this->xmit_mode->ViewValue = $this->xmit_mode->CurrentValue;
 			$this->xmit_mode->ViewCustomAttributes = "";
-
-			// xmit_id
-			$this->xmit_id->LinkCustomAttributes = "";
-			$this->xmit_id->HrefValue = "";
-			$this->xmit_id->TooltipValue = "";
 
 			// xmit_mode
 			$this->xmit_mode->LinkCustomAttributes = "";
@@ -1909,7 +1573,7 @@ class xmit_details_list extends xmit_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

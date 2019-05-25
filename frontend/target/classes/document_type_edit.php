@@ -350,9 +350,9 @@ class document_type_edit extends document_type
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class document_type_edit extends document_type
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -612,7 +612,7 @@ class document_type_edit extends document_type
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->document_type->setVisibility();
 		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -787,11 +787,6 @@ class document_type_edit extends document_type
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'type_id' first before field var 'x_type_id'
-		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
-		if (!$this->type_id->IsDetailKey)
-			$this->type_id->setFormValue($val);
-
 		// Check field name 'document_type' first before field var 'x_document_type'
 		$val = $CurrentForm->hasValue("document_type") ? $CurrentForm->getValue("document_type") : $CurrentForm->getValue("x_document_type");
 		if (!$this->document_type->IsDetailKey) {
@@ -809,6 +804,11 @@ class document_type_edit extends document_type
 			else
 				$this->document_category->setFormValue($val);
 		}
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+		if (!$this->type_id->IsDetailKey)
+			$this->type_id->setFormValue($val);
 	}
 
 	// Restore form values
@@ -910,10 +910,6 @@ class document_type_edit extends document_type
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
 			$this->document_type->ViewCustomAttributes = "";
@@ -921,11 +917,6 @@ class document_type_edit extends document_type
 			// document_category
 			$this->document_category->ViewValue = $this->document_category->CurrentValue;
 			$this->document_category->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// document_type
 			$this->document_type->LinkCustomAttributes = "";
@@ -937,12 +928,6 @@ class document_type_edit extends document_type
 			$this->document_category->HrefValue = "";
 			$this->document_category->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// type_id
-			$this->type_id->EditAttrs["class"] = "form-control";
-			$this->type_id->EditCustomAttributes = "";
-			$this->type_id->EditValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
 
 			// document_type
 			$this->document_type->EditAttrs["class"] = "form-control";
@@ -961,12 +946,8 @@ class document_type_edit extends document_type
 			$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
 
 			// Edit refer script
-			// type_id
-
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-
 			// document_type
+
 			$this->document_type->LinkCustomAttributes = "";
 			$this->document_type->HrefValue = "";
 
@@ -1028,6 +1009,25 @@ class document_type_edit extends document_type
 		$filter = $this->getRecordFilter();
 		$filter = $this->applyUserIDFilters($filter);
 		$conn = &$this->getConnection();
+		if ($this->document_type->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"document_type\" = '" . AdjustSql($this->document_type->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->document_type->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->document_type->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
 		$this->CurrentFilter = $filter;
 		$sql = $this->getCurrentSql();
 		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];

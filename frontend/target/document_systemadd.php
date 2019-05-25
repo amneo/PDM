@@ -108,7 +108,12 @@ $document_system_add->showMessage();
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $document_system_add->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="document_system">
+<?php if ($document_system->isConfirm()) { // Confirm page ?>
 <input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="confirm" id="confirm" value="confirm">
+<?php } else { ?>
+<input type="hidden" name="action" id="action" value="confirm">
+<?php } ?>
 <input type="hidden" name="modal" value="<?php echo (int)$document_system_add->IsModal ?>">
 <?php if (!$document_system_add->IsMobileOrModal) { ?>
 <div class="ew-desktop"><!-- desktop -->
@@ -123,18 +128,34 @@ $document_system_add->showMessage();
 	<div id="r_system_name" class="form-group row">
 		<label id="elh_document_system_system_name" for="x_system_name" class="<?php echo $document_system_add->LeftColumnClass ?>"><?php echo $document_system->system_name->caption() ?><?php echo ($document_system->system_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_system_add->RightColumnClass ?>"><div<?php echo $document_system->system_name->cellAttributes() ?>>
+<?php if (!$document_system->isConfirm()) { ?>
 <span id="el_document_system_system_name">
 <input type="text" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_document_system_system_name">
+<span<?php echo $document_system->system_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" value="<?php echo HtmlEncode($document_system->system_name->FormValue) ?>">
+<?php } ?>
 <?php echo $document_system->system_name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_system_name">
 		<td class="<?php echo $document_system_add->TableLeftColumnClass ?>"><span id="elh_document_system_system_name"><?php echo $document_system->system_name->caption() ?><?php echo ($document_system->system_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_system->system_name->cellAttributes() ?>>
+<?php if (!$document_system->isConfirm()) { ?>
 <span id="el_document_system_system_name">
 <input type="text" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_document_system_system_name">
+<span<?php echo $document_system->system_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" value="<?php echo HtmlEncode($document_system->system_name->FormValue) ?>">
+<?php } ?>
 <?php echo $document_system->system_name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -144,18 +165,34 @@ $document_system_add->showMessage();
 	<div id="r_system_group" class="form-group row">
 		<label id="elh_document_system_system_group" for="x_system_group" class="<?php echo $document_system_add->LeftColumnClass ?>"><?php echo $document_system->system_group->caption() ?><?php echo ($document_system->system_group->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_system_add->RightColumnClass ?>"><div<?php echo $document_system->system_group->cellAttributes() ?>>
+<?php if (!$document_system->isConfirm()) { ?>
 <span id="el_document_system_system_group">
 <input type="text" data-table="document_system" data-field="x_system_group" name="x_system_group" id="x_system_group" size="30" placeholder="<?php echo HtmlEncode($document_system->system_group->getPlaceHolder()) ?>" value="<?php echo $document_system->system_group->EditValue ?>"<?php echo $document_system->system_group->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_document_system_system_group">
+<span<?php echo $document_system->system_group->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_group->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_group" name="x_system_group" id="x_system_group" value="<?php echo HtmlEncode($document_system->system_group->FormValue) ?>">
+<?php } ?>
 <?php echo $document_system->system_group->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_system_group">
 		<td class="<?php echo $document_system_add->TableLeftColumnClass ?>"><span id="elh_document_system_system_group"><?php echo $document_system->system_group->caption() ?><?php echo ($document_system->system_group->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_system->system_group->cellAttributes() ?>>
+<?php if (!$document_system->isConfirm()) { ?>
 <span id="el_document_system_system_group">
 <input type="text" data-table="document_system" data-field="x_system_group" name="x_system_group" id="x_system_group" size="30" placeholder="<?php echo HtmlEncode($document_system->system_group->getPlaceHolder()) ?>" value="<?php echo $document_system->system_group->EditValue ?>"<?php echo $document_system->system_group->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_document_system_system_group">
+<span<?php echo $document_system->system_group->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_group->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_group" name="x_system_group" id="x_system_group" value="<?php echo HtmlEncode($document_system->system_group->FormValue) ?>">
+<?php } ?>
 <?php echo $document_system->system_group->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -168,8 +205,13 @@ $document_system_add->showMessage();
 <?php if (!$document_system_add->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $document_system_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("AddBtn") ?></button>
+<?php if (!$document_system->isConfirm()) { // Confirm page ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" onclick="this.form.action.value='confirm';"><?php echo $Language->phrase("AddBtn") ?></button>
 <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?php echo $document_system_add->getReturnUrl() ?>"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("ConfirmBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="submit" onclick="this.form.action.value='cancel';"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } ?>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>

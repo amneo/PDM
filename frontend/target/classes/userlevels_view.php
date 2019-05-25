@@ -403,9 +403,9 @@ class userlevels_view extends userlevels
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -426,9 +426,9 @@ class userlevels_view extends userlevels
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -728,8 +728,8 @@ class userlevels_view extends userlevels
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->userlevelid->setVisibility();
-		$this->userlevelname->setVisibility();
+		$this->userlevelid->Visible = FALSE;
+		$this->userlevelname->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1047,16 +1047,6 @@ class userlevels_view extends userlevels
 			if ($Security->getUserLevelName($this->userlevelid->CurrentValue) <> "")
 				$this->userlevelname->ViewValue = $Security->getUserLevelName($this->userlevelid->CurrentValue);
 			$this->userlevelname->ViewCustomAttributes = "";
-
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
-
-			// userlevelname
-			$this->userlevelname->LinkCustomAttributes = "";
-			$this->userlevelname->HrefValue = "";
-			$this->userlevelname->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1142,7 +1132,7 @@ class userlevels_view extends userlevels
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

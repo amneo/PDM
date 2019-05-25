@@ -731,13 +731,13 @@ class transmit_details_view extends transmit_details
 		// Setup export options
 		$this->setupExportOptions();
 		$this->transmit_id->Visible = FALSE;
-		$this->transmittal_no->setVisibility();
-		$this->project_name->setVisibility();
-		$this->delivery_location->setVisibility();
-		$this->addressed_to->setVisibility();
-		$this->remarks->setVisibility();
-		$this->ack_rcvd->setVisibility();
-		$this->ack_document->setVisibility();
+		$this->transmittal_no->Visible = FALSE;
+		$this->project_name->Visible = FALSE;
+		$this->delivery_location->Visible = FALSE;
+		$this->addressed_to->Visible = FALSE;
+		$this->remarks->Visible = FALSE;
+		$this->ack_rcvd->Visible = FALSE;
+		$this->ack_document->Visible = FALSE;
 		$this->transmital_date->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
@@ -1128,48 +1128,6 @@ class transmit_details_view extends transmit_details
 				$this->ack_document->ViewValue = "";
 			}
 			$this->ack_document->ViewCustomAttributes = "";
-
-			// transmittal_no
-			$this->transmittal_no->LinkCustomAttributes = "";
-			$this->transmittal_no->HrefValue = "";
-			$this->transmittal_no->TooltipValue = "";
-
-			// project_name
-			$this->project_name->LinkCustomAttributes = "";
-			$this->project_name->HrefValue = "";
-			$this->project_name->TooltipValue = "";
-
-			// delivery_location
-			$this->delivery_location->LinkCustomAttributes = "";
-			$this->delivery_location->HrefValue = "";
-			$this->delivery_location->TooltipValue = "";
-
-			// addressed_to
-			$this->addressed_to->LinkCustomAttributes = "";
-			$this->addressed_to->HrefValue = "";
-			$this->addressed_to->TooltipValue = "";
-
-			// remarks
-			$this->remarks->LinkCustomAttributes = "";
-			$this->remarks->HrefValue = "";
-			$this->remarks->TooltipValue = "";
-
-			// ack_rcvd
-			$this->ack_rcvd->LinkCustomAttributes = "";
-			$this->ack_rcvd->HrefValue = "";
-			$this->ack_rcvd->TooltipValue = "";
-
-			// ack_document
-			$this->ack_document->LinkCustomAttributes = "";
-			if (!EmptyValue($this->ack_document->Upload->DbValue)) {
-				$this->ack_document->HrefValue = GetFileUploadUrl($this->ack_document, $this->ack_document->Upload->DbValue); // Add prefix/suffix
-				$this->ack_document->LinkAttrs["target"] = ""; // Add target
-				if ($this->isExport()) $this->ack_document->HrefValue = FullUrl($this->ack_document->HrefValue, "href");
-			} else {
-				$this->ack_document->HrefValue = "";
-			}
-			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
-			$this->ack_document->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1255,7 +1213,7 @@ class transmit_details_view extends transmit_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

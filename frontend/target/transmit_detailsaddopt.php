@@ -78,6 +78,11 @@ ftransmit_detailsaddopt.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->remarks->caption(), $transmit_details->remarks->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transmit_details_addopt->transmit_mode->Required) { ?>
+			elm = this.getElements("x" + infix + "_transmit_mode[]");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->transmit_mode->caption(), $transmit_details->transmit_mode->RequiredErrorMessage)) ?>");
+		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -100,6 +105,8 @@ ftransmit_detailsaddopt.validateRequired = <?php echo json_encode(CLIENT_VALIDAT
 ftransmit_detailsaddopt.lists["x_project_name"] = <?php echo $transmit_details_addopt->project_name->Lookup->toClientList() ?>;
 ftransmit_detailsaddopt.lists["x_project_name"].options = <?php echo JsonEncode($transmit_details_addopt->project_name->lookupOptions()) ?>;
 ftransmit_detailsaddopt.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+ftransmit_detailsaddopt.lists["x_transmit_mode[]"] = <?php echo $transmit_details_addopt->transmit_mode->Lookup->toClientList() ?>;
+ftransmit_detailsaddopt.lists["x_transmit_mode[]"].options = <?php echo JsonEncode($transmit_details_addopt->transmit_mode->lookupOptions()) ?>;
 
 // Form object for search
 </script>
@@ -141,7 +148,7 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
-ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":false});
+ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":true});
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 <?php echo $transmit_details->project_name->CustomMsg ?></div>
@@ -173,6 +180,18 @@ ftransmit_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":f
 ew.createEditor("ftransmit_detailsaddopt", "x_remarks", 0, 0, <?php echo ($transmit_details->remarks->ReadOnly || FALSE) ? "true" : "false" ?>);
 </script>
 <?php echo $transmit_details->remarks->CustomMsg ?></div>
+	</div>
+<?php } ?>
+<?php if ($transmit_details->transmit_mode->Visible) { // transmit_mode ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label"><?php echo $transmit_details->transmit_mode->caption() ?><?php echo ($transmit_details->transmit_mode->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<div id="tp_x_transmit_mode" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transmit_details" data-field="x_transmit_mode" data-value-separator="<?php echo $transmit_details->transmit_mode->displayValueSeparatorAttribute() ?>" name="x_transmit_mode[]" id="x_transmit_mode[]" value="{value}"<?php echo $transmit_details->transmit_mode->editAttributes() ?>></div>
+<div id="dsl_x_transmit_mode" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transmit_details->transmit_mode->checkBoxListHtml(FALSE, "x_transmit_mode[]") ?>
+</div></div>
+<?php echo $transmit_details->transmit_mode->Lookup->getParamTag("p_x_transmit_mode") ?>
+<?php echo $transmit_details->transmit_mode->CustomMsg ?></div>
 	</div>
 <?php } ?>
 </form>

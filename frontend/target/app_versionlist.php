@@ -140,15 +140,6 @@ $app_version_list->renderListOptions();
 // Render list options (header, left)
 $app_version_list->ListOptions->render("header", "left");
 ?>
-<?php if ($app_version->sequence_no->Visible) { // sequence_no ?>
-	<?php if ($app_version->sortUrl($app_version->sequence_no) == "") { ?>
-		<th data-name="sequence_no" class="<?php echo $app_version->sequence_no->headerCellClass() ?>"><div id="elh_app_version_sequence_no" class="app_version_sequence_no"><div class="ew-table-header-caption"><?php echo $app_version->sequence_no->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="sequence_no" class="<?php echo $app_version->sequence_no->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $app_version->SortUrl($app_version->sequence_no) ?>',2);"><div id="elh_app_version_sequence_no" class="app_version_sequence_no">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $app_version->sequence_no->caption() ?></span><span class="ew-table-header-sort"><?php if ($app_version->sequence_no->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($app_version->sequence_no->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($app_version->release_date->Visible) { // release_date ?>
 	<?php if ($app_version->sortUrl($app_version->release_date) == "") { ?>
 		<th data-name="release_date" class="<?php echo $app_version->release_date->headerCellClass() ?>"><div id="elh_app_version_release_date" class="app_version_release_date"><div class="ew-table-header-caption"><?php echo $app_version->release_date->caption() ?></div></div></th>
@@ -232,14 +223,6 @@ while ($app_version_list->RecCnt < $app_version_list->StopRec) {
 // Render list options (body, left)
 $app_version_list->ListOptions->render("body", "left", $app_version_list->RowCnt);
 ?>
-	<?php if ($app_version->sequence_no->Visible) { // sequence_no ?>
-		<td data-name="sequence_no"<?php echo $app_version->sequence_no->cellAttributes() ?>>
-<span id="el<?php echo $app_version_list->RowCnt ?>_app_version_sequence_no" class="app_version_sequence_no">
-<span<?php echo $app_version->sequence_no->viewAttributes() ?>>
-<?php echo $app_version->sequence_no->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($app_version->release_date->Visible) { // release_date ?>
 		<td data-name="release_date"<?php echo $app_version->release_date->cellAttributes() ?>>
 <span id="el<?php echo $app_version_list->RowCnt ?>_app_version_release_date" class="app_version_release_date">

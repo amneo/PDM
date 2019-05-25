@@ -1,8 +1,8 @@
 funtion name 	|	Description of Function
 om_func_01 		|	Retrives latest version of the application
-om_func_02		|	Prepares the consolidated Report of document log in Landscape view
-om_func_03		|	Function to prepare the document_log table with pivot display of all documents
-om_func_04		|	Does the work of insert statements when invoked by om_func_03	
-om_func_05		|	Logic to esnure that the document sequence is maintained and a document cycle is completed
+om_func_02		|	Trigger for table transaction_details
+om_func_03		|	Function to prepare the document_log table with pivot display of all documents in Landscape view
+om_func_04		|	Does the work of insert statements when invoked by om_func_03. It Inserts the documents in the correct place	
+om_func_05		|	Logic to ensure that the document sequence is maintained and a document cycle is completed
 om_func_06		| 	Function to get overall approval status for out or in direction gets information from approval_details table.
 om_func_07		| 	Function to ensure documnt cycle and its integrity by returning Function that returns the latest direction and approval status searched document details if required.

@@ -358,9 +358,9 @@ class userlevels_add extends userlevels
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class userlevels_add extends userlevels
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -622,7 +622,7 @@ class userlevels_add extends userlevels
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->userlevelid->setVisibility();
+		$this->userlevelid->Visible = FALSE;
 		$this->userlevelname->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -780,15 +780,6 @@ class userlevels_add extends userlevels
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'userlevelid' first before field var 'x_userlevelid'
-		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
-		if (!$this->userlevelid->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->userlevelid->Visible = FALSE; // Disable update for API request
-			else
-				$this->userlevelid->setFormValue($val);
-		}
-
 		// Check field name 'userlevelname' first before field var 'x_userlevelname'
 		$val = $CurrentForm->hasValue("userlevelname") ? $CurrentForm->getValue("userlevelname") : $CurrentForm->getValue("x_userlevelname");
 		if (!$this->userlevelname->IsDetailKey) {
@@ -797,6 +788,11 @@ class userlevels_add extends userlevels
 			else
 				$this->userlevelname->setFormValue($val);
 		}
+
+		// Check field name 'userlevelid' first before field var 'x_userlevelid'
+		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
+		if (!$this->userlevelid->IsDetailKey)
+			$this->userlevelid->setFormValue($val);
 	}
 
 	// Restore form values
@@ -907,22 +903,11 @@ class userlevels_add extends userlevels
 				$this->userlevelname->ViewValue = $Security->getUserLevelName($this->userlevelid->CurrentValue);
 			$this->userlevelname->ViewCustomAttributes = "";
 
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
-
 			// userlevelname
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 			$this->userlevelname->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
-
-			// userlevelid
-			$this->userlevelid->EditAttrs["class"] = "form-control";
-			$this->userlevelid->EditCustomAttributes = "";
-			$this->userlevelid->EditValue = HtmlEncode($this->userlevelid->CurrentValue);
-			$this->userlevelid->PlaceHolder = RemoveHtml($this->userlevelid->caption());
 
 			// userlevelname
 			$this->userlevelname->EditAttrs["class"] = "form-control";
@@ -933,12 +918,8 @@ class userlevels_add extends userlevels
 			$this->userlevelname->PlaceHolder = RemoveHtml($this->userlevelname->caption());
 
 			// Add refer script
-			// userlevelid
-
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-
 			// userlevelname
+
 			$this->userlevelname->LinkCustomAttributes = "";
 			$this->userlevelname->HrefValue = "";
 		}
@@ -965,9 +946,6 @@ class userlevels_add extends userlevels
 			if (!$this->userlevelid->IsDetailKey && $this->userlevelid->FormValue != NULL && $this->userlevelid->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->userlevelid->caption(), $this->userlevelid->RequiredErrorMessage));
 			}
-		}
-		if (!CheckInteger($this->userlevelid->FormValue)) {
-			AddMessage($FormError, $this->userlevelid->errorMessage());
 		}
 		if ($this->userlevelname->Required) {
 			if (!$this->userlevelname->IsDetailKey && $this->userlevelname->FormValue != NULL && $this->userlevelname->FormValue == "") {
@@ -1010,17 +988,6 @@ class userlevels_add extends userlevels
 		}
 		if ($this->getFailureMessage() <> "")
 			return FALSE;
-		if ($this->userlevelid->CurrentValue <> "") { // Check field with unique index
-			$filter = "(userlevelid = " . AdjustSql($this->userlevelid->CurrentValue, $this->Dbid) . ")";
-			$rsChk = $this->loadRs($filter);
-			if ($rsChk && !$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->userlevelid->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->userlevelid->CurrentValue, $idxErrMsg);
-				$this->setFailureMessage($idxErrMsg);
-				$rsChk->close();
-				return FALSE;
-			}
-		}
 		$conn = &$this->getConnection();
 
 		// Load db values from rsold
@@ -1028,9 +995,6 @@ class userlevels_add extends userlevels
 		if ($rsold) {
 		}
 		$rsnew = [];
-
-		// userlevelid
-		$this->userlevelid->setDbValueDef($rsnew, $this->userlevelid->CurrentValue, 0, FALSE);
 
 		// userlevelname
 		$this->userlevelname->setDbValueDef($rsnew, $this->userlevelname->CurrentValue, "", FALSE);

@@ -76,9 +76,6 @@ $document_type_delete->showMessage();
 <table class="table ew-table">
 	<thead>
 	<tr class="ew-table-header">
-<?php if ($document_type->type_id->Visible) { // type_id ?>
-		<th class="<?php echo $document_type->type_id->headerCellClass() ?>"><span id="elh_document_type_type_id" class="document_type_type_id"><?php echo $document_type->type_id->caption() ?></span></th>
-<?php } ?>
 <?php if ($document_type->document_type->Visible) { // document_type ?>
 		<th class="<?php echo $document_type->document_type->headerCellClass() ?>"><span id="elh_document_type_document_type" class="document_type_document_type"><?php echo $document_type->document_type->caption() ?></span></th>
 <?php } ?>
@@ -106,14 +103,6 @@ while (!$document_type_delete->Recordset->EOF) {
 	$document_type_delete->renderRow();
 ?>
 	<tr<?php echo $document_type->rowAttributes() ?>>
-<?php if ($document_type->type_id->Visible) { // type_id ?>
-		<td<?php echo $document_type->type_id->cellAttributes() ?>>
-<span id="el<?php echo $document_type_delete->RowCnt ?>_document_type_type_id" class="document_type_type_id">
-<span<?php echo $document_type->type_id->viewAttributes() ?>>
-<?php echo $document_type->type_id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($document_type->document_type->Visible) { // document_type ?>
 		<td<?php echo $document_type->document_type->cellAttributes() ?>>
 <span id="el<?php echo $document_type_delete->RowCnt ?>_document_type_document_type" class="document_type_document_type">

@@ -414,9 +414,9 @@ class distribution_details_list extends distribution_details
 		$this->MultiUpdateUrl = "distribution_detailsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -437,9 +437,9 @@ class distribution_details_list extends distribution_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -628,7 +628,7 @@ class distribution_details_list extends distribution_details
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -721,6 +721,9 @@ class distribution_details_list extends distribution_details
 			$this->terminate();
 		}
 
+		// Create form object
+		$CurrentForm = new HttpForm();
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -768,6 +771,9 @@ class distribution_details_list extends distribution_details
 
 		// Setup export options
 		$this->setupExportOptions();
+
+		// Setup import options
+		$this->setupImportOptions();
 		$this->distribution_id->Visible = FALSE;
 		$this->to_Name->setVisibility();
 		$this->email_address->setVisibility();
@@ -828,6 +834,44 @@ class distribution_details_list extends distribution_details
 			if (!$this->isExport())
 				$this->setupBreadcrumb();
 
+			// Check QueryString parameters
+			if (Get("action") !== NULL) {
+				$this->CurrentAction = Get("action");
+
+				// Clear inline mode
+				if ($this->isCancel())
+					$this->clearInlineMode();
+
+				// Switch to grid add mode
+				if ($this->isGridAdd())
+					$this->gridAddMode();
+			} else {
+				if (Post("action") !== NULL) {
+					$this->CurrentAction = Post("action"); // Get action
+
+					// Process import
+					if ($this->isImport()) {
+						$this->import(Post(API_FILE_TOKEN_NAME));
+						$this->terminate();
+					}
+
+					// Grid Insert
+					if ($this->isGridInsert() && @$_SESSION[SESSION_INLINE_MODE] == "gridadd") {
+						if ($this->validateGridForm()) {
+							$gridInsert = $this->gridInsert();
+						} else {
+							$gridInsert = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridInsert) {
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridAddMode(); // Stay in Grid add mode
+						}
+					}
+				}
+			}
+
 			// Hide list options
 			if ($this->isExport()) {
 				$this->ListOptions->hideAllOptions(array("sequence"));
@@ -849,6 +893,15 @@ class distribution_details_list extends distribution_details
 			// Hide other options
 			if ($this->isExport())
 				$this->OtherOptions->hideAllOptions();
+
+			// Show grid delete link for grid add / grid edit
+			if ($this->AllowAddDeleteRow) {
+				if ($this->isGridAdd() || $this->isGridEdit()) {
+					$item = &$this->ListOptions->getItem("griddelete");
+					if ($item)
+						$item->Visible = TRUE;
+				}
+			}
 
 			// Get default search criteria
 			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
@@ -879,7 +932,7 @@ class distribution_details_list extends distribution_details
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -984,6 +1037,22 @@ class distribution_details_list extends distribution_details
 		}
 	}
 
+	// Exit inline mode
+	protected function clearInlineMode()
+	{
+		$this->LastAction = $this->CurrentAction; // Save last action
+		$this->CurrentAction = ""; // Clear action
+		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
+	}
+
+	// Switch to Grid Add mode
+	protected function gridAddMode()
+	{
+		$this->CurrentAction = "gridadd";
+		$_SESSION[SESSION_INLINE_MODE] = "gridadd";
+		$this->hideFieldsForAddEdit();
+	}
+
 	// Build filter for all keys
 	protected function buildKeyFilter()
 	{
@@ -1023,6 +1092,190 @@ class distribution_details_list extends distribution_details
 				return FALSE;
 		}
 		return TRUE;
+	}
+
+	// Perform Grid Add
+	public function gridInsert()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$rowindex = 1;
+		$gridInsert = FALSE;
+		$conn = &$this->getConnection();
+
+		// Call Grid Inserting event
+		if (!$this->Grid_Inserting()) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridAddCancelled")); // Set grid add cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+
+		// Init key filter
+		$wrkfilter = "";
+		$addcnt = 0;
+		if ($this->AuditTrailOnAdd)
+			$this->writeAuditTrailDummy($Language->phrase("BatchInsertBegin")); // Batch insert begin
+		$key = "";
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Insert all rows
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "" && $rowaction <> "insert")
+				continue; // Skip
+			$this->loadFormValues(); // Get form values
+			if (!$this->emptyRow()) {
+				$addcnt++;
+				$this->SendEmail = FALSE; // Do not send email on insert success
+
+				// Validate form
+				if (!$this->validateForm()) {
+					$gridInsert = FALSE; // Form error, reset action
+					$this->setFailureMessage($FormError);
+				} else {
+					$gridInsert = $this->addRow($this->OldRecordset); // Insert this row
+				}
+				if ($gridInsert) {
+					if ($key <> "")
+						$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+					$key .= $this->distribution_id->CurrentValue;
+
+					// Add filter for this record
+					$filter = $this->getRecordFilter();
+					if ($wrkfilter <> "")
+						$wrkfilter .= " OR ";
+					$wrkfilter .= $filter;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($addcnt == 0) { // No record inserted
+			$this->setFailureMessage($Language->phrase("NoAddRecord"));
+			$gridInsert = FALSE;
+		}
+		if ($gridInsert) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			$this->CurrentFilter = $wrkfilter;
+			$sql = $this->getCurrentSql();
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Inserted event
+			$this->Grid_Inserted($rsnew);
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailDummy($Language->phrase("BatchInsertSuccess")); // Batch insert success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("InsertSuccess")); // Set up insert success message
+			$this->clearInlineMode(); // Clear grid add mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailDummy($Language->phrase("BatchInsertRollback")); // Batch insert rollback
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("InsertFailed")); // Set insert failed message
+		}
+		return $gridInsert;
+	}
+
+	// Check if empty row
+	public function emptyRow()
+	{
+		global $CurrentForm;
+		if ($CurrentForm->hasValue("x_to_Name") && $CurrentForm->hasValue("o_to_Name") && $this->to_Name->CurrentValue <> $this->to_Name->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_email_address") && $CurrentForm->hasValue("o_email_address") && $this->email_address->CurrentValue <> $this->email_address->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_project_name") && $CurrentForm->hasValue("o_project_name") && $this->project_name->CurrentValue <> $this->project_name->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_distribution_valid") && $CurrentForm->hasValue("o_distribution_valid") && ConvertToBool($this->distribution_valid->CurrentValue) <> ConvertToBool($this->distribution_valid->OldValue))
+			return FALSE;
+		return TRUE;
+	}
+
+	// Validate grid form
+	public function validateGridForm()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Validate all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else if (!$this->validateForm()) {
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	}
+
+	// Get all form values of the grid
+	public function getGridFormValues()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+		$rows = array();
+
+		// Loop through all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else {
+					$rows[] = $this->getFieldValues("FormValue"); // Return row as array
+				}
+			}
+		}
+		return $rows; // Return as array of array
+	}
+
+	// Restore form values for current row
+	public function restoreCurrentRowFormValues($idx)
+	{
+		global $CurrentForm;
+
+		// Get row based on current index
+		$CurrentForm->Index = $idx;
+		$this->loadFormValues(); // Load form values
 	}
 
 	// Get list of filters
@@ -1349,17 +1602,19 @@ class distribution_details_list extends distribution_details
 	{
 		global $Security, $Language;
 
+		// "griddelete"
+		if ($this->AllowAddDeleteRow) {
+			$item = &$this->ListOptions->add("griddelete");
+			$item->CssClass = "text-nowrap";
+			$item->OnLeft = TRUE;
+			$item->Visible = FALSE; // Default hidden
+		}
+
 		// Add group option item
 		$item = &$this->ListOptions->add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
-
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
@@ -1371,12 +1626,6 @@ class distribution_details_list extends distribution_details
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->canAdd();
-		$item->OnLeft = TRUE;
-
-		// "delete"
-		$item = &$this->ListOptions->add("delete");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canDelete();
 		$item->OnLeft = TRUE;
 
 		// List actions
@@ -1421,13 +1670,35 @@ class distribution_details_list extends distribution_details
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
 
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView()) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
+		// Set up row action and key
+		if (is_numeric($this->RowIndex) && $this->CurrentMode <> "view") {
+			$CurrentForm->Index = $this->RowIndex;
+			$actionName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormActionName);
+			$oldKeyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormOldKeyName);
+			$keyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormKeyName);
+			$blankRowName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormBlankRowName);
+			if ($this->RowAction <> "")
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $actionName . "\" id=\"" . $actionName . "\" value=\"" . $this->RowAction . "\">";
+			if ($this->RowAction == "delete") {
+				$rowkey = $CurrentForm->getValue($this->FormKeyName);
+				$this->setupKeyValues($rowkey);
+			}
+			if ($this->RowAction == "insert" && $this->isConfirm() && $this->emptyRow())
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $blankRowName . "\" id=\"" . $blankRowName . "\" value=\"1\">";
+		}
+
+		// "delete"
+		if ($this->AllowAddDeleteRow) {
+			if ($this->isGridAdd() || $this->isGridEdit()) {
+				$options = &$this->ListOptions;
+				$options->UseButtonGroup = TRUE; // Use button group for grid delete button
+				$opt = &$options->Items["griddelete"];
+				if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+					$opt->Body = "&nbsp;";
+				} else {
+					$opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
+				}
+			}
 		}
 
 		// "edit"
@@ -1447,13 +1718,6 @@ class distribution_details_list extends distribution_details
 		} else {
 			$opt->Body = "";
 		}
-
-		// "delete"
-		$opt = &$this->ListOptions->Items["delete"];
-		if ($Security->canDelete())
-			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-		else
-			$opt->Body = "";
 
 		// Set up list action buttons
 		$opt = &$this->ListOptions->getItem("listactions");
@@ -1505,6 +1769,9 @@ class distribution_details_list extends distribution_details
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
 		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
+		$item = &$option->add("gridadd");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
+		$item->Visible = ($this->GridAddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1543,6 +1810,7 @@ class distribution_details_list extends distribution_details
 	{
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
+		if (!$this->isGridAdd() && !$this->isGridEdit()) { // Not grid add/edit mode
 			$option = &$options["action"];
 
 			// Set up list action buttons
@@ -1564,6 +1832,33 @@ class distribution_details_list extends distribution_details
 				$option = &$options["action"];
 				$option->hideAllOptions();
 			}
+		} else { // Grid add/edit mode
+
+			// Hide all options first
+			foreach ($options as &$option)
+				$option->hideAllOptions();
+			if ($this->isGridAdd()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+
+				// Add grid insert
+				$item = &$option->add("gridinsert");
+				$item->Body = "<a class=\"ew-action ew-grid-insert\" title=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridInsertLink") . "</a>";
+
+				// Add grid cancel
+				$item = &$option->add("gridcancel");
+				$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+		}
 	}
 
 	// Process list action
@@ -1731,6 +2026,21 @@ class distribution_details_list extends distribution_details
 		}
 	}
 
+	// Load default values
+	protected function loadDefaultValues()
+	{
+		$this->distribution_id->CurrentValue = NULL;
+		$this->distribution_id->OldValue = $this->distribution_id->CurrentValue;
+		$this->to_Name->CurrentValue = NULL;
+		$this->to_Name->OldValue = $this->to_Name->CurrentValue;
+		$this->email_address->CurrentValue = NULL;
+		$this->email_address->OldValue = $this->email_address->CurrentValue;
+		$this->project_name->CurrentValue = NULL;
+		$this->project_name->OldValue = $this->project_name->CurrentValue;
+		$this->distribution_valid->CurrentValue = true;
+		$this->distribution_valid->OldValue = $this->distribution_valid->CurrentValue;
+	}
+
 	// Load basic search values
 	protected function loadBasicSearchValues()
 	{
@@ -1738,6 +2048,71 @@ class distribution_details_list extends distribution_details
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load form values
+	protected function loadFormValues()
+	{
+
+		// Load from form
+		global $CurrentForm;
+
+		// Check field name 'to_Name' first before field var 'x_to_Name'
+		$val = $CurrentForm->hasValue("to_Name") ? $CurrentForm->getValue("to_Name") : $CurrentForm->getValue("x_to_Name");
+		if (!$this->to_Name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->to_Name->Visible = FALSE; // Disable update for API request
+			else
+				$this->to_Name->setFormValue($val);
+		}
+		$this->to_Name->setOldValue($CurrentForm->getValue("o_to_Name"));
+
+		// Check field name 'email_address' first before field var 'x_email_address'
+		$val = $CurrentForm->hasValue("email_address") ? $CurrentForm->getValue("email_address") : $CurrentForm->getValue("x_email_address");
+		if (!$this->email_address->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->email_address->Visible = FALSE; // Disable update for API request
+			else
+				$this->email_address->setFormValue($val);
+		}
+		$this->email_address->setOldValue($CurrentForm->getValue("o_email_address"));
+
+		// Check field name 'project_name' first before field var 'x_project_name'
+		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
+		if (!$this->project_name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->project_name->Visible = FALSE; // Disable update for API request
+			else
+				$this->project_name->setFormValue($val);
+		}
+		$this->project_name->setOldValue($CurrentForm->getValue("o_project_name"));
+
+		// Check field name 'distribution_valid' first before field var 'x_distribution_valid'
+		$val = $CurrentForm->hasValue("distribution_valid") ? $CurrentForm->getValue("distribution_valid") : $CurrentForm->getValue("x_distribution_valid");
+		if (!$this->distribution_valid->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->distribution_valid->Visible = FALSE; // Disable update for API request
+			else
+				$this->distribution_valid->setFormValue($val);
+		}
+		$this->distribution_valid->setOldValue($CurrentForm->getValue("o_distribution_valid"));
+
+		// Check field name 'distribution_id' first before field var 'x_distribution_id'
+		$val = $CurrentForm->hasValue("distribution_id") ? $CurrentForm->getValue("distribution_id") : $CurrentForm->getValue("x_distribution_id");
+		if (!$this->distribution_id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
+			$this->distribution_id->setFormValue($val);
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		if (!$this->isGridAdd() && !$this->isAdd())
+			$this->distribution_id->CurrentValue = $this->distribution_id->FormValue;
+		$this->to_Name->CurrentValue = $this->to_Name->FormValue;
+		$this->email_address->CurrentValue = $this->email_address->FormValue;
+		$this->project_name->CurrentValue = $this->project_name->FormValue;
+		$this->distribution_valid->CurrentValue = $this->distribution_valid->FormValue;
 	}
 
 	// Load recordset
@@ -1817,12 +2192,13 @@ class distribution_details_list extends distribution_details
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['distribution_id'] = NULL;
-		$row['to_Name'] = NULL;
-		$row['email_address'] = NULL;
-		$row['project_name'] = NULL;
-		$row['distribution_valid'] = NULL;
+		$row['distribution_id'] = $this->distribution_id->CurrentValue;
+		$row['to_Name'] = $this->to_Name->CurrentValue;
+		$row['email_address'] = $this->email_address->CurrentValue;
+		$row['project_name'] = $this->project_name->CurrentValue;
+		$row['distribution_valid'] = $this->distribution_valid->CurrentValue;
 		return $row;
 	}
 
@@ -1942,11 +2318,571 @@ class distribution_details_list extends distribution_details
 			$this->distribution_valid->LinkCustomAttributes = "";
 			$this->distribution_valid->HrefValue = "";
 			$this->distribution_valid->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// to_Name
+			$this->to_Name->EditAttrs["class"] = "form-control";
+			$this->to_Name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->to_Name->CurrentValue = HtmlDecode($this->to_Name->CurrentValue);
+			$this->to_Name->EditValue = HtmlEncode($this->to_Name->CurrentValue);
+			$this->to_Name->PlaceHolder = RemoveHtml($this->to_Name->caption());
+
+			// email_address
+			$this->email_address->EditAttrs["class"] = "form-control";
+			$this->email_address->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->email_address->CurrentValue = HtmlDecode($this->email_address->CurrentValue);
+			$this->email_address->EditValue = HtmlEncode($this->email_address->CurrentValue);
+			$this->email_address->PlaceHolder = RemoveHtml($this->email_address->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// distribution_valid
+			$this->distribution_valid->EditCustomAttributes = "";
+			$this->distribution_valid->EditValue = $this->distribution_valid->options(FALSE);
+
+			// Add refer script
+			// to_Name
+
+			$this->to_Name->LinkCustomAttributes = "";
+			$this->to_Name->HrefValue = "";
+
+			// email_address
+			$this->email_address->LinkCustomAttributes = "";
+			$this->email_address->HrefValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// distribution_valid
+			$this->distribution_valid->LinkCustomAttributes = "";
+			$this->distribution_valid->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate form
+	protected function validateForm()
+	{
+		global $Language, $FormError;
+
+		// Initialize form error message
+		$FormError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->distribution_id->Required) {
+			if (!$this->distribution_id->IsDetailKey && $this->distribution_id->FormValue != NULL && $this->distribution_id->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->distribution_id->caption(), $this->distribution_id->RequiredErrorMessage));
+			}
+		}
+		if ($this->to_Name->Required) {
+			if (!$this->to_Name->IsDetailKey && $this->to_Name->FormValue != NULL && $this->to_Name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->to_Name->caption(), $this->to_Name->RequiredErrorMessage));
+			}
+		}
+		if ($this->email_address->Required) {
+			if (!$this->email_address->IsDetailKey && $this->email_address->FormValue != NULL && $this->email_address->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->email_address->caption(), $this->email_address->RequiredErrorMessage));
+			}
+		}
+		if (!CheckEmail($this->email_address->FormValue)) {
+			AddMessage($FormError, $this->email_address->errorMessage());
+		}
+		if ($this->project_name->Required) {
+			if (!$this->project_name->IsDetailKey && $this->project_name->FormValue != NULL && $this->project_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_name->caption(), $this->project_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->distribution_valid->Required) {
+			if ($this->distribution_valid->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->distribution_valid->caption(), $this->distribution_valid->RequiredErrorMessage));
+			}
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Delete records based on current filter
+	protected function deleteRows()
+	{
+		global $Language, $Security;
+		if (!$Security->canDelete()) {
+			$this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
+			return FALSE;
+		}
+		$deleteRows = TRUE;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE) {
+			return FALSE;
+		} elseif ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+			$rs->close();
+			return FALSE;
+		}
+		$rows = ($rs) ? $rs->getRows() : [];
+		if ($this->AuditTrailOnDelete)
+			$this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+
+		// Clone old rows
+		$rsold = $rows;
+		if ($rs)
+			$rs->close();
+
+		// Call row deleting event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$deleteRows = $this->Row_Deleting($row);
+				if (!$deleteRows)
+					break;
+			}
+		}
+		if ($deleteRows) {
+			$key = "";
+			foreach ($rsold as $row) {
+				$thisKey = "";
+				if ($thisKey <> "")
+					$thisKey .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+				$thisKey .= $row['distribution_id'];
+				if (DELETE_UPLOADED_FILES) // Delete old files
+					$this->deleteUploadedFiles($row);
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				$deleteRows = $this->delete($row); // Delete
+				$conn->raiseErrorFn = '';
+				if ($deleteRows === FALSE)
+					break;
+				if ($key <> "")
+					$key .= ", ";
+				$key .= $thisKey;
+			}
+		}
+		if (!$deleteRows) {
+
+			// Set up error message
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("DeleteCancelled"));
+			}
+		}
+
+		// Call Row Deleted event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$this->Row_Deleted($row);
+			}
+		}
+
+		// Write JSON for API request (Support single row only)
+		if (IsApi() && $deleteRows) {
+			$row = $this->getRecordsFromRecordset($rsold, TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $deleteRows;
+	}
+
+	/**
+	 * Import file
+	 *
+	 * @param string $token File token to locate the uploaded import file
+	 * @return boolean
+	 */
+	public function import($token)
+	{
+		global $Security, $Language;
+		if (!$Security->canImport())
+			return FALSE; // Import not allowed
+
+		// Check if valid token
+		if (EmptyValue($token))
+			return FALSE;
+
+		// Get uploaded files by token
+		$upload = new HttpUpload();
+		$files = explode(MULTIPLE_UPLOAD_SEPARATOR, $upload->getUploadedFileName($token, TRUE));
+		$exts = explode(",", IMPORT_FILE_ALLOWED_EXT);
+		$totCnt = 0;
+		$totSuccessCnt = 0;
+		$totFailCnt = 0;
+		$result = [API_FILE_TOKEN_NAME => $token, "files" => [], "success" => FALSE];
+
+		// Import records
+		foreach ($files as $file) {
+			$res = [API_FILE_TOKEN_NAME => $token, "file" => basename($file)];
+			$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+			// Ignore log file
+			if ($ext == "txt")
+				continue;
+			if (!in_array($ext, $exts)) {
+				$res = array_merge($res, ["error" => str_replace("%e", $ext, $Language->phrase("ImportMessageInvalidFileExtension"))]);
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Set up options for Page Importing event
+			// Get optional data from $_POST first
+
+			$ar = array_keys($_POST);
+			$options = [];
+			foreach ($ar as $key) {
+				if (!in_array($key, ["action", "token", "filetoken"]))
+					$options[$key] = $_POST[$key];
+			}
+
+			// Merge default options
+			$options = array_merge(["maxExecutionTime" => $this->ImportMaxExecutionTime, "file" => $file, "activeSheet" => 0, "headerRowNumber" => 0, "headers" => [], "offset" => 0, "limit" => 0], $options);
+			if ($ext == "csv")
+				$options = array_merge(["inputEncoding" => $this->ImportCsvEncoding, "delimiter" => $this->ImportCsvDelimiter, "enclosure" => $this->ImportCsvQuoteCharacter], $options);
+			$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader(ucfirst($ext));
+
+			// Call Page Importing server event
+			if (!$this->Page_Importing($reader, $options)) {
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Set max execution time
+			if ($options["maxExecutionTime"] > 0)
+				ini_set("max_execution_time", $options["maxExecutionTime"]);
+			try {
+				if ($ext == "csv") {
+					if ($options["inputEncoding"] <> '')
+						$reader->setInputEncoding($options["inputEncoding"]);
+					if ($options["delimiter"] <> '')
+						$reader->setDelimiter($options["delimiter"]);
+					if ($options["enclosure"] <> '')
+						$reader->setEnclosure($options["enclosure"]);
+				}
+				$spreadsheet = @$reader->load($file);
+			} catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+				$res = array_merge($res, ["error" => $e->getMessage()]);
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Get active worksheet
+			$spreadsheet->setActiveSheetIndex($options["activeSheet"]);
+			$worksheet = $spreadsheet->getActiveSheet();
+
+			// Get row and column indexes
+			$highestRow = $worksheet->getHighestRow();
+			$highestColumn = $worksheet->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+			// Get column headers
+			$headers = $options["headers"];
+			$headerRow = 0;
+			if (count($headers) == 0) { // Undetermined, load from header row
+				$headerRow = $options["headerRowNumber"] + 1;
+				$headers = $this->getImportHeaders($worksheet, $headerRow, $highestColumn);
+			}
+			if (count($headers) == 0) { // Unable to load header
+				$res["error"] = $Language->phrase("ImportMessageNoHeaderRow");
+				WriteJson($res);
+				return FALSE;
+			}
+			foreach ($headers as $name) {
+				if (!array_key_exists($name, $this->fields)) { // Unidentified field, not header row
+					$res["error"] = str_replace('%f', $name, $Language->phrase("ImportMessageInvalidFieldName"));
+					WriteJson($res);
+					return FALSE;
+				}
+			}
+			$startRow = $headerRow + 1;
+			$endRow = $highestRow;
+			if ($options["offset"] > 0)
+				$startRow += $options["offset"];
+			if ($options["limit"] > 0) {
+				$endRow = $startRow + $options["limit"] - 1;
+				if ($endRow > $highestRow)
+					$endRow = $highestRow;
+			}
+			if ($endRow >= $startRow)
+				$records = $this->getImportRecords($worksheet, $startRow, $endRow, $highestColumn);
+			else
+				$records = [];
+			$recordCnt = count($records);
+			$cnt = 0;
+			$successCnt = 0;
+			$failCnt = 0;
+			$failList = [];
+			$relLogFile = IncludeTrailingDelimiter(UploadPath(FALSE) . UPLOAD_TEMP_FOLDER_PREFIX . $token, FALSE) . $token . ".txt";
+			$res = array_merge($res, ["totalCount" => $recordCnt, "count" => $cnt, "successCount" => $successCnt, "failCount" => 0]);
+
+			// Begin transaction
+			if ($this->ImportUseTransaction) {
+				$conn = &$this->getConnection();
+				$conn->beginTrans();
+			}
+
+			// Process records
+			foreach ($records as $values) {
+				$importSuccess = FALSE;
+				try {
+					$row = array_combine($headers, $values);
+					$cnt++;
+					$res["count"] = $cnt;
+					if ($this->importRow($row, $cnt)) {
+						$successCnt++;
+						$importSuccess = TRUE;
+					} else {
+						$failCnt++;
+						$failList["row" . $cnt] = $this->getFailureMessage();
+						$this->clearFailureMessage(); // Clear error message
+					}
+				} catch (Exception $e) {
+					$failCnt++;
+					if ($failList["row" . $cnt] == "")
+						$failList["row" . $cnt] = $e->getMessage();
+				}
+
+				// Reset count if import fail + use transaction
+				if (!$importSuccess && $this->ImportUseTransaction) {
+					$successCnt = 0;
+					$failCnt = $cnt;
+				}
+
+				// Save progress to cache
+				$res["successCount"] = $successCnt;
+				$res["failCount"] = $failCnt;
+				SetCache($token, $res);
+
+				// No need to process further if import fail + use transaction
+				if (!$importSuccess && $this->ImportUseTransaction)
+					break;
+			}
+			$res["failList"] = $failList;
+
+			// Commit/Rollback transaction
+			if ($this->ImportUseTransaction) {
+				$conn = &$this->getConnection();
+				if ($failCnt > 0) // Rollback
+					$conn->rollbackTrans();
+				else // Commit
+					$conn->commitTrans();
+			}
+			$totCnt += $cnt;
+			$totSuccessCnt += $successCnt;
+			$totFailCnt += $failCnt;
+
+			// Call Page Imported server event
+			$this->Page_Imported($reader, $res);
+			if ($totCnt > 0 && $totFailCnt == 0) { // Clean up if all records imported
+				$res["success"] = TRUE;
+				$result["success"] = TRUE;
+			} else {
+				$res["log"] = $relLogFile;
+				$result["success"] = FALSE;
+			}
+			$result["files"][] = $res;
+		}
+		if ($result["success"])
+			CleanUploadTempPaths($token);
+		WriteJson($result);
+		return $result["success"];
+	}
+
+	/**
+	 * Get import header
+	 *
+	 * @param object $ws PhpSpreadsheet worksheet
+	 * @param integer $rowIdx Row index for header row (1-based)
+	 * @param string $endColName End column Name (e.g. "F")
+	 * @return array
+	 */
+	protected function getImportHeaders($ws, $rowIdx, $endColName) {
+		$ar = $ws->rangeToArray("A" . $rowIdx . ":" . $endColName . $rowIdx);
+		return $ar[0];
+	}
+
+	/**
+	 * Get import records
+	 *
+	 * @param object $ws PhpSpreadsheet worksheet
+	 * @param integer $startRowIdx Start row index
+	 * @param integer $endRowIdx End row index
+	 * @param string $endColName End column Name (e.g. "F")
+	 * @return array
+	 */
+	protected function getImportRecords($ws, $startRowIdx, $endRowIdx, $endColName) {
+		$ar = $ws->rangeToArray("A" . $startRowIdx . ":" . $endColName . $endRowIdx);
+		return $ar;
+	}
+
+	/**
+	 * Import a row
+	 *
+	 * @param array $row
+	 * @param integer $cnt
+	 * @return boolean
+	 */
+	protected function importRow($row, $cnt)
+	{
+		global $Language;
+
+		// Call Row Import server event
+		if (!$this->Row_Import($row, $cnt))
+			return FALSE;
+
+		// Check field values
+		foreach ($row as $name => $value) {
+			$fld = $this->fields[$name];
+			if (!$this->checkValue($fld, $value)) {
+				$this->setFailureMessage(str_replace(["%f", "%v"], [$fld->Name, $value], $Language->phrase("ImportMessageInvalidFieldValue")));
+				return FALSE;
+			}
+		}
+
+		// Insert/Update to database
+		if (!$this->ImportInsertOnly && $oldrow = $this->load($row)) {
+			$res = $this->update($row, "", $oldrow);
+		} else {
+			$res = $this->insert($row);
+		}
+		return $res;
+	}
+
+	/**
+	 * Check field value
+	 *
+	 * @param object $fld Field object
+	 * @param object $value
+	 * @return boolean
+	 */
+	protected function checkValue($fld, $value)
+	{
+		if ($fld->DataType == DATATYPE_NUMBER && !is_numeric($value))
+			return FALSE;
+		elseif ($fld->DataType == DATATYPE_DATE && !CheckDate($value))
+			return FALSE;
+		return TRUE;
+	}
+
+	// Load row
+	protected function load($row)
+	{
+		$filter = $this->getRecordFilter($row);
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rs = LoadRecordset($sql, $conn);
+		if ($rs && !$rs->EOF)
+			return $rs->fields;
+		else
+			return NULL;
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
+	{
+		global $Language, $Security;
+		$conn = &$this->getConnection();
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
+		}
+		$rsnew = [];
+
+		// to_Name
+		$this->to_Name->setDbValueDef($rsnew, $this->to_Name->CurrentValue, "", FALSE);
+
+		// email_address
+		$this->email_address->setDbValueDef($rsnew, $this->email_address->CurrentValue, "", FALSE);
+
+		// project_name
+		$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", FALSE);
+
+		// distribution_valid
+		$this->distribution_valid->setDbValueDef($rsnew, ((strval($this->distribution_valid->CurrentValue) == "1") ? "1" : "0"), 0, strval($this->distribution_valid->CurrentValue) == "");
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
+			}
+		} else {
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
+			}
+			$addRow = FALSE;
+		}
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $addRow;
 	}
 
 	// Get export HTML tag
@@ -2027,13 +2963,32 @@ class distribution_details_list extends distribution_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
 
 		// Add group option item
 		$item = &$this->ExportOptions->add($this->ExportOptions->GroupOptionName);
+		$item->Body = "";
+		$item->Visible = FALSE;
+	}
+
+	// Set up import options
+	protected function setupImportOptions()
+	{
+		global $Security, $Language;
+
+		// Import
+		$item = &$this->ImportOptions->add("import");
+		$item->Body = "<button id=\"imf_distribution_details\" class=\"ew-import-link ew-import\" title=\"" . $Language->phrase("ImportText") . "\" data-caption=\"" . $Language->phrase("ImportText") . "\" onclick=\"ew.importDialogShow({lnk:'imf_distribution_details',hdr:ew.language.phrase('ImportText')});\">" . $Language->phrase("Import") . "</button>";
+		$item->Visible = $Security->canImport();
+		$this->ImportOptions->UseButtonGroup = TRUE;
+		$this->ImportOptions->UseDropDownButton = FALSE;
+		$this->ImportOptions->DropDownButtonPhrase = $Language->phrase("ButtonImport");
+
+		// Add group option item
+		$item = &$this->ImportOptions->add($this->ImportOptions->GroupOptionName);
 		$item->Body = "";
 		$item->Visible = FALSE;
 	}

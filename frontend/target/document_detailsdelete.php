@@ -53,6 +53,8 @@ fdocument_detailsdelete.validateRequired = <?php echo json_encode(CLIENT_VALIDAT
 fdocument_detailsdelete.lists["x_project_name"] = <?php echo $document_details_delete->project_name->Lookup->toClientList() ?>;
 fdocument_detailsdelete.lists["x_project_name"].options = <?php echo JsonEncode($document_details_delete->project_name->lookupOptions()) ?>;
 fdocument_detailsdelete.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailsdelete.lists["x_project_system"] = <?php echo $document_details_delete->project_system->Lookup->toClientList() ?>;
+fdocument_detailsdelete.lists["x_project_system"].options = <?php echo JsonEncode($document_details_delete->project_system->lookupOptions()) ?>;
 fdocument_detailsdelete.lists["x_document_type"] = <?php echo $document_details_delete->document_type->Lookup->toClientList() ?>;
 fdocument_detailsdelete.lists["x_document_type"].options = <?php echo JsonEncode($document_details_delete->document_type->lookupOptions()) ?>;
 fdocument_detailsdelete.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;

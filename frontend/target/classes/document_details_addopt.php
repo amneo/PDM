@@ -4,11 +4,11 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class document_details_view extends document_details
+class document_details_addopt extends document_details
 {
 
 	// Page ID
-	public $PageID = "view";
+	public $PageID = "addopt";
 
 	// Project ID
 	public $ProjectID = "{vishal-pdm}";
@@ -17,40 +17,7 @@ class document_details_view extends document_details
 	public $TableName = 'document_details';
 
 	// Page object name
-	public $PageObjName = "document_details_view";
-
-	// Page URLs
-	public $AddUrl;
-	public $EditUrl;
-	public $CopyUrl;
-	public $DeleteUrl;
-	public $ViewUrl;
-	public $ListUrl;
-	public $CancelUrl;
-
-	// Export URLs
-	public $ExportPrintUrl;
-	public $ExportHtmlUrl;
-	public $ExportExcelUrl;
-	public $ExportWordUrl;
-	public $ExportXmlUrl;
-	public $ExportCsvUrl;
-	public $ExportPdfUrl;
-
-	// Custom export
-	public $ExportExcelCustom = FALSE;
-	public $ExportWordCustom = FALSE;
-	public $ExportPdfCustom = FALSE;
-	public $ExportEmailCustom = FALSE;
-
-	// Update URLs
-	public $InlineAddUrl;
-	public $InlineCopyUrl;
-	public $InlineEditUrl;
-	public $GridAddUrl;
-	public $GridEditUrl;
-	public $MultiDeleteUrl;
-	public $MultiUpdateUrl;
+	public $PageObjName = "document_details_addopt";
 
 	// Audit Trail
 	public $AuditTrailOnAdd = TRUE;
@@ -389,27 +356,15 @@ class document_details_view extends document_details
 			$GLOBALS["document_details"] = &$this;
 			$GLOBALS["Table"] = &$GLOBALS["document_details"];
 		}
-		$keyUrl = "";
-		if (Get("document_sequence") !== NULL) {
-			$this->RecKey["document_sequence"] = Get("document_sequence");
-			$keyUrl .= "&amp;document_sequence=" . urlencode($this->RecKey["document_sequence"]);
-		}
-		$this->ExportPrintUrl = $this->pageUrl() . "export=print" . $keyUrl;
-		$this->ExportHtmlUrl = $this->pageUrl() . "export=html" . $keyUrl;
-		$this->ExportExcelUrl = $this->pageUrl() . "export=excel" . $keyUrl;
-		$this->ExportWordUrl = $this->pageUrl() . "export=word" . $keyUrl;
-		$this->ExportXmlUrl = $this->pageUrl() . "export=xml" . $keyUrl;
-		$this->ExportCsvUrl = $this->pageUrl() . "export=csv" . $keyUrl;
-		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
-			define(PROJECT_NAMESPACE . "PAGE_ID", 'view');
+			define(PROJECT_NAMESPACE . "PAGE_ID", 'addopt');
 
 		// Table name (for backward compatibility)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
@@ -426,26 +381,11 @@ class document_details_view extends document_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
-
-		// Export options
-		$this->ExportOptions = new ListOptions();
-		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ew-export-option";
-
-		// Other options
-		if (!$this->OtherOptions)
-			$this->OtherOptions = new ListOptionsArray();
-		$this->OtherOptions["action"] = new ListOptions();
-		$this->OtherOptions["action"]->Tag = "div";
-		$this->OtherOptions["action"]->TagClassName = "ew-action-option";
-		$this->OtherOptions["detail"] = new ListOptions();
-		$this->OtherOptions["detail"]->Tag = "div";
-		$this->OtherOptions["detail"]->TagClassName = "ew-detail-option";
 	}
 
 	// Terminate page
@@ -495,24 +435,8 @@ class document_details_view extends document_details
 		if ($url <> "") {
 			if (!DEBUG_ENABLED && ob_get_length())
 				ob_end_clean();
-
-			// Handle modal response
-			if ($this->IsModal) { // Show as modal
-				$row = array("url" => $url, "modal" => "1");
-				$pageName = GetPageName($url);
-				if ($pageName != $this->getListUrl()) { // Not List page
-					$row["caption"] = $this->getModalCaption($pageName);
-					if ($pageName == "document_detailsview.php")
-						$row["view"] = "1";
-				} else { // List page should not be shown as modal => error
-					$row["error"] = $this->getFailureMessage();
-					$this->clearFailureMessage();
-				}
-				WriteJson($row);
-			} else {
-				SaveDebugMessage();
-				AddHeader("Location", $url);
-			}
+			SaveDebugMessage();
+			AddHeader("Location", $url);
 		}
 		exit();
 	}
@@ -602,20 +526,6 @@ class document_details_view extends document_details
 		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
 			$this->document_sequence->Visible = FALSE;
 	}
-	public $ExportOptions; // Export options
-	public $OtherOptions; // Other options
-	public $DisplayRecs = 1;
-	public $DbMasterFilter;
-	public $DbDetailFilter;
-	public $StartRec;
-	public $StopRec;
-	public $TotalRecs = 0;
-	public $RecRange = 10;
-	public $Pager;
-	public $AutoHidePager = AUTO_HIDE_PAGER;
-	public $RecCnt;
-	public $RecKey = array();
-	public $IsModal = FALSE;
 
 	//
 	// Page run
@@ -624,7 +534,7 @@ class document_details_view extends document_details
 	public function run()
 	{
 		global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $RequestSecurity, $CurrentForm,
-			$SkipHeaderFooter, $EXPORT;
+			$FormError;
 
 		// Init Session data for API request if token found
 		if (IsApi() && session_status() !== PHP_SESSION_ACTIVE) {
@@ -632,9 +542,6 @@ class document_details_view extends document_details
 			if (is_callable($func) && Param(TOKEN_NAME) !== NULL && $func(Param(TOKEN_NAME), SessionTimeoutTime()))
 				session_start();
 		}
-
-		// Is modal
-		$this->IsModal = (Param("modal") == "1");
 
 		// User profile
 		$UserProfile = new UserProfile();
@@ -663,7 +570,7 @@ class document_details_view extends document_details
 			$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName);
 			if ($Security->isLoggedIn())
 				$Security->TablePermission_Loaded();
-			if (!$Security->canView()) {
+			if (!$Security->canAdd()) {
 				$Security->saveLastUrl();
 				$this->setFailureMessage(DeniedMessage()); // Set no permission
 				if ($Security->canList())
@@ -686,50 +593,9 @@ class document_details_view extends document_details
 			$this->terminate();
 		}
 
-		// Get export parameters
-		$custom = "";
-		if (Param("export") !== NULL) {
-			$this->Export = Param("export");
-			$custom = Param("custom", "");
-		} elseif (IsPost()) {
-			if (Post("exporttype") !== NULL)
-				$this->Export = Post("exporttype");
-			$custom = Post("custom", "");
-		} elseif (Get("cmd") == "json") {
-			$this->Export = Get("cmd");
-		} else {
-			$this->setExportReturnUrl(CurrentUrl());
-		}
-		$ExportFileName = $this->TableVar; // Get export file, used in header
-		if (Get("document_sequence") !== NULL) {
-			if ($ExportFileName <> "")
-				$ExportFileName .= "_";
-			$ExportFileName .= Get("document_sequence");
-		}
-
-		// Get custom export parameters
-		if ($this->isExport() && $custom <> "") {
-			$this->CustomExport = $this->Export;
-			$this->Export = "print";
-		}
-		$CustomExportType = $this->CustomExport;
-		$ExportType = $this->Export; // Get export parameter, used in header
-
-		// Update Export URLs
-		if (defined(PROJECT_NAMESPACE . "USE_PHPEXCEL"))
-			$this->ExportExcelCustom = FALSE;
-		if ($this->ExportExcelCustom)
-			$this->ExportExcelUrl .= "&amp;custom=1";
-		if (defined(PROJECT_NAMESPACE . "USE_PHPWORD"))
-			$this->ExportWordCustom = FALSE;
-		if ($this->ExportWordCustom)
-			$this->ExportWordUrl .= "&amp;custom=1";
-		if ($this->ExportPdfCustom)
-			$this->ExportPdfUrl .= "&amp;custom=1";
+		// Create form object
+		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-
-		// Setup export options
-		$this->setupExportOptions();
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
 		$this->client_doc_no->setVisibility();
@@ -762,217 +628,127 @@ class document_details_view extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
-
-		// Check modal
-		if ($this->IsModal)
-			$SkipHeaderFooter = TRUE;
-
-		// Load current record
-		$loadCurrentRecord = FALSE;
-		$returnUrl = "";
-		$matchRecord = FALSE;
-		if ($this->isPageRequest()) { // Validate request
-			if (Get("document_sequence") !== NULL) {
-				$this->document_sequence->setQueryStringValue(Get("document_sequence"));
-				$this->RecKey["document_sequence"] = $this->document_sequence->QueryStringValue;
-			} elseif (IsApi() && Key(0) != NULL) {
-				$this->document_sequence->setQueryStringValue(Key(0));
-				$this->RecKey["document_sequence"] = $this->document_sequence->QueryStringValue;
-			} elseif (Post("document_sequence") !== NULL) {
-				$this->document_sequence->setFormValue(Post("document_sequence"));
-				$this->RecKey["document_sequence"] = $this->document_sequence->FormValue;
-			} elseif (IsApi() && Route(2) != NULL) {
-				$this->document_sequence->setFormValue(Route(2));
-				$this->RecKey["document_sequence"] = $this->document_sequence->FormValue;
-			} else {
-				$loadCurrentRecord = TRUE;
-			}
-
-			// Get action
-			$this->CurrentAction = "show"; // Display
-			switch ($this->CurrentAction) {
-				case "show": // Get a record to display
-					$this->StartRec = 1; // Initialize start position
-					if ($this->Recordset = $this->loadRecordset()) // Load records
-						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
-					if ($this->TotalRecs <= 0) { // No record found
-						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
-							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-						$this->terminate("document_detailslist.php"); // Return to list page
-					} elseif ($loadCurrentRecord) { // Load current record position
-						$this->setupStartRec(); // Set up start record position
-
-						// Point to current record
-						if ($this->StartRec <= $this->TotalRecs) {
-							$matchRecord = TRUE;
-							$this->Recordset->move($this->StartRec - 1);
-						}
-					} else { // Match key values
-						while (!$this->Recordset->EOF) {
-							if (SameString($this->document_sequence->CurrentValue, $this->Recordset->fields('document_sequence'))) {
-								$this->setStartRecordNumber($this->StartRec); // Save record position
-								$matchRecord = TRUE;
-								break;
-							} else {
-								$this->StartRec++;
-								$this->Recordset->moveNext();
-							}
-						}
-					}
-					if (!$matchRecord) {
-						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
-							$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-						$returnUrl = "document_detailslist.php"; // No matching record, return to list
-					} else {
-						$this->loadRowValues($this->Recordset); // Load row values
-					}
-			}
-
-			// Export data only
-			if (!$this->CustomExport && in_array($this->Export, array_keys($EXPORT))) {
-				$this->exportData();
-				$this->terminate();
-			}
-		} else {
-			$returnUrl = "document_detailslist.php"; // Not page request, return to list
-		}
-		if ($returnUrl <> "") {
-			$this->terminate($returnUrl);
-			return;
-		}
+		$this->setupLookupOptions($this->project_system);
+		$this->setupLookupOptions($this->document_type);
+		set_error_handler(PROJECT_NAMESPACE . "ErrorHandler");
 
 		// Set up Breadcrumb
-		if (!$this->isExport())
-			$this->setupBreadcrumb();
+		//$this->setupBreadcrumb(); // Not used
+
+		$this->loadRowValues(); // Load default values
 
 		// Render row
-		$this->RowType = ROWTYPE_VIEW;
+		$this->RowType = ROWTYPE_ADD; // Render add type
 		$this->resetAttributes();
 		$this->renderRow();
-
-		// Normal return
-		if (IsApi()) {
-			$rows = $this->getRecordsFromRecordset($this->Recordset, TRUE); // Get current record only
-			$this->Recordset->close();
-			WriteJson(["success" => TRUE, $this->TableVar => $rows]);
-			$this->terminate(TRUE);
-		}
 	}
 
-	// Set up other options
-	protected function setupOtherOptions()
+	// Get upload files
+	protected function getUploadFiles()
 	{
-		global $Language, $Security;
-		$options = &$this->OtherOptions;
-		$option = &$options["action"];
-
-		// Add
-		$item = &$option->add("add");
-		$addcaption = HtmlTitle($Language->phrase("ViewPageAddLink"));
-		if ($this->IsModal) // Modal
-			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
-
-		// Edit
-		$item = &$option->add("edit");
-		$editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-		if ($this->IsModal) // Modal
-			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->EditUrl) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-		$item->Visible = ($this->EditUrl <> "" && $Security->canEdit());
-
-		// Copy
-		$item = &$option->add("copy");
-		$copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
-		if ($this->IsModal) // Modal
-			$item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->CopyUrl) . "'});\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-		$item->Visible = ($this->CopyUrl <> "" && $Security->canAdd());
-
-		// Delete
-		$item = &$option->add("delete");
-		if ($this->IsModal) // Handle as inline delete
-			$item->Body = "<a onclick=\"return ew.confirmDelete(this);\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery($this->DeleteUrl, "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-		$item->Visible = ($this->DeleteUrl <> "" && $Security->canDelete());
-
-		// Set up action default
-		$option = &$options["action"];
-		$option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
-		$option->UseDropDownButton = FALSE;
-		$option->UseButtonGroup = TRUE;
-		$item = &$option->add($option->GroupOptionName);
-		$item->Body = "";
-		$item->Visible = FALSE;
+		global $CurrentForm, $Language;
 	}
 
-	// Set up starting record parameters
-	public function setupStartRec()
+	// Load default values
+	protected function loadDefaultValues()
 	{
-		if ($this->DisplayRecs == 0)
-			return;
-		if ($this->isPageRequest()) { // Validate request
-			if (Get(TABLE_START_REC) !== NULL) { // Check for "start" parameter
-				$this->StartRec = Get(TABLE_START_REC);
-				$this->setStartRecordNumber($this->StartRec);
-			} elseif (Get(TABLE_PAGE_NO) !== NULL) {
-				$pageNo = Get(TABLE_PAGE_NO);
-				if (is_numeric($pageNo)) {
-					$this->StartRec = ($pageNo - 1) * $this->DisplayRecs + 1;
-					if ($this->StartRec <= 0) {
-						$this->StartRec = 1;
-					} elseif ($this->StartRec >= (int)(($this->TotalRecs - 1)/$this->DisplayRecs) * $this->DisplayRecs + 1) {
-						$this->StartRec = (int)(($this->TotalRecs - 1)/$this->DisplayRecs) * $this->DisplayRecs + 1;
-					}
-					$this->setStartRecordNumber($this->StartRec);
-				}
-			}
-		}
-		$this->StartRec = $this->getStartRecordNumber();
-
-		// Check if correct start record counter
-		if (!is_numeric($this->StartRec) || $this->StartRec == "") { // Avoid invalid start record counter
-			$this->StartRec = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRec);
-		} elseif ($this->StartRec > $this->TotalRecs) { // Avoid starting record > total records
-			$this->StartRec = (int)(($this->TotalRecs - 1)/$this->DisplayRecs) * $this->DisplayRecs + 1; // Point to last page first record
-			$this->setStartRecordNumber($this->StartRec);
-		} elseif (($this->StartRec - 1) % $this->DisplayRecs <> 0) {
-			$this->StartRec = (int)(($this->StartRec - 1)/$this->DisplayRecs) * $this->DisplayRecs + 1; // Point to page boundary
-			$this->setStartRecordNumber($this->StartRec);
-		}
+		$this->document_sequence->CurrentValue = NULL;
+		$this->document_sequence->OldValue = $this->document_sequence->CurrentValue;
+		$this->firelink_doc_no->CurrentValue = NULL;
+		$this->firelink_doc_no->OldValue = $this->firelink_doc_no->CurrentValue;
+		$this->client_doc_no->CurrentValue = NULL;
+		$this->client_doc_no->OldValue = $this->client_doc_no->CurrentValue;
+		$this->document_tittle->CurrentValue = NULL;
+		$this->document_tittle->OldValue = $this->document_tittle->CurrentValue;
+		$this->project_name->CurrentValue = NULL;
+		$this->project_name->OldValue = $this->project_name->CurrentValue;
+		$this->project_system->CurrentValue = NULL;
+		$this->project_system->OldValue = $this->project_system->CurrentValue;
+		$this->create_date->CurrentValue = NULL;
+		$this->create_date->OldValue = $this->create_date->CurrentValue;
+		$this->planned_date->CurrentValue = NULL;
+		$this->planned_date->OldValue = $this->planned_date->CurrentValue;
+		$this->document_type->CurrentValue = NULL;
+		$this->document_type->OldValue = $this->document_type->CurrentValue;
+		$this->expiry_date->CurrentValue = NULL;
+		$this->expiry_date->OldValue = $this->expiry_date->CurrentValue;
 	}
 
-	// Load recordset
-	public function loadRecordset($offset = -1, $rowcnt = -1)
+	// Load form values
+	protected function loadFormValues()
 	{
 
-		// Load List page SQL
-		$sql = $this->getListSql();
-		$conn = &$this->getConnection();
+		// Load from form
+		global $CurrentForm;
 
-		// Load recordset
-		$dbtype = GetConnectionType($this->Dbid);
-		if ($this->UseSelectLimit) {
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			if ($dbtype == "MSSQL") {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset, ["_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())]);
-			} else {
-				$rs = $conn->selectLimit($sql, $rowcnt, $offset);
-			}
-			$conn->raiseErrorFn = '';
-		} else {
-			$rs = LoadRecordset($sql, $conn);
+		// Check field name 'firelink_doc_no' first before field var 'x_firelink_doc_no'
+		$val = $CurrentForm->hasValue("firelink_doc_no") ? $CurrentForm->getValue("firelink_doc_no") : $CurrentForm->getValue("x_firelink_doc_no");
+		if (!$this->firelink_doc_no->IsDetailKey) {
+			$this->firelink_doc_no->setFormValue(ConvertFromUtf8($val));
 		}
 
-		// Call Recordset Selected event
-		$this->Recordset_Selected($rs);
-		return $rs;
+		// Check field name 'client_doc_no' first before field var 'x_client_doc_no'
+		$val = $CurrentForm->hasValue("client_doc_no") ? $CurrentForm->getValue("client_doc_no") : $CurrentForm->getValue("x_client_doc_no");
+		if (!$this->client_doc_no->IsDetailKey) {
+			$this->client_doc_no->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'document_tittle' first before field var 'x_document_tittle'
+		$val = $CurrentForm->hasValue("document_tittle") ? $CurrentForm->getValue("document_tittle") : $CurrentForm->getValue("x_document_tittle");
+		if (!$this->document_tittle->IsDetailKey) {
+			$this->document_tittle->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'project_name' first before field var 'x_project_name'
+		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
+		if (!$this->project_name->IsDetailKey) {
+			$this->project_name->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'project_system' first before field var 'x_project_system'
+		$val = $CurrentForm->hasValue("project_system") ? $CurrentForm->getValue("project_system") : $CurrentForm->getValue("x_project_system");
+		if (!$this->project_system->IsDetailKey) {
+			$this->project_system->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'planned_date' first before field var 'x_planned_date'
+		$val = $CurrentForm->hasValue("planned_date") ? $CurrentForm->getValue("planned_date") : $CurrentForm->getValue("x_planned_date");
+		if (!$this->planned_date->IsDetailKey) {
+			$this->planned_date->setFormValue(ConvertFromUtf8($val));
+			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
+		}
+
+		// Check field name 'document_type' first before field var 'x_document_type'
+		$val = $CurrentForm->hasValue("document_type") ? $CurrentForm->getValue("document_type") : $CurrentForm->getValue("x_document_type");
+		if (!$this->document_type->IsDetailKey) {
+			$this->document_type->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'expiry_date' first before field var 'x_expiry_date'
+		$val = $CurrentForm->hasValue("expiry_date") ? $CurrentForm->getValue("expiry_date") : $CurrentForm->getValue("x_expiry_date");
+		if (!$this->expiry_date->IsDetailKey) {
+			$this->expiry_date->setFormValue(ConvertFromUtf8($val));
+			$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
+		}
+
+		// Check field name 'document_sequence' first before field var 'x_document_sequence'
+		$val = $CurrentForm->hasValue("document_sequence") ? $CurrentForm->getValue("document_sequence") : $CurrentForm->getValue("x_document_sequence");
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		$this->firelink_doc_no->CurrentValue = ConvertToUtf8($this->firelink_doc_no->FormValue);
+		$this->client_doc_no->CurrentValue = ConvertToUtf8($this->client_doc_no->FormValue);
+		$this->document_tittle->CurrentValue = ConvertToUtf8($this->document_tittle->FormValue);
+		$this->project_name->CurrentValue = ConvertToUtf8($this->project_name->FormValue);
+		$this->project_system->CurrentValue = ConvertToUtf8($this->project_system->FormValue);
+		$this->planned_date->CurrentValue = ConvertToUtf8($this->planned_date->FormValue);
+		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
+		$this->document_type->CurrentValue = ConvertToUtf8($this->document_type->FormValue);
+		$this->expiry_date->CurrentValue = ConvertToUtf8($this->expiry_date->FormValue);
+		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
 	}
 
 	// Load row based on key values
@@ -1010,8 +786,6 @@ class document_details_view extends document_details
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		if ($this->AuditTrailOnView)
-			$this->writeAuditTrailOnView($row);
 		$this->document_sequence->setDbValue($row['document_sequence']);
 		$this->firelink_doc_no->setDbValue($row['firelink_doc_no']);
 		$this->client_doc_no->setDbValue($row['client_doc_no']);
@@ -1026,23 +800,29 @@ class document_details_view extends document_details
 		$this->create_date->setDbValue($row['create_date']);
 		$this->planned_date->setDbValue($row['planned_date']);
 		$this->document_type->setDbValue($row['document_type']);
+		if (array_key_exists('EV__document_type', $rs->fields)) {
+			$this->document_type->VirtualValue = $rs->fields('EV__document_type'); // Set up virtual field value
+		} else {
+			$this->document_type->VirtualValue = ""; // Clear value
+		}
 		$this->expiry_date->setDbValue($row['expiry_date']);
 	}
 
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['document_sequence'] = NULL;
-		$row['firelink_doc_no'] = NULL;
-		$row['client_doc_no'] = NULL;
-		$row['document_tittle'] = NULL;
-		$row['project_name'] = NULL;
-		$row['project_system'] = NULL;
-		$row['create_date'] = NULL;
-		$row['planned_date'] = NULL;
-		$row['document_type'] = NULL;
-		$row['expiry_date'] = NULL;
+		$row['document_sequence'] = $this->document_sequence->CurrentValue;
+		$row['firelink_doc_no'] = $this->firelink_doc_no->CurrentValue;
+		$row['client_doc_no'] = $this->client_doc_no->CurrentValue;
+		$row['document_tittle'] = $this->document_tittle->CurrentValue;
+		$row['project_name'] = $this->project_name->CurrentValue;
+		$row['project_system'] = $this->project_system->CurrentValue;
+		$row['create_date'] = $this->create_date->CurrentValue;
+		$row['planned_date'] = $this->planned_date->CurrentValue;
+		$row['document_type'] = $this->document_type->CurrentValue;
+		$row['expiry_date'] = $this->expiry_date->CurrentValue;
 		return $row;
 	}
 
@@ -1052,14 +832,8 @@ class document_details_view extends document_details
 		global $Security, $Language, $CurrentLanguage;
 
 		// Initialize URLs
-		$this->AddUrl = $this->getAddUrl();
-		$this->EditUrl = $this->getEditUrl();
-		$this->CopyUrl = $this->getCopyUrl();
-		$this->DeleteUrl = $this->getDeleteUrl();
-		$this->ListUrl = $this->getListUrl();
-		$this->setupOtherOptions();
-
 		// Call Row_Rendering event
+
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
@@ -1097,14 +871,13 @@ class document_details_view extends document_details
 			if ($curVal <> "") {
 				$this->project_name->ViewValue = $this->project_name->lookupCacheOption($curVal);
 				if ($this->project_name->ViewValue === NULL) { // Lookup from database
-					$filterWrk = "\"project_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
 						$arwrk[2] = $rswrk->fields('df2');
-						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1118,21 +891,62 @@ class document_details_view extends document_details
 			$this->project_name->ViewCustomAttributes = "";
 
 			// project_system
-			$this->project_system->ViewValue = $this->project_system->CurrentValue;
+			$curVal = strval($this->project_system->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+				if ($this->project_system->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"system_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_system->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->project_system->ViewValue = $this->project_system->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_system->ViewValue = $this->project_system->CurrentValue;
+					}
+				}
+			} else {
+				$this->project_system->ViewValue = NULL;
+			}
 			$this->project_system->ViewCustomAttributes = "";
 
 			// create_date
 			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 0);
+			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
 			$this->create_date->ViewCustomAttributes = "";
 
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 0);
+			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
-			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			if ($this->document_type->VirtualValue <> "") {
+				$this->document_type->ViewValue = $this->document_type->VirtualValue;
+			} else {
+				$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->ViewValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->ViewValue = $this->document_type->CurrentValue;
+					}
+				}
+			} else {
+				$this->document_type->ViewValue = NULL;
+			}
+			}
 			$this->document_type->ViewCustomAttributes = "";
 
 			// expiry_date
@@ -1179,197 +993,336 @@ class document_details_view extends document_details
 			$this->expiry_date->LinkCustomAttributes = "";
 			$this->expiry_date->HrefValue = "";
 			$this->expiry_date->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->CurrentValue = HtmlDecode($this->firelink_doc_no->CurrentValue);
+			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->CurrentValue);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// client_doc_no
+			$this->client_doc_no->EditAttrs["class"] = "form-control";
+			$this->client_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->client_doc_no->CurrentValue = HtmlDecode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->EditValue = HtmlEncode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->PlaceHolder = RemoveHtml($this->client_doc_no->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->CurrentValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// project_system
+			$this->project_system->EditAttrs["class"] = "form-control";
+			$this->project_system->EditCustomAttributes = "";
+			$curVal = trim(strval($this->project_system->CurrentValue));
+			if ($curVal <> "")
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+			else
+				$this->project_system->ViewValue = $this->project_system->Lookup !== NULL && is_array($this->project_system->Lookup->Options) ? $curVal : NULL;
+			if ($this->project_system->ViewValue !== NULL) { // Load from cache
+				$this->project_system->EditValue = array_values($this->project_system->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"system_name\"" . SearchString("=", $this->project_system->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->project_system->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->project_system->EditValue = $arwrk;
+			}
+
+			// planned_date
+			$this->planned_date->EditAttrs["class"] = "form-control";
+			$this->planned_date->EditCustomAttributes = "";
+			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
+			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
+
+			// document_type
+			$this->document_type->EditAttrs["class"] = "form-control";
+			$this->document_type->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
+			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->EditValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+					}
+				}
+			} else {
+				$this->document_type->EditValue = NULL;
+			}
+			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
+
+			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
+			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime($this->expiry_date->CurrentValue, 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
+
+			// Add refer script
+			// firelink_doc_no
+
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// project_system
+			$this->project_system->LinkCustomAttributes = "";
+			$this->project_system->HrefValue = "";
+
+			// planned_date
+			$this->planned_date->LinkCustomAttributes = "";
+			$this->planned_date->HrefValue = "";
+
+			// document_type
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+
+			// expiry_date
+			$this->expiry_date->LinkCustomAttributes = "";
+			$this->expiry_date->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
 	}
 
-	// Get export HTML tag
-	protected function getExportTag($type, $custom = FALSE)
+	// Validate form
+	protected function validateForm()
 	{
-		global $Language;
-		if (SameText($type, "excel")) {
-			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"ew.export(document.fdocument_detailsview,'" . $this->ExportExcelUrl . "','excel',true);\">" . $Language->phrase("ExportToExcel") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportExcelUrl . "\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
-		} elseif (SameText($type, "word")) {
-			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"ew.export(document.fdocument_detailsview,'" . $this->ExportWordUrl . "','word',true);\">" . $Language->phrase("ExportToWord") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportWordUrl . "\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
-		} elseif (SameText($type, "pdf")) {
-			if ($custom)
-				return "<a href=\"javascript:void(0);\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"ew.export(document.fdocument_detailsview,'" . $this->ExportPdfUrl . "','pdf',true);\">" . $Language->phrase("ExportToPDF") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\">" . $Language->phrase("ExportToPDF") . "</a>";
-		} elseif (SameText($type, "html")) {
-			return "<a href=\"" . $this->ExportHtmlUrl . "\" class=\"ew-export-link ew-html\" title=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\">" . $Language->phrase("ExportToHtml") . "</a>";
-		} elseif (SameText($type, "xml")) {
-			return "<a href=\"" . $this->ExportXmlUrl . "\" class=\"ew-export-link ew-xml\" title=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\">" . $Language->phrase("ExportToXml") . "</a>";
-		} elseif (SameText($type, "csv")) {
-			return "<a href=\"" . $this->ExportCsvUrl . "\" class=\"ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
-		} elseif (SameText($type, "print")) {
-			return "<a href=\"" . $this->ExportPrintUrl . "\" class=\"ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
-		}
-	}
+		global $Language, $FormError;
 
-	// Set up export options
-	protected function setupExportOptions()
-	{
-		global $Language;
+		// Initialize form error message
+		$FormError = "";
 
-		// Printer friendly
-		$item = &$this->ExportOptions->add("print");
-		$item->Body = $this->getExportTag("print");
-		$item->Visible = TRUE;
-
-		// Export to Excel
-		$item = &$this->ExportOptions->add("excel");
-		$item->Body = $this->getExportTag("excel");
-		$item->Visible = TRUE;
-
-		// Export to Word
-		$item = &$this->ExportOptions->add("word");
-		$item->Body = $this->getExportTag("word");
-		$item->Visible = FALSE;
-
-		// Export to Html
-		$item = &$this->ExportOptions->add("html");
-		$item->Body = $this->getExportTag("html");
-		$item->Visible = FALSE;
-
-		// Export to Xml
-		$item = &$this->ExportOptions->add("xml");
-		$item->Body = $this->getExportTag("xml");
-		$item->Visible = FALSE;
-
-		// Export to Csv
-		$item = &$this->ExportOptions->add("csv");
-		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
-
-		// Export to Pdf
-		$item = &$this->ExportOptions->add("pdf");
-		$item->Body = $this->getExportTag("pdf");
-		$item->Visible = FALSE;
-
-		// Export to Email
-		$item = &$this->ExportOptions->add("email");
-		$url = "";
-		$item->Body = "<button id=\"emf_document_details\" class=\"ew-export-link ew-email\" title=\"" . $Language->phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->phrase("ExportToEmailText") . "\" onclick=\"ew.emailDialogShow({lnk:'emf_document_details',hdr:ew.language.phrase('ExportToEmailText'),f:document.fdocument_detailsview,key:" . ArrayToJsonAttribute($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->phrase("ExportToEmail") . "</button>";
-		$item->Visible = FALSE;
-
-		// Drop down button for export
-		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
-		if ($this->ExportOptions->UseButtonGroup && IsMobile())
-			$this->ExportOptions->UseDropDownButton = TRUE;
-		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
-
-		// Add group option item
-		$item = &$this->ExportOptions->add($this->ExportOptions->GroupOptionName);
-		$item->Body = "";
-		$item->Visible = FALSE;
-
-		// Hide options for export
-		if ($this->isExport())
-			$this->ExportOptions->hideAllOptions();
-	}
-
-	/**
-	 * Export data in HTML/CSV/Word/Excel/XML/Email/PDF format
-	 *
-	 * @param boolean $return Return the data rather than output it
-	 * @return mixed 
-	 */
-	public function exportData($return = FALSE)
-	{
-		global $Language;
-		$utf8 = SameText(PROJECT_CHARSET, "utf-8");
-		$selectLimit = FALSE;
-
-		// Load recordset
-		if ($selectLimit) {
-			$this->TotalRecs = $this->listRecordCount();
-		} else {
-			if (!$this->Recordset)
-				$this->Recordset = $this->loadRecordset();
-			$rs = &$this->Recordset;
-			if ($rs)
-				$this->TotalRecs = $rs->RecordCount();
-		}
-		$this->StartRec = 1;
-		$this->setupStartRec(); // Set up start record position
-
-		// Set the last record to display
-		if ($this->DisplayRecs <= 0) {
-			$this->StopRec = $this->TotalRecs;
-		} else {
-			$this->StopRec = $this->StartRec + $this->DisplayRecs - 1;
-		}
-		$this->ExportDoc = GetExportDocument($this, "v");
-		$doc = &$this->ExportDoc;
-		if (!$doc)
-			$this->setFailureMessage($Language->phrase("ExportClassNotFound")); // Export class not found
-		if (!$rs || !$doc) {
-			RemoveHeader("Content-Type"); // Remove header
-			RemoveHeader("Content-Disposition");
-			$this->showMessage();
-			return;
-		}
-		if ($selectLimit) {
-			$this->StartRec = 1;
-			$this->StopRec = $this->DisplayRecs <= 0 ? $this->TotalRecs : $this->DisplayRecs;
-		}
-
-		// Call Page Exporting server event
-		$this->ExportDoc->ExportCustom = !$this->Page_Exporting();
-		$header = $this->PageHeader;
-		$this->Page_DataRendering($header);
-		$doc->Text .= $header;
-		$this->exportDocument($doc, $rs, $this->StartRec, $this->StopRec, "view");
-		$footer = $this->PageFooter;
-		$this->Page_DataRendered($footer);
-		$doc->Text .= $footer;
-
-		// Close recordset
-		$rs->close();
-
-		// Call Page Exported server event
-		$this->Page_Exported();
-
-		// Export header and footer
-		$doc->exportHeaderAndFooter();
-
-		// Clean output buffer (without destroying output buffer)
-		$buffer = ob_get_contents(); // Save the output buffer
-		if (!DEBUG_ENABLED && $buffer)
-			ob_clean();
-
-		// Write debug message if enabled
-		if (DEBUG_ENABLED && !$this->isExport("pdf"))
-			echo GetDebugMessage();
-
-		// Output data
-		if ($this->isExport("email")) {
-
-			// Export-to-email disabled
-		} else {
-			$doc->export();
-			if ($return) {
-				RemoveHeader("Content-Type"); // Remove header
-				RemoveHeader("Content-Disposition");
-				$content = ob_get_contents();
-				if ($content)
-					ob_clean();
-				if ($buffer)
-					echo $buffer; // Resume the output buffer
-				return $content;
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->document_sequence->Required) {
+			if (!$this->document_sequence->IsDetailKey && $this->document_sequence->FormValue != NULL && $this->document_sequence->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_sequence->caption(), $this->document_sequence->RequiredErrorMessage));
 			}
 		}
+		if ($this->firelink_doc_no->Required) {
+			if (!$this->firelink_doc_no->IsDetailKey && $this->firelink_doc_no->FormValue != NULL && $this->firelink_doc_no->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->firelink_doc_no->caption(), $this->firelink_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->client_doc_no->Required) {
+			if (!$this->client_doc_no->IsDetailKey && $this->client_doc_no->FormValue != NULL && $this->client_doc_no->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->client_doc_no->caption(), $this->client_doc_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_tittle->Required) {
+			if (!$this->document_tittle->IsDetailKey && $this->document_tittle->FormValue != NULL && $this->document_tittle->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_tittle->caption(), $this->document_tittle->RequiredErrorMessage));
+			}
+		}
+		if ($this->project_name->Required) {
+			if (!$this->project_name->IsDetailKey && $this->project_name->FormValue != NULL && $this->project_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_name->caption(), $this->project_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->project_system->Required) {
+			if (!$this->project_system->IsDetailKey && $this->project_system->FormValue != NULL && $this->project_system->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_system->caption(), $this->project_system->RequiredErrorMessage));
+			}
+		}
+		if ($this->create_date->Required) {
+			if (!$this->create_date->IsDetailKey && $this->create_date->FormValue != NULL && $this->create_date->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->create_date->caption(), $this->create_date->RequiredErrorMessage));
+			}
+		}
+		if ($this->planned_date->Required) {
+			if (!$this->planned_date->IsDetailKey && $this->planned_date->FormValue != NULL && $this->planned_date->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
+			}
+		}
+		if (!CheckStdDate($this->planned_date->FormValue)) {
+			AddMessage($FormError, $this->planned_date->errorMessage());
+		}
+		if ($this->document_type->Required) {
+			if (!$this->document_type->IsDetailKey && $this->document_type->FormValue != NULL && $this->document_type->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_type->caption(), $this->document_type->RequiredErrorMessage));
+			}
+		}
+		if ($this->expiry_date->Required) {
+			if (!$this->expiry_date->IsDetailKey && $this->expiry_date->FormValue != NULL && $this->expiry_date->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->expiry_date->caption(), $this->expiry_date->RequiredErrorMessage));
+			}
+		}
+		if (!CheckDate($this->expiry_date->FormValue)) {
+			AddMessage($FormError, $this->expiry_date->errorMessage());
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
+	{
+		global $Language, $Security;
+		if ($this->firelink_doc_no->CurrentValue <> "") { // Check field with unique index
+			$filter = "(firelink_doc_no = '" . AdjustSql($this->firelink_doc_no->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->firelink_doc_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->firelink_doc_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		if ($this->client_doc_no->CurrentValue <> "") { // Check field with unique index
+			$filter = "(client_doc_no = '" . AdjustSql($this->client_doc_no->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->client_doc_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->client_doc_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		$conn = &$this->getConnection();
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
+		}
+		$rsnew = [];
+
+		// firelink_doc_no
+		$this->firelink_doc_no->setDbValueDef($rsnew, $this->firelink_doc_no->CurrentValue, "", FALSE);
+
+		// client_doc_no
+		$this->client_doc_no->setDbValueDef($rsnew, $this->client_doc_no->CurrentValue, "", FALSE);
+
+		// document_tittle
+		$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, "", FALSE);
+
+		// project_name
+		$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", FALSE);
+
+		// project_system
+		$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", FALSE);
+
+		// planned_date
+		$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), FALSE);
+
+		// document_type
+		$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", FALSE);
+
+		// expiry_date
+		$this->expiry_date->setDbValueDef($rsnew, UnFormatDateTime($this->expiry_date->CurrentValue, 0), NULL, FALSE);
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
+			}
+		} else {
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
+			}
+			$addRow = FALSE;
+		}
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $addRow;
 	}
 
 	// Set up Breadcrumb
@@ -1379,8 +1332,8 @@ class document_details_view extends document_details
 		$Breadcrumb = new Breadcrumb();
 		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
 		$Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("document_detailslist.php"), "", $this->TableVar, TRUE);
-		$pageId = "view";
-		$Breadcrumb->add("view", $pageId, $url);
+		$pageId = "addopt";
+		$Breadcrumb->add("addopt", $pageId, $url);
 	}
 
 	// Setup lookup options
@@ -1415,6 +1368,10 @@ class document_details_view extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_project_system":
+							break;
+						case "x_document_type":
 							break;
 					}
 					$ar[strval($row[0])] = $row;
@@ -1484,32 +1441,6 @@ class document_details_view extends document_details
 
 		// Example:
 		//$footer = "your footer";
-
-	}
-
-	// Page Exporting event
-	// $this->ExportDoc = export document object
-	function Page_Exporting() {
-
-		//$this->ExportDoc->Text = "my header"; // Export header
-		//return FALSE; // Return FALSE to skip default export and use Row_Export event
-
-		return TRUE; // Return TRUE to use default export and skip Row_Export event
-	}
-
-	// Row Export event
-	// $this->ExportDoc = export document object
-	function Row_Export($rs) {
-
-		//$this->ExportDoc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
-	}
-
-	// Page Exported event
-	// $this->ExportDoc = export document object
-	function Page_Exported() {
-
-		//$this->ExportDoc->Text .= "my footer"; // Export footer
-		//echo $this->ExportDoc->Text;
 
 	}
 }

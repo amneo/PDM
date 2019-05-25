@@ -139,7 +139,12 @@ $project_details_add->showMessage();
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $project_details_add->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="project_details">
+<?php if ($project_details->isConfirm()) { // Confirm page ?>
 <input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="confirm" id="confirm" value="confirm">
+<?php } else { ?>
+<input type="hidden" name="action" id="action" value="confirm">
+<?php } ?>
 <input type="hidden" name="modal" value="<?php echo (int)$project_details_add->IsModal ?>">
 <?php if (!$project_details_add->IsMobileOrModal) { ?>
 <div class="ew-desktop"><!-- desktop -->
@@ -154,18 +159,34 @@ $project_details_add->showMessage();
 	<div id="r_project_name" class="form-group row">
 		<label id="elh_project_details_project_name" for="x_project_name" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_name->caption() ?><?php echo ($project_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_name->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_name">
-<input type="text" data-table="project_details" data-field="x_project_name" data-page="1" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_name">
+<span<?php echo $project_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($project_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_name">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_name"><?php echo $project_details->project_name->caption() ?><?php echo ($project_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_name->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_name">
-<input type="text" data-table="project_details" data-field="x_project_name" data-page="1" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_name">
+<span<?php echo $project_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($project_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -175,18 +196,34 @@ $project_details_add->showMessage();
 	<div id="r_project_our_client" class="form-group row">
 		<label id="elh_project_details_project_our_client" for="x_project_our_client" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_our_client->caption() ?><?php echo ($project_details->project_our_client->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_our_client->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_our_client">
-<input type="text" data-table="project_details" data-field="x_project_our_client" data-page="1" name="x_project_our_client" id="x_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_our_client" name="x_project_our_client" id="x_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_our_client">
+<span<?php echo $project_details->project_our_client->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_our_client->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_our_client" name="x_project_our_client" id="x_project_our_client" value="<?php echo HtmlEncode($project_details->project_our_client->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_our_client->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_our_client">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_our_client"><?php echo $project_details->project_our_client->caption() ?><?php echo ($project_details->project_our_client->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_our_client->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_our_client">
-<input type="text" data-table="project_details" data-field="x_project_our_client" data-page="1" name="x_project_our_client" id="x_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_our_client" name="x_project_our_client" id="x_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_our_client">
+<span<?php echo $project_details->project_our_client->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_our_client->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_our_client" name="x_project_our_client" id="x_project_our_client" value="<?php echo HtmlEncode($project_details->project_our_client->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_our_client->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -196,18 +233,34 @@ $project_details_add->showMessage();
 	<div id="r_project_end_user" class="form-group row">
 		<label id="elh_project_details_project_end_user" for="x_project_end_user" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_end_user->caption() ?><?php echo ($project_details->project_end_user->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_end_user->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_end_user">
-<input type="text" data-table="project_details" data-field="x_project_end_user" data-page="1" name="x_project_end_user" id="x_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_end_user" name="x_project_end_user" id="x_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_end_user">
+<span<?php echo $project_details->project_end_user->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_end_user->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_end_user" name="x_project_end_user" id="x_project_end_user" value="<?php echo HtmlEncode($project_details->project_end_user->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_end_user->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_end_user">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_end_user"><?php echo $project_details->project_end_user->caption() ?><?php echo ($project_details->project_end_user->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_end_user->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_end_user">
-<input type="text" data-table="project_details" data-field="x_project_end_user" data-page="1" name="x_project_end_user" id="x_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_end_user" name="x_project_end_user" id="x_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_end_user">
+<span<?php echo $project_details->project_end_user->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_end_user->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_end_user" name="x_project_end_user" id="x_project_end_user" value="<?php echo HtmlEncode($project_details->project_end_user->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_end_user->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -217,18 +270,34 @@ $project_details_add->showMessage();
 	<div id="r_project_sales_engg" class="form-group row">
 		<label id="elh_project_details_project_sales_engg" for="x_project_sales_engg" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_sales_engg->caption() ?><?php echo ($project_details->project_sales_engg->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_sales_engg->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_sales_engg">
-<input type="text" data-table="project_details" data-field="x_project_sales_engg" data-page="1" name="x_project_sales_engg" id="x_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_sales_engg" name="x_project_sales_engg" id="x_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_sales_engg">
+<span<?php echo $project_details->project_sales_engg->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_sales_engg->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_sales_engg" name="x_project_sales_engg" id="x_project_sales_engg" value="<?php echo HtmlEncode($project_details->project_sales_engg->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_sales_engg->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_sales_engg">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_sales_engg"><?php echo $project_details->project_sales_engg->caption() ?><?php echo ($project_details->project_sales_engg->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_sales_engg->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_sales_engg">
-<input type="text" data-table="project_details" data-field="x_project_sales_engg" data-page="1" name="x_project_sales_engg" id="x_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_sales_engg" name="x_project_sales_engg" id="x_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_sales_engg">
+<span<?php echo $project_details->project_sales_engg->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_sales_engg->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_sales_engg" name="x_project_sales_engg" id="x_project_sales_engg" value="<?php echo HtmlEncode($project_details->project_sales_engg->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_sales_engg->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -238,18 +307,34 @@ $project_details_add->showMessage();
 	<div id="r_project_distribution" class="form-group row">
 		<label id="elh_project_details_project_distribution" for="x_project_distribution" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_distribution->caption() ?><?php echo ($project_details->project_distribution->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_distribution->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_distribution">
-<input type="text" data-table="project_details" data-field="x_project_distribution" data-page="1" name="x_project_distribution" id="x_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_distribution" name="x_project_distribution" id="x_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_distribution">
+<span<?php echo $project_details->project_distribution->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_distribution->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_distribution" name="x_project_distribution" id="x_project_distribution" value="<?php echo HtmlEncode($project_details->project_distribution->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_distribution->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_distribution">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_distribution"><?php echo $project_details->project_distribution->caption() ?><?php echo ($project_details->project_distribution->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_distribution->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_distribution">
-<input type="text" data-table="project_details" data-field="x_project_distribution" data-page="1" name="x_project_distribution" id="x_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_distribution" name="x_project_distribution" id="x_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_distribution">
+<span<?php echo $project_details->project_distribution->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_distribution->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_distribution" name="x_project_distribution" id="x_project_distribution" value="<?php echo HtmlEncode($project_details->project_distribution->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_distribution->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -259,18 +344,34 @@ $project_details_add->showMessage();
 	<div id="r_project_transmittal" class="form-group row">
 		<label id="elh_project_details_project_transmittal" for="x_project_transmittal" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->project_transmittal->caption() ?><?php echo ($project_details->project_transmittal->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->project_transmittal->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_transmittal">
-<input type="text" data-table="project_details" data-field="x_project_transmittal" data-page="1" name="x_project_transmittal" id="x_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_transmittal" name="x_project_transmittal" id="x_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_transmittal">
+<span<?php echo $project_details->project_transmittal->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_transmittal->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_transmittal" name="x_project_transmittal" id="x_project_transmittal" value="<?php echo HtmlEncode($project_details->project_transmittal->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_transmittal->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_transmittal">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_project_transmittal"><?php echo $project_details->project_transmittal->caption() ?><?php echo ($project_details->project_transmittal->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->project_transmittal->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_project_transmittal">
-<input type="text" data-table="project_details" data-field="x_project_transmittal" data-page="1" name="x_project_transmittal" id="x_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_project_transmittal" name="x_project_transmittal" id="x_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_project_transmittal">
+<span<?php echo $project_details->project_transmittal->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->project_transmittal->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_transmittal" name="x_project_transmittal" id="x_project_transmittal" value="<?php echo HtmlEncode($project_details->project_transmittal->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->project_transmittal->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -280,18 +381,34 @@ $project_details_add->showMessage();
 	<div id="r_order_number" class="form-group row">
 		<label id="elh_project_details_order_number" for="x_order_number" class="<?php echo $project_details_add->LeftColumnClass ?>"><?php echo $project_details->order_number->caption() ?><?php echo ($project_details->order_number->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $project_details_add->RightColumnClass ?>"><div<?php echo $project_details->order_number->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_order_number">
-<input type="text" data-table="project_details" data-field="x_order_number" data-page="1" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_order_number">
+<span<?php echo $project_details->order_number->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->order_number->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_order_number" name="x_order_number" id="x_order_number" value="<?php echo HtmlEncode($project_details->order_number->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->order_number->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_order_number">
 		<td class="<?php echo $project_details_add->TableLeftColumnClass ?>"><span id="elh_project_details_order_number"><?php echo $project_details->order_number->caption() ?><?php echo ($project_details->order_number->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $project_details->order_number->cellAttributes() ?>>
+<?php if (!$project_details->isConfirm()) { ?>
 <span id="el_project_details_order_number">
-<input type="text" data-table="project_details" data-field="x_order_number" data-page="1" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
+<input type="text" data-table="project_details" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_project_details_order_number">
+<span<?php echo $project_details->order_number->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($project_details->order_number->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_order_number" name="x_order_number" id="x_order_number" value="<?php echo HtmlEncode($project_details->order_number->FormValue) ?>">
+<?php } ?>
 <?php echo $project_details->order_number->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -304,8 +421,13 @@ $project_details_add->showMessage();
 <?php if (!$project_details_add->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $project_details_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("AddBtn") ?></button>
+<?php if (!$project_details->isConfirm()) { // Confirm page ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" onclick="this.form.action.value='confirm';"><?php echo $Language->phrase("AddBtn") ?></button>
 <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?php echo $project_details_add->getReturnUrl() ?>"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("ConfirmBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="submit" onclick="this.form.action.value='cancel';"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } ?>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>

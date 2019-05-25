@@ -65,7 +65,7 @@ class xmit_details extends DbTable
 		$this->xmit_id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->xmit_id->IsPrimaryKey = TRUE; // Primary key field
 		$this->xmit_id->Nullable = FALSE; // NOT NULL field
-		$this->xmit_id->Sortable = TRUE; // Allow sort
+		$this->xmit_id->Sortable = FALSE; // Allow sort
 		$this->xmit_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['xmit_id'] = &$this->xmit_id;
 
@@ -747,10 +747,7 @@ class xmit_details extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->xmit_id);
-					$doc->exportCaption($this->xmit_mode);
 				} else {
-					$doc->exportCaption($this->xmit_id);
 					$doc->exportCaption($this->xmit_mode);
 				}
 				$doc->endExportRow();
@@ -783,10 +780,7 @@ class xmit_details extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->xmit_id);
-						$doc->exportField($this->xmit_mode);
 					} else {
-						$doc->exportField($this->xmit_id);
 						$doc->exportField($this->xmit_mode);
 					}
 					$doc->endExportRow($rowCnt);

@@ -25,9 +25,9 @@ class transaction_details extends DbTable
 	public $AuditTrailOnAdd = TRUE;
 	public $AuditTrailOnEdit = TRUE;
 	public $AuditTrailOnDelete = TRUE;
-	public $AuditTrailOnView = FALSE;
-	public $AuditTrailOnViewData = FALSE;
-	public $AuditTrailOnSearch = FALSE;
+	public $AuditTrailOnView = TRUE;
+	public $AuditTrailOnViewData = TRUE;
+	public $AuditTrailOnSearch = TRUE;
 
 	// Export
 	public $ExportDoc;
@@ -100,12 +100,12 @@ class transaction_details extends DbTable
 		$this->fields['firelink_doc_no'] = &$this->firelink_doc_no;
 
 		// project_name
-		$this->project_name = new DbField('transaction_details', 'transaction_details', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"project_name"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->project_name = new DbField('transaction_details', 'transaction_details', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"project_name"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'HIDDEN');
 		$this->project_name->Sortable = TRUE; // Allow sort
 		$this->fields['project_name'] = &$this->project_name;
 
 		// document_tittle
-		$this->document_tittle = new DbField('transaction_details', 'transaction_details', 'x_document_tittle', 'document_tittle', '"document_tittle"', '"document_tittle"', 200, -1, FALSE, '"document_tittle"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->document_tittle = new DbField('transaction_details', 'transaction_details', 'x_document_tittle', 'document_tittle', '"document_tittle"', '"document_tittle"', 200, -1, FALSE, '"document_tittle"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'HIDDEN');
 		$this->document_tittle->Sortable = TRUE; // Allow sort
 		$this->fields['document_tittle'] = &$this->document_tittle;
 
@@ -150,11 +150,13 @@ class transaction_details extends DbTable
 		$this->fields['direction'] = &$this->direction;
 
 		// approval_status
-		$this->approval_status = new DbField('transaction_details', 'transaction_details', 'x_approval_status', 'approval_status', '"approval_status"', '"approval_status"', 200, -1, FALSE, '"approval_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
+		$this->approval_status = new DbField('transaction_details', 'transaction_details', 'x_approval_status', 'approval_status', '"approval_status"', '"approval_status"', 200, -1, FALSE, '"approval_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->approval_status->Nullable = FALSE; // NOT NULL field
 		$this->approval_status->Required = TRUE; // Required field
 		$this->approval_status->Sortable = TRUE; // Allow sort
-		$this->approval_status->Lookup = new Lookup('approval_status', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
+		$this->approval_status->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->approval_status->PleaseSelectText = $Language->phrase("PleaseSelect"); // PleaseSelect text
+		$this->approval_status->Lookup = new Lookup('approval_status', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '"short_code"', '');
 		$this->fields['approval_status'] = &$this->approval_status;
 
 		// document_link
@@ -358,13 +360,19 @@ class transaction_details extends DbTable
 	// Apply User ID filters
 	public function applyUserIDFilters($filter)
 	{
+		global $Security;
+
+		// Add User ID filter
+		if ($Security->currentUserID() <> "" && !$Security->isAdmin()) { // Non system admin
+			$filter = $this->addUserIDFilter($filter);
+		}
 		return $filter;
 	}
 
 	// Check if User ID security allows view all
 	public function userIDAllow($id = "")
 	{
-		$allow = USER_ID_ALLOW;
+		$allow = $this->UserIDAllowSecurity;
 		switch ($id) {
 			case "add":
 			case "copy":
@@ -1214,18 +1222,10 @@ class transaction_details extends DbTable
 		// project_name
 		$this->project_name->EditAttrs["class"] = "form-control";
 		$this->project_name->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
-		$this->project_name->EditValue = $this->project_name->CurrentValue;
-		$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
 
 		// document_tittle
 		$this->document_tittle->EditAttrs["class"] = "form-control";
 		$this->document_tittle->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
-		$this->document_tittle->EditValue = $this->document_tittle->CurrentValue;
-		$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
 
 		// submit_no
 		$this->submit_no->EditAttrs["class"] = "form-control";
@@ -1283,6 +1283,7 @@ class transaction_details extends DbTable
 		$this->direction->EditValue = $this->direction->options(FALSE);
 
 		// approval_status
+		$this->approval_status->EditAttrs["class"] = "form-control";
 		$this->approval_status->EditCustomAttributes = "";
 
 		// document_link
@@ -1435,6 +1436,55 @@ class transaction_details extends DbTable
 		if (!$doc->ExportCustom) {
 			$doc->exportTableFooter();
 		}
+	}
+
+	// Add User ID filter
+	public function addUserIDFilter($filter = "")
+	{
+		global $Security;
+		$filterWrk = "";
+		$id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
+		if (!$this->userIdAllow($id) && !$Security->isAdmin()) {
+			$filterWrk = $Security->userIdList();
+			if ($filterWrk <> "")
+				$filterWrk = '"username" IN (' . $filterWrk . ')';
+		}
+
+		// Call User ID Filtering event
+		$this->UserID_Filtering($filterWrk);
+		AddFilter($filter, $filterWrk);
+		return $filter;
+	}
+
+	// User ID subquery
+	public function getUserIDSubquery(&$fld, &$masterfld)
+	{
+		global $UserTableConn;
+		$wrk = "";
+		$sql = "SELECT " . $masterfld->Expression . " FROM \"public\".\"transaction_details\"";
+		$filter = $this->addUserIDFilter("");
+		if ($filter <> "")
+			$sql .= " WHERE " . $filter;
+
+		// Use subquery
+		if (USE_SUBQUERY_FOR_MASTER_USER_ID) {
+			$wrk = $sql;
+		} else {
+
+			// List all values
+			if ($rs = $UserTableConn->execute($sql)) {
+				while (!$rs->EOF) {
+					if ($wrk <> "")
+						$wrk .= ",";
+					$wrk .= QuotedValue($rs->fields[0], $masterfld->DataType, USER_TABLE_DBID);
+					$rs->moveNext();
+				}
+				$rs->close();
+			}
+		}
+		if ($wrk <> "")
+			$wrk = $fld->Expression . " IN (" . $wrk . ")";
+		return $wrk;
 	}
 
 	// Lookup data from table
@@ -1792,6 +1842,62 @@ class transaction_details extends DbTable
 				WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
 			}
 		}
+	}
+
+	// Write Audit Trail (view page)
+	public function writeAuditTrailOnView(&$rs)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnView)
+			return;
+		$table = 'transaction_details';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['document_sequence'];
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		if ($this->AuditTrailOnViewData) { // Write all data
+			foreach (array_keys($rs) as $fldname) {
+				if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType <> DATATYPE_BLOB) { // Ignore BLOB fields
+					if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
+						$oldvalue = $Language->phrase("PasswordMask"); // Password Field
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
+						if (AUDIT_TRAIL_TO_DATABASE)
+							$oldvalue = $rs[$fldname];
+						else
+							$oldvalue = "[MEMO]"; // Memo Field
+					} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
+						$oldvalue = "[XML]"; // XML Field
+					} else {
+						$oldvalue = $rs[$fldname];
+					}
+					WriteAuditTrail("log", $dt, $id, $usr, "V", $table, $fldname, $key, $oldvalue, "");
+				}
+			}
+		} else { // Write record id only
+			WriteAuditTrail("log", $dt, $id, $usr, "V", $table, "", $key, "", "");
+		}
+	}
+
+	// Write Audit Trail (search)
+	public function writeAuditTrailOnSearch($searchparm, $searchsql)
+	{
+		global $Language;
+		if (!$this->AuditTrailOnSearch)
+			return;
+		$table = 'transaction_details';
+
+		// Write Audit Trail
+		$dt = DbCurrentDateTime();
+		$id = ScriptName();
+		$usr = CurrentUserID();
+		WriteAuditTrail("log", $dt, $id, $usr, "search", $table, "", "", $searchsql, $searchparm);
 	}
 
 	// Table level events

@@ -1170,7 +1170,7 @@ class project_details_view extends project_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

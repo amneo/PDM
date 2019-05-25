@@ -350,9 +350,9 @@ class document_system_edit extends document_system
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class document_system_edit extends document_system
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -612,10 +612,11 @@ class document_system_edit extends document_system
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->system_name->setVisibility();
 		$this->system_group->setVisibility();
 		$this->hideFieldsForAddEdit();
+		$this->system_name->Required = FALSE;
 
 		// Do not use lookup cache
 		$this->setUseLookupCache(FALSE);
@@ -787,11 +788,6 @@ class document_system_edit extends document_system
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'type_id' first before field var 'x_type_id'
-		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
-		if (!$this->type_id->IsDetailKey)
-			$this->type_id->setFormValue($val);
-
 		// Check field name 'system_name' first before field var 'x_system_name'
 		$val = $CurrentForm->hasValue("system_name") ? $CurrentForm->getValue("system_name") : $CurrentForm->getValue("x_system_name");
 		if (!$this->system_name->IsDetailKey) {
@@ -809,6 +805,11 @@ class document_system_edit extends document_system
 			else
 				$this->system_group->setFormValue($val);
 		}
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+		if (!$this->type_id->IsDetailKey)
+			$this->type_id->setFormValue($val);
 	}
 
 	// Restore form values
@@ -910,10 +911,6 @@ class document_system_edit extends document_system
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// system_name
 			$this->system_name->ViewValue = $this->system_name->CurrentValue;
 			$this->system_name->ViewCustomAttributes = "";
@@ -921,11 +918,6 @@ class document_system_edit extends document_system
 			// system_group
 			$this->system_group->ViewValue = $this->system_group->CurrentValue;
 			$this->system_group->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// system_name
 			$this->system_name->LinkCustomAttributes = "";
@@ -938,19 +930,11 @@ class document_system_edit extends document_system
 			$this->system_group->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
-			// type_id
-			$this->type_id->EditAttrs["class"] = "form-control";
-			$this->type_id->EditCustomAttributes = "";
-			$this->type_id->EditValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// system_name
 			$this->system_name->EditAttrs["class"] = "form-control";
 			$this->system_name->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->system_name->CurrentValue = HtmlDecode($this->system_name->CurrentValue);
-			$this->system_name->EditValue = HtmlEncode($this->system_name->CurrentValue);
-			$this->system_name->PlaceHolder = RemoveHtml($this->system_name->caption());
+			$this->system_name->EditValue = $this->system_name->CurrentValue;
+			$this->system_name->ViewCustomAttributes = "";
 
 			// system_group
 			$this->system_group->EditAttrs["class"] = "form-control";
@@ -961,14 +945,11 @@ class document_system_edit extends document_system
 			$this->system_group->PlaceHolder = RemoveHtml($this->system_group->caption());
 
 			// Edit refer script
-			// type_id
-
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-
 			// system_name
+
 			$this->system_name->LinkCustomAttributes = "";
 			$this->system_name->HrefValue = "";
+			$this->system_name->TooltipValue = "";
 
 			// system_group
 			$this->system_group->LinkCustomAttributes = "";
@@ -1063,9 +1044,6 @@ class document_system_edit extends document_system
 			$rsold = &$rs->fields;
 			$this->loadDbValues($rsold);
 			$rsnew = [];
-
-			// system_name
-			$this->system_name->setDbValueDef($rsnew, $this->system_name->CurrentValue, "", $this->system_name->ReadOnly);
 
 			// system_group
 			$this->system_group->setDbValueDef($rsnew, $this->system_group->CurrentValue, "", $this->system_group->ReadOnly);

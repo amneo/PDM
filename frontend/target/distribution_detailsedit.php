@@ -193,7 +193,7 @@ $distribution_details_edit->showMessage();
 		<label id="elh_distribution_details_email_address" for="x_email_address" class="<?php echo $distribution_details_edit->LeftColumnClass ?>"><?php echo $distribution_details->email_address->caption() ?><?php echo ($distribution_details->email_address->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $distribution_details_edit->RightColumnClass ?>"><div<?php echo $distribution_details->email_address->cellAttributes() ?>>
 <span id="el_distribution_details_email_address">
-<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="250" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
+<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="50" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
 </span>
 <?php echo $distribution_details->email_address->CustomMsg ?></div></div>
 	</div>
@@ -202,7 +202,7 @@ $distribution_details_edit->showMessage();
 		<td class="<?php echo $distribution_details_edit->TableLeftColumnClass ?>"><span id="elh_distribution_details_email_address"><?php echo $distribution_details->email_address->caption() ?><?php echo ($distribution_details->email_address->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $distribution_details->email_address->cellAttributes() ?>>
 <span id="el_distribution_details_email_address">
-<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="250" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
+<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="50" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
 </span>
 <?php echo $distribution_details->email_address->CustomMsg ?></td>
 	</tr>

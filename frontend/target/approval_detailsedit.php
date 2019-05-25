@@ -54,11 +54,6 @@ fapproval_detailsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($approval_details_edit->id->Required) { ?>
-			elm = this.getElements("x" + infix + "_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->id->caption(), $approval_details->id->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($approval_details_edit->short_code->Required) { ?>
 			elm = this.getElements("x" + infix + "_short_code");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -132,31 +127,6 @@ $approval_details_edit->showMessage();
 <div class="ew-edit-div"><!-- page* -->
 <?php } else { ?>
 <table id="tbl_approval_detailsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
-<?php } ?>
-<?php if ($approval_details->id->Visible) { // id ?>
-<?php if ($approval_details_edit->IsMobileOrModal) { ?>
-	<div id="r_id" class="form-group row">
-		<label id="elh_approval_details_id" class="<?php echo $approval_details_edit->LeftColumnClass ?>"><?php echo $approval_details->id->caption() ?><?php echo ($approval_details->id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $approval_details_edit->RightColumnClass ?>"><div<?php echo $approval_details->id->cellAttributes() ?>>
-<span id="el_approval_details_id">
-<span<?php echo $approval_details->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="approval_details" data-field="x_id" name="x_id" id="x_id" value="<?php echo HtmlEncode($approval_details->id->CurrentValue) ?>">
-<?php echo $approval_details->id->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_id">
-		<td class="<?php echo $approval_details_edit->TableLeftColumnClass ?>"><span id="elh_approval_details_id"><?php echo $approval_details->id->caption() ?><?php echo ($approval_details->id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $approval_details->id->cellAttributes() ?>>
-<span id="el_approval_details_id">
-<span<?php echo $approval_details->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($approval_details->id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="approval_details" data-field="x_id" name="x_id" id="x_id" value="<?php echo HtmlEncode($approval_details->id->CurrentValue) ?>">
-<?php echo $approval_details->id->CustomMsg ?></td>
-	</tr>
-<?php } ?>
 <?php } ?>
 <?php if ($approval_details->short_code->Visible) { // short_code ?>
 <?php if ($approval_details_edit->IsMobileOrModal) { ?>
@@ -247,6 +217,7 @@ $approval_details_edit->showMessage();
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="approval_details" data-field="x_id" name="x_id" id="x_id" value="<?php echo HtmlEncode($approval_details->id->CurrentValue) ?>">
 <?php if (!$approval_details_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $approval_details_edit->OffsetColumnClass ?>"><!-- buttons offset -->

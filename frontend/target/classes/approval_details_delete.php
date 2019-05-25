@@ -350,9 +350,9 @@ class approval_details_delete extends approval_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class approval_details_delete extends approval_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -592,7 +592,7 @@ class approval_details_delete extends approval_details
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->id->setVisibility();
+		$this->id->Visible = FALSE;
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
 		$this->out_status->setVisibility();
@@ -766,16 +766,15 @@ class approval_details_delete extends approval_details
 
 		// Common render codes for all row types
 		// id
+
+		$this->id->CellCssStyle = "white-space: nowrap;";
+
 		// short_code
 		// Description
 		// out_status
 		// in_status
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// id
-			$this->id->ViewValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
 
 			// short_code
 			$this->short_code->ViewValue = $this->short_code->CurrentValue;
@@ -794,11 +793,6 @@ class approval_details_delete extends approval_details
 			$this->in_status->ViewValue = $this->in_status->CurrentValue;
 			$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
 			$this->in_status->ViewCustomAttributes = "";
-
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
 
 			// short_code
 			$this->short_code->LinkCustomAttributes = "";

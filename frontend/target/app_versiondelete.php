@@ -76,9 +76,6 @@ $app_version_delete->showMessage();
 <table class="table ew-table">
 	<thead>
 	<tr class="ew-table-header">
-<?php if ($app_version->sequence_no->Visible) { // sequence_no ?>
-		<th class="<?php echo $app_version->sequence_no->headerCellClass() ?>"><span id="elh_app_version_sequence_no" class="app_version_sequence_no"><?php echo $app_version->sequence_no->caption() ?></span></th>
-<?php } ?>
 <?php if ($app_version->release_date->Visible) { // release_date ?>
 		<th class="<?php echo $app_version->release_date->headerCellClass() ?>"><span id="elh_app_version_release_date" class="app_version_release_date"><?php echo $app_version->release_date->caption() ?></span></th>
 <?php } ?>
@@ -106,14 +103,6 @@ while (!$app_version_delete->Recordset->EOF) {
 	$app_version_delete->renderRow();
 ?>
 	<tr<?php echo $app_version->rowAttributes() ?>>
-<?php if ($app_version->sequence_no->Visible) { // sequence_no ?>
-		<td<?php echo $app_version->sequence_no->cellAttributes() ?>>
-<span id="el<?php echo $app_version_delete->RowCnt ?>_app_version_sequence_no" class="app_version_sequence_no">
-<span<?php echo $app_version->sequence_no->viewAttributes() ?>>
-<?php echo $app_version->sequence_no->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($app_version->release_date->Visible) { // release_date ?>
 		<td<?php echo $app_version->release_date->cellAttributes() ?>>
 <span id="el<?php echo $app_version_delete->RowCnt ?>_app_version_release_date" class="app_version_release_date">

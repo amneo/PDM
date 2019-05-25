@@ -358,9 +358,9 @@ class userlevelpermissions_edit extends userlevelpermissions
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class userlevelpermissions_edit extends userlevelpermissions
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -619,7 +619,7 @@ class userlevelpermissions_edit extends userlevelpermissions
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->userlevelid->setVisibility();
+		$this->userlevelid->Visible = FALSE;
 		$this->_tablename->setVisibility();
 		$this->permission->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -804,15 +804,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'userlevelid' first before field var 'x_userlevelid'
-		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
-		if (!$this->userlevelid->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->userlevelid->Visible = FALSE; // Disable update for API request
-			else
-				$this->userlevelid->setFormValue($val);
-		}
-
 		// Check field name 'tablename' first before field var 'x__tablename'
 		$val = $CurrentForm->hasValue("tablename") ? $CurrentForm->getValue("tablename") : $CurrentForm->getValue("x__tablename");
 		if (!$this->_tablename->IsDetailKey) {
@@ -830,6 +821,11 @@ class userlevelpermissions_edit extends userlevelpermissions
 			else
 				$this->permission->setFormValue($val);
 		}
+
+		// Check field name 'userlevelid' first before field var 'x_userlevelid'
+		$val = $CurrentForm->hasValue("userlevelid") ? $CurrentForm->getValue("userlevelid") : $CurrentForm->getValue("x_userlevelid");
+		if (!$this->userlevelid->IsDetailKey)
+			$this->userlevelid->setFormValue($val);
 	}
 
 	// Restore form values
@@ -935,11 +931,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// userlevelid
-			$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->ViewValue = FormatNumber($this->userlevelid->ViewValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
-
 			// tablename
 			$arwrk = array();
 			$arwrk[1] = $this->_tablename->CurrentValue;
@@ -951,11 +942,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 			$this->permission->ViewValue = FormatNumber($this->permission->ViewValue, 0, -2, -2, -2);
 			$this->permission->ViewCustomAttributes = "";
 
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
-
 			// tablename
 			$this->_tablename->LinkCustomAttributes = "";
 			$this->_tablename->HrefValue = "";
@@ -966,13 +952,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 			$this->permission->HrefValue = "";
 			$this->permission->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// userlevelid
-			$this->userlevelid->EditAttrs["class"] = "form-control";
-			$this->userlevelid->EditCustomAttributes = "";
-			$this->userlevelid->EditValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->EditValue = FormatNumber($this->userlevelid->EditValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
 			$this->_tablename->EditAttrs["class"] = "form-control";
@@ -989,12 +968,8 @@ class userlevelpermissions_edit extends userlevelpermissions
 			$this->permission->PlaceHolder = RemoveHtml($this->permission->caption());
 
 			// Edit refer script
-			// userlevelid
-
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-
 			// tablename
+
 			$this->_tablename->LinkCustomAttributes = "";
 			$this->_tablename->HrefValue = "";
 
@@ -1025,9 +1000,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 			if (!$this->userlevelid->IsDetailKey && $this->userlevelid->FormValue != NULL && $this->userlevelid->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->userlevelid->caption(), $this->userlevelid->RequiredErrorMessage));
 			}
-		}
-		if (!CheckInteger($this->userlevelid->FormValue)) {
-			AddMessage($FormError, $this->userlevelid->errorMessage());
 		}
 		if ($this->_tablename->Required) {
 			if (!$this->_tablename->IsDetailKey && $this->_tablename->FormValue != NULL && $this->_tablename->FormValue == "") {
@@ -1079,7 +1051,6 @@ class userlevelpermissions_edit extends userlevelpermissions
 			$this->loadDbValues($rsold);
 			$rsnew = [];
 
-			// userlevelid
 			// tablename
 			// permission
 

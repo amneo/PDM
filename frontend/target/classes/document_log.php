@@ -146,6 +146,7 @@ class document_log extends DbTable
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new BasicSearch($this->TableVar);
+		$this->BasicSearch->TypeDefault = "OR";
 
 		// log_id
 		$this->log_id = new DbField('document_log', 'document_log', 'x_log_id', 'log_id', '"log_id"', 'CAST("log_id" AS varchar(255))', 20, -1, FALSE, '"log_id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
@@ -195,7 +196,7 @@ class document_log extends DbTable
 		$this->fields['current_status'] = &$this->current_status;
 
 		// current_status_file
-		$this->current_status_file = new DbField('document_log', 'document_log', 'x_current_status_file', 'current_status_file', '"current_status_file"', '"current_status_file"', 200, -1, FALSE, '"current_status_file"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->current_status_file = new DbField('document_log', 'document_log', 'x_current_status_file', 'current_status_file', '"current_status_file"', '"current_status_file"', 200, -1, TRUE, '"current_status_file"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->current_status_file->Sortable = FALSE; // Allow sort
 		$this->fields['current_status_file'] = &$this->current_status_file;
 
@@ -239,7 +240,7 @@ class document_log extends DbTable
 		$this->fields['approval_status_1'] = &$this->approval_status_1;
 
 		// direction_file_1
-		$this->direction_file_1 = new DbField('document_log', 'document_log', 'x_direction_file_1', 'direction_file_1', '"direction_file_1"', '"direction_file_1"', 200, -1, FALSE, '"direction_file_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_1 = new DbField('document_log', 'document_log', 'x_direction_file_1', 'direction_file_1', '"direction_file_1"', '"direction_file_1"', 200, -1, TRUE, '"direction_file_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_1->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_1'] = &$this->direction_file_1;
 
@@ -279,10 +280,11 @@ class document_log extends DbTable
 		// approval_status_2
 		$this->approval_status_2 = new DbField('document_log', 'document_log', 'x_approval_status_2', 'approval_status_2', '"approval_status_2"', '"approval_status_2"', 200, -1, FALSE, '"approval_status_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_2->Sortable = TRUE; // Allow sort
+		$this->approval_status_2->Lookup = new Lookup('approval_status_2', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_2'] = &$this->approval_status_2;
 
 		// direction_file_2
-		$this->direction_file_2 = new DbField('document_log', 'document_log', 'x_direction_file_2', 'direction_file_2', '"direction_file_2"', '"direction_file_2"', 200, -1, FALSE, '"direction_file_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_2 = new DbField('document_log', 'document_log', 'x_direction_file_2', 'direction_file_2', '"direction_file_2"', '"direction_file_2"', 200, -1, TRUE, '"direction_file_2"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_2->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_2'] = &$this->direction_file_2;
 
@@ -322,10 +324,11 @@ class document_log extends DbTable
 		// approval_status_3
 		$this->approval_status_3 = new DbField('document_log', 'document_log', 'x_approval_status_3', 'approval_status_3', '"approval_status_3"', '"approval_status_3"', 200, -1, FALSE, '"approval_status_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_3->Sortable = TRUE; // Allow sort
+		$this->approval_status_3->Lookup = new Lookup('approval_status_3', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_3'] = &$this->approval_status_3;
 
 		// direction_file_3
-		$this->direction_file_3 = new DbField('document_log', 'document_log', 'x_direction_file_3', 'direction_file_3', '"direction_file_3"', '"direction_file_3"', 200, -1, FALSE, '"direction_file_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_3 = new DbField('document_log', 'document_log', 'x_direction_file_3', 'direction_file_3', '"direction_file_3"', '"direction_file_3"', 200, -1, TRUE, '"direction_file_3"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_3->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_3'] = &$this->direction_file_3;
 
@@ -365,10 +368,11 @@ class document_log extends DbTable
 		// approval_status_4
 		$this->approval_status_4 = new DbField('document_log', 'document_log', 'x_approval_status_4', 'approval_status_4', '"approval_status_4"', '"approval_status_4"', 200, -1, FALSE, '"approval_status_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_4->Sortable = TRUE; // Allow sort
+		$this->approval_status_4->Lookup = new Lookup('approval_status_4', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_4'] = &$this->approval_status_4;
 
 		// direction_file_4
-		$this->direction_file_4 = new DbField('document_log', 'document_log', 'x_direction_file_4', 'direction_file_4', '"direction_file_4"', '"direction_file_4"', 200, -1, FALSE, '"direction_file_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_4 = new DbField('document_log', 'document_log', 'x_direction_file_4', 'direction_file_4', '"direction_file_4"', '"direction_file_4"', 200, -1, TRUE, '"direction_file_4"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_4->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_4'] = &$this->direction_file_4;
 
@@ -408,10 +412,11 @@ class document_log extends DbTable
 		// approval_status_5
 		$this->approval_status_5 = new DbField('document_log', 'document_log', 'x_approval_status_5', 'approval_status_5', '"approval_status_5"', '"approval_status_5"', 200, -1, FALSE, '"approval_status_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_5->Sortable = TRUE; // Allow sort
+		$this->approval_status_5->Lookup = new Lookup('approval_status_5', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_5'] = &$this->approval_status_5;
 
 		// direction_file_5
-		$this->direction_file_5 = new DbField('document_log', 'document_log', 'x_direction_file_5', 'direction_file_5', '"direction_file_5"', '"direction_file_5"', 200, -1, FALSE, '"direction_file_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_5 = new DbField('document_log', 'document_log', 'x_direction_file_5', 'direction_file_5', '"direction_file_5"', '"direction_file_5"', 200, -1, TRUE, '"direction_file_5"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_5->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_5'] = &$this->direction_file_5;
 
@@ -451,10 +456,11 @@ class document_log extends DbTable
 		// approval_status_6
 		$this->approval_status_6 = new DbField('document_log', 'document_log', 'x_approval_status_6', 'approval_status_6', '"approval_status_6"', '"approval_status_6"', 200, -1, FALSE, '"approval_status_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_6->Sortable = TRUE; // Allow sort
+		$this->approval_status_6->Lookup = new Lookup('approval_status_6', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_6'] = &$this->approval_status_6;
 
 		// direction_file_6
-		$this->direction_file_6 = new DbField('document_log', 'document_log', 'x_direction_file_6', 'direction_file_6', '"direction_file_6"', '"direction_file_6"', 200, -1, FALSE, '"direction_file_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_6 = new DbField('document_log', 'document_log', 'x_direction_file_6', 'direction_file_6', '"direction_file_6"', '"direction_file_6"', 200, -1, TRUE, '"direction_file_6"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_6->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_6'] = &$this->direction_file_6;
 
@@ -494,10 +500,11 @@ class document_log extends DbTable
 		// approval_status_7
 		$this->approval_status_7 = new DbField('document_log', 'document_log', 'x_approval_status_7', 'approval_status_7', '"approval_status_7"', '"approval_status_7"', 200, -1, FALSE, '"approval_status_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_7->Sortable = TRUE; // Allow sort
+		$this->approval_status_7->Lookup = new Lookup('approval_status_7', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_7'] = &$this->approval_status_7;
 
 		// direction_file_7
-		$this->direction_file_7 = new DbField('document_log', 'document_log', 'x_direction_file_7', 'direction_file_7', '"direction_file_7"', '"direction_file_7"', 200, -1, FALSE, '"direction_file_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_7 = new DbField('document_log', 'document_log', 'x_direction_file_7', 'direction_file_7', '"direction_file_7"', '"direction_file_7"', 200, -1, TRUE, '"direction_file_7"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_7->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_7'] = &$this->direction_file_7;
 
@@ -537,10 +544,11 @@ class document_log extends DbTable
 		// approval_status_8
 		$this->approval_status_8 = new DbField('document_log', 'document_log', 'x_approval_status_8', 'approval_status_8', '"approval_status_8"', '"approval_status_8"', 200, -1, FALSE, '"approval_status_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_8->Sortable = TRUE; // Allow sort
+		$this->approval_status_8->Lookup = new Lookup('approval_status_8', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_8'] = &$this->approval_status_8;
 
 		// direction_file_8
-		$this->direction_file_8 = new DbField('document_log', 'document_log', 'x_direction_file_8', 'direction_file_8', '"direction_file_8"', '"direction_file_8"', 200, -1, FALSE, '"direction_file_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_8 = new DbField('document_log', 'document_log', 'x_direction_file_8', 'direction_file_8', '"direction_file_8"', '"direction_file_8"', 200, -1, TRUE, '"direction_file_8"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_8->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_8'] = &$this->direction_file_8;
 
@@ -580,10 +588,11 @@ class document_log extends DbTable
 		// approval_status_9
 		$this->approval_status_9 = new DbField('document_log', 'document_log', 'x_approval_status_9', 'approval_status_9', '"approval_status_9"', '"approval_status_9"', 200, -1, FALSE, '"approval_status_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_9->Sortable = TRUE; // Allow sort
+		$this->approval_status_9->Lookup = new Lookup('approval_status_9', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_9'] = &$this->approval_status_9;
 
 		// direction_file_9
-		$this->direction_file_9 = new DbField('document_log', 'document_log', 'x_direction_file_9', 'direction_file_9', '"direction_file_9"', '"direction_file_9"', 200, -1, FALSE, '"direction_file_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_9 = new DbField('document_log', 'document_log', 'x_direction_file_9', 'direction_file_9', '"direction_file_9"', '"direction_file_9"', 200, -1, TRUE, '"direction_file_9"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_9->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_9'] = &$this->direction_file_9;
 
@@ -623,10 +632,11 @@ class document_log extends DbTable
 		// approval_status_10
 		$this->approval_status_10 = new DbField('document_log', 'document_log', 'x_approval_status_10', 'approval_status_10', '"approval_status_10"', '"approval_status_10"', 200, -1, FALSE, '"approval_status_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->approval_status_10->Sortable = TRUE; // Allow sort
+		$this->approval_status_10->Lookup = new Lookup('approval_status_10', 'approval_details', FALSE, 'short_code', ["short_code","Description","",""], [], [], [], [], [], [], '', '');
 		$this->fields['approval_status_10'] = &$this->approval_status_10;
 
 		// direction_file_10
-		$this->direction_file_10 = new DbField('document_log', 'document_log', 'x_direction_file_10', 'direction_file_10', '"direction_file_10"', '"direction_file_10"', 200, -1, FALSE, '"direction_file_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->direction_file_10 = new DbField('document_log', 'document_log', 'x_direction_file_10', 'direction_file_10', '"direction_file_10"', '"direction_file_10"', 200, -1, TRUE, '"direction_file_10"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->direction_file_10->Sortable = FALSE; // Allow sort
 		$this->fields['direction_file_10'] = &$this->direction_file_10;
 
@@ -997,7 +1007,7 @@ class document_log extends DbTable
 		$this->project_name->DbValue = $row['project_name'];
 		$this->document_tittle->DbValue = $row['document_tittle'];
 		$this->current_status->DbValue = $row['current_status'];
-		$this->current_status_file->DbValue = $row['current_status_file'];
+		$this->current_status_file->Upload->DbValue = $row['current_status_file'];
 		$this->submit_no_1->DbValue = $row['submit_no_1'];
 		$this->revision_no_1->DbValue = $row['revision_no_1'];
 		$this->direction_1->DbValue = $row['direction_1'];
@@ -1005,7 +1015,7 @@ class document_log extends DbTable
 		$this->transmit_date_1->DbValue = $row['transmit_date_1'];
 		$this->transmit_no_1->DbValue = $row['transmit_no_1'];
 		$this->approval_status_1->DbValue = $row['approval_status_1'];
-		$this->direction_file_1->DbValue = $row['direction_file_1'];
+		$this->direction_file_1->Upload->DbValue = $row['direction_file_1'];
 		$this->submit_no_2->DbValue = $row['submit_no_2'];
 		$this->revision_no_2->DbValue = $row['revision_no_2'];
 		$this->direction_2->DbValue = $row['direction_2'];
@@ -1013,7 +1023,7 @@ class document_log extends DbTable
 		$this->transmit_date_2->DbValue = $row['transmit_date_2'];
 		$this->transmit_no_2->DbValue = $row['transmit_no_2'];
 		$this->approval_status_2->DbValue = $row['approval_status_2'];
-		$this->direction_file_2->DbValue = $row['direction_file_2'];
+		$this->direction_file_2->Upload->DbValue = $row['direction_file_2'];
 		$this->submit_no_3->DbValue = $row['submit_no_3'];
 		$this->revision_no_3->DbValue = $row['revision_no_3'];
 		$this->direction_3->DbValue = $row['direction_3'];
@@ -1021,7 +1031,7 @@ class document_log extends DbTable
 		$this->transmit_date_3->DbValue = $row['transmit_date_3'];
 		$this->transmit_no_3->DbValue = $row['transmit_no_3'];
 		$this->approval_status_3->DbValue = $row['approval_status_3'];
-		$this->direction_file_3->DbValue = $row['direction_file_3'];
+		$this->direction_file_3->Upload->DbValue = $row['direction_file_3'];
 		$this->submit_no_4->DbValue = $row['submit_no_4'];
 		$this->revision_no_4->DbValue = $row['revision_no_4'];
 		$this->direction_4->DbValue = $row['direction_4'];
@@ -1029,7 +1039,7 @@ class document_log extends DbTable
 		$this->transmit_date_4->DbValue = $row['transmit_date_4'];
 		$this->transmit_no_4->DbValue = $row['transmit_no_4'];
 		$this->approval_status_4->DbValue = $row['approval_status_4'];
-		$this->direction_file_4->DbValue = $row['direction_file_4'];
+		$this->direction_file_4->Upload->DbValue = $row['direction_file_4'];
 		$this->submit_no_5->DbValue = $row['submit_no_5'];
 		$this->revision_no_5->DbValue = $row['revision_no_5'];
 		$this->direction_5->DbValue = $row['direction_5'];
@@ -1037,7 +1047,7 @@ class document_log extends DbTable
 		$this->transmit_date_5->DbValue = $row['transmit_date_5'];
 		$this->transmit_no_5->DbValue = $row['transmit_no_5'];
 		$this->approval_status_5->DbValue = $row['approval_status_5'];
-		$this->direction_file_5->DbValue = $row['direction_file_5'];
+		$this->direction_file_5->Upload->DbValue = $row['direction_file_5'];
 		$this->submit_no_6->DbValue = $row['submit_no_6'];
 		$this->revision_no_6->DbValue = $row['revision_no_6'];
 		$this->direction_6->DbValue = $row['direction_6'];
@@ -1045,7 +1055,7 @@ class document_log extends DbTable
 		$this->transmit_date_6->DbValue = $row['transmit_date_6'];
 		$this->transmit_no_6->DbValue = $row['transmit_no_6'];
 		$this->approval_status_6->DbValue = $row['approval_status_6'];
-		$this->direction_file_6->DbValue = $row['direction_file_6'];
+		$this->direction_file_6->Upload->DbValue = $row['direction_file_6'];
 		$this->submit_no_7->DbValue = $row['submit_no_7'];
 		$this->revision_no_7->DbValue = $row['revision_no_7'];
 		$this->direction_7->DbValue = $row['direction_7'];
@@ -1053,7 +1063,7 @@ class document_log extends DbTable
 		$this->transmit_date_7->DbValue = $row['transmit_date_7'];
 		$this->transmit_no_7->DbValue = $row['transmit_no_7'];
 		$this->approval_status_7->DbValue = $row['approval_status_7'];
-		$this->direction_file_7->DbValue = $row['direction_file_7'];
+		$this->direction_file_7->Upload->DbValue = $row['direction_file_7'];
 		$this->submit_no_8->DbValue = $row['submit_no_8'];
 		$this->revision_no_8->DbValue = $row['revision_no_8'];
 		$this->direction_8->DbValue = $row['direction_8'];
@@ -1061,7 +1071,7 @@ class document_log extends DbTable
 		$this->transmit_date_8->DbValue = $row['transmit_date_8'];
 		$this->transmit_no_8->DbValue = $row['transmit_no_8'];
 		$this->approval_status_8->DbValue = $row['approval_status_8'];
-		$this->direction_file_8->DbValue = $row['direction_file_8'];
+		$this->direction_file_8->Upload->DbValue = $row['direction_file_8'];
 		$this->submit_no_9->DbValue = $row['submit_no_9'];
 		$this->revision_no_9->DbValue = $row['revision_no_9'];
 		$this->direction_9->DbValue = $row['direction_9'];
@@ -1069,7 +1079,7 @@ class document_log extends DbTable
 		$this->transmit_date_9->DbValue = $row['transmit_date_9'];
 		$this->transmit_no_9->DbValue = $row['transmit_no_9'];
 		$this->approval_status_9->DbValue = $row['approval_status_9'];
-		$this->direction_file_9->DbValue = $row['direction_file_9'];
+		$this->direction_file_9->Upload->DbValue = $row['direction_file_9'];
 		$this->submit_no_10->DbValue = $row['submit_no_10'];
 		$this->revision_no_10->DbValue = $row['revision_no_10'];
 		$this->direction_10->DbValue = $row['direction_10'];
@@ -1077,7 +1087,7 @@ class document_log extends DbTable
 		$this->transmit_date_10->DbValue = $row['transmit_date_10'];
 		$this->transmit_no_10->DbValue = $row['transmit_no_10'];
 		$this->approval_status_10->DbValue = $row['approval_status_10'];
-		$this->direction_file_10->DbValue = $row['direction_file_10'];
+		$this->direction_file_10->Upload->DbValue = $row['direction_file_10'];
 		$this->log_updatedon->DbValue = $row['log_updatedon'];
 	}
 
@@ -1085,6 +1095,61 @@ class document_log extends DbTable
 	public function deleteUploadedFiles($row)
 	{
 		$this->loadDbValues($row);
+		$oldFiles = EmptyValue($row['current_status_file']) ? [] : [$row['current_status_file']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->current_status_file->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->current_status_file->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_1']) ? [] : [$row['direction_file_1']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_1->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_1->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_2']) ? [] : [$row['direction_file_2']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_2->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_2->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_3']) ? [] : [$row['direction_file_3']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_3->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_3->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_4']) ? [] : [$row['direction_file_4']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_4->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_4->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_5']) ? [] : [$row['direction_file_5']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_5->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_5->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_6']) ? [] : [$row['direction_file_6']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_6->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_6->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_7']) ? [] : [$row['direction_file_7']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_7->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_7->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_8']) ? [] : [$row['direction_file_8']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_8->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_8->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_9']) ? [] : [$row['direction_file_9']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_9->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_9->oldPhysicalUploadPath() . $oldFile);
+		}
+		$oldFiles = EmptyValue($row['direction_file_10']) ? [] : [$row['direction_file_10']];
+		foreach ($oldFiles as $oldFile) {
+			if (file_exists($this->direction_file_10->oldPhysicalUploadPath() . $oldFile))
+				@unlink($this->direction_file_10->oldPhysicalUploadPath() . $oldFile);
+		}
 	}
 
 	// Record filter WHERE clause
@@ -1311,7 +1376,7 @@ class document_log extends DbTable
 		$this->project_name->setDbValue($rs->fields('project_name'));
 		$this->document_tittle->setDbValue($rs->fields('document_tittle'));
 		$this->current_status->setDbValue($rs->fields('current_status'));
-		$this->current_status_file->setDbValue($rs->fields('current_status_file'));
+		$this->current_status_file->Upload->DbValue = $rs->fields('current_status_file');
 		$this->submit_no_1->setDbValue($rs->fields('submit_no_1'));
 		$this->revision_no_1->setDbValue($rs->fields('revision_no_1'));
 		$this->direction_1->setDbValue($rs->fields('direction_1'));
@@ -1319,7 +1384,7 @@ class document_log extends DbTable
 		$this->transmit_date_1->setDbValue($rs->fields('transmit_date_1'));
 		$this->transmit_no_1->setDbValue($rs->fields('transmit_no_1'));
 		$this->approval_status_1->setDbValue($rs->fields('approval_status_1'));
-		$this->direction_file_1->setDbValue($rs->fields('direction_file_1'));
+		$this->direction_file_1->Upload->DbValue = $rs->fields('direction_file_1');
 		$this->submit_no_2->setDbValue($rs->fields('submit_no_2'));
 		$this->revision_no_2->setDbValue($rs->fields('revision_no_2'));
 		$this->direction_2->setDbValue($rs->fields('direction_2'));
@@ -1327,7 +1392,7 @@ class document_log extends DbTable
 		$this->transmit_date_2->setDbValue($rs->fields('transmit_date_2'));
 		$this->transmit_no_2->setDbValue($rs->fields('transmit_no_2'));
 		$this->approval_status_2->setDbValue($rs->fields('approval_status_2'));
-		$this->direction_file_2->setDbValue($rs->fields('direction_file_2'));
+		$this->direction_file_2->Upload->DbValue = $rs->fields('direction_file_2');
 		$this->submit_no_3->setDbValue($rs->fields('submit_no_3'));
 		$this->revision_no_3->setDbValue($rs->fields('revision_no_3'));
 		$this->direction_3->setDbValue($rs->fields('direction_3'));
@@ -1335,7 +1400,7 @@ class document_log extends DbTable
 		$this->transmit_date_3->setDbValue($rs->fields('transmit_date_3'));
 		$this->transmit_no_3->setDbValue($rs->fields('transmit_no_3'));
 		$this->approval_status_3->setDbValue($rs->fields('approval_status_3'));
-		$this->direction_file_3->setDbValue($rs->fields('direction_file_3'));
+		$this->direction_file_3->Upload->DbValue = $rs->fields('direction_file_3');
 		$this->submit_no_4->setDbValue($rs->fields('submit_no_4'));
 		$this->revision_no_4->setDbValue($rs->fields('revision_no_4'));
 		$this->direction_4->setDbValue($rs->fields('direction_4'));
@@ -1343,7 +1408,7 @@ class document_log extends DbTable
 		$this->transmit_date_4->setDbValue($rs->fields('transmit_date_4'));
 		$this->transmit_no_4->setDbValue($rs->fields('transmit_no_4'));
 		$this->approval_status_4->setDbValue($rs->fields('approval_status_4'));
-		$this->direction_file_4->setDbValue($rs->fields('direction_file_4'));
+		$this->direction_file_4->Upload->DbValue = $rs->fields('direction_file_4');
 		$this->submit_no_5->setDbValue($rs->fields('submit_no_5'));
 		$this->revision_no_5->setDbValue($rs->fields('revision_no_5'));
 		$this->direction_5->setDbValue($rs->fields('direction_5'));
@@ -1351,7 +1416,7 @@ class document_log extends DbTable
 		$this->transmit_date_5->setDbValue($rs->fields('transmit_date_5'));
 		$this->transmit_no_5->setDbValue($rs->fields('transmit_no_5'));
 		$this->approval_status_5->setDbValue($rs->fields('approval_status_5'));
-		$this->direction_file_5->setDbValue($rs->fields('direction_file_5'));
+		$this->direction_file_5->Upload->DbValue = $rs->fields('direction_file_5');
 		$this->submit_no_6->setDbValue($rs->fields('submit_no_6'));
 		$this->revision_no_6->setDbValue($rs->fields('revision_no_6'));
 		$this->direction_6->setDbValue($rs->fields('direction_6'));
@@ -1359,7 +1424,7 @@ class document_log extends DbTable
 		$this->transmit_date_6->setDbValue($rs->fields('transmit_date_6'));
 		$this->transmit_no_6->setDbValue($rs->fields('transmit_no_6'));
 		$this->approval_status_6->setDbValue($rs->fields('approval_status_6'));
-		$this->direction_file_6->setDbValue($rs->fields('direction_file_6'));
+		$this->direction_file_6->Upload->DbValue = $rs->fields('direction_file_6');
 		$this->submit_no_7->setDbValue($rs->fields('submit_no_7'));
 		$this->revision_no_7->setDbValue($rs->fields('revision_no_7'));
 		$this->direction_7->setDbValue($rs->fields('direction_7'));
@@ -1367,7 +1432,7 @@ class document_log extends DbTable
 		$this->transmit_date_7->setDbValue($rs->fields('transmit_date_7'));
 		$this->transmit_no_7->setDbValue($rs->fields('transmit_no_7'));
 		$this->approval_status_7->setDbValue($rs->fields('approval_status_7'));
-		$this->direction_file_7->setDbValue($rs->fields('direction_file_7'));
+		$this->direction_file_7->Upload->DbValue = $rs->fields('direction_file_7');
 		$this->submit_no_8->setDbValue($rs->fields('submit_no_8'));
 		$this->revision_no_8->setDbValue($rs->fields('revision_no_8'));
 		$this->direction_8->setDbValue($rs->fields('direction_8'));
@@ -1375,7 +1440,7 @@ class document_log extends DbTable
 		$this->transmit_date_8->setDbValue($rs->fields('transmit_date_8'));
 		$this->transmit_no_8->setDbValue($rs->fields('transmit_no_8'));
 		$this->approval_status_8->setDbValue($rs->fields('approval_status_8'));
-		$this->direction_file_8->setDbValue($rs->fields('direction_file_8'));
+		$this->direction_file_8->Upload->DbValue = $rs->fields('direction_file_8');
 		$this->submit_no_9->setDbValue($rs->fields('submit_no_9'));
 		$this->revision_no_9->setDbValue($rs->fields('revision_no_9'));
 		$this->direction_9->setDbValue($rs->fields('direction_9'));
@@ -1383,7 +1448,7 @@ class document_log extends DbTable
 		$this->transmit_date_9->setDbValue($rs->fields('transmit_date_9'));
 		$this->transmit_no_9->setDbValue($rs->fields('transmit_no_9'));
 		$this->approval_status_9->setDbValue($rs->fields('approval_status_9'));
-		$this->direction_file_9->setDbValue($rs->fields('direction_file_9'));
+		$this->direction_file_9->Upload->DbValue = $rs->fields('direction_file_9');
 		$this->submit_no_10->setDbValue($rs->fields('submit_no_10'));
 		$this->revision_no_10->setDbValue($rs->fields('revision_no_10'));
 		$this->direction_10->setDbValue($rs->fields('direction_10'));
@@ -1391,7 +1456,7 @@ class document_log extends DbTable
 		$this->transmit_date_10->setDbValue($rs->fields('transmit_date_10'));
 		$this->transmit_no_10->setDbValue($rs->fields('transmit_no_10'));
 		$this->approval_status_10->setDbValue($rs->fields('approval_status_10'));
-		$this->direction_file_10->setDbValue($rs->fields('direction_file_10'));
+		$this->direction_file_10->Upload->DbValue = $rs->fields('direction_file_10');
 		$this->log_updatedon->setDbValue($rs->fields('log_updatedon'));
 	}
 
@@ -1564,7 +1629,11 @@ class document_log extends DbTable
 		$this->current_status->ViewCustomAttributes = "";
 
 		// current_status_file
-		$this->current_status_file->ViewValue = $this->current_status_file->CurrentValue;
+		if (!EmptyValue($this->current_status_file->Upload->DbValue)) {
+			$this->current_status_file->ViewValue = $this->current_status_file->Upload->DbValue;
+		} else {
+			$this->current_status_file->ViewValue = "";
+		}
 		$this->current_status_file->ViewCustomAttributes = "";
 
 		// submit_no_1
@@ -1618,7 +1687,11 @@ class document_log extends DbTable
 		$this->approval_status_1->ViewCustomAttributes = "";
 
 		// direction_file_1
-		$this->direction_file_1->ViewValue = $this->direction_file_1->CurrentValue;
+		if (!EmptyValue($this->direction_file_1->Upload->DbValue)) {
+			$this->direction_file_1->ViewValue = $this->direction_file_1->Upload->DbValue;
+		} else {
+			$this->direction_file_1->ViewValue = "";
+		}
 		$this->direction_file_1->ViewCustomAttributes = "";
 
 		// submit_no_2
@@ -1649,10 +1722,34 @@ class document_log extends DbTable
 
 		// approval_status_2
 		$this->approval_status_2->ViewValue = $this->approval_status_2->CurrentValue;
+		$curVal = strval($this->approval_status_2->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_2->ViewValue = $this->approval_status_2->lookupCacheOption($curVal);
+			if ($this->approval_status_2->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_2->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_2->ViewValue = $this->approval_status_2->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_2->ViewValue = $this->approval_status_2->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_2->ViewValue = NULL;
+		}
 		$this->approval_status_2->ViewCustomAttributes = "";
 
 		// direction_file_2
-		$this->direction_file_2->ViewValue = $this->direction_file_2->CurrentValue;
+		if (!EmptyValue($this->direction_file_2->Upload->DbValue)) {
+			$this->direction_file_2->ViewValue = $this->direction_file_2->Upload->DbValue;
+		} else {
+			$this->direction_file_2->ViewValue = "";
+		}
 		$this->direction_file_2->ViewCustomAttributes = "";
 
 		// submit_no_3
@@ -1683,10 +1780,34 @@ class document_log extends DbTable
 
 		// approval_status_3
 		$this->approval_status_3->ViewValue = $this->approval_status_3->CurrentValue;
+		$curVal = strval($this->approval_status_3->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_3->ViewValue = $this->approval_status_3->lookupCacheOption($curVal);
+			if ($this->approval_status_3->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_3->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_3->ViewValue = $this->approval_status_3->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_3->ViewValue = $this->approval_status_3->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_3->ViewValue = NULL;
+		}
 		$this->approval_status_3->ViewCustomAttributes = "";
 
 		// direction_file_3
-		$this->direction_file_3->ViewValue = $this->direction_file_3->CurrentValue;
+		if (!EmptyValue($this->direction_file_3->Upload->DbValue)) {
+			$this->direction_file_3->ViewValue = $this->direction_file_3->Upload->DbValue;
+		} else {
+			$this->direction_file_3->ViewValue = "";
+		}
 		$this->direction_file_3->ViewCustomAttributes = "";
 
 		// submit_no_4
@@ -1717,10 +1838,34 @@ class document_log extends DbTable
 
 		// approval_status_4
 		$this->approval_status_4->ViewValue = $this->approval_status_4->CurrentValue;
+		$curVal = strval($this->approval_status_4->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_4->ViewValue = $this->approval_status_4->lookupCacheOption($curVal);
+			if ($this->approval_status_4->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_4->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_4->ViewValue = $this->approval_status_4->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_4->ViewValue = $this->approval_status_4->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_4->ViewValue = NULL;
+		}
 		$this->approval_status_4->ViewCustomAttributes = "";
 
 		// direction_file_4
-		$this->direction_file_4->ViewValue = $this->direction_file_4->CurrentValue;
+		if (!EmptyValue($this->direction_file_4->Upload->DbValue)) {
+			$this->direction_file_4->ViewValue = $this->direction_file_4->Upload->DbValue;
+		} else {
+			$this->direction_file_4->ViewValue = "";
+		}
 		$this->direction_file_4->ViewCustomAttributes = "";
 
 		// submit_no_5
@@ -1751,10 +1896,34 @@ class document_log extends DbTable
 
 		// approval_status_5
 		$this->approval_status_5->ViewValue = $this->approval_status_5->CurrentValue;
+		$curVal = strval($this->approval_status_5->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_5->ViewValue = $this->approval_status_5->lookupCacheOption($curVal);
+			if ($this->approval_status_5->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_5->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_5->ViewValue = $this->approval_status_5->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_5->ViewValue = $this->approval_status_5->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_5->ViewValue = NULL;
+		}
 		$this->approval_status_5->ViewCustomAttributes = "";
 
 		// direction_file_5
-		$this->direction_file_5->ViewValue = $this->direction_file_5->CurrentValue;
+		if (!EmptyValue($this->direction_file_5->Upload->DbValue)) {
+			$this->direction_file_5->ViewValue = $this->direction_file_5->Upload->DbValue;
+		} else {
+			$this->direction_file_5->ViewValue = "";
+		}
 		$this->direction_file_5->ViewCustomAttributes = "";
 
 		// submit_no_6
@@ -1785,10 +1954,34 @@ class document_log extends DbTable
 
 		// approval_status_6
 		$this->approval_status_6->ViewValue = $this->approval_status_6->CurrentValue;
+		$curVal = strval($this->approval_status_6->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_6->ViewValue = $this->approval_status_6->lookupCacheOption($curVal);
+			if ($this->approval_status_6->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_6->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_6->ViewValue = $this->approval_status_6->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_6->ViewValue = $this->approval_status_6->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_6->ViewValue = NULL;
+		}
 		$this->approval_status_6->ViewCustomAttributes = "";
 
 		// direction_file_6
-		$this->direction_file_6->ViewValue = $this->direction_file_6->CurrentValue;
+		if (!EmptyValue($this->direction_file_6->Upload->DbValue)) {
+			$this->direction_file_6->ViewValue = $this->direction_file_6->Upload->DbValue;
+		} else {
+			$this->direction_file_6->ViewValue = "";
+		}
 		$this->direction_file_6->ViewCustomAttributes = "";
 
 		// submit_no_7
@@ -1819,10 +2012,34 @@ class document_log extends DbTable
 
 		// approval_status_7
 		$this->approval_status_7->ViewValue = $this->approval_status_7->CurrentValue;
+		$curVal = strval($this->approval_status_7->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_7->ViewValue = $this->approval_status_7->lookupCacheOption($curVal);
+			if ($this->approval_status_7->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_7->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_7->ViewValue = $this->approval_status_7->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_7->ViewValue = $this->approval_status_7->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_7->ViewValue = NULL;
+		}
 		$this->approval_status_7->ViewCustomAttributes = "";
 
 		// direction_file_7
-		$this->direction_file_7->ViewValue = $this->direction_file_7->CurrentValue;
+		if (!EmptyValue($this->direction_file_7->Upload->DbValue)) {
+			$this->direction_file_7->ViewValue = $this->direction_file_7->Upload->DbValue;
+		} else {
+			$this->direction_file_7->ViewValue = "";
+		}
 		$this->direction_file_7->ViewCustomAttributes = "";
 
 		// submit_no_8
@@ -1853,10 +2070,34 @@ class document_log extends DbTable
 
 		// approval_status_8
 		$this->approval_status_8->ViewValue = $this->approval_status_8->CurrentValue;
+		$curVal = strval($this->approval_status_8->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_8->ViewValue = $this->approval_status_8->lookupCacheOption($curVal);
+			if ($this->approval_status_8->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_8->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_8->ViewValue = $this->approval_status_8->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_8->ViewValue = $this->approval_status_8->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_8->ViewValue = NULL;
+		}
 		$this->approval_status_8->ViewCustomAttributes = "";
 
 		// direction_file_8
-		$this->direction_file_8->ViewValue = $this->direction_file_8->CurrentValue;
+		if (!EmptyValue($this->direction_file_8->Upload->DbValue)) {
+			$this->direction_file_8->ViewValue = $this->direction_file_8->Upload->DbValue;
+		} else {
+			$this->direction_file_8->ViewValue = "";
+		}
 		$this->direction_file_8->ViewCustomAttributes = "";
 
 		// submit_no_9
@@ -1887,10 +2128,34 @@ class document_log extends DbTable
 
 		// approval_status_9
 		$this->approval_status_9->ViewValue = $this->approval_status_9->CurrentValue;
+		$curVal = strval($this->approval_status_9->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_9->ViewValue = $this->approval_status_9->lookupCacheOption($curVal);
+			if ($this->approval_status_9->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_9->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_9->ViewValue = $this->approval_status_9->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_9->ViewValue = $this->approval_status_9->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_9->ViewValue = NULL;
+		}
 		$this->approval_status_9->ViewCustomAttributes = "";
 
 		// direction_file_9
-		$this->direction_file_9->ViewValue = $this->direction_file_9->CurrentValue;
+		if (!EmptyValue($this->direction_file_9->Upload->DbValue)) {
+			$this->direction_file_9->ViewValue = $this->direction_file_9->Upload->DbValue;
+		} else {
+			$this->direction_file_9->ViewValue = "";
+		}
 		$this->direction_file_9->ViewCustomAttributes = "";
 
 		// submit_no_10
@@ -1922,10 +2187,34 @@ class document_log extends DbTable
 
 		// approval_status_10
 		$this->approval_status_10->ViewValue = $this->approval_status_10->CurrentValue;
+		$curVal = strval($this->approval_status_10->CurrentValue);
+		if ($curVal <> "") {
+			$this->approval_status_10->ViewValue = $this->approval_status_10->lookupCacheOption($curVal);
+			if ($this->approval_status_10->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->approval_status_10->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$this->approval_status_10->ViewValue = $this->approval_status_10->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->approval_status_10->ViewValue = $this->approval_status_10->CurrentValue;
+				}
+			}
+		} else {
+			$this->approval_status_10->ViewValue = NULL;
+		}
 		$this->approval_status_10->ViewCustomAttributes = "";
 
 		// direction_file_10
-		$this->direction_file_10->ViewValue = $this->direction_file_10->CurrentValue;
+		if (!EmptyValue($this->direction_file_10->Upload->DbValue)) {
+			$this->direction_file_10->ViewValue = $this->direction_file_10->Upload->DbValue;
+		} else {
+			$this->direction_file_10->ViewValue = "";
+		}
 		$this->direction_file_10->ViewCustomAttributes = "";
 
 		// log_updatedon
@@ -1965,8 +2254,8 @@ class document_log extends DbTable
 
 		// current_status
 		$this->current_status->LinkCustomAttributes = "";
-		if (!EmptyValue($this->current_status_file->CurrentValue)) {
-			$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->current_status_file->Upload->DbValue)) {
+			$this->current_status->HrefValue = GetFileUploadUrl($this->current_status_file, $this->current_status_file->Upload->DbValue); // Add prefix/suffix
 			$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
 		} else {
@@ -1977,6 +2266,7 @@ class document_log extends DbTable
 		// current_status_file
 		$this->current_status_file->LinkCustomAttributes = "";
 		$this->current_status_file->HrefValue = "";
+		$this->current_status_file->ExportHrefValue = $this->current_status_file->UploadPath . $this->current_status_file->Upload->DbValue;
 		$this->current_status_file->TooltipValue = "";
 
 		// submit_no_1
@@ -2011,8 +2301,8 @@ class document_log extends DbTable
 
 		// approval_status_1
 		$this->approval_status_1->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_1->CurrentValue)) {
-			$this->approval_status_1->HrefValue = ((!empty($this->direction_file_1->ViewValue) && !is_array($this->direction_file_1->ViewValue)) ? RemoveHtml($this->direction_file_1->ViewValue) : $this->direction_file_1->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_1->Upload->DbValue)) {
+			$this->approval_status_1->HrefValue = GetFileUploadUrl($this->direction_file_1, $this->direction_file_1->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_1->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_1->HrefValue = FullUrl($this->approval_status_1->HrefValue, "href");
 		} else {
@@ -2023,6 +2313,7 @@ class document_log extends DbTable
 		// direction_file_1
 		$this->direction_file_1->LinkCustomAttributes = "";
 		$this->direction_file_1->HrefValue = "";
+		$this->direction_file_1->ExportHrefValue = $this->direction_file_1->UploadPath . $this->direction_file_1->Upload->DbValue;
 		$this->direction_file_1->TooltipValue = "";
 
 		// submit_no_2
@@ -2057,8 +2348,8 @@ class document_log extends DbTable
 
 		// approval_status_2
 		$this->approval_status_2->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_2->CurrentValue)) {
-			$this->approval_status_2->HrefValue = ((!empty($this->direction_file_2->ViewValue) && !is_array($this->direction_file_2->ViewValue)) ? RemoveHtml($this->direction_file_2->ViewValue) : $this->direction_file_2->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_2->Upload->DbValue)) {
+			$this->approval_status_2->HrefValue = GetFileUploadUrl($this->direction_file_2, $this->direction_file_2->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_2->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_2->HrefValue = FullUrl($this->approval_status_2->HrefValue, "href");
 		} else {
@@ -2069,6 +2360,7 @@ class document_log extends DbTable
 		// direction_file_2
 		$this->direction_file_2->LinkCustomAttributes = "";
 		$this->direction_file_2->HrefValue = "";
+		$this->direction_file_2->ExportHrefValue = $this->direction_file_2->UploadPath . $this->direction_file_2->Upload->DbValue;
 		$this->direction_file_2->TooltipValue = "";
 
 		// submit_no_3
@@ -2103,8 +2395,8 @@ class document_log extends DbTable
 
 		// approval_status_3
 		$this->approval_status_3->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_3->CurrentValue)) {
-			$this->approval_status_3->HrefValue = ((!empty($this->direction_file_3->ViewValue) && !is_array($this->direction_file_3->ViewValue)) ? RemoveHtml($this->direction_file_3->ViewValue) : $this->direction_file_3->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_3->Upload->DbValue)) {
+			$this->approval_status_3->HrefValue = GetFileUploadUrl($this->direction_file_3, $this->direction_file_3->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_3->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_3->HrefValue = FullUrl($this->approval_status_3->HrefValue, "href");
 		} else {
@@ -2115,6 +2407,7 @@ class document_log extends DbTable
 		// direction_file_3
 		$this->direction_file_3->LinkCustomAttributes = "";
 		$this->direction_file_3->HrefValue = "";
+		$this->direction_file_3->ExportHrefValue = $this->direction_file_3->UploadPath . $this->direction_file_3->Upload->DbValue;
 		$this->direction_file_3->TooltipValue = "";
 
 		// submit_no_4
@@ -2149,8 +2442,8 @@ class document_log extends DbTable
 
 		// approval_status_4
 		$this->approval_status_4->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_4->CurrentValue)) {
-			$this->approval_status_4->HrefValue = ((!empty($this->direction_file_4->ViewValue) && !is_array($this->direction_file_4->ViewValue)) ? RemoveHtml($this->direction_file_4->ViewValue) : $this->direction_file_4->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_4->Upload->DbValue)) {
+			$this->approval_status_4->HrefValue = GetFileUploadUrl($this->direction_file_4, $this->direction_file_4->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_4->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_4->HrefValue = FullUrl($this->approval_status_4->HrefValue, "href");
 		} else {
@@ -2161,6 +2454,7 @@ class document_log extends DbTable
 		// direction_file_4
 		$this->direction_file_4->LinkCustomAttributes = "";
 		$this->direction_file_4->HrefValue = "";
+		$this->direction_file_4->ExportHrefValue = $this->direction_file_4->UploadPath . $this->direction_file_4->Upload->DbValue;
 		$this->direction_file_4->TooltipValue = "";
 
 		// submit_no_5
@@ -2200,13 +2494,14 @@ class document_log extends DbTable
 
 		// direction_file_5
 		$this->direction_file_5->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_5->CurrentValue)) {
-			$this->direction_file_5->HrefValue = ((!empty($this->direction_file_5->ViewValue) && !is_array($this->direction_file_5->ViewValue)) ? RemoveHtml($this->direction_file_5->ViewValue) : $this->direction_file_5->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_5->Upload->DbValue)) {
+			$this->direction_file_5->HrefValue = GetFileUploadUrl($this->direction_file_5, $this->direction_file_5->Upload->DbValue); // Add prefix/suffix
 			$this->direction_file_5->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->direction_file_5->HrefValue = FullUrl($this->direction_file_5->HrefValue, "href");
 		} else {
 			$this->direction_file_5->HrefValue = "";
 		}
+		$this->direction_file_5->ExportHrefValue = $this->direction_file_5->UploadPath . $this->direction_file_5->Upload->DbValue;
 		$this->direction_file_5->TooltipValue = "";
 
 		// submit_no_6
@@ -2241,8 +2536,8 @@ class document_log extends DbTable
 
 		// approval_status_6
 		$this->approval_status_6->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_6->CurrentValue)) {
-			$this->approval_status_6->HrefValue = ((!empty($this->direction_file_6->ViewValue) && !is_array($this->direction_file_6->ViewValue)) ? RemoveHtml($this->direction_file_6->ViewValue) : $this->direction_file_6->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_6->Upload->DbValue)) {
+			$this->approval_status_6->HrefValue = GetFileUploadUrl($this->direction_file_6, $this->direction_file_6->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_6->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_6->HrefValue = FullUrl($this->approval_status_6->HrefValue, "href");
 		} else {
@@ -2253,6 +2548,7 @@ class document_log extends DbTable
 		// direction_file_6
 		$this->direction_file_6->LinkCustomAttributes = "";
 		$this->direction_file_6->HrefValue = "";
+		$this->direction_file_6->ExportHrefValue = $this->direction_file_6->UploadPath . $this->direction_file_6->Upload->DbValue;
 		$this->direction_file_6->TooltipValue = "";
 
 		// submit_no_7
@@ -2287,8 +2583,8 @@ class document_log extends DbTable
 
 		// approval_status_7
 		$this->approval_status_7->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_7->CurrentValue)) {
-			$this->approval_status_7->HrefValue = ((!empty($this->direction_file_7->ViewValue) && !is_array($this->direction_file_7->ViewValue)) ? RemoveHtml($this->direction_file_7->ViewValue) : $this->direction_file_7->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_7->Upload->DbValue)) {
+			$this->approval_status_7->HrefValue = GetFileUploadUrl($this->direction_file_7, $this->direction_file_7->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_7->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_7->HrefValue = FullUrl($this->approval_status_7->HrefValue, "href");
 		} else {
@@ -2299,6 +2595,7 @@ class document_log extends DbTable
 		// direction_file_7
 		$this->direction_file_7->LinkCustomAttributes = "";
 		$this->direction_file_7->HrefValue = "";
+		$this->direction_file_7->ExportHrefValue = $this->direction_file_7->UploadPath . $this->direction_file_7->Upload->DbValue;
 		$this->direction_file_7->TooltipValue = "";
 
 		// submit_no_8
@@ -2333,8 +2630,8 @@ class document_log extends DbTable
 
 		// approval_status_8
 		$this->approval_status_8->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_8->CurrentValue)) {
-			$this->approval_status_8->HrefValue = ((!empty($this->direction_file_8->ViewValue) && !is_array($this->direction_file_8->ViewValue)) ? RemoveHtml($this->direction_file_8->ViewValue) : $this->direction_file_8->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_8->Upload->DbValue)) {
+			$this->approval_status_8->HrefValue = GetFileUploadUrl($this->direction_file_8, $this->direction_file_8->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_8->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_8->HrefValue = FullUrl($this->approval_status_8->HrefValue, "href");
 		} else {
@@ -2345,6 +2642,7 @@ class document_log extends DbTable
 		// direction_file_8
 		$this->direction_file_8->LinkCustomAttributes = "";
 		$this->direction_file_8->HrefValue = "";
+		$this->direction_file_8->ExportHrefValue = $this->direction_file_8->UploadPath . $this->direction_file_8->Upload->DbValue;
 		$this->direction_file_8->TooltipValue = "";
 
 		// submit_no_9
@@ -2379,8 +2677,8 @@ class document_log extends DbTable
 
 		// approval_status_9
 		$this->approval_status_9->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_9->CurrentValue)) {
-			$this->approval_status_9->HrefValue = ((!empty($this->direction_file_9->ViewValue) && !is_array($this->direction_file_9->ViewValue)) ? RemoveHtml($this->direction_file_9->ViewValue) : $this->direction_file_9->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_9->Upload->DbValue)) {
+			$this->approval_status_9->HrefValue = GetFileUploadUrl($this->direction_file_9, $this->direction_file_9->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_9->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_9->HrefValue = FullUrl($this->approval_status_9->HrefValue, "href");
 		} else {
@@ -2391,6 +2689,7 @@ class document_log extends DbTable
 		// direction_file_9
 		$this->direction_file_9->LinkCustomAttributes = "";
 		$this->direction_file_9->HrefValue = "";
+		$this->direction_file_9->ExportHrefValue = $this->direction_file_9->UploadPath . $this->direction_file_9->Upload->DbValue;
 		$this->direction_file_9->TooltipValue = "";
 
 		// submit_no_10
@@ -2425,8 +2724,8 @@ class document_log extends DbTable
 
 		// approval_status_10
 		$this->approval_status_10->LinkCustomAttributes = "";
-		if (!EmptyValue($this->direction_file_10->CurrentValue)) {
-			$this->approval_status_10->HrefValue = ((!empty($this->direction_file_10->ViewValue) && !is_array($this->direction_file_10->ViewValue)) ? RemoveHtml($this->direction_file_10->ViewValue) : $this->direction_file_10->CurrentValue); // Add prefix/suffix
+		if (!EmptyValue($this->direction_file_10->Upload->DbValue)) {
+			$this->approval_status_10->HrefValue = GetFileUploadUrl($this->direction_file_10, $this->direction_file_10->Upload->DbValue); // Add prefix/suffix
 			$this->approval_status_10->LinkAttrs["target"] = "_blank"; // Add target
 			if ($this->isExport()) $this->approval_status_10->HrefValue = FullUrl($this->approval_status_10->HrefValue, "href");
 		} else {
@@ -2437,6 +2736,7 @@ class document_log extends DbTable
 		// direction_file_10
 		$this->direction_file_10->LinkCustomAttributes = "";
 		$this->direction_file_10->HrefValue = "";
+		$this->direction_file_10->ExportHrefValue = $this->direction_file_10->UploadPath . $this->direction_file_10->Upload->DbValue;
 		$this->direction_file_10->TooltipValue = "";
 
 		// log_updatedon
@@ -2516,10 +2816,13 @@ class document_log extends DbTable
 		// current_status_file
 		$this->current_status_file->EditAttrs["class"] = "form-control";
 		$this->current_status_file->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->current_status_file->CurrentValue = HtmlDecode($this->current_status_file->CurrentValue);
-		$this->current_status_file->EditValue = $this->current_status_file->CurrentValue;
-		$this->current_status_file->PlaceHolder = RemoveHtml($this->current_status_file->caption());
+		if (!EmptyValue($this->current_status_file->Upload->DbValue)) {
+			$this->current_status_file->EditValue = $this->current_status_file->Upload->DbValue;
+		} else {
+			$this->current_status_file->EditValue = "";
+		}
+		if (!EmptyValue($this->current_status_file->CurrentValue))
+				$this->current_status_file->Upload->FileName = $this->current_status_file->CurrentValue;
 
 		// submit_no_1
 		$this->submit_no_1->EditAttrs["class"] = "form-control";
@@ -2574,10 +2877,13 @@ class document_log extends DbTable
 		// direction_file_1
 		$this->direction_file_1->EditAttrs["class"] = "form-control";
 		$this->direction_file_1->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_1->CurrentValue = HtmlDecode($this->direction_file_1->CurrentValue);
-		$this->direction_file_1->EditValue = $this->direction_file_1->CurrentValue;
-		$this->direction_file_1->PlaceHolder = RemoveHtml($this->direction_file_1->caption());
+		if (!EmptyValue($this->direction_file_1->Upload->DbValue)) {
+			$this->direction_file_1->EditValue = $this->direction_file_1->Upload->DbValue;
+		} else {
+			$this->direction_file_1->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_1->CurrentValue))
+				$this->direction_file_1->Upload->FileName = $this->direction_file_1->CurrentValue;
 
 		// submit_no_2
 		$this->submit_no_2->EditAttrs["class"] = "form-control";
@@ -2632,10 +2938,13 @@ class document_log extends DbTable
 		// direction_file_2
 		$this->direction_file_2->EditAttrs["class"] = "form-control";
 		$this->direction_file_2->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_2->CurrentValue = HtmlDecode($this->direction_file_2->CurrentValue);
-		$this->direction_file_2->EditValue = $this->direction_file_2->CurrentValue;
-		$this->direction_file_2->PlaceHolder = RemoveHtml($this->direction_file_2->caption());
+		if (!EmptyValue($this->direction_file_2->Upload->DbValue)) {
+			$this->direction_file_2->EditValue = $this->direction_file_2->Upload->DbValue;
+		} else {
+			$this->direction_file_2->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_2->CurrentValue))
+				$this->direction_file_2->Upload->FileName = $this->direction_file_2->CurrentValue;
 
 		// submit_no_3
 		$this->submit_no_3->EditAttrs["class"] = "form-control";
@@ -2690,10 +2999,13 @@ class document_log extends DbTable
 		// direction_file_3
 		$this->direction_file_3->EditAttrs["class"] = "form-control";
 		$this->direction_file_3->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_3->CurrentValue = HtmlDecode($this->direction_file_3->CurrentValue);
-		$this->direction_file_3->EditValue = $this->direction_file_3->CurrentValue;
-		$this->direction_file_3->PlaceHolder = RemoveHtml($this->direction_file_3->caption());
+		if (!EmptyValue($this->direction_file_3->Upload->DbValue)) {
+			$this->direction_file_3->EditValue = $this->direction_file_3->Upload->DbValue;
+		} else {
+			$this->direction_file_3->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_3->CurrentValue))
+				$this->direction_file_3->Upload->FileName = $this->direction_file_3->CurrentValue;
 
 		// submit_no_4
 		$this->submit_no_4->EditAttrs["class"] = "form-control";
@@ -2748,10 +3060,13 @@ class document_log extends DbTable
 		// direction_file_4
 		$this->direction_file_4->EditAttrs["class"] = "form-control";
 		$this->direction_file_4->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_4->CurrentValue = HtmlDecode($this->direction_file_4->CurrentValue);
-		$this->direction_file_4->EditValue = $this->direction_file_4->CurrentValue;
-		$this->direction_file_4->PlaceHolder = RemoveHtml($this->direction_file_4->caption());
+		if (!EmptyValue($this->direction_file_4->Upload->DbValue)) {
+			$this->direction_file_4->EditValue = $this->direction_file_4->Upload->DbValue;
+		} else {
+			$this->direction_file_4->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_4->CurrentValue))
+				$this->direction_file_4->Upload->FileName = $this->direction_file_4->CurrentValue;
 
 		// submit_no_5
 		$this->submit_no_5->EditAttrs["class"] = "form-control";
@@ -2806,10 +3121,13 @@ class document_log extends DbTable
 		// direction_file_5
 		$this->direction_file_5->EditAttrs["class"] = "form-control";
 		$this->direction_file_5->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_5->CurrentValue = HtmlDecode($this->direction_file_5->CurrentValue);
-		$this->direction_file_5->EditValue = $this->direction_file_5->CurrentValue;
-		$this->direction_file_5->PlaceHolder = RemoveHtml($this->direction_file_5->caption());
+		if (!EmptyValue($this->direction_file_5->Upload->DbValue)) {
+			$this->direction_file_5->EditValue = $this->direction_file_5->Upload->DbValue;
+		} else {
+			$this->direction_file_5->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_5->CurrentValue))
+				$this->direction_file_5->Upload->FileName = $this->direction_file_5->CurrentValue;
 
 		// submit_no_6
 		$this->submit_no_6->EditAttrs["class"] = "form-control";
@@ -2864,10 +3182,13 @@ class document_log extends DbTable
 		// direction_file_6
 		$this->direction_file_6->EditAttrs["class"] = "form-control";
 		$this->direction_file_6->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_6->CurrentValue = HtmlDecode($this->direction_file_6->CurrentValue);
-		$this->direction_file_6->EditValue = $this->direction_file_6->CurrentValue;
-		$this->direction_file_6->PlaceHolder = RemoveHtml($this->direction_file_6->caption());
+		if (!EmptyValue($this->direction_file_6->Upload->DbValue)) {
+			$this->direction_file_6->EditValue = $this->direction_file_6->Upload->DbValue;
+		} else {
+			$this->direction_file_6->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_6->CurrentValue))
+				$this->direction_file_6->Upload->FileName = $this->direction_file_6->CurrentValue;
 
 		// submit_no_7
 		$this->submit_no_7->EditAttrs["class"] = "form-control";
@@ -2922,10 +3243,13 @@ class document_log extends DbTable
 		// direction_file_7
 		$this->direction_file_7->EditAttrs["class"] = "form-control";
 		$this->direction_file_7->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_7->CurrentValue = HtmlDecode($this->direction_file_7->CurrentValue);
-		$this->direction_file_7->EditValue = $this->direction_file_7->CurrentValue;
-		$this->direction_file_7->PlaceHolder = RemoveHtml($this->direction_file_7->caption());
+		if (!EmptyValue($this->direction_file_7->Upload->DbValue)) {
+			$this->direction_file_7->EditValue = $this->direction_file_7->Upload->DbValue;
+		} else {
+			$this->direction_file_7->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_7->CurrentValue))
+				$this->direction_file_7->Upload->FileName = $this->direction_file_7->CurrentValue;
 
 		// submit_no_8
 		$this->submit_no_8->EditAttrs["class"] = "form-control";
@@ -2980,10 +3304,13 @@ class document_log extends DbTable
 		// direction_file_8
 		$this->direction_file_8->EditAttrs["class"] = "form-control";
 		$this->direction_file_8->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_8->CurrentValue = HtmlDecode($this->direction_file_8->CurrentValue);
-		$this->direction_file_8->EditValue = $this->direction_file_8->CurrentValue;
-		$this->direction_file_8->PlaceHolder = RemoveHtml($this->direction_file_8->caption());
+		if (!EmptyValue($this->direction_file_8->Upload->DbValue)) {
+			$this->direction_file_8->EditValue = $this->direction_file_8->Upload->DbValue;
+		} else {
+			$this->direction_file_8->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_8->CurrentValue))
+				$this->direction_file_8->Upload->FileName = $this->direction_file_8->CurrentValue;
 
 		// submit_no_9
 		$this->submit_no_9->EditAttrs["class"] = "form-control";
@@ -3038,10 +3365,13 @@ class document_log extends DbTable
 		// direction_file_9
 		$this->direction_file_9->EditAttrs["class"] = "form-control";
 		$this->direction_file_9->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_9->CurrentValue = HtmlDecode($this->direction_file_9->CurrentValue);
-		$this->direction_file_9->EditValue = $this->direction_file_9->CurrentValue;
-		$this->direction_file_9->PlaceHolder = RemoveHtml($this->direction_file_9->caption());
+		if (!EmptyValue($this->direction_file_9->Upload->DbValue)) {
+			$this->direction_file_9->EditValue = $this->direction_file_9->Upload->DbValue;
+		} else {
+			$this->direction_file_9->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_9->CurrentValue))
+				$this->direction_file_9->Upload->FileName = $this->direction_file_9->CurrentValue;
 
 		// submit_no_10
 		$this->submit_no_10->EditAttrs["class"] = "form-control";
@@ -3096,10 +3426,13 @@ class document_log extends DbTable
 		// direction_file_10
 		$this->direction_file_10->EditAttrs["class"] = "form-control";
 		$this->direction_file_10->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->direction_file_10->CurrentValue = HtmlDecode($this->direction_file_10->CurrentValue);
-		$this->direction_file_10->EditValue = $this->direction_file_10->CurrentValue;
-		$this->direction_file_10->PlaceHolder = RemoveHtml($this->direction_file_10->caption());
+		if (!EmptyValue($this->direction_file_10->Upload->DbValue)) {
+			$this->direction_file_10->EditValue = $this->direction_file_10->Upload->DbValue;
+		} else {
+			$this->direction_file_10->EditValue = "";
+		}
+		if (!EmptyValue($this->direction_file_10->CurrentValue))
+				$this->direction_file_10->Upload->FileName = $this->direction_file_10->CurrentValue;
 
 		// log_updatedon
 		$this->log_updatedon->EditAttrs["class"] = "form-control";
@@ -3621,8 +3954,121 @@ class document_log extends DbTable
 	// Get file data
 	public function getFileData($fldparm, $key, $resize, $width = THUMBNAIL_DEFAULT_WIDTH, $height = THUMBNAIL_DEFAULT_HEIGHT)
 	{
+		global $COMPOSITE_KEY_SEPARATOR;
 
-		// No binary fields
+		// Set up field name / file name field / file type field
+		$fldName = "";
+		$fileNameFld = "";
+		$fileTypeFld = "";
+		if ($fldparm == 'current_status_file') {
+			$fldName = "current_status_file";
+			$fileNameFld = "current_status_file";
+		} elseif ($fldparm == 'direction_file_1') {
+			$fldName = "direction_file_1";
+			$fileNameFld = "direction_file_1";
+		} elseif ($fldparm == 'direction_file_2') {
+			$fldName = "direction_file_2";
+			$fileNameFld = "direction_file_2";
+		} elseif ($fldparm == 'direction_file_3') {
+			$fldName = "direction_file_3";
+			$fileNameFld = "direction_file_3";
+		} elseif ($fldparm == 'direction_file_4') {
+			$fldName = "direction_file_4";
+			$fileNameFld = "direction_file_4";
+		} elseif ($fldparm == 'direction_file_5') {
+			$fldName = "direction_file_5";
+			$fileNameFld = "direction_file_5";
+		} elseif ($fldparm == 'direction_file_6') {
+			$fldName = "direction_file_6";
+			$fileNameFld = "direction_file_6";
+		} elseif ($fldparm == 'direction_file_7') {
+			$fldName = "direction_file_7";
+			$fileNameFld = "direction_file_7";
+		} elseif ($fldparm == 'direction_file_8') {
+			$fldName = "direction_file_8";
+			$fileNameFld = "direction_file_8";
+		} elseif ($fldparm == 'direction_file_9') {
+			$fldName = "direction_file_9";
+			$fileNameFld = "direction_file_9";
+		} elseif ($fldparm == 'direction_file_10') {
+			$fldName = "direction_file_10";
+			$fileNameFld = "direction_file_10";
+		} else {
+			return FALSE; // Incorrect field
+		}
+
+		// Set up key values
+		$ar = explode($COMPOSITE_KEY_SEPARATOR, $key);
+		if (count($ar) == 1) {
+			$this->log_id->CurrentValue = $ar[0];
+		} else {
+			return FALSE; // Incorrect key
+		}
+
+		// Set up filter (WHERE Clause)
+		$filter = $this->getRecordFilter();
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$dbtype = GetConnectionType($this->Dbid);
+		if (($rs = $conn->execute($sql)) && !$rs->EOF) {
+			$val = $rs->fields($fldName);
+			if (!EmptyValue($val)) {
+				$fld = $this->fields[$fldName];
+
+				// Binary data
+				if ($fld->DataType == DATATYPE_BLOB) {
+					if ($dbtype <> "MYSQL") {
+						if (is_array($val) || is_object($val)) // Byte array
+							$val = BytesToString($val);
+					}
+					if ($resize)
+						ResizeBinary($val, $width, $height);
+
+					// Write file type
+					if ($fileTypeFld <> "" && !EmptyValue($rs->fields($fileTypeFld))) {
+						AddHeader("Content-type", $rs->fields($fileTypeFld));
+					} else {
+						AddHeader("Content-type", ContentType($val));
+					}
+
+					// Write file name
+					if ($fileNameFld <> "" && !EmptyValue($rs->fields($fileNameFld)))
+						AddHeader("Content-Disposition", "attachment; filename=\"" . $rs->fields($fileNameFld) . "\"");
+
+					// Write file data
+					if (StartsString("PK", $val) && ContainsString($val, "[Content_Types].xml") &&
+						ContainsString($val, "_rels") && ContainsString($val, "docProps")) { // Fix Office 2007 documents
+						if (!EndsString("\0\0\0", $val)) // Not ends with 3 or 4 \0
+							$val .= "\0\0\0\0";
+					}
+
+					// Clear output buffer
+					if (ob_get_length())
+						ob_end_clean();
+
+					// Write binary data
+					Write($val);
+
+				// Upload to folder
+				} else {
+					if ($fld->UploadMultiple)
+						$files = explode(MULTIPLE_UPLOAD_SEPARATOR, $val);
+					else
+						$files = [$val];
+					$data = [];
+					$ar = [];
+					foreach ($files as $file) {
+						if (!EmptyValue($file))
+							$ar[$file] = FullUrl($fld->hrefPath() . $file);
+					}
+					$data[$fld->Param] = $ar;
+					WriteJson($data);
+				}
+			}
+			$rs->close();
+			return TRUE;
+		}
 		return FALSE;
 	}
 

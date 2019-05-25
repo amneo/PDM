@@ -66,7 +66,7 @@ class document_type extends DbTable
 		$this->type_id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->type_id->IsPrimaryKey = TRUE; // Primary key field
 		$this->type_id->Nullable = FALSE; // NOT NULL field
-		$this->type_id->Sortable = TRUE; // Allow sort
+		$this->type_id->Sortable = FALSE; // Allow sort
 		$this->type_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['type_id'] = &$this->type_id;
 
@@ -781,7 +781,6 @@ class document_type extends DbTable
 					$doc->exportCaption($this->document_type);
 					$doc->exportCaption($this->document_category);
 				} else {
-					$doc->exportCaption($this->type_id);
 					$doc->exportCaption($this->document_type);
 					$doc->exportCaption($this->document_category);
 				}
@@ -819,7 +818,6 @@ class document_type extends DbTable
 						$doc->exportField($this->document_type);
 						$doc->exportField($this->document_category);
 					} else {
-						$doc->exportField($this->type_id);
 						$doc->exportField($this->document_type);
 						$doc->exportField($this->document_category);
 					}

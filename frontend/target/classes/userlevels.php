@@ -73,7 +73,7 @@ class userlevels extends DbTable
 		$this->userlevelid->IsPrimaryKey = TRUE; // Primary key field
 		$this->userlevelid->Nullable = FALSE; // NOT NULL field
 		$this->userlevelid->Required = TRUE; // Required field
-		$this->userlevelid->Sortable = TRUE; // Allow sort
+		$this->userlevelid->Sortable = FALSE; // Allow sort
 		$this->userlevelid->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['userlevelid'] = &$this->userlevelid;
 
@@ -769,8 +769,6 @@ class userlevels extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->userlevelid);
-					$doc->exportCaption($this->userlevelname);
 				} else {
 					$doc->exportCaption($this->userlevelid);
 					$doc->exportCaption($this->userlevelname);
@@ -805,8 +803,6 @@ class userlevels extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->userlevelid);
-						$doc->exportField($this->userlevelname);
 					} else {
 						$doc->exportField($this->userlevelid);
 						$doc->exportField($this->userlevelname);

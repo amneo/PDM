@@ -320,9 +320,9 @@ class cron_file
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &GetConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}

@@ -23,9 +23,9 @@ class transaction_details_edit extends transaction_details
 	public $AuditTrailOnAdd = TRUE;
 	public $AuditTrailOnEdit = TRUE;
 	public $AuditTrailOnDelete = TRUE;
-	public $AuditTrailOnView = FALSE;
-	public $AuditTrailOnViewData = FALSE;
-	public $AuditTrailOnSearch = FALSE;
+	public $AuditTrailOnView = TRUE;
+	public $AuditTrailOnViewData = TRUE;
+	public $AuditTrailOnSearch = TRUE;
 
 	// Page headings
 	public $Heading = "";
@@ -358,9 +358,9 @@ class transaction_details_edit extends transaction_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class transaction_details_edit extends transaction_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -607,6 +607,11 @@ class transaction_details_edit extends transaction_details
 				$Security->UserID_Loading();
 				$Security->loadUserID();
 				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate(GetUrl("transaction_detailslist.php"));
+					return;
+				}
 			}
 		}
 
@@ -732,7 +737,7 @@ class transaction_details_edit extends transaction_details
 				}
 				break;
 			case "update": // Update
-				$returnUrl = $this->getReturnUrl();
+				$returnUrl = $this->GetViewUrl();
 				if (GetPageName($returnUrl) == "transaction_detailslist.php")
 					$returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
@@ -925,6 +930,15 @@ class transaction_details_edit extends transaction_details
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
 			$rs->close();
+		}
+
+		// Check if valid User ID
+		if ($res) {
+			$res = $this->showOptionLink('edit');
+			if (!$res) {
+				$userIdMsg = DeniedMessage();
+				$this->setFailureMessage($userIdMsg);
+			}
 		}
 		return $res;
 	}
@@ -1423,7 +1437,7 @@ class transaction_details_edit extends transaction_details
 			}
 		}
 		if ($this->approval_status->Required) {
-			if ($this->approval_status->FormValue == "") {
+			if (!$this->approval_status->IsDetailKey && $this->approval_status->FormValue != NULL && $this->approval_status->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->approval_status->caption(), $this->approval_status->RequiredErrorMessage));
 			}
 		}
@@ -1534,6 +1548,15 @@ class transaction_details_edit extends transaction_details
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $editRow;
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->username->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

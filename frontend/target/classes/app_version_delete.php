@@ -350,9 +350,9 @@ class app_version_delete extends app_version
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class app_version_delete extends app_version
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -592,7 +592,7 @@ class app_version_delete extends app_version
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->sequence_no->setVisibility();
+		$this->sequence_no->Visible = FALSE;
 		$this->frontend_version->Visible = FALSE;
 		$this->backend_version->Visible = FALSE;
 		$this->release_date->setVisibility();
@@ -769,6 +769,9 @@ class app_version_delete extends app_version
 
 		// Common render codes for all row types
 		// sequence_no
+
+		$this->sequence_no->CellCssStyle = "white-space: nowrap;";
+
 		// frontend_version
 		// backend_version
 		// release_date
@@ -776,11 +779,6 @@ class app_version_delete extends app_version
 		// remarks
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// sequence_no
-			$this->sequence_no->ViewValue = $this->sequence_no->CurrentValue;
-			$this->sequence_no->ViewValue = FormatNumber($this->sequence_no->ViewValue, 0, -2, -2, -2);
-			$this->sequence_no->ViewCustomAttributes = "";
 
 			// release_date
 			$this->release_date->ViewValue = $this->release_date->CurrentValue;
@@ -791,11 +789,6 @@ class app_version_delete extends app_version
 			$this->posted_date->ViewValue = $this->posted_date->CurrentValue;
 			$this->posted_date->ViewValue = FormatDateTime($this->posted_date->ViewValue, 0);
 			$this->posted_date->ViewCustomAttributes = "";
-
-			// sequence_no
-			$this->sequence_no->LinkCustomAttributes = "";
-			$this->sequence_no->HrefValue = "";
-			$this->sequence_no->TooltipValue = "";
 
 			// release_date
 			$this->release_date->LinkCustomAttributes = "";

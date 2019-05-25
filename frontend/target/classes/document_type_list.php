@@ -406,9 +406,9 @@ class document_type_list extends document_type
 		$this->MultiUpdateUrl = "document_typeupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -429,9 +429,9 @@ class document_type_list extends document_type
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -620,7 +620,7 @@ class document_type_list extends document_type
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -713,6 +713,9 @@ class document_type_list extends document_type
 			$this->terminate();
 		}
 
+		// Create form object
+		$CurrentForm = new HttpForm();
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -760,7 +763,7 @@ class document_type_list extends document_type
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->document_type->setVisibility();
 		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -817,6 +820,35 @@ class document_type_list extends document_type
 			if (!$this->isExport())
 				$this->setupBreadcrumb();
 
+			// Check QueryString parameters
+			if (Get("action") !== NULL) {
+				$this->CurrentAction = Get("action");
+
+				// Clear inline mode
+				if ($this->isCancel())
+					$this->clearInlineMode();
+
+				// Switch to inline edit mode
+				if ($this->isEdit())
+					$this->inlineEditMode();
+
+				// Switch to inline add mode
+				if ($this->isAdd() || $this->isCopy())
+					$this->inlineAddMode();
+			} else {
+				if (Post("action") !== NULL) {
+					$this->CurrentAction = Post("action"); // Get action
+
+					// Inline Update
+					if (($this->isUpdate() || $this->isOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "edit")
+						$this->inlineUpdate();
+
+					// Insert Inline
+					if ($this->isInsert() && @$_SESSION[SESSION_INLINE_MODE] == "add")
+						$this->inlineInsert();
+				}
+			}
+
 			// Hide list options
 			if ($this->isExport()) {
 				$this->ListOptions->hideAllOptions(array("sequence"));
@@ -868,7 +900,7 @@ class document_type_list extends document_type
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -963,6 +995,125 @@ class document_type_list extends document_type
 			$this->Recordset->close();
 			WriteJson(["success" => TRUE, $this->TableVar => $rows, "totalRecordCount" => $this->TotalRecs]);
 			$this->terminate(TRUE);
+		}
+	}
+
+	// Exit inline mode
+	protected function clearInlineMode()
+	{
+		$this->setKey("type_id", ""); // Clear inline edit key
+		$this->LastAction = $this->CurrentAction; // Save last action
+		$this->CurrentAction = ""; // Clear action
+		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
+	}
+
+	// Switch to Inline Edit mode
+	protected function inlineEditMode()
+	{
+		global $Security, $Language;
+		if (!$Security->canEdit())
+			return FALSE; // Edit not allowed
+		$inlineEdit = TRUE;
+		if (Get("type_id") !== NULL) {
+			$this->type_id->setQueryStringValue(Get("type_id"));
+		} else {
+			$inlineEdit = FALSE;
+		}
+		if ($inlineEdit) {
+			if ($this->loadRow()) {
+				$this->setKey("type_id", $this->type_id->CurrentValue); // Set up inline edit key
+				$_SESSION[SESSION_INLINE_MODE] = "edit"; // Enable inline edit
+			}
+		}
+		return TRUE;
+	}
+
+	// Perform update to Inline Edit record
+	protected function inlineUpdate()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$CurrentForm->Index = 1;
+		$this->loadFormValues(); // Get form values
+
+		// Validate form
+		$inlineUpdate = TRUE;
+		if (!$this->validateForm()) {
+			$inlineUpdate = FALSE; // Form error, reset action
+			$this->setFailureMessage($FormError);
+		} else {
+			$inlineUpdate = FALSE;
+			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
+			if ($this->setupKeyValues($rowkey)) { // Set up key values
+				if ($this->checkInlineEditKey()) { // Check key
+					$this->SendEmail = TRUE; // Send email on update success
+					$inlineUpdate = $this->editRow(); // Update record
+				} else {
+					$inlineUpdate = FALSE;
+				}
+			}
+		}
+		if ($inlineUpdate) { // Update success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up success message
+			$this->clearInlineMode(); // Clear inline edit mode
+		} else {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
+			$this->EventCancelled = TRUE; // Cancel event
+			$this->CurrentAction = "edit"; // Stay in edit mode
+		}
+	}
+
+	// Check Inline Edit key
+	public function checkInlineEditKey()
+	{
+		if (strval($this->getKey("type_id")) <> strval($this->type_id->CurrentValue))
+			return FALSE;
+		return TRUE;
+	}
+
+	// Switch to Inline Add mode
+	protected function inlineAddMode()
+	{
+		global $Security, $Language;
+		if (!$Security->canAdd())
+			return FALSE; // Add not allowed
+		if ($this->isCopy()) {
+			if (Get("type_id") !== NULL) {
+				$this->type_id->setQueryStringValue(Get("type_id"));
+				$this->setKey("type_id", $this->type_id->CurrentValue); // Set up key
+			} else {
+				$this->setKey("type_id", ""); // Clear key
+				$this->CurrentAction = "add";
+			}
+		}
+		$_SESSION[SESSION_INLINE_MODE] = "add"; // Enable inline add
+		return TRUE;
+	}
+
+	// Perform update to Inline Add/Copy record
+	protected function inlineInsert()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$this->loadOldRecord(); // Load old record
+		$CurrentForm->Index = 0;
+		$this->loadFormValues(); // Get form values
+
+		// Validate form
+		if (!$this->validateForm()) {
+			$this->setFailureMessage($FormError); // Set validation error message
+			$this->EventCancelled = TRUE; // Set event cancelled
+			$this->CurrentAction = "add"; // Stay in add mode
+			return;
+		}
+		$this->SendEmail = TRUE; // Send email on add success
+		if ($this->addRow($this->OldRecordset)) { // Add record
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up add success message
+			$this->clearInlineMode(); // Clear inline add mode
+		} else { // Add failed
+			$this->EventCancelled = TRUE; // Set event cancelled
+			$this->CurrentAction = "add"; // Stay in add mode
 		}
 	}
 
@@ -1255,7 +1406,6 @@ class document_type_list extends document_type
 		if (Get("order") !== NULL) {
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
-			$this->updateSort($this->type_id, $ctrl); // type_id
 			$this->updateSort($this->document_type, $ctrl); // document_type
 			$this->updateSort($this->document_category, $ctrl); // document_category
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1293,7 +1443,6 @@ class document_type_list extends document_type
 			if ($this->Command == "resetsort") {
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
-				$this->type_id->setSort("");
 				$this->document_type->setSort("");
 				$this->document_category->setSort("");
 			}
@@ -1381,6 +1530,46 @@ class document_type_list extends document_type
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
 
+		// Set up row action and key
+		if (is_numeric($this->RowIndex) && $this->CurrentMode <> "view") {
+			$CurrentForm->Index = $this->RowIndex;
+			$actionName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormActionName);
+			$oldKeyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormOldKeyName);
+			$keyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormKeyName);
+			$blankRowName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormBlankRowName);
+			if ($this->RowAction <> "")
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $actionName . "\" id=\"" . $actionName . "\" value=\"" . $this->RowAction . "\">";
+			if ($this->RowAction == "delete") {
+				$rowkey = $CurrentForm->getValue($this->FormKeyName);
+				$this->setupKeyValues($rowkey);
+			}
+			if ($this->RowAction == "insert" && $this->isConfirm() && $this->emptyRow())
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $blankRowName . "\" id=\"" . $blankRowName . "\" value=\"1\">";
+		}
+
+		// "copy"
+		$opt = &$this->ListOptions->Items["copy"];
+		if ($this->isInlineAddRow() || $this->isInlineCopyRow()) { // Inline Add/Copy
+			$this->ListOptions->CustomItem = "copy"; // Show copy column only
+			$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
+				"<a class=\"ew-grid-link ew-inline-insert\" title=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("InsertLink") . "</a>&nbsp;" .
+				"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("CancelLink") . "</a>" .
+				"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"insert\"></div>";
+			return;
+		}
+
+		// "edit"
+		$opt = &$this->ListOptions->Items["edit"];
+		if ($this->isInlineEditRow()) { // Inline-Edit
+			$this->ListOptions->CustomItem = "edit"; // Show edit column only
+				$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
+					"<a class=\"ew-grid-link ew-inline-update\" title=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . UrlAddHash($this->pageName(), "r" . $this->RowCnt . "_" . $this->TableVar) . "');\">" . $Language->phrase("UpdateLink") . "</a>&nbsp;" .
+					"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("CancelLink") . "</a>" .
+					"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"update\"></div>";
+			$opt->Body .= "<input type=\"hidden\" name=\"k" . $this->RowIndex . "_key\" id=\"k" . $this->RowIndex . "_key\" value=\"" . HtmlEncode($this->type_id->CurrentValue) . "\">";
+			return;
+		}
+
 		// "view"
 		$opt = &$this->ListOptions->Items["view"];
 		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
@@ -1395,6 +1584,7 @@ class document_type_list extends document_type
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
 		if ($Security->canEdit()) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
+			$opt->Body .= "<a class=\"ew-row-link ew-inline-edit\" title=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" href=\"" . HtmlEncode(UrlAddHash($this->InlineEditUrl, "r" . $this->RowCnt . "_" . $this->TableVar)) . "\">" . $Language->phrase("InlineEditLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1404,6 +1594,7 @@ class document_type_list extends document_type
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
 			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			$opt->Body .= "<a class=\"ew-row-link ew-inline-copy\" title=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" href=\"" . HtmlEncode($this->InlineCopyUrl) . "\">" . $Language->phrase("InlineCopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1465,6 +1656,11 @@ class document_type_list extends document_type
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
 		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
+
+		// Inline Add
+		$item = &$option->add("inlineadd");
+		$item->Body = "<a class=\"ew-add-edit ew-inline-add\" title=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" href=\"" . HtmlEncode($this->InlineAddUrl) . "\">" .$Language->phrase("InlineAddLink") . "</a>";
+		$item->Visible = ($this->InlineAddUrl <> "" && $Security->canAdd());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1691,6 +1887,17 @@ class document_type_list extends document_type
 		}
 	}
 
+	// Load default values
+	protected function loadDefaultValues()
+	{
+		$this->type_id->CurrentValue = NULL;
+		$this->type_id->OldValue = $this->type_id->CurrentValue;
+		$this->document_type->CurrentValue = NULL;
+		$this->document_type->OldValue = $this->document_type->CurrentValue;
+		$this->document_category->CurrentValue = NULL;
+		$this->document_category->OldValue = $this->document_category->CurrentValue;
+	}
+
 	// Load basic search values
 	protected function loadBasicSearchValues()
 	{
@@ -1698,6 +1905,47 @@ class document_type_list extends document_type
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load form values
+	protected function loadFormValues()
+	{
+
+		// Load from form
+		global $CurrentForm;
+
+		// Check field name 'document_type' first before field var 'x_document_type'
+		$val = $CurrentForm->hasValue("document_type") ? $CurrentForm->getValue("document_type") : $CurrentForm->getValue("x_document_type");
+		if (!$this->document_type->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_type->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_type->setFormValue($val);
+		}
+
+		// Check field name 'document_category' first before field var 'x_document_category'
+		$val = $CurrentForm->hasValue("document_category") ? $CurrentForm->getValue("document_category") : $CurrentForm->getValue("x_document_category");
+		if (!$this->document_category->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->document_category->Visible = FALSE; // Disable update for API request
+			else
+				$this->document_category->setFormValue($val);
+		}
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+		if (!$this->type_id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
+			$this->type_id->setFormValue($val);
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		if (!$this->isGridAdd() && !$this->isAdd())
+			$this->type_id->CurrentValue = $this->type_id->FormValue;
+		$this->document_type->CurrentValue = $this->document_type->FormValue;
+		$this->document_category->CurrentValue = $this->document_category->FormValue;
 	}
 
 	// Load recordset
@@ -1745,6 +1993,8 @@ class document_type_list extends document_type
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
+			if (!$this->EventCancelled)
+				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -1770,10 +2020,11 @@ class document_type_list extends document_type
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['type_id'] = NULL;
-		$row['document_type'] = NULL;
-		$row['document_category'] = NULL;
+		$row['type_id'] = $this->type_id->CurrentValue;
+		$row['document_type'] = $this->document_type->CurrentValue;
+		$row['document_category'] = $this->document_category->CurrentValue;
 		return $row;
 	}
 
@@ -1823,10 +2074,6 @@ class document_type_list extends document_type
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
 			$this->document_type->ViewCustomAttributes = "";
@@ -1834,11 +2081,6 @@ class document_type_list extends document_type
 			// document_category
 			$this->document_category->ViewValue = $this->document_category->CurrentValue;
 			$this->document_category->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// document_type
 			$this->document_type->LinkCustomAttributes = "";
@@ -1849,11 +2091,283 @@ class document_type_list extends document_type
 			$this->document_category->LinkCustomAttributes = "";
 			$this->document_category->HrefValue = "";
 			$this->document_category->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// document_type
+			$this->document_type->EditAttrs["class"] = "form-control";
+			$this->document_type->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
+			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
+
+			// document_category
+			$this->document_category->EditAttrs["class"] = "form-control";
+			$this->document_category->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_category->CurrentValue = HtmlDecode($this->document_category->CurrentValue);
+			$this->document_category->EditValue = HtmlEncode($this->document_category->CurrentValue);
+			$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
+
+			// Add refer script
+			// document_type
+
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+
+			// document_category
+			$this->document_category->LinkCustomAttributes = "";
+			$this->document_category->HrefValue = "";
+		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// document_type
+			$this->document_type->EditAttrs["class"] = "form-control";
+			$this->document_type->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
+			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
+
+			// document_category
+			$this->document_category->EditAttrs["class"] = "form-control";
+			$this->document_category->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_category->CurrentValue = HtmlDecode($this->document_category->CurrentValue);
+			$this->document_category->EditValue = HtmlEncode($this->document_category->CurrentValue);
+			$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
+
+			// Edit refer script
+			// document_type
+
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+
+			// document_category
+			$this->document_category->LinkCustomAttributes = "";
+			$this->document_category->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate form
+	protected function validateForm()
+	{
+		global $Language, $FormError;
+
+		// Initialize form error message
+		$FormError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->type_id->Required) {
+			if (!$this->type_id->IsDetailKey && $this->type_id->FormValue != NULL && $this->type_id->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->type_id->caption(), $this->type_id->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_type->Required) {
+			if (!$this->document_type->IsDetailKey && $this->document_type->FormValue != NULL && $this->document_type->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_type->caption(), $this->document_type->RequiredErrorMessage));
+			}
+		}
+		if ($this->document_category->Required) {
+			if (!$this->document_category->IsDetailKey && $this->document_category->FormValue != NULL && $this->document_category->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->document_category->caption(), $this->document_category->RequiredErrorMessage));
+			}
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Update record based on key values
+	protected function editRow()
+	{
+		global $Security, $Language;
+		$filter = $this->getRecordFilter();
+		$filter = $this->applyUserIDFilters($filter);
+		$conn = &$this->getConnection();
+		if ($this->document_type->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"document_type\" = '" . AdjustSql($this->document_type->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->document_type->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->document_type->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+			$editRow = FALSE; // Update Failed
+		} else {
+
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->loadDbValues($rsold);
+			$rsnew = [];
+
+			// document_type
+			$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", $this->document_type->ReadOnly);
+
+			// document_category
+			$this->document_category->setDbValueDef($rsnew, $this->document_category->CurrentValue, "", $this->document_category->ReadOnly);
+
+			// Call Row Updating event
+			$updateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($updateRow) {
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				if (count($rsnew) > 0)
+					$editRow = $this->update($rsnew, "", $rsold);
+				else
+					$editRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($editRow) {
+				}
+			} else {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
+				}
+				$editRow = FALSE;
+			}
+		}
+
+		// Call Row_Updated event
+		if ($editRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->close();
+
+		// Write JSON for API request
+		if (IsApi() && $editRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $editRow;
+	}
+
+	// Load row hash
+	protected function loadRowHash()
+	{
+		$filter = $this->getRecordFilter();
+
+		// Load SQL based on filter
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rsRow = $conn->Execute($sql);
+		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
+		$rsRow->close();
+	}
+
+	// Get Row Hash
+	public function getRowHash(&$rs)
+	{
+		if (!$rs)
+			return "";
+		$hash = "";
+		$hash .= GetFieldHash($rs->fields('document_type')); // document_type
+		$hash .= GetFieldHash($rs->fields('document_category')); // document_category
+		return md5($hash);
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
+	{
+		global $Language, $Security;
+		if ($this->document_type->CurrentValue <> "") { // Check field with unique index
+			$filter = "(document_type = '" . AdjustSql($this->document_type->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->document_type->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->document_type->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		$conn = &$this->getConnection();
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
+		}
+		$rsnew = [];
+
+		// document_type
+		$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", FALSE);
+
+		// document_category
+		$this->document_category->setDbValueDef($rsnew, $this->document_category->CurrentValue, "", FALSE);
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
+			}
+		} else {
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
+			}
+			$addRow = FALSE;
+		}
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $addRow;
 	}
 
 	// Get export HTML tag
@@ -1934,7 +2448,7 @@ class document_type_list extends document_type
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

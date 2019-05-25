@@ -350,9 +350,9 @@ class app_version_add extends app_version
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class app_version_add extends app_version
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -617,7 +617,7 @@ class app_version_add extends app_version
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->sequence_no->Visible = FALSE;
-		$this->frontend_version->setVisibility();
+		$this->frontend_version->Visible = FALSE;
 		$this->backend_version->setVisibility();
 		$this->release_date->setVisibility();
 		$this->posted_date->setVisibility();
@@ -774,15 +774,6 @@ class app_version_add extends app_version
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'frontend_version' first before field var 'x_frontend_version'
-		$val = $CurrentForm->hasValue("frontend_version") ? $CurrentForm->getValue("frontend_version") : $CurrentForm->getValue("x_frontend_version");
-		if (!$this->frontend_version->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->frontend_version->Visible = FALSE; // Disable update for API request
-			else
-				$this->frontend_version->setFormValue($val);
-		}
-
 		// Check field name 'backend_version' first before field var 'x_backend_version'
 		$val = $CurrentForm->hasValue("backend_version") ? $CurrentForm->getValue("backend_version") : $CurrentForm->getValue("x_backend_version");
 		if (!$this->backend_version->IsDetailKey) {
@@ -829,7 +820,6 @@ class app_version_add extends app_version
 	public function restoreFormValues()
 	{
 		global $CurrentForm;
-		$this->frontend_version->CurrentValue = $this->frontend_version->FormValue;
 		$this->backend_version->CurrentValue = $this->backend_version->FormValue;
 		$this->release_date->CurrentValue = $this->release_date->FormValue;
 		$this->release_date->CurrentValue = UnFormatDateTime($this->release_date->CurrentValue, 0);
@@ -938,15 +928,6 @@ class app_version_add extends app_version
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// sequence_no
-			$this->sequence_no->ViewValue = $this->sequence_no->CurrentValue;
-			$this->sequence_no->ViewValue = FormatNumber($this->sequence_no->ViewValue, 0, -2, -2, -2);
-			$this->sequence_no->ViewCustomAttributes = "";
-
-			// frontend_version
-			$this->frontend_version->ViewValue = $this->frontend_version->CurrentValue;
-			$this->frontend_version->ViewCustomAttributes = "";
-
 			// backend_version
 			$this->backend_version->ViewValue = $this->backend_version->CurrentValue;
 			$this->backend_version->ViewCustomAttributes = "";
@@ -964,11 +945,6 @@ class app_version_add extends app_version
 			// remarks
 			$this->remarks->ViewValue = $this->remarks->CurrentValue;
 			$this->remarks->ViewCustomAttributes = "";
-
-			// frontend_version
-			$this->frontend_version->LinkCustomAttributes = "";
-			$this->frontend_version->HrefValue = "";
-			$this->frontend_version->TooltipValue = "";
 
 			// backend_version
 			$this->backend_version->LinkCustomAttributes = "";
@@ -990,12 +966,6 @@ class app_version_add extends app_version
 			$this->remarks->HrefValue = "";
 			$this->remarks->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
-
-			// frontend_version
-			$this->frontend_version->EditAttrs["class"] = "form-control";
-			$this->frontend_version->EditCustomAttributes = "";
-			$this->frontend_version->EditValue = HtmlEncode($this->frontend_version->CurrentValue);
-			$this->frontend_version->PlaceHolder = RemoveHtml($this->frontend_version->caption());
 
 			// backend_version
 			$this->backend_version->EditAttrs["class"] = "form-control";
@@ -1022,12 +992,8 @@ class app_version_add extends app_version
 			$this->remarks->PlaceHolder = RemoveHtml($this->remarks->caption());
 
 			// Add refer script
-			// frontend_version
-
-			$this->frontend_version->LinkCustomAttributes = "";
-			$this->frontend_version->HrefValue = "";
-
 			// backend_version
+
 			$this->backend_version->LinkCustomAttributes = "";
 			$this->backend_version->HrefValue = "";
 
@@ -1122,9 +1088,6 @@ class app_version_add extends app_version
 		if ($rsold) {
 		}
 		$rsnew = [];
-
-		// frontend_version
-		$this->frontend_version->setDbValueDef($rsnew, $this->frontend_version->CurrentValue, "", FALSE);
 
 		// backend_version
 		$this->backend_version->setDbValueDef($rsnew, $this->backend_version->CurrentValue, "", FALSE);

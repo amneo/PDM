@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'VwuklRym5KAtx8mf'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'guNTrDrN2PrqeHBi'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -339,22 +339,22 @@ define(PROJECT_NAMESPACE . "USE_SUBQUERY_FOR_MASTER_USER_ID", FALSE);
 define(PROJECT_NAMESPACE . "USER_ID_ALLOW", 104);
 
 // User table/field names
-define(PROJECT_NAMESPACE . "USER_TABLE_NAME", "user_dtls");
-define(PROJECT_NAMESPACE . "LOGIN_USERNAME_FIELD_NAME", "username");
-define(PROJECT_NAMESPACE . "LOGIN_PASSWORD_FIELD_NAME", "password");
-define(PROJECT_NAMESPACE . "USER_ID_FIELD_NAME", "user_id");
-define(PROJECT_NAMESPACE . "USER_LEVEL_FIELD_NAME", "UserLevel");
-define(PROJECT_NAMESPACE . "USER_PROFILE_FIELD_NAME", "history");
-define(PROJECT_NAMESPACE . "REGISTER_ACTIVATE_FIELD_NAME", "account_valid");
-define(PROJECT_NAMESPACE . "USER_EMAIL_FIELD_NAME", "email_addreess");
+define(PROJECT_NAMESPACE . "USER_TABLE_NAME", "users");
+define(PROJECT_NAMESPACE . "LOGIN_USERNAME_FIELD_NAME", "userLoginId");
+define(PROJECT_NAMESPACE . "LOGIN_PASSWORD_FIELD_NAME", "uPassword");
+define(PROJECT_NAMESPACE . "USER_ID_FIELD_NAME", "seqid");
+define(PROJECT_NAMESPACE . "USER_LEVEL_FIELD_NAME", "uLevel");
+define(PROJECT_NAMESPACE . "USER_PROFILE_FIELD_NAME", "uProfile");
+define(PROJECT_NAMESPACE . "REGISTER_ACTIVATE_FIELD_NAME", "uActivated");
+define(PROJECT_NAMESPACE . "USER_EMAIL_FIELD_NAME", "uEmail");
 
 // User table filters
 define(PROJECT_NAMESPACE . "USER_TABLE_DBID", "DB");
-define(PROJECT_NAMESPACE . "USER_TABLE", "\"public\".\"user_dtls\"");
-define(PROJECT_NAMESPACE . "USER_NAME_FILTER", "(\"username\" = '%u')");
-define(PROJECT_NAMESPACE . "USER_ID_FILTER", "(\"user_id\" = %u)");
-define(PROJECT_NAMESPACE . "USER_EMAIL_FILTER", "(\"email_addreess\" = '%e')");
-define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "(\"account_valid\" = true)");
+define(PROJECT_NAMESPACE . "USER_TABLE", "\"public\".\"users\"");
+define(PROJECT_NAMESPACE . "USER_NAME_FILTER", "(\"userLoginId\" = '%u')");
+define(PROJECT_NAMESPACE . "USER_ID_FILTER", "(\"seqid\" = %u)");
+define(PROJECT_NAMESPACE . "USER_EMAIL_FILTER", "(\"uEmail\" = '%e')");
+define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "(\"uActivated\" = true)");
 
 // User Profile Constants
 define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_ID", "SessionID");
@@ -401,7 +401,7 @@ $REMOTE_FILE_PATTERN = '/^((https?\:)?|ftps?\:|s3:)\/\//i';
 $UPLOAD_TYPE = "POST"; // HTTP request method for the file uploads, e.g. "POST", "PUT"
 define(PROJECT_NAMESPACE . "UPLOAD_TEMP_PATH", ""); // Upload temp path (absolute local physical path)
 define(PROJECT_NAMESPACE . "UPLOAD_TEMP_HREF_PATH", ""); // Upload temp href path (absolute URL path for download)
-define(PROJECT_NAMESPACE . "UPLOAD_DEST_PATH", "upload/"); // Upload destination path (relative to app root)
+define(PROJECT_NAMESPACE . "UPLOAD_DEST_PATH", "pdmdb/"); // Upload destination path (relative to app root)
 define(PROJECT_NAMESPACE . "UPLOAD_HREF_PATH", ""); // Upload file href path (for download)
 define(PROJECT_NAMESPACE . "UPLOAD_TEMP_FOLDER_PREFIX", "temp__"); // Upload temp folders prefix
 define(PROJECT_NAMESPACE . "UPLOAD_TEMP_FOLDER_TIME_LIMIT", 1440); // Upload temp folder time limit (minutes)
@@ -411,7 +411,7 @@ define(PROJECT_NAMESPACE . "UPLOAD_THUMBNAIL_HEIGHT", 0); // Temporary thumbnail
 define(PROJECT_NAMESPACE . "UPLOAD_ALLOWED_FILE_EXT", "gif,jpg,jpeg,bmp,png,doc,docx,xls,xlsx,pdf,zip"); // Allowed file extensions
 define(PROJECT_NAMESPACE . "IMAGE_ALLOWED_FILE_EXT", "gif,jpe,jpeg,jpg,png,bmp"); // Allowed file extensions for images
 define(PROJECT_NAMESPACE . "DOWNLOAD_ALLOWED_FILE_EXT", "csv,pdf,xls,doc,xlsx,docx"); // Allowed file extensions for download (non-image)
-define(PROJECT_NAMESPACE . "ENCRYPT_FILE_PATH", TRUE); // Encrypt file path
+define(PROJECT_NAMESPACE . "ENCRYPT_FILE_PATH", FALSE); // Encrypt file path
 define(PROJECT_NAMESPACE . "MAX_FILE_SIZE", 1000000000); // Max file size
 define(PROJECT_NAMESPACE . "MAX_FILE_COUNT", 0); // Max file count
 define(PROJECT_NAMESPACE . "THUMBNAIL_DEFAULT_WIDTH", 0); // Thumbnail default width

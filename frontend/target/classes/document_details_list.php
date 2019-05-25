@@ -414,9 +414,9 @@ class document_details_list extends document_details
 		$this->MultiUpdateUrl = "document_detailsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -437,9 +437,9 @@ class document_details_list extends document_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -628,7 +628,7 @@ class document_details_list extends document_details
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -771,6 +771,9 @@ class document_details_list extends document_details
 
 		// Setup export options
 		$this->setupExportOptions();
+
+		// Setup import options
+		$this->setupImportOptions();
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();
 		$this->client_doc_no->setVisibility();
@@ -815,6 +818,7 @@ class document_details_list extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->project_system);
 		$this->setupLookupOptions($this->document_type);
 
 		// Search filters
@@ -845,12 +849,54 @@ class document_details_list extends document_details
 				if ($this->isCancel())
 					$this->clearInlineMode();
 
+				// Switch to grid edit mode
+				if ($this->isGridEdit())
+					$this->gridEditMode();
+
+				// Switch to inline edit mode
+				if ($this->isEdit())
+					$this->inlineEditMode();
+
+				// Switch to inline add mode
+				if ($this->isAdd() || $this->isCopy())
+					$this->inlineAddMode();
+
 				// Switch to grid add mode
 				if ($this->isGridAdd())
 					$this->gridAddMode();
 			} else {
 				if (Post("action") !== NULL) {
 					$this->CurrentAction = Post("action"); // Get action
+
+					// Process import
+					if ($this->isImport()) {
+						$this->import(Post(API_FILE_TOKEN_NAME));
+						$this->terminate();
+					}
+
+					// Grid Update
+					if (($this->isGridUpdate() || $this->isGridOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "gridedit") {
+						if ($this->validateGridForm()) {
+							$gridUpdate = $this->gridUpdate();
+						} else {
+							$gridUpdate = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridUpdate) {
+							$this->gridAddMode();
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridEditMode(); // Stay in Grid edit mode
+						}
+					}
+
+					// Inline Update
+					if (($this->isUpdate() || $this->isOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "edit")
+						$this->inlineUpdate();
+
+					// Insert Inline
+					if ($this->isInsert() && @$_SESSION[SESSION_INLINE_MODE] == "add")
+						$this->inlineInsert();
 
 					// Grid Insert
 					if ($this->isGridInsert() && @$_SESSION[SESSION_INLINE_MODE] == "gridadd") {
@@ -861,11 +907,17 @@ class document_details_list extends document_details
 							$this->setFailureMessage($FormError);
 						}
 						if ($gridInsert) {
+							$this->gridAddMode();
 						} else {
 							$this->EventCancelled = TRUE;
 							$this->gridAddMode(); // Stay in Grid add mode
 						}
 					}
+				} elseif (@$_SESSION[SESSION_INLINE_MODE] == "gridedit") { // Previously in grid edit mode
+					if (Get(TABLE_START_REC) !== NULL || Get(TABLE_PAGE_NO) !== NULL) // Stay in grid edit mode if paging
+						$this->gridEditMode();
+					else // Reset grid edit
+						$this->clearInlineMode();
 				}
 			}
 
@@ -939,7 +991,7 @@ class document_details_list extends document_details
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -1052,6 +1104,7 @@ class document_details_list extends document_details
 	// Exit inline mode
 	protected function clearInlineMode()
 	{
+		$this->setKey("document_sequence", ""); // Clear inline edit key
 		$this->LastAction = $this->CurrentAction; // Save last action
 		$this->CurrentAction = ""; // Clear action
 		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -1063,6 +1116,234 @@ class document_details_list extends document_details
 		$this->CurrentAction = "gridadd";
 		$_SESSION[SESSION_INLINE_MODE] = "gridadd";
 		$this->hideFieldsForAddEdit();
+	}
+
+	// Switch to Grid Edit mode
+	protected function gridEditMode()
+	{
+		$this->CurrentAction = "gridedit";
+		$_SESSION[SESSION_INLINE_MODE] = "gridedit";
+		$this->hideFieldsForAddEdit();
+	}
+
+	// Switch to Inline Edit mode
+	protected function inlineEditMode()
+	{
+		global $Security, $Language;
+		if (!$Security->canEdit())
+			return FALSE; // Edit not allowed
+		$inlineEdit = TRUE;
+		if (Get("document_sequence") !== NULL) {
+			$this->document_sequence->setQueryStringValue(Get("document_sequence"));
+		} else {
+			$inlineEdit = FALSE;
+		}
+		if ($inlineEdit) {
+			if ($this->loadRow()) {
+				$this->setKey("document_sequence", $this->document_sequence->CurrentValue); // Set up inline edit key
+				$_SESSION[SESSION_INLINE_MODE] = "edit"; // Enable inline edit
+			}
+		}
+		return TRUE;
+	}
+
+	// Perform update to Inline Edit record
+	protected function inlineUpdate()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$CurrentForm->Index = 1;
+		$this->loadFormValues(); // Get form values
+
+		// Validate form
+		$inlineUpdate = TRUE;
+		if (!$this->validateForm()) {
+			$inlineUpdate = FALSE; // Form error, reset action
+			$this->setFailureMessage($FormError);
+		} else {
+			$inlineUpdate = FALSE;
+			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
+			if ($this->setupKeyValues($rowkey)) { // Set up key values
+				if ($this->checkInlineEditKey()) { // Check key
+					$this->SendEmail = TRUE; // Send email on update success
+					$inlineUpdate = $this->editRow(); // Update record
+				} else {
+					$inlineUpdate = FALSE;
+				}
+			}
+		}
+		if ($inlineUpdate) { // Update success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up success message
+			$this->clearInlineMode(); // Clear inline edit mode
+		} else {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
+			$this->EventCancelled = TRUE; // Cancel event
+			$this->CurrentAction = "edit"; // Stay in edit mode
+		}
+	}
+
+	// Check Inline Edit key
+	public function checkInlineEditKey()
+	{
+		if (strval($this->getKey("document_sequence")) <> strval($this->document_sequence->CurrentValue))
+			return FALSE;
+		return TRUE;
+	}
+
+	// Switch to Inline Add mode
+	protected function inlineAddMode()
+	{
+		global $Security, $Language;
+		if (!$Security->canAdd())
+			return FALSE; // Add not allowed
+		if ($this->isCopy()) {
+			if (Get("document_sequence") !== NULL) {
+				$this->document_sequence->setQueryStringValue(Get("document_sequence"));
+				$this->setKey("document_sequence", $this->document_sequence->CurrentValue); // Set up key
+			} else {
+				$this->setKey("document_sequence", ""); // Clear key
+				$this->CurrentAction = "add";
+			}
+		}
+		$_SESSION[SESSION_INLINE_MODE] = "add"; // Enable inline add
+		return TRUE;
+	}
+
+	// Perform update to Inline Add/Copy record
+	protected function inlineInsert()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$this->loadOldRecord(); // Load old record
+		$CurrentForm->Index = 0;
+		$this->loadFormValues(); // Get form values
+
+		// Validate form
+		if (!$this->validateForm()) {
+			$this->setFailureMessage($FormError); // Set validation error message
+			$this->EventCancelled = TRUE; // Set event cancelled
+			$this->CurrentAction = "add"; // Stay in add mode
+			return;
+		}
+		$this->SendEmail = TRUE; // Send email on add success
+		if ($this->addRow($this->OldRecordset)) { // Add record
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up add success message
+			$this->clearInlineMode(); // Clear inline add mode
+		} else { // Add failed
+			$this->EventCancelled = TRUE; // Set event cancelled
+			$this->CurrentAction = "add"; // Stay in add mode
+		}
+	}
+
+	// Perform update to grid
+	public function gridUpdate()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$gridUpdate = TRUE;
+
+		// Get old recordset
+		$this->CurrentFilter = $this->buildKeyFilter();
+		if ($this->CurrentFilter == "")
+			$this->CurrentFilter = "0=1";
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		if ($rs = $conn->execute($sql)) {
+			$rsold = $rs->getRows();
+			$rs->close();
+		}
+
+		// Call Grid Updating event
+		if (!$this->Grid_Updating($rsold)) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridEditCancelled")); // Set grid edit cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+		if ($this->AuditTrailOnEdit)
+			$this->writeAuditTrailDummy($Language->phrase("BatchUpdateBegin")); // Batch update begin
+		$key = "";
+
+		// Update row index and get row key
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Update all rows based on key
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+			$CurrentForm->Index = $rowindex;
+			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+
+			// Load all values and keys
+			if ($rowaction <> "insertdelete") { // Skip insert then deleted rows
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "" || $rowaction == "edit" || $rowaction == "delete") {
+					$gridUpdate = $this->setupKeyValues($rowkey); // Set up key values
+				} else {
+					$gridUpdate = TRUE;
+				}
+
+				// Skip empty row
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// No action required
+				// Validate form and insert/update/delete record
+
+				} elseif ($gridUpdate) {
+					if ($rowaction == "delete") {
+						$this->CurrentFilter = $this->getRecordFilter();
+						$gridUpdate = $this->deleteRows(); // Delete this row
+					} else if (!$this->validateForm()) {
+						$gridUpdate = FALSE; // Form error, reset action
+						$this->setFailureMessage($FormError);
+					} else {
+						if ($rowaction == "insert") {
+							$gridUpdate = $this->addRow(); // Insert this row
+						} else {
+							if ($rowkey <> "") {
+								$this->SendEmail = FALSE; // Do not send email on update success
+								$gridUpdate = $this->editRow(); // Update this row
+							}
+						} // End update
+					}
+				}
+				if ($gridUpdate) {
+					if ($key <> "")
+						$key .= ", ";
+					$key .= $rowkey;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($gridUpdate) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Updated event
+			$this->Grid_Updated($rsold, $rsnew);
+			if ($this->AuditTrailOnEdit)
+				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateSuccess")); // Batch update success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
+			$this->clearInlineMode(); // Clear inline edit mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->AuditTrailOnEdit)
+				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateRollback")); // Batch update rollback
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
+		}
+		return $gridUpdate;
 	}
 
 	// Build filter for all keys
@@ -1832,18 +2113,10 @@ class document_details_list extends document_details
 
 		// "checkbox"
 		$item = &$this->ListOptions->add("checkbox");
-		$item->Visible = FALSE;
+		$item->Visible = $Security->canEdit();
 		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew.selectAllKey(this);\">";
 		$item->moveTo(0);
-		$item->ShowInDropDown = FALSE;
-		$item->ShowInButtonGroup = FALSE;
-
-		// "sequence"
-		$item = &$this->ListOptions->add("sequence");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
-		$item->OnLeft = TRUE; // Always on left
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
@@ -1903,15 +2176,35 @@ class document_details_list extends document_details
 			}
 		}
 
-		// "sequence"
-		$opt = &$this->ListOptions->Items["sequence"];
-		$opt->Body = FormatSequenceNumber($this->RecCnt);
+		// "copy"
+		$opt = &$this->ListOptions->Items["copy"];
+		if ($this->isInlineAddRow() || $this->isInlineCopyRow()) { // Inline Add/Copy
+			$this->ListOptions->CustomItem = "copy"; // Show copy column only
+			$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
+				"<a class=\"ew-grid-link ew-inline-insert\" title=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("InsertLink") . "</a>&nbsp;" .
+				"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("CancelLink") . "</a>" .
+				"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"insert\"></div>";
+			return;
+		}
+
+		// "edit"
+		$opt = &$this->ListOptions->Items["edit"];
+		if ($this->isInlineEditRow()) { // Inline-Edit
+			$this->ListOptions->CustomItem = "edit"; // Show edit column only
+				$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
+					"<a class=\"ew-grid-link ew-inline-update\" title=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . UrlAddHash($this->pageName(), "r" . $this->RowCnt . "_" . $this->TableVar) . "');\">" . $Language->phrase("UpdateLink") . "</a>&nbsp;" .
+					"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("CancelLink") . "</a>" .
+					"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"update\"></div>";
+			$opt->Body .= "<input type=\"hidden\" name=\"k" . $this->RowIndex . "_key\" id=\"k" . $this->RowIndex . "_key\" value=\"" . HtmlEncode($this->document_sequence->CurrentValue) . "\">";
+			return;
+		}
 
 		// "edit"
 		$opt = &$this->ListOptions->Items["edit"];
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
 		if ($Security->canEdit()) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
+			$opt->Body .= "<a class=\"ew-row-link ew-inline-edit\" title=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" href=\"" . HtmlEncode(UrlAddHash($this->InlineEditUrl, "r" . $this->RowCnt . "_" . $this->TableVar)) . "\">" . $Language->phrase("InlineEditLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1921,6 +2214,7 @@ class document_details_list extends document_details
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
 			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
+			$opt->Body .= "<a class=\"ew-row-link ew-inline-copy\" title=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" href=\"" . HtmlEncode($this->InlineCopyUrl) . "\">" . $Language->phrase("InlineCopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -1964,6 +2258,9 @@ class document_details_list extends document_details
 		// "checkbox"
 		$opt = &$this->ListOptions->Items["checkbox"];
 		$opt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ew-multi-select\" value=\"" . HtmlEncode($this->document_sequence->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\">";
+		if ($this->isGridEdit() && is_numeric($this->RowIndex)) {
+			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $keyName . "\" id=\"" . $keyName . "\" value=\"" . $this->document_sequence->CurrentValue . "\">";
+		}
 		$this->renderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1982,10 +2279,26 @@ class document_details_list extends document_details
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
 		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
+
+		// Inline Add
+		$item = &$option->add("inlineadd");
+		$item->Body = "<a class=\"ew-add-edit ew-inline-add\" title=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" href=\"" . HtmlEncode($this->InlineAddUrl) . "\">" .$Language->phrase("InlineAddLink") . "</a>";
+		$item->Visible = ($this->InlineAddUrl <> "" && $Security->canAdd());
 		$item = &$option->add("gridadd");
 		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
 		$item->Visible = ($this->GridAddUrl <> "" && $Security->canAdd());
+
+		// Add grid edit
+		$option = $options["addedit"];
+		$item = &$option->add("gridedit");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-edit\" title=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" href=\"" . HtmlEncode($this->GridEditUrl) . "\">" . $Language->phrase("GridEditLink") . "</a>";
+		$item->Visible = ($this->GridEditUrl <> "" && $Security->canEdit());
 		$option = $options["action"];
+
+		// Add multi update
+		$item = &$option->add("multiupdate");
+		$item->Body = "<a class=\"ew-action ew-multi-update\" title=\"" . HtmlTitle($Language->phrase("UpdateSelectedLink")) . "\" data-table=\"document_details\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateSelectedLink")) . "\" href=\"\" onclick=\"ew.submitAction(event,{f:document.fdocument_detailslist,url:'" . $this->MultiUpdateUrl . "'});return false;\">" . $Language->phrase("UpdateSelectedLink") . "</a>";
+		$item->Visible = ($Security->canEdit());
 
 		// Set up options default
 		foreach ($options as &$option) {
@@ -2070,6 +2383,23 @@ class document_details_list extends document_details
 				// Add grid cancel
 				$item = &$option->add("gridcancel");
 				$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+			if ($this->isGridEdit()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+					$item = &$option->add("gridsave");
+					$item->Body = "<a class=\"ew-action ew-grid-save\" title=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridSaveLink") . "</a>";
+					$item = &$option->add("gridcancel");
+					$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
 			}
 		}
 	}
@@ -2516,6 +2846,8 @@ class document_details_list extends document_details
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
+			if (!$this->EventCancelled)
+				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -2650,7 +2982,7 @@ class document_details_list extends document_details
 			if ($curVal <> "") {
 				$this->project_name->ViewValue = $this->project_name->lookupCacheOption($curVal);
 				if ($this->project_name->ViewValue === NULL) { // Lookup from database
-					$filterWrk = "\"project_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
@@ -2670,7 +3002,25 @@ class document_details_list extends document_details
 			$this->project_name->ViewCustomAttributes = "";
 
 			// project_system
-			$this->project_system->ViewValue = $this->project_system->CurrentValue;
+			$curVal = strval($this->project_system->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+				if ($this->project_system->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"system_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_system->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->project_system->ViewValue = $this->project_system->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_system->ViewValue = $this->project_system->CurrentValue;
+					}
+				}
+			} else {
+				$this->project_system->ViewValue = NULL;
+			}
 			$this->project_system->ViewCustomAttributes = "";
 
 			// create_date
@@ -2698,7 +3048,6 @@ class document_details_list extends document_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2796,7 +3145,7 @@ class document_details_list extends document_details
 			if ($curVal <> "") {
 				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
 				if ($this->project_name->EditValue === NULL) { // Lookup from database
-					$filterWrk = "\"project_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
@@ -2817,10 +3166,25 @@ class document_details_list extends document_details
 			// project_system
 			$this->project_system->EditAttrs["class"] = "form-control";
 			$this->project_system->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->project_system->CurrentValue = HtmlDecode($this->project_system->CurrentValue);
-			$this->project_system->EditValue = HtmlEncode($this->project_system->CurrentValue);
-			$this->project_system->PlaceHolder = RemoveHtml($this->project_system->caption());
+			$curVal = trim(strval($this->project_system->CurrentValue));
+			if ($curVal <> "")
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+			else
+				$this->project_system->ViewValue = $this->project_system->Lookup !== NULL && is_array($this->project_system->Lookup->Options) ? $curVal : NULL;
+			if ($this->project_system->ViewValue !== NULL) { // Load from cache
+				$this->project_system->EditValue = array_values($this->project_system->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"system_name\"" . SearchString("=", $this->project_system->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->project_system->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->project_system->EditValue = $arwrk;
+			}
 
 			// create_date
 			$this->create_date->EditAttrs["class"] = "form-control";
@@ -2850,7 +3214,6 @@ class document_details_list extends document_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
 						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -2869,6 +3232,165 @@ class document_details_list extends document_details
 			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
 
 			// Add refer script
+			// firelink_doc_no
+
+			$this->firelink_doc_no->LinkCustomAttributes = "";
+			$this->firelink_doc_no->HrefValue = "";
+
+			// client_doc_no
+			$this->client_doc_no->LinkCustomAttributes = "";
+			$this->client_doc_no->HrefValue = "";
+
+			// document_tittle
+			$this->document_tittle->LinkCustomAttributes = "";
+			$this->document_tittle->HrefValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// project_system
+			$this->project_system->LinkCustomAttributes = "";
+			$this->project_system->HrefValue = "";
+
+			// create_date
+			$this->create_date->LinkCustomAttributes = "";
+			$this->create_date->HrefValue = "";
+
+			// planned_date
+			$this->planned_date->LinkCustomAttributes = "";
+			$this->planned_date->HrefValue = "";
+
+			// document_type
+			$this->document_type->LinkCustomAttributes = "";
+			$this->document_type->HrefValue = "";
+
+			// expiry_date
+			$this->expiry_date->LinkCustomAttributes = "";
+			$this->expiry_date->HrefValue = "";
+		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->CurrentValue = HtmlDecode($this->firelink_doc_no->CurrentValue);
+			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->CurrentValue);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// client_doc_no
+			$this->client_doc_no->EditAttrs["class"] = "form-control";
+			$this->client_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->client_doc_no->CurrentValue = HtmlDecode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->EditValue = HtmlEncode($this->client_doc_no->CurrentValue);
+			$this->client_doc_no->PlaceHolder = RemoveHtml($this->client_doc_no->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->CurrentValue = HtmlDecode($this->document_tittle->CurrentValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->CurrentValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// project_system
+			$this->project_system->EditAttrs["class"] = "form-control";
+			$this->project_system->EditCustomAttributes = "";
+			$curVal = trim(strval($this->project_system->CurrentValue));
+			if ($curVal <> "")
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+			else
+				$this->project_system->ViewValue = $this->project_system->Lookup !== NULL && is_array($this->project_system->Lookup->Options) ? $curVal : NULL;
+			if ($this->project_system->ViewValue !== NULL) { // Load from cache
+				$this->project_system->EditValue = array_values($this->project_system->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"system_name\"" . SearchString("=", $this->project_system->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->project_system->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->project_system->EditValue = $arwrk;
+			}
+
+			// create_date
+			$this->create_date->EditAttrs["class"] = "form-control";
+			$this->create_date->EditCustomAttributes = "";
+			$this->create_date->EditValue = HtmlEncode(FormatDateTime($this->create_date->CurrentValue, 5));
+			$this->create_date->PlaceHolder = RemoveHtml($this->create_date->caption());
+
+			// planned_date
+			$this->planned_date->EditAttrs["class"] = "form-control";
+			$this->planned_date->EditCustomAttributes = "";
+			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
+			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
+
+			// document_type
+			$this->document_type->EditAttrs["class"] = "form-control";
+			$this->document_type->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
+			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+			$curVal = strval($this->document_type->CurrentValue);
+			if ($curVal <> "") {
+				$this->document_type->EditValue = $this->document_type->lookupCacheOption($curVal);
+				if ($this->document_type->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"document_type\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->document_type->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
+					}
+				}
+			} else {
+				$this->document_type->EditValue = NULL;
+			}
+			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
+
+			// expiry_date
+			$this->expiry_date->EditAttrs["class"] = "form-control";
+			$this->expiry_date->EditCustomAttributes = "";
+			$this->expiry_date->EditValue = HtmlEncode(FormatDateTime($this->expiry_date->CurrentValue, 8));
+			$this->expiry_date->PlaceHolder = RemoveHtml($this->expiry_date->caption());
+
+			// Edit refer script
 			// firelink_doc_no
 
 			$this->firelink_doc_no->LinkCustomAttributes = "";
@@ -3107,6 +3629,457 @@ class document_details_list extends document_details
 		return $deleteRows;
 	}
 
+	// Update record based on key values
+	protected function editRow()
+	{
+		global $Security, $Language;
+		$filter = $this->getRecordFilter();
+		$filter = $this->applyUserIDFilters($filter);
+		$conn = &$this->getConnection();
+		if ($this->firelink_doc_no->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"firelink_doc_no\" = '" . AdjustSql($this->firelink_doc_no->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->firelink_doc_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->firelink_doc_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
+		if ($this->client_doc_no->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"client_doc_no\" = '" . AdjustSql($this->client_doc_no->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->client_doc_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->client_doc_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+			$editRow = FALSE; // Update Failed
+		} else {
+
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->loadDbValues($rsold);
+			$rsnew = [];
+
+			// firelink_doc_no
+			$this->firelink_doc_no->setDbValueDef($rsnew, $this->firelink_doc_no->CurrentValue, "", $this->firelink_doc_no->ReadOnly);
+
+			// client_doc_no
+			$this->client_doc_no->setDbValueDef($rsnew, $this->client_doc_no->CurrentValue, "", $this->client_doc_no->ReadOnly);
+
+			// document_tittle
+			$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, "", $this->document_tittle->ReadOnly);
+
+			// project_name
+			$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", $this->project_name->ReadOnly);
+
+			// project_system
+			$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", $this->project_system->ReadOnly);
+
+			// create_date
+			$this->create_date->setDbValueDef($rsnew, UnFormatDateTime($this->create_date->CurrentValue, 5), NULL, $this->create_date->ReadOnly);
+
+			// planned_date
+			$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), $this->planned_date->ReadOnly);
+
+			// document_type
+			$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", $this->document_type->ReadOnly);
+
+			// expiry_date
+			$this->expiry_date->setDbValueDef($rsnew, UnFormatDateTime($this->expiry_date->CurrentValue, 0), NULL, $this->expiry_date->ReadOnly);
+
+			// Call Row Updating event
+			$updateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($updateRow) {
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				if (count($rsnew) > 0)
+					$editRow = $this->update($rsnew, "", $rsold);
+				else
+					$editRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($editRow) {
+				}
+			} else {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
+				}
+				$editRow = FALSE;
+			}
+		}
+
+		// Call Row_Updated event
+		if ($editRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->close();
+
+		// Write JSON for API request
+		if (IsApi() && $editRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $editRow;
+	}
+
+	/**
+	 * Import file
+	 *
+	 * @param string $token File token to locate the uploaded import file
+	 * @return boolean
+	 */
+	public function import($token)
+	{
+		global $Security, $Language;
+		if (!$Security->canImport())
+			return FALSE; // Import not allowed
+
+		// Check if valid token
+		if (EmptyValue($token))
+			return FALSE;
+
+		// Get uploaded files by token
+		$upload = new HttpUpload();
+		$files = explode(MULTIPLE_UPLOAD_SEPARATOR, $upload->getUploadedFileName($token, TRUE));
+		$exts = explode(",", IMPORT_FILE_ALLOWED_EXT);
+		$totCnt = 0;
+		$totSuccessCnt = 0;
+		$totFailCnt = 0;
+		$result = [API_FILE_TOKEN_NAME => $token, "files" => [], "success" => FALSE];
+
+		// Import records
+		foreach ($files as $file) {
+			$res = [API_FILE_TOKEN_NAME => $token, "file" => basename($file)];
+			$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+			// Ignore log file
+			if ($ext == "txt")
+				continue;
+			if (!in_array($ext, $exts)) {
+				$res = array_merge($res, ["error" => str_replace("%e", $ext, $Language->phrase("ImportMessageInvalidFileExtension"))]);
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Set up options for Page Importing event
+			// Get optional data from $_POST first
+
+			$ar = array_keys($_POST);
+			$options = [];
+			foreach ($ar as $key) {
+				if (!in_array($key, ["action", "token", "filetoken"]))
+					$options[$key] = $_POST[$key];
+			}
+
+			// Merge default options
+			$options = array_merge(["maxExecutionTime" => $this->ImportMaxExecutionTime, "file" => $file, "activeSheet" => 0, "headerRowNumber" => 0, "headers" => [], "offset" => 0, "limit" => 0], $options);
+			if ($ext == "csv")
+				$options = array_merge(["inputEncoding" => $this->ImportCsvEncoding, "delimiter" => $this->ImportCsvDelimiter, "enclosure" => $this->ImportCsvQuoteCharacter], $options);
+			$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader(ucfirst($ext));
+
+			// Call Page Importing server event
+			if (!$this->Page_Importing($reader, $options)) {
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Set max execution time
+			if ($options["maxExecutionTime"] > 0)
+				ini_set("max_execution_time", $options["maxExecutionTime"]);
+			try {
+				if ($ext == "csv") {
+					if ($options["inputEncoding"] <> '')
+						$reader->setInputEncoding($options["inputEncoding"]);
+					if ($options["delimiter"] <> '')
+						$reader->setDelimiter($options["delimiter"]);
+					if ($options["enclosure"] <> '')
+						$reader->setEnclosure($options["enclosure"]);
+				}
+				$spreadsheet = @$reader->load($file);
+			} catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+				$res = array_merge($res, ["error" => $e->getMessage()]);
+				WriteJson($res);
+				return FALSE;
+			}
+
+			// Get active worksheet
+			$spreadsheet->setActiveSheetIndex($options["activeSheet"]);
+			$worksheet = $spreadsheet->getActiveSheet();
+
+			// Get row and column indexes
+			$highestRow = $worksheet->getHighestRow();
+			$highestColumn = $worksheet->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+			// Get column headers
+			$headers = $options["headers"];
+			$headerRow = 0;
+			if (count($headers) == 0) { // Undetermined, load from header row
+				$headerRow = $options["headerRowNumber"] + 1;
+				$headers = $this->getImportHeaders($worksheet, $headerRow, $highestColumn);
+			}
+			if (count($headers) == 0) { // Unable to load header
+				$res["error"] = $Language->phrase("ImportMessageNoHeaderRow");
+				WriteJson($res);
+				return FALSE;
+			}
+			foreach ($headers as $name) {
+				if (!array_key_exists($name, $this->fields)) { // Unidentified field, not header row
+					$res["error"] = str_replace('%f', $name, $Language->phrase("ImportMessageInvalidFieldName"));
+					WriteJson($res);
+					return FALSE;
+				}
+			}
+			$startRow = $headerRow + 1;
+			$endRow = $highestRow;
+			if ($options["offset"] > 0)
+				$startRow += $options["offset"];
+			if ($options["limit"] > 0) {
+				$endRow = $startRow + $options["limit"] - 1;
+				if ($endRow > $highestRow)
+					$endRow = $highestRow;
+			}
+			if ($endRow >= $startRow)
+				$records = $this->getImportRecords($worksheet, $startRow, $endRow, $highestColumn);
+			else
+				$records = [];
+			$recordCnt = count($records);
+			$cnt = 0;
+			$successCnt = 0;
+			$failCnt = 0;
+			$failList = [];
+			$relLogFile = IncludeTrailingDelimiter(UploadPath(FALSE) . UPLOAD_TEMP_FOLDER_PREFIX . $token, FALSE) . $token . ".txt";
+			$res = array_merge($res, ["totalCount" => $recordCnt, "count" => $cnt, "successCount" => $successCnt, "failCount" => 0]);
+
+			// Begin transaction
+			if ($this->ImportUseTransaction) {
+				$conn = &$this->getConnection();
+				$conn->beginTrans();
+			}
+
+			// Process records
+			foreach ($records as $values) {
+				$importSuccess = FALSE;
+				try {
+					$row = array_combine($headers, $values);
+					$cnt++;
+					$res["count"] = $cnt;
+					if ($this->importRow($row, $cnt)) {
+						$successCnt++;
+						$importSuccess = TRUE;
+					} else {
+						$failCnt++;
+						$failList["row" . $cnt] = $this->getFailureMessage();
+						$this->clearFailureMessage(); // Clear error message
+					}
+				} catch (Exception $e) {
+					$failCnt++;
+					if ($failList["row" . $cnt] == "")
+						$failList["row" . $cnt] = $e->getMessage();
+				}
+
+				// Reset count if import fail + use transaction
+				if (!$importSuccess && $this->ImportUseTransaction) {
+					$successCnt = 0;
+					$failCnt = $cnt;
+				}
+
+				// Save progress to cache
+				$res["successCount"] = $successCnt;
+				$res["failCount"] = $failCnt;
+				SetCache($token, $res);
+
+				// No need to process further if import fail + use transaction
+				if (!$importSuccess && $this->ImportUseTransaction)
+					break;
+			}
+			$res["failList"] = $failList;
+
+			// Commit/Rollback transaction
+			if ($this->ImportUseTransaction) {
+				$conn = &$this->getConnection();
+				if ($failCnt > 0) // Rollback
+					$conn->rollbackTrans();
+				else // Commit
+					$conn->commitTrans();
+			}
+			$totCnt += $cnt;
+			$totSuccessCnt += $successCnt;
+			$totFailCnt += $failCnt;
+
+			// Call Page Imported server event
+			$this->Page_Imported($reader, $res);
+			if ($totCnt > 0 && $totFailCnt == 0) { // Clean up if all records imported
+				$res["success"] = TRUE;
+				$result["success"] = TRUE;
+			} else {
+				$res["log"] = $relLogFile;
+				$result["success"] = FALSE;
+			}
+			$result["files"][] = $res;
+		}
+		if ($result["success"])
+			CleanUploadTempPaths($token);
+		WriteJson($result);
+		return $result["success"];
+	}
+
+	/**
+	 * Get import header
+	 *
+	 * @param object $ws PhpSpreadsheet worksheet
+	 * @param integer $rowIdx Row index for header row (1-based)
+	 * @param string $endColName End column Name (e.g. "F")
+	 * @return array
+	 */
+	protected function getImportHeaders($ws, $rowIdx, $endColName) {
+		$ar = $ws->rangeToArray("A" . $rowIdx . ":" . $endColName . $rowIdx);
+		return $ar[0];
+	}
+
+	/**
+	 * Get import records
+	 *
+	 * @param object $ws PhpSpreadsheet worksheet
+	 * @param integer $startRowIdx Start row index
+	 * @param integer $endRowIdx End row index
+	 * @param string $endColName End column Name (e.g. "F")
+	 * @return array
+	 */
+	protected function getImportRecords($ws, $startRowIdx, $endRowIdx, $endColName) {
+		$ar = $ws->rangeToArray("A" . $startRowIdx . ":" . $endColName . $endRowIdx);
+		return $ar;
+	}
+
+	/**
+	 * Import a row
+	 *
+	 * @param array $row
+	 * @param integer $cnt
+	 * @return boolean
+	 */
+	protected function importRow($row, $cnt)
+	{
+		global $Language;
+
+		// Call Row Import server event
+		if (!$this->Row_Import($row, $cnt))
+			return FALSE;
+
+		// Check field values
+		foreach ($row as $name => $value) {
+			$fld = $this->fields[$name];
+			if (!$this->checkValue($fld, $value)) {
+				$this->setFailureMessage(str_replace(["%f", "%v"], [$fld->Name, $value], $Language->phrase("ImportMessageInvalidFieldValue")));
+				return FALSE;
+			}
+		}
+
+		// Insert/Update to database
+		if (!$this->ImportInsertOnly && $oldrow = $this->load($row)) {
+			$res = $this->update($row, "", $oldrow);
+		} else {
+			$res = $this->insert($row);
+		}
+		return $res;
+	}
+
+	/**
+	 * Check field value
+	 *
+	 * @param object $fld Field object
+	 * @param object $value
+	 * @return boolean
+	 */
+	protected function checkValue($fld, $value)
+	{
+		if ($fld->DataType == DATATYPE_NUMBER && !is_numeric($value))
+			return FALSE;
+		elseif ($fld->DataType == DATATYPE_DATE && !CheckDate($value))
+			return FALSE;
+		return TRUE;
+	}
+
+	// Load row
+	protected function load($row)
+	{
+		$filter = $this->getRecordFilter($row);
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rs = LoadRecordset($sql, $conn);
+		if ($rs && !$rs->EOF)
+			return $rs->fields;
+		else
+			return NULL;
+	}
+
+	// Load row hash
+	protected function loadRowHash()
+	{
+		$filter = $this->getRecordFilter();
+
+		// Load SQL based on filter
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rsRow = $conn->Execute($sql);
+		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
+		$rsRow->close();
+	}
+
+	// Get Row Hash
+	public function getRowHash(&$rs)
+	{
+		if (!$rs)
+			return "";
+		$hash = "";
+		$hash .= GetFieldHash($rs->fields('firelink_doc_no')); // firelink_doc_no
+		$hash .= GetFieldHash($rs->fields('client_doc_no')); // client_doc_no
+		$hash .= GetFieldHash($rs->fields('document_tittle')); // document_tittle
+		$hash .= GetFieldHash($rs->fields('project_name')); // project_name
+		$hash .= GetFieldHash($rs->fields('project_system')); // project_system
+		$hash .= GetFieldHash($rs->fields('create_date')); // create_date
+		$hash .= GetFieldHash($rs->fields('planned_date')); // planned_date
+		$hash .= GetFieldHash($rs->fields('document_type')); // document_type
+		$hash .= GetFieldHash($rs->fields('expiry_date')); // expiry_date
+		return md5($hash);
+	}
+
 	// Add record
 	protected function addRow($rsold = NULL)
 	{
@@ -3295,13 +4268,32 @@ class document_details_list extends document_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
 
 		// Add group option item
 		$item = &$this->ExportOptions->add($this->ExportOptions->GroupOptionName);
+		$item->Body = "";
+		$item->Visible = FALSE;
+	}
+
+	// Set up import options
+	protected function setupImportOptions()
+	{
+		global $Security, $Language;
+
+		// Import
+		$item = &$this->ImportOptions->add("import");
+		$item->Body = "<button id=\"imf_document_details\" class=\"ew-import-link ew-import\" title=\"" . $Language->phrase("ImportText") . "\" data-caption=\"" . $Language->phrase("ImportText") . "\" onclick=\"ew.importDialogShow({lnk:'imf_document_details',hdr:ew.language.phrase('ImportText')});\">" . $Language->phrase("Import") . "</button>";
+		$item->Visible = $Security->canImport();
+		$this->ImportOptions->UseButtonGroup = TRUE;
+		$this->ImportOptions->UseDropDownButton = FALSE;
+		$this->ImportOptions->DropDownButtonPhrase = $Language->phrase("ButtonImport");
+
+		// Add group option item
+		$item = &$this->ImportOptions->add($this->ImportOptions->GroupOptionName);
 		$item->Body = "";
 		$item->Visible = FALSE;
 	}
@@ -3451,6 +4443,8 @@ class document_details_list extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_project_system":
 							break;
 						case "x_document_type":
 							break;

@@ -395,9 +395,9 @@ class document_system_view extends document_system
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -418,9 +418,9 @@ class document_system_view extends document_system
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -722,7 +722,7 @@ class document_system_view extends document_system
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->system_name->setVisibility();
 		$this->system_group->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -859,15 +859,6 @@ class document_system_view extends document_system
 			$item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
 
-		// Edit
-		$item = &$option->add("edit");
-		$editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-		if ($this->IsModal) // Modal
-			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->EditUrl) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-		$item->Visible = ($this->EditUrl <> "" && $Security->canEdit());
-
 		// Copy
 		$item = &$option->add("copy");
 		$copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
@@ -876,14 +867,6 @@ class document_system_view extends document_system
 		else
 			$item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
 		$item->Visible = ($this->CopyUrl <> "" && $Security->canAdd());
-
-		// Delete
-		$item = &$option->add("delete");
-		if ($this->IsModal) // Handle as inline delete
-			$item->Body = "<a onclick=\"return ew.confirmDelete(this);\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery($this->DeleteUrl, "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-		else
-			$item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-		$item->Visible = ($this->DeleteUrl <> "" && $Security->canDelete());
 
 		// Set up action default
 		$option = &$options["action"];
@@ -1032,10 +1015,6 @@ class document_system_view extends document_system
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// system_name
 			$this->system_name->ViewValue = $this->system_name->CurrentValue;
 			$this->system_name->ViewCustomAttributes = "";
@@ -1043,11 +1022,6 @@ class document_system_view extends document_system
 			// system_group
 			$this->system_group->ViewValue = $this->system_group->CurrentValue;
 			$this->system_group->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// system_name
 			$this->system_name->LinkCustomAttributes = "";
@@ -1143,7 +1117,7 @@ class document_system_view extends document_system
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

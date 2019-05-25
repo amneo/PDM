@@ -358,9 +358,9 @@ class transmit_details_edit extends transmit_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class transmit_details_edit extends transmit_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -621,7 +621,7 @@ class transmit_details_edit extends transmit_details
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->transmit_id->Visible = FALSE;
-		$this->transmittal_no->Visible = FALSE;
+		$this->transmittal_no->setVisibility();
 		$this->project_name->setVisibility();
 		$this->delivery_location->setVisibility();
 		$this->addressed_to->setVisibility();
@@ -629,8 +629,10 @@ class transmit_details_edit extends transmit_details
 		$this->ack_rcvd->setVisibility();
 		$this->ack_document->setVisibility();
 		$this->transmital_date->Visible = FALSE;
+		$this->transmit_mode->setVisibility();
 		$this->hideFieldsForAddEdit();
-		$this->delivery_location->Required = FALSE;
+		$this->transmittal_no->Required = FALSE;
+		$this->project_name->Required = FALSE;
 
 		// Do not use lookup cache
 		$this->setUseLookupCache(FALSE);
@@ -652,6 +654,7 @@ class transmit_details_edit extends transmit_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->transmit_mode);
 
 		// Check modal
 		if ($this->IsModal)
@@ -748,7 +751,11 @@ class transmit_details_edit extends transmit_details
 		$this->setupBreadcrumb();
 
 		// Render the record
-		$this->RowType = ROWTYPE_EDIT; // Render as Edit
+		if ($this->isConfirm()) { // Confirm page
+			$this->RowType = ROWTYPE_VIEW; // Render as View
+		} else {
+			$this->RowType = ROWTYPE_EDIT; // Render as Edit
+		}
 		$this->resetAttributes();
 		$this->renderRow();
 	}
@@ -807,6 +814,15 @@ class transmit_details_edit extends transmit_details
 		global $CurrentForm;
 		$this->getUploadFiles(); // Get upload files
 
+		// Check field name 'transmittal_no' first before field var 'x_transmittal_no'
+		$val = $CurrentForm->hasValue("transmittal_no") ? $CurrentForm->getValue("transmittal_no") : $CurrentForm->getValue("x_transmittal_no");
+		if (!$this->transmittal_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmittal_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmittal_no->setFormValue($val);
+		}
+
 		// Check field name 'project_name' first before field var 'x_project_name'
 		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
 		if (!$this->project_name->IsDetailKey) {
@@ -852,6 +868,15 @@ class transmit_details_edit extends transmit_details
 				$this->ack_rcvd->setFormValue($val);
 		}
 
+		// Check field name 'transmit_mode' first before field var 'x_transmit_mode'
+		$val = $CurrentForm->hasValue("transmit_mode") ? $CurrentForm->getValue("transmit_mode") : $CurrentForm->getValue("x_transmit_mode");
+		if (!$this->transmit_mode->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmit_mode->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmit_mode->setFormValue($val);
+		}
+
 		// Check field name 'transmit_id' first before field var 'x_transmit_id'
 		$val = $CurrentForm->hasValue("transmit_id") ? $CurrentForm->getValue("transmit_id") : $CurrentForm->getValue("x_transmit_id");
 		if (!$this->transmit_id->IsDetailKey)
@@ -863,11 +888,13 @@ class transmit_details_edit extends transmit_details
 	{
 		global $CurrentForm;
 		$this->transmit_id->CurrentValue = $this->transmit_id->FormValue;
+		$this->transmittal_no->CurrentValue = $this->transmittal_no->FormValue;
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->delivery_location->CurrentValue = $this->delivery_location->FormValue;
 		$this->addressed_to->CurrentValue = $this->addressed_to->FormValue;
 		$this->remarks->CurrentValue = $this->remarks->FormValue;
 		$this->ack_rcvd->CurrentValue = $this->ack_rcvd->FormValue;
+		$this->transmit_mode->CurrentValue = $this->transmit_mode->FormValue;
 	}
 
 	// Load row based on key values
@@ -920,6 +947,7 @@ class transmit_details_edit extends transmit_details
 		$this->ack_document->Upload->DbValue = $row['ack_document'];
 		$this->ack_document->setDbValue($this->ack_document->Upload->DbValue);
 		$this->transmital_date->setDbValue($row['transmital_date']);
+		$this->transmit_mode->setDbValue($row['transmit_mode']);
 	}
 
 	// Return a row with default values
@@ -935,6 +963,7 @@ class transmit_details_edit extends transmit_details
 		$row['ack_rcvd'] = NULL;
 		$row['ack_document'] = NULL;
 		$row['transmital_date'] = NULL;
+		$row['transmit_mode'] = NULL;
 		return $row;
 	}
 
@@ -981,6 +1010,7 @@ class transmit_details_edit extends transmit_details
 		// ack_rcvd
 		// ack_document
 		// transmital_date
+		// transmit_mode
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -1048,6 +1078,45 @@ class transmit_details_edit extends transmit_details
 			}
 			$this->ack_document->ViewCustomAttributes = "";
 
+			// transmit_mode
+			$curVal = strval($this->transmit_mode->CurrentValue);
+			if ($curVal <> "") {
+				$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+				if ($this->transmit_mode->ViewValue === NULL) { // Lookup from database
+					$arwrk = explode(",", $curVal);
+					$filterWrk = "";
+					foreach ($arwrk as $wrk) {
+						if ($filterWrk <> "")
+							$filterWrk .= " OR ";
+						$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+					}
+					$sqlWrk = $this->transmit_mode->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$this->transmit_mode->ViewValue = new OptionValues();
+						$ari = 0;
+						while (!$rswrk->EOF) {
+							$arwrk = array();
+							$arwrk[1] = $rswrk->fields('df');
+							$this->transmit_mode->ViewValue->add($this->transmit_mode->displayValue($arwrk));
+							$rswrk->MoveNext();
+							$ari++;
+						}
+						$rswrk->Close();
+					} else {
+						$this->transmit_mode->ViewValue = $this->transmit_mode->CurrentValue;
+					}
+				}
+			} else {
+				$this->transmit_mode->ViewValue = NULL;
+			}
+			$this->transmit_mode->ViewCustomAttributes = "";
+
+			// transmittal_no
+			$this->transmittal_no->LinkCustomAttributes = "";
+			$this->transmittal_no->HrefValue = "";
+			$this->transmittal_no->TooltipValue = "";
+
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
@@ -1084,21 +1153,55 @@ class transmit_details_edit extends transmit_details
 			}
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
 			$this->ack_document->TooltipValue = "";
+
+			// transmit_mode
+			$this->transmit_mode->LinkCustomAttributes = "";
+			$this->transmit_mode->HrefValue = "";
+			$this->transmit_mode->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// transmittal_no
+			$this->transmittal_no->EditAttrs["class"] = "form-control";
+			$this->transmittal_no->EditCustomAttributes = "";
+			$this->transmittal_no->EditValue = $this->transmittal_no->CurrentValue;
+			$this->transmittal_no->ViewCustomAttributes = "";
 
 			// project_name
 			$this->project_name->EditAttrs["class"] = "form-control";
 			$this->project_name->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
-			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
-			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+			if ($this->project_name->VirtualValue <> "") {
+				$this->project_name->EditValue = $this->project_name->VirtualValue;
+			} else {
+				$this->project_name->EditValue = $this->project_name->CurrentValue;
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = $this->project_name->CurrentValue;
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			}
+			$this->project_name->ViewCustomAttributes = "";
 
 			// delivery_location
 			$this->delivery_location->EditAttrs["class"] = "form-control";
 			$this->delivery_location->EditCustomAttributes = "";
-			$this->delivery_location->EditValue = $this->delivery_location->CurrentValue;
-			$this->delivery_location->ViewCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->delivery_location->CurrentValue = HtmlDecode($this->delivery_location->CurrentValue);
+			$this->delivery_location->EditValue = HtmlEncode($this->delivery_location->CurrentValue);
+			$this->delivery_location->PlaceHolder = RemoveHtml($this->delivery_location->caption());
 
 			// addressed_to
 			$this->addressed_to->EditAttrs["class"] = "form-control";
@@ -1131,16 +1234,48 @@ class transmit_details_edit extends transmit_details
 			if ($this->isShow() && !$this->EventCancelled)
 				RenderUploadField($this->ack_document);
 
-			// Edit refer script
-			// project_name
+			// transmit_mode
+			$this->transmit_mode->EditCustomAttributes = "";
+			$curVal = trim(strval($this->transmit_mode->CurrentValue));
+			if ($curVal <> "")
+				$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+			else
+				$this->transmit_mode->ViewValue = $this->transmit_mode->Lookup !== NULL && is_array($this->transmit_mode->Lookup->Options) ? $curVal : NULL;
+			if ($this->transmit_mode->ViewValue !== NULL) { // Load from cache
+				$this->transmit_mode->EditValue = array_values($this->transmit_mode->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$arwrk = explode(",", $curVal);
+					$filterWrk = "";
+					foreach ($arwrk as $wrk) {
+						if ($filterWrk <> "") $filterWrk .= " OR ";
+						$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+					}
+				}
+				$sqlWrk = $this->transmit_mode->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->transmit_mode->EditValue = $arwrk;
+			}
 
+			// Edit refer script
+			// transmittal_no
+
+			$this->transmittal_no->LinkCustomAttributes = "";
+			$this->transmittal_no->HrefValue = "";
+			$this->transmittal_no->TooltipValue = "";
+
+			// project_name
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
 
 			// delivery_location
 			$this->delivery_location->LinkCustomAttributes = "";
 			$this->delivery_location->HrefValue = "";
-			$this->delivery_location->TooltipValue = "";
 
 			// addressed_to
 			$this->addressed_to->LinkCustomAttributes = "";
@@ -1164,6 +1299,10 @@ class transmit_details_edit extends transmit_details
 				$this->ack_document->HrefValue = "";
 			}
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
+
+			// transmit_mode
+			$this->transmit_mode->LinkCustomAttributes = "";
+			$this->transmit_mode->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1229,6 +1368,11 @@ class transmit_details_edit extends transmit_details
 				AddMessage($FormError, str_replace("%s", $this->transmital_date->caption(), $this->transmital_date->RequiredErrorMessage));
 			}
 		}
+		if ($this->transmit_mode->Required) {
+			if ($this->transmit_mode->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->transmit_mode->caption(), $this->transmit_mode->RequiredErrorMessage));
+			}
+		}
 
 		// Return validate result
 		$validateForm = ($FormError == "");
@@ -1249,6 +1393,25 @@ class transmit_details_edit extends transmit_details
 		$filter = $this->getRecordFilter();
 		$filter = $this->applyUserIDFilters($filter);
 		$conn = &$this->getConnection();
+		if ($this->transmittal_no->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"transmittal_no\" = '" . AdjustSql($this->transmittal_no->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->transmittal_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->transmittal_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
 		$this->CurrentFilter = $filter;
 		$sql = $this->getCurrentSql();
 		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
@@ -1266,8 +1429,8 @@ class transmit_details_edit extends transmit_details
 			$this->loadDbValues($rsold);
 			$rsnew = [];
 
-			// project_name
-			$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", $this->project_name->ReadOnly);
+			// delivery_location
+			$this->delivery_location->setDbValueDef($rsnew, $this->delivery_location->CurrentValue, NULL, $this->delivery_location->ReadOnly);
 
 			// addressed_to
 			$this->addressed_to->setDbValueDef($rsnew, $this->addressed_to->CurrentValue, NULL, $this->addressed_to->ReadOnly);
@@ -1287,6 +1450,9 @@ class transmit_details_edit extends transmit_details
 					$rsnew['ack_document'] = $this->ack_document->Upload->FileName;
 				}
 			}
+
+			// transmit_mode
+			$this->transmit_mode->setDbValueDef($rsnew, $this->transmit_mode->CurrentValue, NULL, $this->transmit_mode->ReadOnly);
 			if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
 				$oldFiles = EmptyValue($this->ack_document->Upload->DbValue) ? array() : array($this->ack_document->Upload->DbValue);
 				if (!EmptyValue($this->ack_document->Upload->FileName)) {
@@ -1442,6 +1608,8 @@ class transmit_details_edit extends transmit_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_transmit_mode":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

@@ -54,14 +54,6 @@ fuserlevelsadd.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($userlevels_add->userlevelid->Required) { ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $userlevels->userlevelid->caption(), $userlevels->userlevelid->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.checkInteger(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($userlevels->userlevelid->errorMessage()) ?>");
 		<?php if ($userlevels_add->userlevelname->Required) { ?>
 			elm = this.getElements("x" + infix + "_userlevelname");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -140,27 +132,6 @@ $userlevels_add->showMessage();
 <div class="ew-add-div"><!-- page* -->
 <?php } else { ?>
 <table id="tbl_userlevelsadd" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
-<?php } ?>
-<?php if ($userlevels->userlevelid->Visible) { // userlevelid ?>
-<?php if ($userlevels_add->IsMobileOrModal) { ?>
-	<div id="r_userlevelid" class="form-group row">
-		<label id="elh_userlevels_userlevelid" for="x_userlevelid" class="<?php echo $userlevels_add->LeftColumnClass ?>"><?php echo $userlevels->userlevelid->caption() ?><?php echo ($userlevels->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $userlevels_add->RightColumnClass ?>"><div<?php echo $userlevels->userlevelid->cellAttributes() ?>>
-<span id="el_userlevels_userlevelid">
-<input type="text" data-table="userlevels" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" size="30" placeholder="<?php echo HtmlEncode($userlevels->userlevelid->getPlaceHolder()) ?>" value="<?php echo $userlevels->userlevelid->EditValue ?>"<?php echo $userlevels->userlevelid->editAttributes() ?>>
-</span>
-<?php echo $userlevels->userlevelid->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_userlevelid">
-		<td class="<?php echo $userlevels_add->TableLeftColumnClass ?>"><span id="elh_userlevels_userlevelid"><?php echo $userlevels->userlevelid->caption() ?><?php echo ($userlevels->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $userlevels->userlevelid->cellAttributes() ?>>
-<span id="el_userlevels_userlevelid">
-<input type="text" data-table="userlevels" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" size="30" placeholder="<?php echo HtmlEncode($userlevels->userlevelid->getPlaceHolder()) ?>" value="<?php echo $userlevels->userlevelid->EditValue ?>"<?php echo $userlevels->userlevelid->editAttributes() ?>>
-</span>
-<?php echo $userlevels->userlevelid->CustomMsg ?></td>
-	</tr>
-<?php } ?>
 <?php } ?>
 <?php if ($userlevels->userlevelname->Visible) { // userlevelname ?>
 <?php if ($userlevels_add->IsMobileOrModal) { ?>

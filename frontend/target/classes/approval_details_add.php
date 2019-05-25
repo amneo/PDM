@@ -350,9 +350,9 @@ class approval_details_add extends approval_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class approval_details_add extends approval_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -736,7 +736,11 @@ class approval_details_add extends approval_details
 		$this->setupBreadcrumb();
 
 		// Render row based on row type
-		$this->RowType = ROWTYPE_ADD; // Render add type
+		if ($this->isConfirm()) { // Confirm page
+			$this->RowType = ROWTYPE_VIEW; // Render view type
+		} else {
+			$this->RowType = ROWTYPE_ADD; // Render add type
+		}
 
 		// Render row
 		$this->resetAttributes();
@@ -916,10 +920,6 @@ class approval_details_add extends approval_details
 		// in_status
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// id
-			$this->id->ViewValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
 
 			// short_code
 			$this->short_code->ViewValue = $this->short_code->CurrentValue;

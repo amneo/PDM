@@ -350,9 +350,9 @@ class approval_details_edit extends approval_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class approval_details_edit extends approval_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -612,7 +612,7 @@ class approval_details_edit extends approval_details
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->id->setVisibility();
+		$this->id->Visible = FALSE;
 		$this->short_code->setVisibility();
 		$this->Description->setVisibility();
 		$this->out_status->setVisibility();
@@ -789,11 +789,6 @@ class approval_details_edit extends approval_details
 		// Load from form
 		global $CurrentForm;
 
-		// Check field name 'id' first before field var 'x_id'
-		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-		if (!$this->id->IsDetailKey)
-			$this->id->setFormValue($val);
-
 		// Check field name 'short_code' first before field var 'x_short_code'
 		$val = $CurrentForm->hasValue("short_code") ? $CurrentForm->getValue("short_code") : $CurrentForm->getValue("x_short_code");
 		if (!$this->short_code->IsDetailKey) {
@@ -829,6 +824,11 @@ class approval_details_edit extends approval_details
 			else
 				$this->in_status->setFormValue($val);
 		}
+
+		// Check field name 'id' first before field var 'x_id'
+		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+		if (!$this->id->IsDetailKey)
+			$this->id->setFormValue($val);
 	}
 
 	// Restore form values
@@ -938,10 +938,6 @@ class approval_details_edit extends approval_details
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// id
-			$this->id->ViewValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
-
 			// short_code
 			$this->short_code->ViewValue = $this->short_code->CurrentValue;
 			$this->short_code->ViewCustomAttributes = "";
@@ -959,11 +955,6 @@ class approval_details_edit extends approval_details
 			$this->in_status->ViewValue = $this->in_status->CurrentValue;
 			$this->in_status->ViewValue = strtoupper($this->in_status->ViewValue);
 			$this->in_status->ViewCustomAttributes = "";
-
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
 
 			// short_code
 			$this->short_code->LinkCustomAttributes = "";
@@ -985,12 +976,6 @@ class approval_details_edit extends approval_details
 			$this->in_status->HrefValue = "";
 			$this->in_status->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// id
-			$this->id->EditAttrs["class"] = "form-control";
-			$this->id->EditCustomAttributes = "";
-			$this->id->EditValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
 
 			// short_code
 			$this->short_code->EditAttrs["class"] = "form-control";
@@ -1023,12 +1008,8 @@ class approval_details_edit extends approval_details
 			$this->in_status->PlaceHolder = RemoveHtml($this->in_status->caption());
 
 			// Edit refer script
-			// id
-
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-
 			// short_code
+
 			$this->short_code->LinkCustomAttributes = "";
 			$this->short_code->HrefValue = "";
 

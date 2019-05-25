@@ -90,6 +90,11 @@ ftransmit_detailsadd.validate = function() {
 			if (felm && elm && !ew.hasValue(elm))
 				return this.onError(felm, "<?php echo JsEncode(str_replace("%s", $transmit_details->ack_document->caption(), $transmit_details->ack_document->RequiredErrorMessage)) ?>");
 		<?php } ?>
+		<?php if ($transmit_details_add->transmit_mode->Required) { ?>
+			elm = this.getElements("x" + infix + "_transmit_mode[]");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $transmit_details->transmit_mode->caption(), $transmit_details->transmit_mode->RequiredErrorMessage)) ?>");
+		<?php } ?>
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -123,6 +128,8 @@ ftransmit_detailsadd.lists["x_project_name"].options = <?php echo JsonEncode($tr
 ftransmit_detailsadd.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 ftransmit_detailsadd.lists["x_ack_rcvd"] = <?php echo $transmit_details_add->ack_rcvd->Lookup->toClientList() ?>;
 ftransmit_detailsadd.lists["x_ack_rcvd"].options = <?php echo JsonEncode($transmit_details_add->ack_rcvd->options(FALSE, TRUE)) ?>;
+ftransmit_detailsadd.lists["x_transmit_mode[]"] = <?php echo $transmit_details_add->transmit_mode->Lookup->toClientList() ?>;
+ftransmit_detailsadd.lists["x_transmit_mode[]"].options = <?php echo JsonEncode($transmit_details_add->transmit_mode->lookupOptions()) ?>;
 
 // Form object for search
 </script>
@@ -213,7 +220,7 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
-ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":false});
+ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true});
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
@@ -247,7 +254,7 @@ $transmit_details->project_name->EditAttrs["onchange"] = "";
 </span>
 <input type="hidden" data-table="transmit_details" data-field="x_project_name" data-value-separator="<?php echo $transmit_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($transmit_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
-ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":false});
+ftransmit_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true});
 </script>
 <?php echo $transmit_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
@@ -388,22 +395,10 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->ack_rcvd->cellAttributes() ?>>
 <?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_ack_rcvd">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transmit_details->ack_rcvd->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transmit_details->ack_rcvd->ViewValue ?></button>
-		<div id="dsl_x_ack_rcvd" data-repeatcolumn="5" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transmit_details->ack_rcvd->radioButtonListHtml(TRUE, "x_ack_rcvd") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_ack_rcvd" class="ew-template"><input type="radio" class="form-check-input" data-table="transmit_details" data-field="x_ack_rcvd" data-value-separator="<?php echo $transmit_details->ack_rcvd->displayValueSeparatorAttribute() ?>" name="x_ack_rcvd" id="x_ack_rcvd" value="{value}"<?php echo $transmit_details->ack_rcvd->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$transmit_details->ack_rcvd->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
+<div id="tp_x_ack_rcvd" class="ew-template"><input type="radio" class="form-check-input" data-table="transmit_details" data-field="x_ack_rcvd" data-value-separator="<?php echo $transmit_details->ack_rcvd->displayValueSeparatorAttribute() ?>" name="x_ack_rcvd" id="x_ack_rcvd" value="{value}"<?php echo $transmit_details->ack_rcvd->editAttributes() ?>></div>
+<div id="dsl_x_ack_rcvd" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transmit_details->ack_rcvd->radioButtonListHtml(FALSE, "x_ack_rcvd") ?>
+</div></div>
 </span>
 <?php } else { ?>
 <span id="el_transmit_details_ack_rcvd">
@@ -420,22 +415,10 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 		<td<?php echo $transmit_details->ack_rcvd->cellAttributes() ?>>
 <?php if (!$transmit_details->isConfirm()) { ?>
 <span id="el_transmit_details_ack_rcvd">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transmit_details->ack_rcvd->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transmit_details->ack_rcvd->ViewValue ?></button>
-		<div id="dsl_x_ack_rcvd" data-repeatcolumn="5" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transmit_details->ack_rcvd->radioButtonListHtml(TRUE, "x_ack_rcvd") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_ack_rcvd" class="ew-template"><input type="radio" class="form-check-input" data-table="transmit_details" data-field="x_ack_rcvd" data-value-separator="<?php echo $transmit_details->ack_rcvd->displayValueSeparatorAttribute() ?>" name="x_ack_rcvd" id="x_ack_rcvd" value="{value}"<?php echo $transmit_details->ack_rcvd->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$transmit_details->ack_rcvd->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
+<div id="tp_x_ack_rcvd" class="ew-template"><input type="radio" class="form-check-input" data-table="transmit_details" data-field="x_ack_rcvd" data-value-separator="<?php echo $transmit_details->ack_rcvd->displayValueSeparatorAttribute() ?>" name="x_ack_rcvd" id="x_ack_rcvd" value="{value}"<?php echo $transmit_details->ack_rcvd->editAttributes() ?>></div>
+<div id="dsl_x_ack_rcvd" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transmit_details->ack_rcvd->radioButtonListHtml(FALSE, "x_ack_rcvd") ?>
+</div></div>
 </span>
 <?php } else { ?>
 <span id="el_transmit_details_ack_rcvd">
@@ -488,6 +471,51 @@ ew.createEditor("ftransmit_detailsadd", "x_remarks", 0, 0, <?php echo ($transmit
 <table id="ft_x_ack_document" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
 </span>
 <?php echo $transmit_details->ack_document->CustomMsg ?></td>
+	</tr>
+<?php } ?>
+<?php } ?>
+<?php if ($transmit_details->transmit_mode->Visible) { // transmit_mode ?>
+<?php if ($transmit_details_add->IsMobileOrModal) { ?>
+	<div id="r_transmit_mode" class="form-group row">
+		<label id="elh_transmit_details_transmit_mode" class="<?php echo $transmit_details_add->LeftColumnClass ?>"><?php echo $transmit_details->transmit_mode->caption() ?><?php echo ($transmit_details->transmit_mode->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $transmit_details_add->RightColumnClass ?>"><div<?php echo $transmit_details->transmit_mode->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
+<span id="el_transmit_details_transmit_mode">
+<div id="tp_x_transmit_mode" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transmit_details" data-field="x_transmit_mode" data-value-separator="<?php echo $transmit_details->transmit_mode->displayValueSeparatorAttribute() ?>" name="x_transmit_mode[]" id="x_transmit_mode[]" value="{value}"<?php echo $transmit_details->transmit_mode->editAttributes() ?>></div>
+<div id="dsl_x_transmit_mode" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transmit_details->transmit_mode->checkBoxListHtml(FALSE, "x_transmit_mode[]") ?>
+</div></div>
+<?php echo $transmit_details->transmit_mode->Lookup->getParamTag("p_x_transmit_mode") ?>
+</span>
+<?php } else { ?>
+<span id="el_transmit_details_transmit_mode">
+<span<?php echo $transmit_details->transmit_mode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->transmit_mode->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_transmit_mode" name="x_transmit_mode" id="x_transmit_mode" value="<?php echo HtmlEncode($transmit_details->transmit_mode->FormValue) ?>">
+<?php } ?>
+<?php echo $transmit_details->transmit_mode->CustomMsg ?></div></div>
+	</div>
+<?php } else { ?>
+	<tr id="r_transmit_mode">
+		<td class="<?php echo $transmit_details_add->TableLeftColumnClass ?>"><span id="elh_transmit_details_transmit_mode"><?php echo $transmit_details->transmit_mode->caption() ?><?php echo ($transmit_details->transmit_mode->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
+		<td<?php echo $transmit_details->transmit_mode->cellAttributes() ?>>
+<?php if (!$transmit_details->isConfirm()) { ?>
+<span id="el_transmit_details_transmit_mode">
+<div id="tp_x_transmit_mode" class="ew-template"><input type="checkbox" class="form-check-input" data-table="transmit_details" data-field="x_transmit_mode" data-value-separator="<?php echo $transmit_details->transmit_mode->displayValueSeparatorAttribute() ?>" name="x_transmit_mode[]" id="x_transmit_mode[]" value="{value}"<?php echo $transmit_details->transmit_mode->editAttributes() ?>></div>
+<div id="dsl_x_transmit_mode" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $transmit_details->transmit_mode->checkBoxListHtml(FALSE, "x_transmit_mode[]") ?>
+</div></div>
+<?php echo $transmit_details->transmit_mode->Lookup->getParamTag("p_x_transmit_mode") ?>
+</span>
+<?php } else { ?>
+<span id="el_transmit_details_transmit_mode">
+<span<?php echo $transmit_details->transmit_mode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transmit_details->transmit_mode->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="transmit_details" data-field="x_transmit_mode" name="x_transmit_mode" id="x_transmit_mode" value="<?php echo HtmlEncode($transmit_details->transmit_mode->FormValue) ?>">
+<?php } ?>
+<?php echo $transmit_details->transmit_mode->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php } ?>

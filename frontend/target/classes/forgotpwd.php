@@ -4,7 +4,7 @@ namespace PHPMaker2019\pdm;
 /**
  * Page class
  */
-class forgotpwd extends user_dtls
+class forgotpwd extends users
 {
 
 	// Page ID
@@ -329,13 +329,13 @@ class forgotpwd extends user_dtls
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS["user_dtls"]) || get_class($GLOBALS["user_dtls"]) == PROJECT_NAMESPACE . "user_dtls") {
-			$GLOBALS["user_dtls"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["user_dtls"];
+		// Table object (users)
+		if (!isset($GLOBALS["users"]) || get_class($GLOBALS["users"]) == PROJECT_NAMESPACE . "users") {
+			$GLOBALS["users"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["users"];
 		}
-		if (!isset($GLOBALS["user_dtls"]))
-			$GLOBALS["user_dtls"] = &$this;
+		if (!isset($GLOBALS["users"]))
+			$GLOBALS["users"] = &$this;
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -352,9 +352,9 @@ class forgotpwd extends user_dtls
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -497,8 +497,8 @@ class forgotpwd extends user_dtls
 					// Call User Recover Password event
 					$validEmail = $this->User_RecoverPassword($rsold);
 					if ($validEmail) {
-						$userName = $rsold['username'];
-						$password = $rsold['password'];
+						$userName = $rsold['userLoginId'];
+						$password = $rsold['uPassword'];
 					}
 				} else {
 					$validEmail = FALSE;

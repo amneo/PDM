@@ -69,7 +69,7 @@ class app_version extends DbTable
 		$this->sequence_no->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->sequence_no->IsPrimaryKey = TRUE; // Primary key field
 		$this->sequence_no->Nullable = FALSE; // NOT NULL field
-		$this->sequence_no->Sortable = TRUE; // Allow sort
+		$this->sequence_no->Sortable = FALSE; // Allow sort
 		$this->sequence_no->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['sequence_no'] = &$this->sequence_no;
 
@@ -709,6 +709,9 @@ class app_version extends DbTable
 
 		// Common render codes
 		// sequence_no
+
+		$this->sequence_no->CellCssStyle = "white-space: nowrap;";
+
 		// frontend_version
 		// backend_version
 		// release_date
@@ -853,14 +856,7 @@ class app_version extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->sequence_no);
-					$doc->exportCaption($this->frontend_version);
-					$doc->exportCaption($this->backend_version);
-					$doc->exportCaption($this->release_date);
-					$doc->exportCaption($this->posted_date);
-					$doc->exportCaption($this->remarks);
 				} else {
-					$doc->exportCaption($this->sequence_no);
 					$doc->exportCaption($this->release_date);
 					$doc->exportCaption($this->posted_date);
 				}
@@ -894,14 +890,7 @@ class app_version extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->sequence_no);
-						$doc->exportField($this->frontend_version);
-						$doc->exportField($this->backend_version);
-						$doc->exportField($this->release_date);
-						$doc->exportField($this->posted_date);
-						$doc->exportField($this->remarks);
 					} else {
-						$doc->exportField($this->sequence_no);
 						$doc->exportField($this->release_date);
 						$doc->exportField($this->posted_date);
 					}

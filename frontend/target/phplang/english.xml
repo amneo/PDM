@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/5/23" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/5/25" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -698,7 +698,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="Project Document Management-FireLink" />
-    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal.Frontend Version: 01-Beta Backend Version: 02-Beta Release Date: 2019-05-15" />
+    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal. Launch-Version-01 Beta Date:25-05-2019" />
     <menu id="36">
       <phrase id="menutext" value="cron" />
     </menu>
@@ -724,10 +724,10 @@
       <phrase id="menutext" value="Document Details" />
     </menu>
     <menu id="2">
-      <phrase id="menutext" value="Document Distribution List" />
+      <phrase id="menutext" value="Communication Matrix" />
     </menu>
-    <menu id="9">
-      <phrase id="menutext" value="User Details" />
+    <menu id="38">
+      <phrase id="menutext" value="Users" />
     </menu>
     <menu id="20">
       <phrase id="menutext" value="User Level Permission" />
@@ -794,7 +794,7 @@
         <phrase id="fldcaption" value="Approval Status" />
       </field>
       <field id="document_link">
-        <phrase id="fldcaption" value="Document Link" />
+        <phrase id="fldcaption" value="Document File" />
         <phrase id="flderrmsg" value="Files with PDF extension are only allowed" />
       </field>
       <field id="transaction_date">
@@ -811,7 +811,7 @@
       </field>
     </table>
     <table id="distribution_details">
-      <phrase id="tblcaption" value="Distribution" />
+      <phrase id="tblcaption" value="Communication Matrix" />
       <field id="distribution_id">
         <phrase id="fldcaption" value="distribution id" />
       </field>
@@ -927,19 +927,19 @@
         <phrase id="fldcaption" value="sequence no" />
       </field>
       <field id="frontend_version">
-        <phrase id="fldcaption" value="frontend version" />
+        <phrase id="fldcaption" value="Frontend Version" />
       </field>
       <field id="backend_version">
-        <phrase id="fldcaption" value="backend version" />
+        <phrase id="fldcaption" value="Backend Version" />
       </field>
       <field id="release_date">
-        <phrase id="fldcaption" value="release date" />
+        <phrase id="fldcaption" value="Release date" />
       </field>
       <field id="posted_date">
-        <phrase id="fldcaption" value="posted date" />
+        <phrase id="fldcaption" value="Posted Date" />
       </field>
       <field id="remarks">
-        <phrase id="fldcaption" value="remarks" />
+        <phrase id="fldcaption" value="Remarks" />
       </field>
     </table>
     <table id="audittrail">
@@ -1008,45 +1008,8 @@
       <field id="transmital_date">
         <phrase id="fldcaption" value="Transmittal Date" />
       </field>
-    </table>
-    <table id="user_dtls">
-      <phrase id="tblcaption" value="User Details" />
-      <field id="user_id">
-        <phrase id="fldcaption" value="User ID" />
-      </field>
-      <field id="username">
-        <phrase id="fldcaption" value="User Name" />
-      </field>
-      <field id="password">
-        <phrase id="fldcaption" value="Password" />
-      </field>
-      <field id="create_login">
-        <phrase id="fldcaption" value="Create Date" />
-      </field>
-      <field id="account_valid">
-        <phrase id="fldcaption" value="Acount Valid" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
-      </field>
-      <field id="last_login">
-        <phrase id="fldcaption" value="Last Login" />
-      </field>
-      <field id="email_addreess">
-        <phrase id="fldcaption" value="Email Address" />
-      </field>
-      <field id="userlevel">
-        <phrase id="fldcaption" value="User Level" />
-      </field>
-      <field id="history">
-        <phrase id="fldcaption" value="history" />
-      </field>
-      <field id="reports_to">
-        <phrase id="fldcaption" value="Reports To" />
-      </field>
-      <field id="name">
-        <phrase id="fldcaption" value="Name" />
+      <field id="transmit_mode">
+        <phrase id="fldcaption" value="Transmittal Mode" />
       </field>
     </table>
     <table id="approval_details">
@@ -1383,15 +1346,52 @@
       <phrase id="tblcaption" value="cron" />
     </table>
     <table id="document_type">
-      <phrase id="tblcaption" value="table" />
+      <phrase id="tblcaption" value="Document Type" />
       <field id="type_id">
         <phrase id="fldcaption" value="type id" />
       </field>
       <field id="document_type">
-        <phrase id="fldcaption" value="document type" />
+        <phrase id="fldcaption" value="Document Type" />
       </field>
       <field id="document_category">
-        <phrase id="fldcaption" value="document category" />
+        <phrase id="fldcaption" value="Document Category" />
+      </field>
+    </table>
+    <table id="users">
+      <phrase id="tblcaption" value="users" />
+      <field id="seqid">
+        <phrase id="fldcaption" value="seqid" />
+      </field>
+      <field id="username">
+        <phrase id="fldcaption" value="Full name" />
+      </field>
+      <field id="userloginid">
+        <phrase id="fldcaption" value="Login ID" />
+      </field>
+      <field id="uemail">
+        <phrase id="fldcaption" value="Email" />
+      </field>
+      <field id="ulevel">
+        <phrase id="fldcaption" value="User level" />
+      </field>
+      <field id="upassword">
+        <phrase id="fldcaption" value="Password" />
+      </field>
+      <field id="ureportsto">
+        <phrase id="fldcaption" value="Reports To" />
+      </field>
+      <field id="uactivated">
+        <phrase id="fldcaption" value="Activated" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="uparentuserid">
+        <phrase id="fldcaption" value="Reports To ID" />
+      </field>
+      <field id="uprofile">
+        <phrase id="fldcaption" value="Profile" />
       </field>
     </table>
   </project>

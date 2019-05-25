@@ -106,28 +106,6 @@ $userlevels_view->showMessage();
 <input type="hidden" name="t" value="userlevels">
 <input type="hidden" name="modal" value="<?php echo (int)$userlevels_view->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($userlevels->userlevelid->Visible) { // userlevelid ?>
-	<tr id="r_userlevelid">
-		<td class="<?php echo $userlevels_view->TableLeftColumnClass ?>"><span id="elh_userlevels_userlevelid"><?php echo $userlevels->userlevelid->caption() ?></span></td>
-		<td data-name="userlevelid"<?php echo $userlevels->userlevelid->cellAttributes() ?>>
-<span id="el_userlevels_userlevelid">
-<span<?php echo $userlevels->userlevelid->viewAttributes() ?>>
-<?php echo $userlevels->userlevelid->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($userlevels->userlevelname->Visible) { // userlevelname ?>
-	<tr id="r_userlevelname">
-		<td class="<?php echo $userlevels_view->TableLeftColumnClass ?>"><span id="elh_userlevels_userlevelname"><?php echo $userlevels->userlevelname->caption() ?></span></td>
-		<td data-name="userlevelname"<?php echo $userlevels->userlevelname->cellAttributes() ?>>
-<span id="el_userlevels_userlevelname">
-<span<?php echo $userlevels->userlevelname->viewAttributes() ?>>
-<?php echo $userlevels->userlevelname->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 </table>
 <?php if (!$userlevels_view->IsModal) { ?>
 <?php if (!$userlevels->isExport()) { ?>

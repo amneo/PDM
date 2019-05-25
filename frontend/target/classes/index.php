@@ -313,9 +313,9 @@ class index
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &GetConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -430,8 +430,6 @@ class index
 			$this->terminate("audittraillist.php");
 		if ($Security->allowList(CurrentProjectID() . 'transmit_details'))
 			$this->terminate("transmit_detailslist.php");
-		if ($Security->allowList(CurrentProjectID() . 'user_dtls'))
-			$this->terminate("user_dtlslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'approval_details'))
 			$this->terminate("approval_detailslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'document_system'))
@@ -448,6 +446,8 @@ class index
 			$this->terminate("./cron_file.php");
 		if ($Security->allowList(CurrentProjectID() . 'document_type'))
 			$this->terminate("document_typelist.php");
+		if ($Security->allowList(CurrentProjectID() . 'users'))
+			$this->terminate("userslist.php");
 		if ($Security->isLoggedIn()) {
 			$this->setFailureMessage(DeniedMessage() . "<br><br><a href=\"logout.php\">" . $Language->phrase("BackToLogin") . "</a>");
 		} else {

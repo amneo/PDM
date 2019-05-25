@@ -53,11 +53,6 @@ fproject_detailsaddopt.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($project_details_addopt->project_id->Required) { ?>
-			elm = this.getElements("x" + infix + "_project_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_id->caption(), $project_details->project_id->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($project_details_addopt->project_name->Required) { ?>
 			elm = this.getElements("x" + infix + "_project_name");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -135,8 +130,6 @@ $project_details_addopt->showMessage();
 <?php //} ?>
 <input type="hidden" name="<?php echo API_ACTION_NAME ?>" id="<?php echo API_ACTION_NAME ?>" value="<?php echo API_ADD_ACTION ?>">
 <input type="hidden" name="<?php echo API_OBJECT_NAME ?>" id="<?php echo API_OBJECT_NAME ?>" value="<?php echo $project_details_addopt->TableVar ?>">
-<?php if ($project_details->project_id->Visible) { // project_id ?>
-<?php } ?>
 <?php if ($project_details->project_name->Visible) { // project_name ?>
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_project_name"><?php echo $project_details->project_name->caption() ?><?php echo ($project_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

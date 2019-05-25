@@ -407,9 +407,9 @@ class userlevelpermissions_view extends userlevelpermissions
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -430,9 +430,9 @@ class userlevelpermissions_view extends userlevelpermissions
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -738,9 +738,9 @@ class userlevelpermissions_view extends userlevelpermissions
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->userlevelid->setVisibility();
-		$this->_tablename->setVisibility();
-		$this->permission->setVisibility();
+		$this->userlevelid->Visible = FALSE;
+		$this->_tablename->Visible = FALSE;
+		$this->permission->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1066,11 +1066,6 @@ class userlevelpermissions_view extends userlevelpermissions
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// userlevelid
-			$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->ViewValue = FormatNumber($this->userlevelid->ViewValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
-
 			// tablename
 			$arwrk = array();
 			$arwrk[1] = $this->_tablename->CurrentValue;
@@ -1081,21 +1076,6 @@ class userlevelpermissions_view extends userlevelpermissions
 			$this->permission->ViewValue = $this->permission->CurrentValue;
 			$this->permission->ViewValue = FormatNumber($this->permission->ViewValue, 0, -2, -2, -2);
 			$this->permission->ViewCustomAttributes = "";
-
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
-
-			// tablename
-			$this->_tablename->LinkCustomAttributes = "";
-			$this->_tablename->HrefValue = "";
-			$this->_tablename->TooltipValue = "";
-
-			// permission
-			$this->permission->LinkCustomAttributes = "";
-			$this->permission->HrefValue = "";
-			$this->permission->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1181,7 +1161,7 @@ class userlevelpermissions_view extends userlevelpermissions
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

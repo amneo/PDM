@@ -54,10 +54,6 @@ fdocument_systemlist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) 
 // Dynamic selection lists
 // Form object for search
 
-var fdocument_systemlistsrch = currentSearchForm = new ew.Form("fdocument_systemlistsrch");
-
-// Filters
-fdocument_systemlistsrch.filterList = <?php echo $document_system_list->getFilterList() ?>;
 </script>
 <script>
 
@@ -72,47 +68,12 @@ fdocument_systemlistsrch.filterList = <?php echo $document_system_list->getFilte
 <?php if ($document_system_list->ImportOptions->visible()) { ?>
 <?php $document_system_list->ImportOptions->render("body") ?>
 <?php } ?>
-<?php if ($document_system_list->SearchOptions->visible()) { ?>
-<?php $document_system_list->SearchOptions->render("body") ?>
-<?php } ?>
-<?php if ($document_system_list->FilterOptions->visible()) { ?>
-<?php $document_system_list->FilterOptions->render("body") ?>
-<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
 $document_system_list->renderOtherOptions();
 ?>
-<?php if ($Security->CanSearch()) { ?>
-<?php if (!$document_system->isExport() && !$document_system->CurrentAction) { ?>
-<form name="fdocument_systemlistsrch" id="fdocument_systemlistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
-<?php $searchPanelClass = ($document_system_list->SearchWhere <> "") ? " show" : " show"; ?>
-<div id="fdocument_systemlistsrch-search-panel" class="ew-search-panel collapse<?php echo $searchPanelClass ?>">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="document_system">
-	<div class="ew-basic-search">
-<div id="xsr_1" class="ew-row d-sm-flex">
-	<div class="ew-quick-search input-group">
-		<input type="text" name="<?php echo TABLE_BASIC_SEARCH ?>" id="<?php echo TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo HtmlEncode($document_system_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo HtmlEncode($Language->phrase("Search")) ?>">
-		<input type="hidden" name="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo HtmlEncode($document_system_list->BasicSearch->getType()) ?>">
-		<div class="input-group-append">
-			<button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?php echo $Language->phrase("SearchBtn") ?></button>
-			<button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?php echo $document_system_list->BasicSearch->getTypeNameShort() ?></span></button>
-			<div class="dropdown-menu dropdown-menu-right">
-				<a class="dropdown-item<?php if ($document_system_list->BasicSearch->getType() == "") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this)"><?php echo $Language->phrase("QuickSearchAuto") ?></a>
-				<a class="dropdown-item<?php if ($document_system_list->BasicSearch->getType() == "=") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'=')"><?php echo $Language->phrase("QuickSearchExact") ?></a>
-				<a class="dropdown-item<?php if ($document_system_list->BasicSearch->getType() == "AND") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'AND')"><?php echo $Language->phrase("QuickSearchAll") ?></a>
-				<a class="dropdown-item<?php if ($document_system_list->BasicSearch->getType() == "OR") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'OR')"><?php echo $Language->phrase("QuickSearchAny") ?></a>
-			</div>
-		</div>
-	</div>
-</div>
-	</div>
-</div>
-</form>
-<?php } ?>
-<?php } ?>
 <?php $document_system_list->showPageHeader(); ?>
 <?php
 $document_system_list->showMessage();
@@ -179,21 +140,12 @@ $document_system_list->renderListOptions();
 // Render list options (header, left)
 $document_system_list->ListOptions->render("header", "left");
 ?>
-<?php if ($document_system->type_id->Visible) { // type_id ?>
-	<?php if ($document_system->sortUrl($document_system->type_id) == "") { ?>
-		<th data-name="type_id" class="<?php echo $document_system->type_id->headerCellClass() ?>"><div id="elh_document_system_type_id" class="document_system_type_id"><div class="ew-table-header-caption"><?php echo $document_system->type_id->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="type_id" class="<?php echo $document_system->type_id->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_system->SortUrl($document_system->type_id) ?>',2);"><div id="elh_document_system_type_id" class="document_system_type_id">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_system->type_id->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_system->type_id->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_system->type_id->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($document_system->system_name->Visible) { // system_name ?>
 	<?php if ($document_system->sortUrl($document_system->system_name) == "") { ?>
 		<th data-name="system_name" class="<?php echo $document_system->system_name->headerCellClass() ?>"><div id="elh_document_system_system_name" class="document_system_system_name"><div class="ew-table-header-caption"><?php echo $document_system->system_name->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="system_name" class="<?php echo $document_system->system_name->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_system->SortUrl($document_system->system_name) ?>',2);"><div id="elh_document_system_system_name" class="document_system_system_name">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_system->system_name->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_system->system_name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_system->system_name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_system->system_name->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_system->system_name->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_system->system_name->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -202,7 +154,7 @@ $document_system_list->ListOptions->render("header", "left");
 		<th data-name="system_group" class="<?php echo $document_system->system_group->headerCellClass() ?>"><div id="elh_document_system_system_group" class="document_system_system_group"><div class="ew-table-header-caption"><?php echo $document_system->system_group->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="system_group" class="<?php echo $document_system->system_group->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_system->SortUrl($document_system->system_group) ?>',2);"><div id="elh_document_system_system_group" class="document_system_system_group">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_system->system_group->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_system->system_group->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_system->system_group->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_system->system_group->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_system->system_group->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_system->system_group->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -271,14 +223,6 @@ while ($document_system_list->RecCnt < $document_system_list->StopRec) {
 // Render list options (body, left)
 $document_system_list->ListOptions->render("body", "left", $document_system_list->RowCnt);
 ?>
-	<?php if ($document_system->type_id->Visible) { // type_id ?>
-		<td data-name="type_id"<?php echo $document_system->type_id->cellAttributes() ?>>
-<span id="el<?php echo $document_system_list->RowCnt ?>_document_system_type_id" class="document_system_type_id">
-<span<?php echo $document_system->type_id->viewAttributes() ?>>
-<?php echo $document_system->type_id->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($document_system->system_name->Visible) { // system_name ?>
 		<td data-name="system_name"<?php echo $document_system->system_name->cellAttributes() ?>>
 <span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_name" class="document_system_system_name">

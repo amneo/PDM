@@ -131,6 +131,8 @@ fdocument_detailsadd.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) 
 fdocument_detailsadd.lists["x_project_name"] = <?php echo $document_details_add->project_name->Lookup->toClientList() ?>;
 fdocument_detailsadd.lists["x_project_name"].options = <?php echo JsonEncode($document_details_add->project_name->lookupOptions()) ?>;
 fdocument_detailsadd.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailsadd.lists["x_project_system"] = <?php echo $document_details_add->project_system->Lookup->toClientList() ?>;
+fdocument_detailsadd.lists["x_project_system"].options = <?php echo JsonEncode($document_details_add->project_system->lookupOptions()) ?>;
 fdocument_detailsadd.lists["x_document_type"] = <?php echo $document_details_add->document_type->Lookup->toClientList() ?>;
 fdocument_detailsadd.lists["x_document_type"].options = <?php echo JsonEncode($document_details_add->document_type->lookupOptions()) ?>;
 fdocument_detailsadd.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
@@ -289,9 +291,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->project_name->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_project_name" class="text-nowrap" style="z-index: 8950">
-	<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_project_name" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true});
 </script>
@@ -318,9 +328,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->project_name->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_project_name" class="text-nowrap" style="z-index: 8950">
-	<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x_project_name" id="sv_x_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_project_name" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true});
 </script>
@@ -344,7 +362,12 @@ fdocument_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true
 		<div class="<?php echo $document_details_add->RightColumnClass ?>"><div<?php echo $document_details->project_system->cellAttributes() ?>>
 <?php if (!$document_details->isConfirm()) { ?>
 <span id="el_document_details_project_system">
-<input type="text" data-table="document_details" data-field="x_project_system" name="x_project_system" id="x_project_system" size="30" placeholder="<?php echo HtmlEncode($document_details->project_system->getPlaceHolder()) ?>" value="<?php echo $document_details->project_system->EditValue ?>"<?php echo $document_details->project_system->editAttributes() ?>>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x_project_system" name="x_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x_project_system") ?>
 </span>
 <?php } else { ?>
 <span id="el_document_details_project_system">
@@ -361,7 +384,12 @@ fdocument_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":true
 		<td<?php echo $document_details->project_system->cellAttributes() ?>>
 <?php if (!$document_details->isConfirm()) { ?>
 <span id="el_document_details_project_system">
-<input type="text" data-table="document_details" data-field="x_project_system" name="x_project_system" id="x_project_system" size="30" placeholder="<?php echo HtmlEncode($document_details->project_system->getPlaceHolder()) ?>" value="<?php echo $document_details->project_system->EditValue ?>"<?php echo $document_details->project_system->editAttributes() ?>>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x_project_system" name="x_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x_project_system") ?>
 </span>
 <?php } else { ?>
 <span id="el_document_details_project_system">
@@ -434,14 +462,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->document_type->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailsadd.createAutoSuggest({"id":"x_document_type","forceSelect":true});
 </script>
@@ -468,14 +499,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->document_type->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_document_type" class="text-nowrap" style="z-index: 8910">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x_document_type" id="sv_x_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x_document_type" id="x_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailsadd.createAutoSuggest({"id":"x_document_type","forceSelect":true});
 </script>

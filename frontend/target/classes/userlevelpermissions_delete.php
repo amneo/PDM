@@ -358,9 +358,9 @@ class userlevelpermissions_delete extends userlevelpermissions
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class userlevelpermissions_delete extends userlevelpermissions
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -599,7 +599,7 @@ class userlevelpermissions_delete extends userlevelpermissions
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->userlevelid->setVisibility();
+		$this->userlevelid->Visible = FALSE;
 		$this->_tablename->setVisibility();
 		$this->permission->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -768,15 +768,13 @@ class userlevelpermissions_delete extends userlevelpermissions
 
 		// Common render codes for all row types
 		// userlevelid
+
+		$this->userlevelid->CellCssStyle = "white-space: nowrap;";
+
 		// tablename
 		// permission
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// userlevelid
-			$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->ViewValue = FormatNumber($this->userlevelid->ViewValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
 			$arwrk = array();
@@ -788,11 +786,6 @@ class userlevelpermissions_delete extends userlevelpermissions
 			$this->permission->ViewValue = $this->permission->CurrentValue;
 			$this->permission->ViewValue = FormatNumber($this->permission->ViewValue, 0, -2, -2, -2);
 			$this->permission->ViewCustomAttributes = "";
-
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
 
 			// tablename
 			$this->_tablename->LinkCustomAttributes = "";

@@ -172,7 +172,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSel
 <?php if ($transaction_details->project_name->Visible) { // project_name ?>
 <?php if ($transaction_details_search->IsMobileOrModal) { ?>
 	<div id="r_project_name" class="form-group row">
-		<label for="x_project_name" class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_project_name"><?php echo $transaction_details->project_name->caption() ?></span>
+		<label class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_project_name"><?php echo $transaction_details->project_name->caption() ?></span>
 		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_project_name" id="z_project_name" value="LIKE"></span>
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->project_name->cellAttributes() ?>>
@@ -198,7 +198,7 @@ ftransaction_detailssearch.createAutoSuggest({"id":"x_firelink_doc_no","forceSel
 <?php if ($transaction_details->document_tittle->Visible) { // document_tittle ?>
 <?php if ($transaction_details_search->IsMobileOrModal) { ?>
 	<div id="r_document_tittle" class="form-group row">
-		<label for="x_document_tittle" class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_document_tittle"><?php echo $transaction_details->document_tittle->caption() ?></span>
+		<label class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_document_tittle"><?php echo $transaction_details->document_tittle->caption() ?></span>
 		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_tittle" id="z_document_tittle" value="LIKE"></span>
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->document_tittle->cellAttributes() ?>>
@@ -404,28 +404,17 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 <?php if ($transaction_details->approval_status->Visible) { // approval_status ?>
 <?php if ($transaction_details_search->IsMobileOrModal) { ?>
 	<div id="r_approval_status" class="form-group row">
-		<label class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_approval_status"><?php echo $transaction_details->approval_status->caption() ?></span>
+		<label for="x_approval_status" class="<?php echo $transaction_details_search->LeftColumnClass ?>"><span id="elh_transaction_details_approval_status"><?php echo $transaction_details->approval_status->caption() ?></span>
 		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_approval_status" id="z_approval_status" value="LIKE"></span>
 		</label>
 		<div class="<?php echo $transaction_details_search->RightColumnClass ?>"><div<?php echo $transaction_details->approval_status->cellAttributes() ?>>
 			<span id="el_transaction_details_approval_status">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->AdvancedSearch->ViewValue ?></button>
-		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" id="x_approval_status" name="x_approval_status" size=3<?php echo $transaction_details->approval_status->editAttributes() ?>>
+		<?php echo $transaction_details->approval_status->selectOptionListHtml("x_approval_status") ?>
+	</select>
+</div>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x_approval_status") ?>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
 </span>
 		</div></div>
 	</div>
@@ -436,23 +425,12 @@ ew.createDateTimePicker("ftransaction_detailssearch", "x_transmit_date", {"ignor
 		<td<?php echo $transaction_details->approval_status->cellAttributes() ?>>
 			<div class="text-nowrap">
 				<span id="el_transaction_details_approval_status">
-<div class="btn-group ew-dropdown-list" role="group">
-	<div class="btn-group" role="group">
-		<button type="button" class="btn form-control dropdown-toggle ew-dropdown-toggle" aria-haspopup="true" aria-expanded="false"<?php if ($transaction_details->approval_status->ReadOnly) { ?> readonly<?php } else { ?>data-toggle="dropdown"<?php } ?>><?php echo $transaction_details->approval_status->AdvancedSearch->ViewValue ?></button>
-		<div id="dsl_x_approval_status" data-repeatcolumn="5" class="dropdown-menu">
-			<div class="ew-items" style="overflow-x: hidden;">
-<?php echo $transaction_details->approval_status->radioButtonListHtml(TRUE, "x_approval_status") ?>
-			</div><!-- /.ew-items ##-->
-		</div><!-- /.dropdown-menu ##-->
-		<div id="tp_x_approval_status" class="ew-template"><input type="radio" class="form-check-input" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" name="x_approval_status" id="x_approval_status" value="{value}"<?php echo $transaction_details->approval_status->editAttributes() ?>></div>
-	</div><!-- /.btn-group ##-->
-	<?php if (!$transaction_details->approval_status->ReadOnly) { ?>
-	<button type="button" class="btn btn-default ew-dropdown-clear" disabled>
-		<i class="fa fa-times ew-icon"></i>
-	</button>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="transaction_details" data-field="x_approval_status" data-value-separator="<?php echo $transaction_details->approval_status->displayValueSeparatorAttribute() ?>" id="x_approval_status" name="x_approval_status" size=3<?php echo $transaction_details->approval_status->editAttributes() ?>>
+		<?php echo $transaction_details->approval_status->selectOptionListHtml("x_approval_status") ?>
+	</select>
+</div>
 <?php echo $transaction_details->approval_status->Lookup->getParamTag("p_x_approval_status") ?>
-	<?php } ?>
-</div><!-- /.ew-dropdown-list ##-->
 </span>
 			</div>
 		</td>

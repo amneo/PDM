@@ -17,7 +17,7 @@ $topMenu->addMenuItem(10, "mci_Masters", $MenuLanguage->MenuPhrase("10", "MenuTe
 $topMenu->addMenuItem(5, "mi_project_details", $MenuLanguage->MenuPhrase("5", "MenuText"), "project_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}project_details'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(4, "mi_document_details", $MenuLanguage->MenuPhrase("4", "MenuText"), "document_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}document_details'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(2, "mi_distribution_details", $MenuLanguage->MenuPhrase("2", "MenuText"), "distribution_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}distribution_details'), FALSE, FALSE, "", "", TRUE);
-$topMenu->addMenuItem(9, "mi_user_dtls", $MenuLanguage->MenuPhrase("9", "MenuText"), "user_dtlslist.php", 10, "", AllowListMenu('{vishal-pdm}user_dtls'), FALSE, FALSE, "", "", TRUE);
+$topMenu->addMenuItem(38, "mi_users", $MenuLanguage->MenuPhrase("38", "MenuText"), "userslist.php", 10, "", AllowListMenu('{vishal-pdm}users'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(20, "mi_userlevelpermissions", $MenuLanguage->MenuPhrase("20", "MenuText"), "userlevelpermissionslist.php", 10, "", AllowListMenu('{vishal-pdm}userlevelpermissions'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(21, "mi_userlevels", $MenuLanguage->MenuPhrase("21", "MenuText"), "userlevelslist.php", 10, "", AllowListMenu('{vishal-pdm}userlevels'), FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(8, "mi_audittrail", $MenuLanguage->MenuPhrase("8", "MenuText"), "audittraillist.php", 10, "", AllowListMenu('{vishal-pdm}audittrail'), FALSE, FALSE, "", "", TRUE);
@@ -39,7 +39,7 @@ $sideMenu->addMenuItem(10, "mci_Masters", $MenuLanguage->MenuPhrase("10", "MenuT
 $sideMenu->addMenuItem(5, "mi_project_details", $MenuLanguage->MenuPhrase("5", "MenuText"), "project_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}project_details'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(4, "mi_document_details", $MenuLanguage->MenuPhrase("4", "MenuText"), "document_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}document_details'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(2, "mi_distribution_details", $MenuLanguage->MenuPhrase("2", "MenuText"), "distribution_detailslist.php", 10, "", AllowListMenu('{vishal-pdm}distribution_details'), FALSE, FALSE, "", "", TRUE);
-$sideMenu->addMenuItem(9, "mi_user_dtls", $MenuLanguage->MenuPhrase("9", "MenuText"), "user_dtlslist.php", 10, "", AllowListMenu('{vishal-pdm}user_dtls'), FALSE, FALSE, "", "", TRUE);
+$sideMenu->addMenuItem(38, "mi_users", $MenuLanguage->MenuPhrase("38", "MenuText"), "userslist.php", 10, "", AllowListMenu('{vishal-pdm}users'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(20, "mi_userlevelpermissions", $MenuLanguage->MenuPhrase("20", "MenuText"), "userlevelpermissionslist.php", 10, "", AllowListMenu('{vishal-pdm}userlevelpermissions'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(21, "mi_userlevels", $MenuLanguage->MenuPhrase("21", "MenuText"), "userlevelslist.php", 10, "", AllowListMenu('{vishal-pdm}userlevels'), FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(8, "mi_audittrail", $MenuLanguage->MenuPhrase("8", "MenuText"), "audittraillist.php", 10, "", AllowListMenu('{vishal-pdm}audittrail'), FALSE, FALSE, "", "", TRUE);

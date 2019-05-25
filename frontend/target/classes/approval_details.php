@@ -68,7 +68,7 @@ class approval_details extends DbTable
 		$this->id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->id->IsPrimaryKey = TRUE; // Primary key field
 		$this->id->Nullable = FALSE; // NOT NULL field
-		$this->id->Sortable = TRUE; // Allow sort
+		$this->id->Sortable = FALSE; // Allow sort
 		$this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
@@ -95,7 +95,7 @@ class approval_details extends DbTable
 		// in_status
 		$this->in_status = new DbField('approval_details', 'approval_details', 'x_in_status', 'in_status', '"in_status"', '"in_status"', 200, -1, FALSE, '"in_status"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->in_status->Required = TRUE; // Required field
-		$this->in_status->Sortable = TRUE; // Allow sort
+		$this->in_status->Sortable = FALSE; // Allow sort
 		$this->fields['in_status'] = &$this->in_status;
 	}
 
@@ -214,7 +214,7 @@ class approval_details extends DbTable
 	}
 	public function getSqlOrderBy() // Order By
 	{
-		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "";
+		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "\"short_code\" ASC";
 	}
 	public function sqlOrderBy() // For backward compatibility
 	{
@@ -699,6 +699,9 @@ class approval_details extends DbTable
 
 		// Common render codes
 		// id
+
+		$this->id->CellCssStyle = "white-space: nowrap;";
+
 		// short_code
 		// Description
 		// out_status
@@ -832,9 +835,7 @@ class approval_details extends DbTable
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
 				} else {
-					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->short_code);
-					$doc->exportCaption($this->in_status);
 				}
 				$doc->endExportRow();
 			}
@@ -867,9 +868,7 @@ class approval_details extends DbTable
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
 					} else {
-						$doc->exportField($this->id);
 						$doc->exportField($this->short_code);
-						$doc->exportField($this->in_status);
 					}
 					$doc->endExportRow($rowCnt);
 				}

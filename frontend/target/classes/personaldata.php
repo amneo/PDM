@@ -341,9 +341,9 @@ class personaldata
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &GetConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -452,10 +452,10 @@ class personaldata
 	{
 		global $UserTable, $UserTableConn;
 		$result = [];
-		$fldNames = ["user_id", "username", "password", "email_addreess"];
+		$fldNames = ["userName", "userLoginId", "uEmail", "uPassword"];
 		$filter = str_replace("%u", AdjustSql(CurrentUserName(), USER_TABLE_DBID), USER_NAME_FILTER);
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 		$sql = $UserTable->getSql($filter);
@@ -487,7 +487,7 @@ class personaldata
 		global $UserTable, $UserTableConn, $Language;
 		$filter = str_replace("%u", AdjustSql(CurrentUserName(), USER_TABLE_DBID), USER_NAME_FILTER);
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 		$sql = $UserTable->getSql($filter);

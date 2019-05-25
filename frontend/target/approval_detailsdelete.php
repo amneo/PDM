@@ -76,9 +76,6 @@ $approval_details_delete->showMessage();
 <table class="table ew-table">
 	<thead>
 	<tr class="ew-table-header">
-<?php if ($approval_details->id->Visible) { // id ?>
-		<th class="<?php echo $approval_details->id->headerCellClass() ?>"><span id="elh_approval_details_id" class="approval_details_id"><?php echo $approval_details->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($approval_details->short_code->Visible) { // short_code ?>
 		<th class="<?php echo $approval_details->short_code->headerCellClass() ?>"><span id="elh_approval_details_short_code" class="approval_details_short_code"><?php echo $approval_details->short_code->caption() ?></span></th>
 <?php } ?>
@@ -112,14 +109,6 @@ while (!$approval_details_delete->Recordset->EOF) {
 	$approval_details_delete->renderRow();
 ?>
 	<tr<?php echo $approval_details->rowAttributes() ?>>
-<?php if ($approval_details->id->Visible) { // id ?>
-		<td<?php echo $approval_details->id->cellAttributes() ?>>
-<span id="el<?php echo $approval_details_delete->RowCnt ?>_approval_details_id" class="approval_details_id">
-<span<?php echo $approval_details->id->viewAttributes() ?>>
-<?php echo $approval_details->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($approval_details->short_code->Visible) { // short_code ?>
 		<td<?php echo $approval_details->short_code->cellAttributes() ?>>
 <span id="el<?php echo $approval_details_delete->RowCnt ?>_approval_details_short_code" class="approval_details_short_code">

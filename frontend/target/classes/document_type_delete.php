@@ -350,9 +350,9 @@ class document_type_delete extends document_type
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class document_type_delete extends document_type
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -592,7 +592,7 @@ class document_type_delete extends document_type
 			$this->terminate();
 		}
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->type_id->setVisibility();
+		$this->type_id->Visible = FALSE;
 		$this->document_type->setVisibility();
 		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -765,10 +765,6 @@ class document_type_delete extends document_type
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
 			$this->document_type->ViewCustomAttributes = "";
@@ -776,11 +772,6 @@ class document_type_delete extends document_type
 			// document_category
 			$this->document_category->ViewValue = $this->document_category->CurrentValue;
 			$this->document_category->ViewCustomAttributes = "";
-
-			// type_id
-			$this->type_id->LinkCustomAttributes = "";
-			$this->type_id->HrefValue = "";
-			$this->type_id->TooltipValue = "";
 
 			// document_type
 			$this->document_type->LinkCustomAttributes = "";

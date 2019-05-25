@@ -42,6 +42,7 @@ class transmit_details extends DbTable
 	public $ack_rcvd;
 	public $ack_document;
 	public $transmital_date;
+	public $transmit_mode;
 
 	// Constructor
 	public function __construct()
@@ -68,12 +69,13 @@ class transmit_details extends DbTable
 		$this->ExportWordColumnWidth = NULL; // Cell width (PHPWord only)
 		$this->DetailAdd = FALSE; // Allow detail add
 		$this->DetailEdit = FALSE; // Allow detail edit
-		$this->DetailView = TRUE; // Allow detail view
+		$this->DetailView = FALSE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 5;
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
 		$this->UserIDAllowSecurity = 104; // User ID Allow
 		$this->BasicSearch = new BasicSearch($this->TableVar);
+		$this->BasicSearch->TypeDefault = "OR";
 
 		// transmit_id
 		$this->transmit_id = new DbField('transmit_details', 'transmit_details', 'x_transmit_id', 'transmit_id', '"transmit_id"', 'CAST("transmit_id" AS varchar(255))', 20, -1, FALSE, '"transmit_id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
@@ -92,7 +94,7 @@ class transmit_details extends DbTable
 		$this->fields['transmittal_no'] = &$this->transmittal_no;
 
 		// project_name
-		$this->project_name = new DbField('transmit_details', 'transmit_details', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"EV__project_name"', TRUE, FALSE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->project_name = new DbField('transmit_details', 'transmit_details', 'x_project_name', 'project_name', '"project_name"', '"project_name"', 200, -1, FALSE, '"EV__project_name"', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
 		$this->project_name->Nullable = FALSE; // NOT NULL field
 		$this->project_name->Required = TRUE; // Required field
 		$this->project_name->Sortable = TRUE; // Allow sort
@@ -133,6 +135,12 @@ class transmit_details extends DbTable
 		$this->transmital_date->Sortable = FALSE; // Allow sort
 		$this->transmital_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['transmital_date'] = &$this->transmital_date;
+
+		// transmit_mode
+		$this->transmit_mode = new DbField('transmit_details', 'transmit_details', 'x_transmit_mode', 'transmit_mode', '"transmit_mode"', '"transmit_mode"', 200, -1, FALSE, '"transmit_mode"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'CHECKBOX');
+		$this->transmit_mode->Sortable = TRUE; // Allow sort
+		$this->transmit_mode->Lookup = new Lookup('transmit_mode', 'xmit_details', FALSE, 'xmit_mode', ["xmit_mode","","",""], [], [], [], [], [], [], '', '');
+		$this->fields['transmit_mode'] = &$this->transmit_mode;
 	}
 
 	// Field Visibility
@@ -575,6 +583,7 @@ class transmit_details extends DbTable
 		$this->ack_rcvd->DbValue = (ConvertToBool($row['ack_rcvd']) ? "1" : "0");
 		$this->ack_document->Upload->DbValue = $row['ack_document'];
 		$this->transmital_date->DbValue = $row['transmital_date'];
+		$this->transmit_mode->DbValue = $row['transmit_mode'];
 	}
 
 	// Delete uploaded files
@@ -814,6 +823,7 @@ class transmit_details extends DbTable
 		$this->ack_rcvd->setDbValue(ConvertToBool($rs->fields('ack_rcvd')) ? "1" : "0");
 		$this->ack_document->Upload->DbValue = $rs->fields('ack_document');
 		$this->transmital_date->setDbValue($rs->fields('transmital_date'));
+		$this->transmit_mode->setDbValue($rs->fields('transmit_mode'));
 	}
 
 	// Render list row values
@@ -837,7 +847,9 @@ class transmit_details extends DbTable
 
 		$this->transmital_date->CellCssStyle = "white-space: nowrap;";
 
+		// transmit_mode
 		// transmit_id
+
 		$this->transmit_id->ViewValue = $this->transmit_id->CurrentValue;
 		$this->transmit_id->ViewValue = FormatNumber($this->transmit_id->ViewValue, 0, -2, -2, -2);
 		$this->transmit_id->ViewCustomAttributes = "";
@@ -905,6 +917,40 @@ class transmit_details extends DbTable
 		$this->transmital_date->ViewValue = $this->transmital_date->CurrentValue;
 		$this->transmital_date->ViewCustomAttributes = "";
 
+		// transmit_mode
+		$curVal = strval($this->transmit_mode->CurrentValue);
+		if ($curVal <> "") {
+			$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+			if ($this->transmit_mode->ViewValue === NULL) { // Lookup from database
+				$arwrk = explode(",", $curVal);
+				$filterWrk = "";
+				foreach ($arwrk as $wrk) {
+					if ($filterWrk <> "")
+						$filterWrk .= " OR ";
+					$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->transmit_mode->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->transmit_mode->ViewValue = new OptionValues();
+					$ari = 0;
+					while (!$rswrk->EOF) {
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->transmit_mode->ViewValue->add($this->transmit_mode->displayValue($arwrk));
+						$rswrk->MoveNext();
+						$ari++;
+					}
+					$rswrk->Close();
+				} else {
+					$this->transmit_mode->ViewValue = $this->transmit_mode->CurrentValue;
+				}
+			}
+		} else {
+			$this->transmit_mode->ViewValue = NULL;
+		}
+		$this->transmit_mode->ViewCustomAttributes = "";
+
 		// transmit_id
 		$this->transmit_id->LinkCustomAttributes = "";
 		$this->transmit_id->HrefValue = "";
@@ -957,6 +1003,11 @@ class transmit_details extends DbTable
 		$this->transmital_date->HrefValue = "";
 		$this->transmital_date->TooltipValue = "";
 
+		// transmit_mode
+		$this->transmit_mode->LinkCustomAttributes = "";
+		$this->transmit_mode->HrefValue = "";
+		$this->transmit_mode->TooltipValue = "";
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 
@@ -982,24 +1033,45 @@ class transmit_details extends DbTable
 		// transmittal_no
 		$this->transmittal_no->EditAttrs["class"] = "form-control";
 		$this->transmittal_no->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->transmittal_no->CurrentValue = HtmlDecode($this->transmittal_no->CurrentValue);
 		$this->transmittal_no->EditValue = $this->transmittal_no->CurrentValue;
-		$this->transmittal_no->PlaceHolder = RemoveHtml($this->transmittal_no->caption());
+		$this->transmittal_no->ViewCustomAttributes = "";
 
 		// project_name
 		$this->project_name->EditAttrs["class"] = "form-control";
 		$this->project_name->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
-		$this->project_name->EditValue = $this->project_name->CurrentValue;
-		$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+		if ($this->project_name->VirtualValue <> "") {
+			$this->project_name->EditValue = $this->project_name->VirtualValue;
+		} else {
+			$this->project_name->EditValue = $this->project_name->CurrentValue;
+		$curVal = strval($this->project_name->CurrentValue);
+		if ($curVal <> "") {
+			$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+			if ($this->project_name->EditValue === NULL) { // Lookup from database
+				$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->project_name->EditValue = $this->project_name->CurrentValue;
+				}
+			}
+		} else {
+			$this->project_name->EditValue = NULL;
+		}
+		}
+		$this->project_name->ViewCustomAttributes = "";
 
 		// delivery_location
 		$this->delivery_location->EditAttrs["class"] = "form-control";
 		$this->delivery_location->EditCustomAttributes = "";
+		if (REMOVE_XSS)
+			$this->delivery_location->CurrentValue = HtmlDecode($this->delivery_location->CurrentValue);
 		$this->delivery_location->EditValue = $this->delivery_location->CurrentValue;
-		$this->delivery_location->ViewCustomAttributes = "";
+		$this->delivery_location->PlaceHolder = RemoveHtml($this->delivery_location->caption());
 
 		// addressed_to
 		$this->addressed_to->EditAttrs["class"] = "form-control";
@@ -1036,6 +1108,9 @@ class transmit_details extends DbTable
 		$this->transmital_date->EditValue = $this->transmital_date->CurrentValue;
 		$this->transmital_date->PlaceHolder = RemoveHtml($this->transmital_date->caption());
 
+		// transmit_mode
+		$this->transmit_mode->EditCustomAttributes = "";
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -1065,13 +1140,7 @@ class transmit_details extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->transmittal_no);
-					$doc->exportCaption($this->project_name);
-					$doc->exportCaption($this->delivery_location);
-					$doc->exportCaption($this->addressed_to);
-					$doc->exportCaption($this->remarks);
-					$doc->exportCaption($this->ack_rcvd);
-					$doc->exportCaption($this->ack_document);
+					$doc->exportCaption($this->transmit_mode);
 				} else {
 					$doc->exportCaption($this->transmit_id);
 					$doc->exportCaption($this->transmittal_no);
@@ -1081,6 +1150,7 @@ class transmit_details extends DbTable
 					$doc->exportCaption($this->remarks);
 					$doc->exportCaption($this->ack_rcvd);
 					$doc->exportCaption($this->ack_document);
+					$doc->exportCaption($this->transmit_mode);
 				}
 				$doc->endExportRow();
 			}
@@ -1112,13 +1182,7 @@ class transmit_details extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->transmittal_no);
-						$doc->exportField($this->project_name);
-						$doc->exportField($this->delivery_location);
-						$doc->exportField($this->addressed_to);
-						$doc->exportField($this->remarks);
-						$doc->exportField($this->ack_rcvd);
-						$doc->exportField($this->ack_document);
+						$doc->exportField($this->transmit_mode);
 					} else {
 						$doc->exportField($this->transmit_id);
 						$doc->exportField($this->transmittal_no);
@@ -1128,6 +1192,7 @@ class transmit_details extends DbTable
 						$doc->exportField($this->remarks);
 						$doc->exportField($this->ack_rcvd);
 						$doc->exportField($this->ack_document);
+						$doc->exportField($this->transmit_mode);
 					}
 					$doc->endExportRow($rowCnt);
 				}

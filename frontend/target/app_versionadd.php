@@ -54,11 +54,6 @@ fapp_versionadd.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($app_version_add->frontend_version->Required) { ?>
-			elm = this.getElements("x" + infix + "_frontend_version");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $app_version->frontend_version->caption(), $app_version->frontend_version->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($app_version_add->backend_version->Required) { ?>
 			elm = this.getElements("x" + infix + "_backend_version");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -138,27 +133,6 @@ $app_version_add->showMessage();
 <div class="ew-add-div"><!-- page* -->
 <?php } else { ?>
 <table id="tbl_app_versionadd" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
-<?php } ?>
-<?php if ($app_version->frontend_version->Visible) { // frontend_version ?>
-<?php if ($app_version_add->IsMobileOrModal) { ?>
-	<div id="r_frontend_version" class="form-group row">
-		<label id="elh_app_version_frontend_version" for="x_frontend_version" class="<?php echo $app_version_add->LeftColumnClass ?>"><?php echo $app_version->frontend_version->caption() ?><?php echo ($app_version->frontend_version->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $app_version_add->RightColumnClass ?>"><div<?php echo $app_version->frontend_version->cellAttributes() ?>>
-<span id="el_app_version_frontend_version">
-<textarea data-table="app_version" data-field="x_frontend_version" name="x_frontend_version" id="x_frontend_version" cols="35" rows="4" placeholder="<?php echo HtmlEncode($app_version->frontend_version->getPlaceHolder()) ?>"<?php echo $app_version->frontend_version->editAttributes() ?>><?php echo $app_version->frontend_version->EditValue ?></textarea>
-</span>
-<?php echo $app_version->frontend_version->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_frontend_version">
-		<td class="<?php echo $app_version_add->TableLeftColumnClass ?>"><span id="elh_app_version_frontend_version"><?php echo $app_version->frontend_version->caption() ?><?php echo ($app_version->frontend_version->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $app_version->frontend_version->cellAttributes() ?>>
-<span id="el_app_version_frontend_version">
-<textarea data-table="app_version" data-field="x_frontend_version" name="x_frontend_version" id="x_frontend_version" cols="35" rows="4" placeholder="<?php echo HtmlEncode($app_version->frontend_version->getPlaceHolder()) ?>"<?php echo $app_version->frontend_version->editAttributes() ?>><?php echo $app_version->frontend_version->EditValue ?></textarea>
-</span>
-<?php echo $app_version->frontend_version->CustomMsg ?></td>
-	</tr>
-<?php } ?>
 <?php } ?>
 <?php if ($app_version->backend_version->Visible) { // backend_version ?>
 <?php if ($app_version_add->IsMobileOrModal) { ?>

@@ -51,13 +51,8 @@ ftransmit_detailsview.Form_CustomValidate = function(fobj) { // DO NOT CHANGE TH
 ftransmit_detailsview.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ftransmit_detailsview.lists["x_project_name"] = <?php echo $transmit_details_view->project_name->Lookup->toClientList() ?>;
-ftransmit_detailsview.lists["x_project_name"].options = <?php echo JsonEncode($transmit_details_view->project_name->lookupOptions()) ?>;
-ftransmit_detailsview.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
-ftransmit_detailsview.lists["x_ack_rcvd"] = <?php echo $transmit_details_view->ack_rcvd->Lookup->toClientList() ?>;
-ftransmit_detailsview.lists["x_ack_rcvd"].options = <?php echo JsonEncode($transmit_details_view->ack_rcvd->options(FALSE, TRUE)) ?>;
-
 // Form object for search
+
 </script>
 <script>
 
@@ -111,84 +106,6 @@ $transmit_details_view->showMessage();
 <input type="hidden" name="t" value="transmit_details">
 <input type="hidden" name="modal" value="<?php echo (int)$transmit_details_view->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($transmit_details->transmittal_no->Visible) { // transmittal_no ?>
-	<tr id="r_transmittal_no">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_transmittal_no"><?php echo $transmit_details->transmittal_no->caption() ?></span></td>
-		<td data-name="transmittal_no"<?php echo $transmit_details->transmittal_no->cellAttributes() ?>>
-<span id="el_transmit_details_transmittal_no">
-<span<?php echo $transmit_details->transmittal_no->viewAttributes() ?>>
-<?php echo $transmit_details->transmittal_no->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->project_name->Visible) { // project_name ?>
-	<tr id="r_project_name">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_project_name"><?php echo $transmit_details->project_name->caption() ?></span></td>
-		<td data-name="project_name"<?php echo $transmit_details->project_name->cellAttributes() ?>>
-<span id="el_transmit_details_project_name">
-<span<?php echo $transmit_details->project_name->viewAttributes() ?>>
-<?php echo $transmit_details->project_name->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->delivery_location->Visible) { // delivery_location ?>
-	<tr id="r_delivery_location">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_delivery_location"><?php echo $transmit_details->delivery_location->caption() ?></span></td>
-		<td data-name="delivery_location"<?php echo $transmit_details->delivery_location->cellAttributes() ?>>
-<span id="el_transmit_details_delivery_location">
-<span<?php echo $transmit_details->delivery_location->viewAttributes() ?>>
-<?php echo $transmit_details->delivery_location->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->addressed_to->Visible) { // addressed_to ?>
-	<tr id="r_addressed_to">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_addressed_to"><?php echo $transmit_details->addressed_to->caption() ?></span></td>
-		<td data-name="addressed_to"<?php echo $transmit_details->addressed_to->cellAttributes() ?>>
-<span id="el_transmit_details_addressed_to">
-<span<?php echo $transmit_details->addressed_to->viewAttributes() ?>>
-<?php echo $transmit_details->addressed_to->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->remarks->Visible) { // remarks ?>
-	<tr id="r_remarks">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_remarks"><?php echo $transmit_details->remarks->caption() ?></span></td>
-		<td data-name="remarks"<?php echo $transmit_details->remarks->cellAttributes() ?>>
-<span id="el_transmit_details_remarks">
-<span<?php echo $transmit_details->remarks->viewAttributes() ?>>
-<?php echo $transmit_details->remarks->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->ack_rcvd->Visible) { // ack_rcvd ?>
-	<tr id="r_ack_rcvd">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_ack_rcvd"><?php echo $transmit_details->ack_rcvd->caption() ?></span></td>
-		<td data-name="ack_rcvd"<?php echo $transmit_details->ack_rcvd->cellAttributes() ?>>
-<span id="el_transmit_details_ack_rcvd">
-<span<?php echo $transmit_details->ack_rcvd->viewAttributes() ?>>
-<?php echo $transmit_details->ack_rcvd->getViewValue() ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($transmit_details->ack_document->Visible) { // ack_document ?>
-	<tr id="r_ack_document">
-		<td class="<?php echo $transmit_details_view->TableLeftColumnClass ?>"><span id="elh_transmit_details_ack_document"><?php echo $transmit_details->ack_document->caption() ?></span></td>
-		<td data-name="ack_document"<?php echo $transmit_details->ack_document->cellAttributes() ?>>
-<span id="el_transmit_details_ack_document">
-<span<?php echo $transmit_details->ack_document->viewAttributes() ?>>
-<?php echo GetFileViewTag($transmit_details->ack_document, $transmit_details->ack_document->getViewValue()) ?>
-</span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 </table>
 <?php if (!$transmit_details_view->IsModal) { ?>
 <?php if (!$transmit_details->isExport()) { ?>

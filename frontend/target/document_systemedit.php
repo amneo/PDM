@@ -54,11 +54,6 @@ fdocument_systemedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($document_system_edit->type_id->Required) { ?>
-			elm = this.getElements("x" + infix + "_type_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_system->type_id->caption(), $document_system->type_id->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($document_system_edit->system_name->Required) { ?>
 			elm = this.getElements("x" + infix + "_system_name");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -123,39 +118,16 @@ $document_system_edit->showMessage();
 <?php } else { ?>
 <table id="tbl_document_systemedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
 <?php } ?>
-<?php if ($document_system->type_id->Visible) { // type_id ?>
-<?php if ($document_system_edit->IsMobileOrModal) { ?>
-	<div id="r_type_id" class="form-group row">
-		<label id="elh_document_system_type_id" class="<?php echo $document_system_edit->LeftColumnClass ?>"><?php echo $document_system->type_id->caption() ?><?php echo ($document_system->type_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $document_system_edit->RightColumnClass ?>"><div<?php echo $document_system->type_id->cellAttributes() ?>>
-<span id="el_document_system_type_id">
-<span<?php echo $document_system->type_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->type_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="document_system" data-field="x_type_id" name="x_type_id" id="x_type_id" value="<?php echo HtmlEncode($document_system->type_id->CurrentValue) ?>">
-<?php echo $document_system->type_id->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_type_id">
-		<td class="<?php echo $document_system_edit->TableLeftColumnClass ?>"><span id="elh_document_system_type_id"><?php echo $document_system->type_id->caption() ?><?php echo ($document_system->type_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $document_system->type_id->cellAttributes() ?>>
-<span id="el_document_system_type_id">
-<span<?php echo $document_system->type_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->type_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="document_system" data-field="x_type_id" name="x_type_id" id="x_type_id" value="<?php echo HtmlEncode($document_system->type_id->CurrentValue) ?>">
-<?php echo $document_system->type_id->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($document_system->system_name->Visible) { // system_name ?>
 <?php if ($document_system_edit->IsMobileOrModal) { ?>
 	<div id="r_system_name" class="form-group row">
 		<label id="elh_document_system_system_name" for="x_system_name" class="<?php echo $document_system_edit->LeftColumnClass ?>"><?php echo $document_system->system_name->caption() ?><?php echo ($document_system->system_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $document_system_edit->RightColumnClass ?>"><div<?php echo $document_system->system_name->cellAttributes() ?>>
 <span id="el_document_system_system_name">
-<input type="text" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
+<span<?php echo $document_system->system_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_name->EditValue) ?>"></span>
 </span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" value="<?php echo HtmlEncode($document_system->system_name->CurrentValue) ?>">
 <?php echo $document_system->system_name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
@@ -163,8 +135,10 @@ $document_system_edit->showMessage();
 		<td class="<?php echo $document_system_edit->TableLeftColumnClass ?>"><span id="elh_document_system_system_name"><?php echo $document_system->system_name->caption() ?><?php echo ($document_system->system_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $document_system->system_name->cellAttributes() ?>>
 <span id="el_document_system_system_name">
-<input type="text" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
+<span<?php echo $document_system->system_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_name->EditValue) ?>"></span>
 </span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="x_system_name" id="x_system_name" value="<?php echo HtmlEncode($document_system->system_name->CurrentValue) ?>">
 <?php echo $document_system->system_name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -195,6 +169,7 @@ $document_system_edit->showMessage();
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="document_system" data-field="x_type_id" name="x_type_id" id="x_type_id" value="<?php echo HtmlEncode($document_system->type_id->CurrentValue) ?>">
 <?php if (!$document_system_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $document_system_edit->OffsetColumnClass ?>"><!-- buttons offset -->

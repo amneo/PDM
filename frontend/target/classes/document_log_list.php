@@ -406,9 +406,9 @@ class document_log_list extends document_log
 		$this->MultiUpdateUrl = "document_logupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -429,9 +429,9 @@ class document_log_list extends document_log
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -620,7 +620,7 @@ class document_log_list extends document_log
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -883,6 +883,15 @@ class document_log_list extends document_log
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->approval_status_1);
+		$this->setupLookupOptions($this->approval_status_2);
+		$this->setupLookupOptions($this->approval_status_3);
+		$this->setupLookupOptions($this->approval_status_4);
+		$this->setupLookupOptions($this->approval_status_5);
+		$this->setupLookupOptions($this->approval_status_6);
+		$this->setupLookupOptions($this->approval_status_7);
+		$this->setupLookupOptions($this->approval_status_8);
+		$this->setupLookupOptions($this->approval_status_9);
+		$this->setupLookupOptions($this->approval_status_10);
 
 		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
@@ -955,7 +964,7 @@ class document_log_list extends document_log
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -2680,7 +2689,8 @@ class document_log_list extends document_log
 		$this->project_name->setDbValue($row['project_name']);
 		$this->document_tittle->setDbValue($row['document_tittle']);
 		$this->current_status->setDbValue($row['current_status']);
-		$this->current_status_file->setDbValue($row['current_status_file']);
+		$this->current_status_file->Upload->DbValue = $row['current_status_file'];
+		$this->current_status_file->setDbValue($this->current_status_file->Upload->DbValue);
 		$this->submit_no_1->setDbValue($row['submit_no_1']);
 		$this->revision_no_1->setDbValue($row['revision_no_1']);
 		$this->direction_1->setDbValue($row['direction_1']);
@@ -2688,7 +2698,8 @@ class document_log_list extends document_log
 		$this->transmit_date_1->setDbValue($row['transmit_date_1']);
 		$this->transmit_no_1->setDbValue($row['transmit_no_1']);
 		$this->approval_status_1->setDbValue($row['approval_status_1']);
-		$this->direction_file_1->setDbValue($row['direction_file_1']);
+		$this->direction_file_1->Upload->DbValue = $row['direction_file_1'];
+		$this->direction_file_1->setDbValue($this->direction_file_1->Upload->DbValue);
 		$this->submit_no_2->setDbValue($row['submit_no_2']);
 		$this->revision_no_2->setDbValue($row['revision_no_2']);
 		$this->direction_2->setDbValue($row['direction_2']);
@@ -2696,7 +2707,8 @@ class document_log_list extends document_log
 		$this->transmit_date_2->setDbValue($row['transmit_date_2']);
 		$this->transmit_no_2->setDbValue($row['transmit_no_2']);
 		$this->approval_status_2->setDbValue($row['approval_status_2']);
-		$this->direction_file_2->setDbValue($row['direction_file_2']);
+		$this->direction_file_2->Upload->DbValue = $row['direction_file_2'];
+		$this->direction_file_2->setDbValue($this->direction_file_2->Upload->DbValue);
 		$this->submit_no_3->setDbValue($row['submit_no_3']);
 		$this->revision_no_3->setDbValue($row['revision_no_3']);
 		$this->direction_3->setDbValue($row['direction_3']);
@@ -2704,7 +2716,8 @@ class document_log_list extends document_log
 		$this->transmit_date_3->setDbValue($row['transmit_date_3']);
 		$this->transmit_no_3->setDbValue($row['transmit_no_3']);
 		$this->approval_status_3->setDbValue($row['approval_status_3']);
-		$this->direction_file_3->setDbValue($row['direction_file_3']);
+		$this->direction_file_3->Upload->DbValue = $row['direction_file_3'];
+		$this->direction_file_3->setDbValue($this->direction_file_3->Upload->DbValue);
 		$this->submit_no_4->setDbValue($row['submit_no_4']);
 		$this->revision_no_4->setDbValue($row['revision_no_4']);
 		$this->direction_4->setDbValue($row['direction_4']);
@@ -2712,7 +2725,8 @@ class document_log_list extends document_log
 		$this->transmit_date_4->setDbValue($row['transmit_date_4']);
 		$this->transmit_no_4->setDbValue($row['transmit_no_4']);
 		$this->approval_status_4->setDbValue($row['approval_status_4']);
-		$this->direction_file_4->setDbValue($row['direction_file_4']);
+		$this->direction_file_4->Upload->DbValue = $row['direction_file_4'];
+		$this->direction_file_4->setDbValue($this->direction_file_4->Upload->DbValue);
 		$this->submit_no_5->setDbValue($row['submit_no_5']);
 		$this->revision_no_5->setDbValue($row['revision_no_5']);
 		$this->direction_5->setDbValue($row['direction_5']);
@@ -2720,7 +2734,8 @@ class document_log_list extends document_log
 		$this->transmit_date_5->setDbValue($row['transmit_date_5']);
 		$this->transmit_no_5->setDbValue($row['transmit_no_5']);
 		$this->approval_status_5->setDbValue($row['approval_status_5']);
-		$this->direction_file_5->setDbValue($row['direction_file_5']);
+		$this->direction_file_5->Upload->DbValue = $row['direction_file_5'];
+		$this->direction_file_5->setDbValue($this->direction_file_5->Upload->DbValue);
 		$this->submit_no_6->setDbValue($row['submit_no_6']);
 		$this->revision_no_6->setDbValue($row['revision_no_6']);
 		$this->direction_6->setDbValue($row['direction_6']);
@@ -2728,7 +2743,8 @@ class document_log_list extends document_log
 		$this->transmit_date_6->setDbValue($row['transmit_date_6']);
 		$this->transmit_no_6->setDbValue($row['transmit_no_6']);
 		$this->approval_status_6->setDbValue($row['approval_status_6']);
-		$this->direction_file_6->setDbValue($row['direction_file_6']);
+		$this->direction_file_6->Upload->DbValue = $row['direction_file_6'];
+		$this->direction_file_6->setDbValue($this->direction_file_6->Upload->DbValue);
 		$this->submit_no_7->setDbValue($row['submit_no_7']);
 		$this->revision_no_7->setDbValue($row['revision_no_7']);
 		$this->direction_7->setDbValue($row['direction_7']);
@@ -2736,7 +2752,8 @@ class document_log_list extends document_log
 		$this->transmit_date_7->setDbValue($row['transmit_date_7']);
 		$this->transmit_no_7->setDbValue($row['transmit_no_7']);
 		$this->approval_status_7->setDbValue($row['approval_status_7']);
-		$this->direction_file_7->setDbValue($row['direction_file_7']);
+		$this->direction_file_7->Upload->DbValue = $row['direction_file_7'];
+		$this->direction_file_7->setDbValue($this->direction_file_7->Upload->DbValue);
 		$this->submit_no_8->setDbValue($row['submit_no_8']);
 		$this->revision_no_8->setDbValue($row['revision_no_8']);
 		$this->direction_8->setDbValue($row['direction_8']);
@@ -2744,7 +2761,8 @@ class document_log_list extends document_log
 		$this->transmit_date_8->setDbValue($row['transmit_date_8']);
 		$this->transmit_no_8->setDbValue($row['transmit_no_8']);
 		$this->approval_status_8->setDbValue($row['approval_status_8']);
-		$this->direction_file_8->setDbValue($row['direction_file_8']);
+		$this->direction_file_8->Upload->DbValue = $row['direction_file_8'];
+		$this->direction_file_8->setDbValue($this->direction_file_8->Upload->DbValue);
 		$this->submit_no_9->setDbValue($row['submit_no_9']);
 		$this->revision_no_9->setDbValue($row['revision_no_9']);
 		$this->direction_9->setDbValue($row['direction_9']);
@@ -2752,7 +2770,8 @@ class document_log_list extends document_log
 		$this->transmit_date_9->setDbValue($row['transmit_date_9']);
 		$this->transmit_no_9->setDbValue($row['transmit_no_9']);
 		$this->approval_status_9->setDbValue($row['approval_status_9']);
-		$this->direction_file_9->setDbValue($row['direction_file_9']);
+		$this->direction_file_9->Upload->DbValue = $row['direction_file_9'];
+		$this->direction_file_9->setDbValue($this->direction_file_9->Upload->DbValue);
 		$this->submit_no_10->setDbValue($row['submit_no_10']);
 		$this->revision_no_10->setDbValue($row['revision_no_10']);
 		$this->direction_10->setDbValue($row['direction_10']);
@@ -2760,7 +2779,8 @@ class document_log_list extends document_log
 		$this->transmit_date_10->setDbValue($row['transmit_date_10']);
 		$this->transmit_no_10->setDbValue($row['transmit_no_10']);
 		$this->approval_status_10->setDbValue($row['approval_status_10']);
-		$this->direction_file_10->setDbValue($row['direction_file_10']);
+		$this->direction_file_10->Upload->DbValue = $row['direction_file_10'];
+		$this->direction_file_10->setDbValue($this->direction_file_10->Upload->DbValue);
 		$this->log_updatedon->setDbValue($row['log_updatedon']);
 	}
 
@@ -3134,6 +3154,26 @@ class document_log_list extends document_log
 
 			// approval_status_2
 			$this->approval_status_2->ViewValue = $this->approval_status_2->CurrentValue;
+			$curVal = strval($this->approval_status_2->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_2->ViewValue = $this->approval_status_2->lookupCacheOption($curVal);
+				if ($this->approval_status_2->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_2->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_2->ViewValue = $this->approval_status_2->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_2->ViewValue = $this->approval_status_2->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_2->ViewValue = NULL;
+			}
 			$this->approval_status_2->ViewCustomAttributes = "";
 
 			// submit_no_3
@@ -3164,6 +3204,26 @@ class document_log_list extends document_log
 
 			// approval_status_3
 			$this->approval_status_3->ViewValue = $this->approval_status_3->CurrentValue;
+			$curVal = strval($this->approval_status_3->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_3->ViewValue = $this->approval_status_3->lookupCacheOption($curVal);
+				if ($this->approval_status_3->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_3->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_3->ViewValue = $this->approval_status_3->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_3->ViewValue = $this->approval_status_3->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_3->ViewValue = NULL;
+			}
 			$this->approval_status_3->ViewCustomAttributes = "";
 
 			// submit_no_4
@@ -3194,6 +3254,26 @@ class document_log_list extends document_log
 
 			// approval_status_4
 			$this->approval_status_4->ViewValue = $this->approval_status_4->CurrentValue;
+			$curVal = strval($this->approval_status_4->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_4->ViewValue = $this->approval_status_4->lookupCacheOption($curVal);
+				if ($this->approval_status_4->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_4->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_4->ViewValue = $this->approval_status_4->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_4->ViewValue = $this->approval_status_4->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_4->ViewValue = NULL;
+			}
 			$this->approval_status_4->ViewCustomAttributes = "";
 
 			// submit_no_5
@@ -3224,6 +3304,26 @@ class document_log_list extends document_log
 
 			// approval_status_5
 			$this->approval_status_5->ViewValue = $this->approval_status_5->CurrentValue;
+			$curVal = strval($this->approval_status_5->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_5->ViewValue = $this->approval_status_5->lookupCacheOption($curVal);
+				if ($this->approval_status_5->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_5->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_5->ViewValue = $this->approval_status_5->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_5->ViewValue = $this->approval_status_5->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_5->ViewValue = NULL;
+			}
 			$this->approval_status_5->ViewCustomAttributes = "";
 
 			// submit_no_6
@@ -3254,6 +3354,26 @@ class document_log_list extends document_log
 
 			// approval_status_6
 			$this->approval_status_6->ViewValue = $this->approval_status_6->CurrentValue;
+			$curVal = strval($this->approval_status_6->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_6->ViewValue = $this->approval_status_6->lookupCacheOption($curVal);
+				if ($this->approval_status_6->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_6->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_6->ViewValue = $this->approval_status_6->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_6->ViewValue = $this->approval_status_6->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_6->ViewValue = NULL;
+			}
 			$this->approval_status_6->ViewCustomAttributes = "";
 
 			// submit_no_7
@@ -3284,6 +3404,26 @@ class document_log_list extends document_log
 
 			// approval_status_7
 			$this->approval_status_7->ViewValue = $this->approval_status_7->CurrentValue;
+			$curVal = strval($this->approval_status_7->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_7->ViewValue = $this->approval_status_7->lookupCacheOption($curVal);
+				if ($this->approval_status_7->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_7->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_7->ViewValue = $this->approval_status_7->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_7->ViewValue = $this->approval_status_7->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_7->ViewValue = NULL;
+			}
 			$this->approval_status_7->ViewCustomAttributes = "";
 
 			// submit_no_8
@@ -3314,6 +3454,26 @@ class document_log_list extends document_log
 
 			// approval_status_8
 			$this->approval_status_8->ViewValue = $this->approval_status_8->CurrentValue;
+			$curVal = strval($this->approval_status_8->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_8->ViewValue = $this->approval_status_8->lookupCacheOption($curVal);
+				if ($this->approval_status_8->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_8->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_8->ViewValue = $this->approval_status_8->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_8->ViewValue = $this->approval_status_8->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_8->ViewValue = NULL;
+			}
 			$this->approval_status_8->ViewCustomAttributes = "";
 
 			// submit_no_9
@@ -3344,6 +3504,26 @@ class document_log_list extends document_log
 
 			// approval_status_9
 			$this->approval_status_9->ViewValue = $this->approval_status_9->CurrentValue;
+			$curVal = strval($this->approval_status_9->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_9->ViewValue = $this->approval_status_9->lookupCacheOption($curVal);
+				if ($this->approval_status_9->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_9->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_9->ViewValue = $this->approval_status_9->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_9->ViewValue = $this->approval_status_9->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_9->ViewValue = NULL;
+			}
 			$this->approval_status_9->ViewCustomAttributes = "";
 
 			// submit_no_10
@@ -3375,6 +3555,26 @@ class document_log_list extends document_log
 
 			// approval_status_10
 			$this->approval_status_10->ViewValue = $this->approval_status_10->CurrentValue;
+			$curVal = strval($this->approval_status_10->CurrentValue);
+			if ($curVal <> "") {
+				$this->approval_status_10->ViewValue = $this->approval_status_10->lookupCacheOption($curVal);
+				if ($this->approval_status_10->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"short_code\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->approval_status_10->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$this->approval_status_10->ViewValue = $this->approval_status_10->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->approval_status_10->ViewValue = $this->approval_status_10->CurrentValue;
+					}
+				}
+			} else {
+				$this->approval_status_10->ViewValue = NULL;
+			}
 			$this->approval_status_10->ViewCustomAttributes = "";
 
 			// log_updatedon
@@ -3409,8 +3609,8 @@ class document_log_list extends document_log
 
 			// current_status
 			$this->current_status->LinkCustomAttributes = "";
-			if (!EmptyValue($this->current_status_file->CurrentValue)) {
-				$this->current_status->HrefValue = ((!empty($this->current_status_file->ViewValue) && !is_array($this->current_status_file->ViewValue)) ? RemoveHtml($this->current_status_file->ViewValue) : $this->current_status_file->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->current_status_file->Upload->DbValue)) {
+				$this->current_status->HrefValue = GetFileUploadUrl($this->current_status_file, $this->current_status_file->Upload->DbValue); // Add prefix/suffix
 				$this->current_status->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->current_status->HrefValue = FullUrl($this->current_status->HrefValue, "href");
 			} else {
@@ -3450,8 +3650,8 @@ class document_log_list extends document_log
 
 			// approval_status_1
 			$this->approval_status_1->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_1->CurrentValue)) {
-				$this->approval_status_1->HrefValue = ((!empty($this->direction_file_1->ViewValue) && !is_array($this->direction_file_1->ViewValue)) ? RemoveHtml($this->direction_file_1->ViewValue) : $this->direction_file_1->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_1->Upload->DbValue)) {
+				$this->approval_status_1->HrefValue = GetFileUploadUrl($this->direction_file_1, $this->direction_file_1->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_1->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_1->HrefValue = FullUrl($this->approval_status_1->HrefValue, "href");
 			} else {
@@ -3491,8 +3691,8 @@ class document_log_list extends document_log
 
 			// approval_status_2
 			$this->approval_status_2->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_2->CurrentValue)) {
-				$this->approval_status_2->HrefValue = ((!empty($this->direction_file_2->ViewValue) && !is_array($this->direction_file_2->ViewValue)) ? RemoveHtml($this->direction_file_2->ViewValue) : $this->direction_file_2->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_2->Upload->DbValue)) {
+				$this->approval_status_2->HrefValue = GetFileUploadUrl($this->direction_file_2, $this->direction_file_2->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_2->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_2->HrefValue = FullUrl($this->approval_status_2->HrefValue, "href");
 			} else {
@@ -3532,8 +3732,8 @@ class document_log_list extends document_log
 
 			// approval_status_3
 			$this->approval_status_3->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_3->CurrentValue)) {
-				$this->approval_status_3->HrefValue = ((!empty($this->direction_file_3->ViewValue) && !is_array($this->direction_file_3->ViewValue)) ? RemoveHtml($this->direction_file_3->ViewValue) : $this->direction_file_3->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_3->Upload->DbValue)) {
+				$this->approval_status_3->HrefValue = GetFileUploadUrl($this->direction_file_3, $this->direction_file_3->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_3->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_3->HrefValue = FullUrl($this->approval_status_3->HrefValue, "href");
 			} else {
@@ -3573,8 +3773,8 @@ class document_log_list extends document_log
 
 			// approval_status_4
 			$this->approval_status_4->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_4->CurrentValue)) {
-				$this->approval_status_4->HrefValue = ((!empty($this->direction_file_4->ViewValue) && !is_array($this->direction_file_4->ViewValue)) ? RemoveHtml($this->direction_file_4->ViewValue) : $this->direction_file_4->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_4->Upload->DbValue)) {
+				$this->approval_status_4->HrefValue = GetFileUploadUrl($this->direction_file_4, $this->direction_file_4->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_4->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_4->HrefValue = FullUrl($this->approval_status_4->HrefValue, "href");
 			} else {
@@ -3649,8 +3849,8 @@ class document_log_list extends document_log
 
 			// approval_status_6
 			$this->approval_status_6->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_6->CurrentValue)) {
-				$this->approval_status_6->HrefValue = ((!empty($this->direction_file_6->ViewValue) && !is_array($this->direction_file_6->ViewValue)) ? RemoveHtml($this->direction_file_6->ViewValue) : $this->direction_file_6->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_6->Upload->DbValue)) {
+				$this->approval_status_6->HrefValue = GetFileUploadUrl($this->direction_file_6, $this->direction_file_6->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_6->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_6->HrefValue = FullUrl($this->approval_status_6->HrefValue, "href");
 			} else {
@@ -3690,8 +3890,8 @@ class document_log_list extends document_log
 
 			// approval_status_7
 			$this->approval_status_7->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_7->CurrentValue)) {
-				$this->approval_status_7->HrefValue = ((!empty($this->direction_file_7->ViewValue) && !is_array($this->direction_file_7->ViewValue)) ? RemoveHtml($this->direction_file_7->ViewValue) : $this->direction_file_7->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_7->Upload->DbValue)) {
+				$this->approval_status_7->HrefValue = GetFileUploadUrl($this->direction_file_7, $this->direction_file_7->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_7->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_7->HrefValue = FullUrl($this->approval_status_7->HrefValue, "href");
 			} else {
@@ -3731,8 +3931,8 @@ class document_log_list extends document_log
 
 			// approval_status_8
 			$this->approval_status_8->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_8->CurrentValue)) {
-				$this->approval_status_8->HrefValue = ((!empty($this->direction_file_8->ViewValue) && !is_array($this->direction_file_8->ViewValue)) ? RemoveHtml($this->direction_file_8->ViewValue) : $this->direction_file_8->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_8->Upload->DbValue)) {
+				$this->approval_status_8->HrefValue = GetFileUploadUrl($this->direction_file_8, $this->direction_file_8->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_8->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_8->HrefValue = FullUrl($this->approval_status_8->HrefValue, "href");
 			} else {
@@ -3772,8 +3972,8 @@ class document_log_list extends document_log
 
 			// approval_status_9
 			$this->approval_status_9->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_9->CurrentValue)) {
-				$this->approval_status_9->HrefValue = ((!empty($this->direction_file_9->ViewValue) && !is_array($this->direction_file_9->ViewValue)) ? RemoveHtml($this->direction_file_9->ViewValue) : $this->direction_file_9->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_9->Upload->DbValue)) {
+				$this->approval_status_9->HrefValue = GetFileUploadUrl($this->direction_file_9, $this->direction_file_9->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_9->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_9->HrefValue = FullUrl($this->approval_status_9->HrefValue, "href");
 			} else {
@@ -3813,8 +4013,8 @@ class document_log_list extends document_log
 
 			// approval_status_10
 			$this->approval_status_10->LinkCustomAttributes = "";
-			if (!EmptyValue($this->direction_file_10->CurrentValue)) {
-				$this->approval_status_10->HrefValue = ((!empty($this->direction_file_10->ViewValue) && !is_array($this->direction_file_10->ViewValue)) ? RemoveHtml($this->direction_file_10->ViewValue) : $this->direction_file_10->CurrentValue); // Add prefix/suffix
+			if (!EmptyValue($this->direction_file_10->Upload->DbValue)) {
+				$this->approval_status_10->HrefValue = GetFileUploadUrl($this->direction_file_10, $this->direction_file_10->Upload->DbValue); // Add prefix/suffix
 				$this->approval_status_10->LinkAttrs["target"] = "_blank"; // Add target
 				if ($this->isExport()) $this->approval_status_10->HrefValue = FullUrl($this->approval_status_10->HrefValue, "href");
 			} else {
@@ -3911,7 +4111,7 @@ class document_log_list extends document_log
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
@@ -4067,6 +4267,24 @@ class document_log_list extends document_log
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_approval_status_1":
+							break;
+						case "x_approval_status_2":
+							break;
+						case "x_approval_status_3":
+							break;
+						case "x_approval_status_4":
+							break;
+						case "x_approval_status_5":
+							break;
+						case "x_approval_status_6":
+							break;
+						case "x_approval_status_7":
+							break;
+						case "x_approval_status_8":
+							break;
+						case "x_approval_status_9":
+							break;
+						case "x_approval_status_10":
 							break;
 					}
 					$ar[strval($row[0])] = $row;

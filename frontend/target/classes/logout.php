@@ -297,8 +297,8 @@ class logout
 		// Language object
 		if (!isset($Language))
 			$Language = new Language();
-		if (!isset($GLOBALS["user_dtls"]))
-			$GLOBALS["user_dtls"] = new user_dtls();
+		if (!isset($GLOBALS["users"]))
+			$GLOBALS["users"] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -315,9 +315,9 @@ class logout
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &GetConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}

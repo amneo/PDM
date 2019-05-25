@@ -69,7 +69,7 @@ class document_details extends DbTable
 		$this->ExportWordColumnWidth = NULL; // Cell width (PHPWord only)
 		$this->DetailAdd = FALSE; // Allow detail add
 		$this->DetailEdit = FALSE; // Allow detail edit
-		$this->DetailView = TRUE; // Allow detail view
+		$this->DetailView = FALSE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 5;
 		$this->AllowAddDeleteRow = TRUE; // Allow add/delete row
@@ -111,14 +111,17 @@ class document_details extends DbTable
 		$this->project_name->Nullable = FALSE; // NOT NULL field
 		$this->project_name->Required = TRUE; // Required field
 		$this->project_name->Sortable = TRUE; // Allow sort
-		$this->project_name->Lookup = new Lookup('project_name', 'project_details', FALSE, 'project_id', ["project_name","order_number","",""], [], [], [], [], [], [], '"project_id" DESC', '');
+		$this->project_name->Lookup = new Lookup('project_name', 'project_details', FALSE, 'project_name', ["project_name","order_number","",""], [], [], [], [], [], [], '"project_id" DESC', '');
 		$this->fields['project_name'] = &$this->project_name;
 
 		// project_system
-		$this->project_system = new DbField('document_details', 'document_details', 'x_project_system', 'project_system', '"project_system"', '"project_system"', 200, -1, FALSE, '"project_system"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->project_system = new DbField('document_details', 'document_details', 'x_project_system', 'project_system', '"project_system"', '"project_system"', 200, -1, FALSE, '"project_system"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->project_system->Nullable = FALSE; // NOT NULL field
 		$this->project_system->Required = TRUE; // Required field
 		$this->project_system->Sortable = TRUE; // Allow sort
+		$this->project_system->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->project_system->PleaseSelectText = $Language->phrase("PleaseSelect"); // PleaseSelect text
+		$this->project_system->Lookup = new Lookup('project_system', 'document_system', FALSE, 'system_name', ["system_name","","",""], [], [], [], [], [], [], '"type_id"', '');
 		$this->fields['project_system'] = &$this->project_system;
 
 		// create_date
@@ -141,7 +144,7 @@ class document_details extends DbTable
 		$this->document_type->Nullable = FALSE; // NOT NULL field
 		$this->document_type->Required = TRUE; // Required field
 		$this->document_type->Sortable = TRUE; // Allow sort
-		$this->document_type->Lookup = new Lookup('document_type', 'document_type', FALSE, 'document_type', ["document_type","document_category","",""], [], [], [], [], [], [], '', '');
+		$this->document_type->Lookup = new Lookup('document_type', 'document_type', FALSE, 'document_type', ["document_type","","",""], [], [], [], [], [], [], '', '');
 		$this->fields['document_type'] = &$this->document_type;
 
 		// expiry_date
@@ -253,7 +256,7 @@ class document_details extends DbTable
 	{
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT \"project_name\" || '" . ValueSeparator(1, $this->project_name) . "' || \"order_number\" FROM \"public\".\"project_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"project_id\" = \"document_details\".\"project_name\" LIMIT 1) AS \"EV__project_name\", (SELECT \"document_type\" || '" . ValueSeparator(1, $this->document_type) . "' || \"document_category\" FROM \"public\".\"document_type\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"document_type\" = \"document_details\".\"document_type\" LIMIT 1) AS \"EV__document_type\" FROM \"public\".\"document_details\"" .
+			"SELECT *, (SELECT \"project_name\" || '" . ValueSeparator(1, $this->project_name) . "' || \"order_number\" FROM \"public\".\"project_details\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"project_name\" = \"document_details\".\"project_name\" LIMIT 1) AS \"EV__project_name\", (SELECT \"document_type\" FROM \"public\".\"document_type\" \"TMP_LOOKUPTABLE\" WHERE \"TMP_LOOKUPTABLE\".\"document_type\" = \"document_details\".\"document_type\" LIMIT 1) AS \"EV__document_type\" FROM \"public\".\"document_details\"" .
 			") \"TMP_TABLE\"";
 		return ($this->SqlSelectList <> "") ? $this->SqlSelectList : $select;
 	}
@@ -884,7 +887,7 @@ class document_details extends DbTable
 		if ($curVal <> "") {
 			$this->project_name->ViewValue = $this->project_name->lookupCacheOption($curVal);
 			if ($this->project_name->ViewValue === NULL) { // Lookup from database
-				$filterWrk = "\"project_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+				$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 				$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
@@ -904,7 +907,25 @@ class document_details extends DbTable
 		$this->project_name->ViewCustomAttributes = "";
 
 		// project_system
-		$this->project_system->ViewValue = $this->project_system->CurrentValue;
+		$curVal = strval($this->project_system->CurrentValue);
+		if ($curVal <> "") {
+			$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+			if ($this->project_system->ViewValue === NULL) { // Lookup from database
+				$filterWrk = "\"system_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+				$sqlWrk = $this->project_system->Lookup->getSql(FALSE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('df');
+					$this->project_system->ViewValue = $this->project_system->displayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->project_system->ViewValue = $this->project_system->CurrentValue;
+				}
+			}
+		} else {
+			$this->project_system->ViewValue = NULL;
+		}
 		$this->project_system->ViewCustomAttributes = "";
 
 		// create_date
@@ -932,7 +953,6 @@ class document_details extends DbTable
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
 					$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1056,10 +1076,6 @@ class document_details extends DbTable
 		// project_system
 		$this->project_system->EditAttrs["class"] = "form-control";
 		$this->project_system->EditCustomAttributes = "";
-		if (REMOVE_XSS)
-			$this->project_system->CurrentValue = HtmlDecode($this->project_system->CurrentValue);
-		$this->project_system->EditValue = $this->project_system->CurrentValue;
-		$this->project_system->PlaceHolder = RemoveHtml($this->project_system->caption());
 
 		// create_date
 		$this->create_date->EditAttrs["class"] = "form-control";

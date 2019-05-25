@@ -395,9 +395,9 @@ class app_version_view extends app_version
 		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf" . $keyUrl;
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -418,9 +418,9 @@ class app_version_view extends app_version
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -722,12 +722,12 @@ class app_version_view extends app_version
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->sequence_no->setVisibility();
-		$this->frontend_version->setVisibility();
-		$this->backend_version->setVisibility();
-		$this->release_date->setVisibility();
-		$this->posted_date->setVisibility();
-		$this->remarks->setVisibility();
+		$this->sequence_no->Visible = FALSE;
+		$this->frontend_version->Visible = FALSE;
+		$this->backend_version->Visible = FALSE;
+		$this->release_date->Visible = FALSE;
+		$this->posted_date->Visible = FALSE;
+		$this->remarks->Visible = FALSE;
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -1044,19 +1044,6 @@ class app_version_view extends app_version
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// sequence_no
-			$this->sequence_no->ViewValue = $this->sequence_no->CurrentValue;
-			$this->sequence_no->ViewValue = FormatNumber($this->sequence_no->ViewValue, 0, -2, -2, -2);
-			$this->sequence_no->ViewCustomAttributes = "";
-
-			// frontend_version
-			$this->frontend_version->ViewValue = $this->frontend_version->CurrentValue;
-			$this->frontend_version->ViewCustomAttributes = "";
-
-			// backend_version
-			$this->backend_version->ViewValue = $this->backend_version->CurrentValue;
-			$this->backend_version->ViewCustomAttributes = "";
-
 			// release_date
 			$this->release_date->ViewValue = $this->release_date->CurrentValue;
 			$this->release_date->ViewValue = FormatDateTime($this->release_date->ViewValue, 0);
@@ -1066,40 +1053,6 @@ class app_version_view extends app_version
 			$this->posted_date->ViewValue = $this->posted_date->CurrentValue;
 			$this->posted_date->ViewValue = FormatDateTime($this->posted_date->ViewValue, 0);
 			$this->posted_date->ViewCustomAttributes = "";
-
-			// remarks
-			$this->remarks->ViewValue = $this->remarks->CurrentValue;
-			$this->remarks->ViewCustomAttributes = "";
-
-			// sequence_no
-			$this->sequence_no->LinkCustomAttributes = "";
-			$this->sequence_no->HrefValue = "";
-			$this->sequence_no->TooltipValue = "";
-
-			// frontend_version
-			$this->frontend_version->LinkCustomAttributes = "";
-			$this->frontend_version->HrefValue = "";
-			$this->frontend_version->TooltipValue = "";
-
-			// backend_version
-			$this->backend_version->LinkCustomAttributes = "";
-			$this->backend_version->HrefValue = "";
-			$this->backend_version->TooltipValue = "";
-
-			// release_date
-			$this->release_date->LinkCustomAttributes = "";
-			$this->release_date->HrefValue = "";
-			$this->release_date->TooltipValue = "";
-
-			// posted_date
-			$this->posted_date->LinkCustomAttributes = "";
-			$this->posted_date->HrefValue = "";
-			$this->posted_date->TooltipValue = "";
-
-			// remarks
-			$this->remarks->LinkCustomAttributes = "";
-			$this->remarks->HrefValue = "";
-			$this->remarks->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1185,7 +1138,7 @@ class app_version_view extends app_version
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

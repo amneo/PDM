@@ -358,9 +358,9 @@ class document_details_search extends document_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class document_details_search extends document_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -650,6 +650,7 @@ class document_details_search extends document_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->project_system);
 		$this->setupLookupOptions($this->document_type);
 
 		// Set up Breadcrumb
@@ -863,7 +864,7 @@ class document_details_search extends document_details
 			if ($curVal <> "") {
 				$this->project_name->ViewValue = $this->project_name->lookupCacheOption($curVal);
 				if ($this->project_name->ViewValue === NULL) { // Lookup from database
-					$filterWrk = "\"project_id\"" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
 					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
@@ -883,7 +884,25 @@ class document_details_search extends document_details
 			$this->project_name->ViewCustomAttributes = "";
 
 			// project_system
-			$this->project_system->ViewValue = $this->project_system->CurrentValue;
+			$curVal = strval($this->project_system->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_system->ViewValue = $this->project_system->lookupCacheOption($curVal);
+				if ($this->project_system->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "\"system_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_system->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->project_system->ViewValue = $this->project_system->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_system->ViewValue = $this->project_system->CurrentValue;
+					}
+				}
+			} else {
+				$this->project_system->ViewValue = NULL;
+			}
 			$this->project_system->ViewCustomAttributes = "";
 
 			// create_date
@@ -911,7 +930,6 @@ class document_details_search extends document_details
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
 						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
 						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1005,10 +1023,25 @@ class document_details_search extends document_details
 			// project_system
 			$this->project_system->EditAttrs["class"] = "form-control";
 			$this->project_system->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->project_system->AdvancedSearch->SearchValue = HtmlDecode($this->project_system->AdvancedSearch->SearchValue);
-			$this->project_system->EditValue = HtmlEncode($this->project_system->AdvancedSearch->SearchValue);
-			$this->project_system->PlaceHolder = RemoveHtml($this->project_system->caption());
+			$curVal = trim(strval($this->project_system->AdvancedSearch->SearchValue));
+			if ($curVal <> "")
+				$this->project_system->AdvancedSearch->ViewValue = $this->project_system->lookupCacheOption($curVal);
+			else
+				$this->project_system->AdvancedSearch->ViewValue = $this->project_system->Lookup !== NULL && is_array($this->project_system->Lookup->Options) ? $curVal : NULL;
+			if ($this->project_system->AdvancedSearch->ViewValue !== NULL) { // Load from cache
+				$this->project_system->EditValue = array_values($this->project_system->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "\"system_name\"" . SearchString("=", $this->project_system->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->project_system->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->project_system->EditValue = $arwrk;
+			}
 
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
@@ -1124,6 +1157,8 @@ class document_details_search extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_project_system":
 							break;
 						case "x_document_type":
 							break;

@@ -350,9 +350,9 @@ class document_type_addopt extends document_type
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -373,9 +373,9 @@ class document_type_addopt extends document_type
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -741,10 +741,6 @@ class document_type_addopt extends document_type
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
-			// type_id
-			$this->type_id->ViewValue = $this->type_id->CurrentValue;
-			$this->type_id->ViewCustomAttributes = "";
-
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
 			$this->document_type->ViewCustomAttributes = "";
@@ -841,6 +837,17 @@ class document_type_addopt extends document_type
 	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
+		if ($this->document_type->CurrentValue <> "") { // Check field with unique index
+			$filter = "(document_type = '" . AdjustSql($this->document_type->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->document_type->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->document_type->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
 		$conn = &$this->getConnection();
 
 		// Load db values from rsold

@@ -155,6 +155,8 @@ fdocument_detailslist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE)
 fdocument_detailslist.lists["x_project_name"] = <?php echo $document_details_list->project_name->Lookup->toClientList() ?>;
 fdocument_detailslist.lists["x_project_name"].options = <?php echo JsonEncode($document_details_list->project_name->lookupOptions()) ?>;
 fdocument_detailslist.autoSuggests["x_project_name"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
+fdocument_detailslist.lists["x_project_system"] = <?php echo $document_details_list->project_system->Lookup->toClientList() ?>;
+fdocument_detailslist.lists["x_project_system"].options = <?php echo JsonEncode($document_details_list->project_system->lookupOptions()) ?>;
 fdocument_detailslist.lists["x_document_type"] = <?php echo $document_details_list->document_type->Lookup->toClientList() ?>;
 fdocument_detailslist.lists["x_document_type"].options = <?php echo JsonEncode($document_details_list->document_type->lookupOptions()) ?>;
 fdocument_detailslist.autoSuggests["x_document_type"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
@@ -270,7 +272,7 @@ $document_details_list->showMessage();
 <?php } ?>
 <input type="hidden" name="t" value="document_details">
 <div id="gmp_document_details" class="<?php if (IsResponsiveLayout()) { ?>table-responsive <?php } ?>card-body ew-grid-middle-panel">
-<?php if ($document_details_list->TotalRecs > 0 || $document_details->isGridEdit()) { ?>
+<?php if ($document_details_list->TotalRecs > 0 || $document_details->isAdd() || $document_details->isCopy() || $document_details->isGridEdit()) { ?>
 <table id="tbl_document_detailslist" class="table ew-table"><!-- .ew-table ##-->
 <thead>
 	<tr class="ew-table-header">
@@ -326,7 +328,7 @@ $document_details_list->ListOptions->render("header", "left");
 		<th data-name="project_system" class="<?php echo $document_details->project_system->headerCellClass() ?>"><div id="elh_document_details_project_system" class="document_details_project_system"><div class="ew-table-header-caption"><?php echo $document_details->project_system->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="project_system" class="<?php echo $document_details->project_system->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_details->SortUrl($document_details->project_system) ?>',2);"><div id="elh_document_details_project_system" class="document_details_project_system">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_details->project_system->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($document_details->project_system->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_details->project_system->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_details->project_system->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_details->project_system->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_details->project_system->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -375,6 +377,179 @@ $document_details_list->ListOptions->render("header", "right");
 </thead>
 <tbody>
 <?php
+	if ($document_details->isAdd() || $document_details->isCopy()) {
+		$document_details_list->RowIndex = 0;
+		$document_details_list->KeyCount = $document_details_list->RowIndex;
+		if ($document_details->isCopy() && !$document_details_list->loadRow())
+			$document_details->CurrentAction = "add";
+		if ($document_details->isAdd())
+			$document_details_list->loadRowValues();
+		if ($document_details->EventCancelled) // Insert failed
+			$document_details_list->restoreFormValues(); // Restore form values
+
+		// Set row properties
+		$document_details->resetAttributes();
+		$document_details->RowAttrs = array_merge($document_details->RowAttrs, array('data-rowindex'=>0, 'id'=>'r0_document_details', 'data-rowtype'=>ROWTYPE_ADD));
+		$document_details->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$document_details_list->renderRow();
+
+		// Render list options
+		$document_details_list->renderListOptions();
+		$document_details_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $document_details->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$document_details_list->ListOptions->render("body", "left", $document_details_list->RowCnt);
+?>
+	<?php if ($document_details->firelink_doc_no->Visible) { // firelink_doc_no ?>
+		<td data-name="firelink_doc_no">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_firelink_doc_no" class="form-group document_details_firelink_doc_no">
+<input type="text" data-table="document_details" data-field="x_firelink_doc_no" name="x<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" id="x<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_details->firelink_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_details->firelink_doc_no->EditValue ?>"<?php echo $document_details->firelink_doc_no->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_firelink_doc_no" name="o<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" id="o<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" value="<?php echo HtmlEncode($document_details->firelink_doc_no->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->client_doc_no->Visible) { // client_doc_no ?>
+		<td data-name="client_doc_no">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_client_doc_no" class="form-group document_details_client_doc_no">
+<input type="text" data-table="document_details" data-field="x_client_doc_no" name="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" id="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_details->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_details->client_doc_no->EditValue ?>"<?php echo $document_details->client_doc_no->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_client_doc_no" name="o<?php echo $document_details_list->RowIndex ?>_client_doc_no" id="o<?php echo $document_details_list->RowIndex ?>_client_doc_no" value="<?php echo HtmlEncode($document_details->client_doc_no->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->document_tittle->Visible) { // document_tittle ?>
+		<td data-name="document_tittle">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_tittle" class="form-group document_details_document_tittle">
+<input type="text" data-table="document_details" data-field="x_document_tittle" name="x<?php echo $document_details_list->RowIndex ?>_document_tittle" id="x<?php echo $document_details_list->RowIndex ?>_document_tittle" size="30" placeholder="<?php echo HtmlEncode($document_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $document_details->document_tittle->EditValue ?>"<?php echo $document_details->document_tittle->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_tittle" name="o<?php echo $document_details_list->RowIndex ?>_document_tittle" id="o<?php echo $document_details_list->RowIndex ?>_document_tittle" value="<?php echo HtmlEncode($document_details->document_tittle->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->project_name->Visible) { // project_name ?>
+		<td data-name="project_name">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_name" class="form-group document_details_project_name">
+<?php
+$wrkonchange = "" . trim(@$document_details->project_name->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->project_name->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $document_details_list->RowIndex ?>_project_name" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_project_name","forceSelect":true});
+</script>
+<?php echo $document_details->project_name->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_name") ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_project_name" name="o<?php echo $document_details_list->RowIndex ?>_project_name" id="o<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->project_system->Visible) { // project_system ?>
+		<td data-name="project_system">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_system" class="form-group document_details_project_system">
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x<?php echo $document_details_list->RowIndex ?>_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x<?php echo $document_details_list->RowIndex ?>_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_system") ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_project_system" name="o<?php echo $document_details_list->RowIndex ?>_project_system" id="o<?php echo $document_details_list->RowIndex ?>_project_system" value="<?php echo HtmlEncode($document_details->project_system->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->create_date->Visible) { // create_date ?>
+		<td data-name="create_date">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="form-group document_details_create_date">
+<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
+<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_create_date" name="o<?php echo $document_details_list->RowIndex ?>_create_date" id="o<?php echo $document_details_list->RowIndex ?>_create_date" value="<?php echo HtmlEncode($document_details->create_date->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->planned_date->Visible) { // planned_date ?>
+		<td data-name="planned_date">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="form-group document_details_planned_date">
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_planned_date" name="o<?php echo $document_details_list->RowIndex ?>_planned_date" id="o<?php echo $document_details_list->RowIndex ?>_planned_date" value="<?php echo HtmlEncode($document_details->planned_date->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->document_type->Visible) { // document_type ?>
+		<td data-name="document_type">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_type" class="form-group document_details_document_type">
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $document_details_list->RowIndex ?>_document_type" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" id="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_document_type","forceSelect":true});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_document_type") ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" name="o<?php echo $document_details_list->RowIndex ?>_document_type" id="o<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_details->expiry_date->Visible) { // expiry_date ?>
+		<td data-name="expiry_date">
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_expiry_date" class="form-group document_details_expiry_date">
+<input type="text" data-table="document_details" data-field="x_expiry_date" name="x<?php echo $document_details_list->RowIndex ?>_expiry_date" id="x<?php echo $document_details_list->RowIndex ?>_expiry_date" placeholder="<?php echo HtmlEncode($document_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $document_details->expiry_date->EditValue ?>"<?php echo $document_details->expiry_date->editAttributes() ?>>
+<?php if (!$document_details->expiry_date->ReadOnly && !$document_details->expiry_date->Disabled && !isset($document_details->expiry_date->EditAttrs["readonly"]) && !isset($document_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_expiry_date" name="o<?php echo $document_details_list->RowIndex ?>_expiry_date" id="o<?php echo $document_details_list->RowIndex ?>_expiry_date" value="<?php echo HtmlEncode($document_details->expiry_date->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$document_details_list->ListOptions->render("body", "right", $document_details_list->RowCnt);
+?>
+<script>
+fdocument_detailslist.updateLists(<?php echo $document_details_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
+}
+?>
+<?php
 if ($document_details->ExportAll && $document_details->isExport()) {
 	$document_details_list->StopRec = $document_details_list->TotalRecs;
 } else {
@@ -408,7 +583,12 @@ if ($document_details_list->Recordset && !$document_details_list->Recordset->EOF
 $document_details->RowType = ROWTYPE_AGGREGATEINIT;
 $document_details->resetAttributes();
 $document_details_list->renderRow();
+$document_details_list->EditRowCnt = 0;
+if ($document_details->isEdit())
+	$document_details_list->RowIndex = 1;
 if ($document_details->isGridAdd())
+	$document_details_list->RowIndex = 0;
+if ($document_details->isGridEdit())
 	$document_details_list->RowIndex = 0;
 while ($document_details_list->RecCnt < $document_details_list->StopRec) {
 	$document_details_list->RecCnt++;
@@ -441,6 +621,27 @@ while ($document_details_list->RecCnt < $document_details_list->StopRec) {
 			$document_details->RowType = ROWTYPE_ADD; // Render add
 		if ($document_details->isGridAdd() && $document_details->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) // Insert failed
 			$document_details_list->restoreCurrentRowFormValues($document_details_list->RowIndex); // Restore form values
+		if ($document_details->isEdit()) {
+			if ($document_details_list->checkInlineEditKey() && $document_details_list->EditRowCnt == 0) { // Inline edit
+				$document_details->RowType = ROWTYPE_EDIT; // Render edit
+			}
+		}
+		if ($document_details->isGridEdit()) { // Grid edit
+			if ($document_details->EventCancelled)
+				$document_details_list->restoreCurrentRowFormValues($document_details_list->RowIndex); // Restore form values
+			if ($document_details_list->RowAction == "insert")
+				$document_details->RowType = ROWTYPE_ADD; // Render add
+			else
+				$document_details->RowType = ROWTYPE_EDIT; // Render edit
+		}
+		if ($document_details->isEdit() && $document_details->RowType == ROWTYPE_EDIT && $document_details->EventCancelled) { // Update failed
+			$CurrentForm->Index = 1;
+			$document_details_list->restoreFormValues(); // Restore form values
+		}
+		if ($document_details->isGridEdit() && ($document_details->RowType == ROWTYPE_EDIT || $document_details->RowType == ROWTYPE_ADD) && $document_details->EventCancelled) // Update failed
+			$document_details_list->restoreCurrentRowFormValues($document_details_list->RowIndex); // Restore form values
+		if ($document_details->RowType == ROWTYPE_EDIT) // Edit row
+			$document_details_list->EditRowCnt++;
 
 		// Set up row id / data-rowindex
 		$document_details->RowAttrs = array_merge($document_details->RowAttrs, array('data-rowindex'=>$document_details_list->RowCnt, 'id'=>'r' . $document_details_list->RowCnt . '_document_details', 'data-rowtype'=>$document_details->RowType));
@@ -468,6 +669,11 @@ $document_details_list->ListOptions->render("body", "left", $document_details_li
 </span>
 <input type="hidden" data-table="document_details" data-field="x_firelink_doc_no" name="o<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" id="o<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" value="<?php echo HtmlEncode($document_details->firelink_doc_no->OldValue) ?>">
 <?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_firelink_doc_no" class="form-group document_details_firelink_doc_no">
+<input type="text" data-table="document_details" data-field="x_firelink_doc_no" name="x<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" id="x<?php echo $document_details_list->RowIndex ?>_firelink_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_details->firelink_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_details->firelink_doc_no->EditValue ?>"<?php echo $document_details->firelink_doc_no->editAttributes() ?>>
+</span>
+<?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_firelink_doc_no" class="document_details_firelink_doc_no">
 <span<?php echo $document_details->firelink_doc_no->viewAttributes() ?>>
@@ -476,6 +682,13 @@ $document_details_list->ListOptions->render("body", "left", $document_details_li
 <?php } ?>
 </td>
 	<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="document_details" data-field="x_document_sequence" name="x<?php echo $document_details_list->RowIndex ?>_document_sequence" id="x<?php echo $document_details_list->RowIndex ?>_document_sequence" value="<?php echo HtmlEncode($document_details->document_sequence->CurrentValue) ?>">
+<input type="hidden" data-table="document_details" data-field="x_document_sequence" name="o<?php echo $document_details_list->RowIndex ?>_document_sequence" id="o<?php echo $document_details_list->RowIndex ?>_document_sequence" value="<?php echo HtmlEncode($document_details->document_sequence->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT || $document_details->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="document_details" data-field="x_document_sequence" name="x<?php echo $document_details_list->RowIndex ?>_document_sequence" id="x<?php echo $document_details_list->RowIndex ?>_document_sequence" value="<?php echo HtmlEncode($document_details->document_sequence->CurrentValue) ?>">
+<?php } ?>
 	<?php if ($document_details->client_doc_no->Visible) { // client_doc_no ?>
 		<td data-name="client_doc_no"<?php echo $document_details->client_doc_no->cellAttributes() ?>>
 <?php if ($document_details->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -483,6 +696,11 @@ $document_details_list->ListOptions->render("body", "left", $document_details_li
 <input type="text" data-table="document_details" data-field="x_client_doc_no" name="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" id="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_details->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_details->client_doc_no->EditValue ?>"<?php echo $document_details->client_doc_no->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_client_doc_no" name="o<?php echo $document_details_list->RowIndex ?>_client_doc_no" id="o<?php echo $document_details_list->RowIndex ?>_client_doc_no" value="<?php echo HtmlEncode($document_details->client_doc_no->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_client_doc_no" class="form-group document_details_client_doc_no">
+<input type="text" data-table="document_details" data-field="x_client_doc_no" name="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" id="x<?php echo $document_details_list->RowIndex ?>_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_details->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_details->client_doc_no->EditValue ?>"<?php echo $document_details->client_doc_no->editAttributes() ?>>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_client_doc_no" class="document_details_client_doc_no">
@@ -499,6 +717,11 @@ $document_details_list->ListOptions->render("body", "left", $document_details_li
 <input type="text" data-table="document_details" data-field="x_document_tittle" name="x<?php echo $document_details_list->RowIndex ?>_document_tittle" id="x<?php echo $document_details_list->RowIndex ?>_document_tittle" size="30" placeholder="<?php echo HtmlEncode($document_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $document_details->document_tittle->EditValue ?>"<?php echo $document_details->document_tittle->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_document_tittle" name="o<?php echo $document_details_list->RowIndex ?>_document_tittle" id="o<?php echo $document_details_list->RowIndex ?>_document_tittle" value="<?php echo HtmlEncode($document_details->document_tittle->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_tittle" class="form-group document_details_document_tittle">
+<input type="text" data-table="document_details" data-field="x_document_tittle" name="x<?php echo $document_details_list->RowIndex ?>_document_tittle" id="x<?php echo $document_details_list->RowIndex ?>_document_tittle" size="30" placeholder="<?php echo HtmlEncode($document_details->document_tittle->getPlaceHolder()) ?>" value="<?php echo $document_details->document_tittle->EditValue ?>"<?php echo $document_details->document_tittle->editAttributes() ?>>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_tittle" class="document_details_document_tittle">
@@ -518,15 +741,48 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->project_name->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $document_details_list->RowIndex ?>_project_name" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
-	<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_project_name" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_project_name","forceSelect":true});
 </script>
 <?php echo $document_details->project_name->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_name") ?>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_project_name" name="o<?php echo $document_details_list->RowIndex ?>_project_name" id="o<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_name" class="form-group document_details_project_name">
+<?php
+$wrkonchange = "" . trim(@$document_details->project_name->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->project_name->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $document_details_list->RowIndex ?>_project_name" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_project_name","forceSelect":true});
+</script>
+<?php echo $document_details->project_name->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_name") ?>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_name" class="document_details_project_name">
@@ -540,9 +796,24 @@ fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_lis
 		<td data-name="project_system"<?php echo $document_details->project_system->cellAttributes() ?>>
 <?php if ($document_details->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_system" class="form-group document_details_project_system">
-<input type="text" data-table="document_details" data-field="x_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" id="x<?php echo $document_details_list->RowIndex ?>_project_system" size="30" placeholder="<?php echo HtmlEncode($document_details->project_system->getPlaceHolder()) ?>" value="<?php echo $document_details->project_system->EditValue ?>"<?php echo $document_details->project_system->editAttributes() ?>>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x<?php echo $document_details_list->RowIndex ?>_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x<?php echo $document_details_list->RowIndex ?>_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_system") ?>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_project_system" name="o<?php echo $document_details_list->RowIndex ?>_project_system" id="o<?php echo $document_details_list->RowIndex ?>_project_system" value="<?php echo HtmlEncode($document_details->project_system->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_system" class="form-group document_details_project_system">
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x<?php echo $document_details_list->RowIndex ?>_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x<?php echo $document_details_list->RowIndex ?>_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_system") ?>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_project_system" class="document_details_project_system">
@@ -565,6 +836,16 @@ ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_
 </span>
 <input type="hidden" data-table="document_details" data-field="x_create_date" name="o<?php echo $document_details_list->RowIndex ?>_create_date" id="o<?php echo $document_details_list->RowIndex ?>_create_date" value="<?php echo HtmlEncode($document_details->create_date->OldValue) ?>">
 <?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="form-group document_details_create_date">
+<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
+<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+</script>
+<?php } ?>
+</span>
+<?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="document_details_create_date">
 <span<?php echo $document_details->create_date->viewAttributes() ?>>
@@ -586,6 +867,16 @@ ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_
 </span>
 <input type="hidden" data-table="document_details" data-field="x_planned_date" name="o<?php echo $document_details_list->RowIndex ?>_planned_date" id="o<?php echo $document_details_list->RowIndex ?>_planned_date" value="<?php echo HtmlEncode($document_details->planned_date->OldValue) ?>">
 <?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="form-group document_details_planned_date">
+<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+</script>
+<?php } ?>
+</span>
+<?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="document_details_planned_date">
 <span<?php echo $document_details->planned_date->viewAttributes() ?>>
@@ -604,20 +895,48 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->document_type->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $document_details_list->RowIndex ?>_document_type" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" id="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_document_type","forceSelect":true});
 </script>
 <?php echo $document_details->document_type->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_document_type") ?>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_document_type" name="o<?php echo $document_details_list->RowIndex ?>_document_type" id="o<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_type" class="form-group document_details_document_type">
+<?php
+$wrkonchange = "" . trim(@$document_details->document_type->EditAttrs["onchange"]);
+if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkonchange) . "\"";
+$document_details->document_type->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $document_details_list->RowIndex ?>_document_type" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" id="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
+</span>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script>
+fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_document_type","forceSelect":true});
+</script>
+<?php echo $document_details->document_type->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_document_type") ?>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_document_type" class="document_details_document_type">
@@ -639,6 +958,16 @@ ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_
 <?php } ?>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_expiry_date" name="o<?php echo $document_details_list->RowIndex ?>_expiry_date" id="o<?php echo $document_details_list->RowIndex ?>_expiry_date" value="<?php echo HtmlEncode($document_details->expiry_date->OldValue) ?>">
+<?php } ?>
+<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_expiry_date" class="form-group document_details_expiry_date">
+<input type="text" data-table="document_details" data-field="x_expiry_date" name="x<?php echo $document_details_list->RowIndex ?>_expiry_date" id="x<?php echo $document_details_list->RowIndex ?>_expiry_date" placeholder="<?php echo HtmlEncode($document_details->expiry_date->getPlaceHolder()) ?>" value="<?php echo $document_details->expiry_date->EditValue ?>"<?php echo $document_details->expiry_date->editAttributes() ?>>
+<?php if (!$document_details->expiry_date->ReadOnly && !$document_details->expiry_date->Disabled && !isset($document_details->expiry_date->EditAttrs["readonly"]) && !isset($document_details->expiry_date->EditAttrs["disabled"])) { ?>
+<script>
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_expiry_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+</script>
+<?php } ?>
+</span>
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_expiry_date" class="document_details_expiry_date">
@@ -724,9 +1053,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->project_name->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $document_details_list->RowIndex ?>_project_name" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
-	<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" id="sv_x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo RemoveHtml($document_details->project_name->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->project_name->getPlaceHolder()) ?>"<?php echo $document_details->project_name->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->project_name->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->project_name->ReadOnly || $document_details->project_name->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
+<?php if (AllowAdd(CurrentProjectID() . "project_details") && !$document_details->project_name->ReadOnly) { ?>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_project_name" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->project_name->caption() ?>" data-title="<?php echo $document_details->project_name->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_project_name',url:'project_detailsaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
+<?php } ?>
+		</div>
+	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_project_name" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_project_name" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->project_name->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_project_name" id="x<?php echo $document_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($document_details->project_name->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_project_name","forceSelect":true});
 </script>
@@ -738,7 +1075,12 @@ fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_lis
 	<?php if ($document_details->project_system->Visible) { // project_system ?>
 		<td data-name="project_system">
 <span id="el$rowindex$_document_details_project_system" class="form-group document_details_project_system">
-<input type="text" data-table="document_details" data-field="x_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" id="x<?php echo $document_details_list->RowIndex ?>_project_system" size="30" placeholder="<?php echo HtmlEncode($document_details->project_system->getPlaceHolder()) ?>" value="<?php echo $document_details->project_system->EditValue ?>"<?php echo $document_details->project_system->editAttributes() ?>>
+<div class="input-group">
+	<select class="custom-select ew-custom-select" data-table="document_details" data-field="x_project_system" data-value-separator="<?php echo $document_details->project_system->displayValueSeparatorAttribute() ?>" id="x<?php echo $document_details_list->RowIndex ?>_project_system" name="x<?php echo $document_details_list->RowIndex ?>_project_system" size=4<?php echo $document_details->project_system->editAttributes() ?>>
+		<?php echo $document_details->project_system->selectOptionListHtml("x<?php echo $document_details_list->RowIndex ?>_project_system") ?>
+	</select>
+</div>
+<?php echo $document_details->project_system->Lookup->getParamTag("p_x" . $document_details_list->RowIndex . "_project_system") ?>
 </span>
 <input type="hidden" data-table="document_details" data-field="x_project_system" name="o<?php echo $document_details_list->RowIndex ?>_project_system" id="o<?php echo $document_details_list->RowIndex ?>_project_system" value="<?php echo HtmlEncode($document_details->project_system->OldValue) ?>">
 </td>
@@ -778,14 +1120,17 @@ if (trim($wrkonchange) <> "") $wrkonchange = " onchange=\"" . JsEncode($wrkoncha
 $document_details->document_type->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $document_details_list->RowIndex ?>_document_type" class="text-nowrap" style="z-index: <?php echo (9000 - $document_details_list->RowCnt * 10) ?>">
-	<div class="input-group">
+	<div class="input-group mb-3">
 		<input type="text" class="form-control" name="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" id="sv_x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo RemoveHtml($document_details->document_type->EditValue) ?>" size="30" placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($document_details->document_type->getPlaceHolder()) ?>"<?php echo $document_details->document_type->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($document_details->document_type->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',m:0,n:10,srch:false});" class="ew-lookup-btn btn btn-default"<?php echo (($document_details->document_type->ReadOnly || $document_details->document_type->Disabled) ? " disabled" : "")?>><i class="fa fa-search ew-icon"></i></button>
 <?php if (AllowAdd(CurrentProjectID() . "document_type") && !$document_details->document_type->ReadOnly) { ?>
-<div class="input-group-append"><button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button></div>
+<button type="button" class="btn btn-default ew-add-opt-btn" id="aol_x<?php echo $document_details_list->RowIndex ?>_document_type" title="<?php echo HtmlTitle($Language->phrase("AddLink")) . "&nbsp;" . $document_details->document_type->caption() ?>" data-title="<?php echo $document_details->document_type->caption() ?>" onclick="ew.addOptionDialogShow({lnk:this,el:'x<?php echo $document_details_list->RowIndex ?>_document_type',url:'document_typeaddopt.php'});"><i class="fa fa-plus ew-icon"></i></button>
 <?php } ?>
+		</div>
 	</div>
 </span>
-<input type="hidden" data-table="document_details" data-field="x_document_type" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="document_details" data-field="x_document_type" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $document_details->document_type->displayValueSeparatorAttribute() ?>" name="x<?php echo $document_details_list->RowIndex ?>_document_type" id="x<?php echo $document_details_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_details->document_type->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <script>
 fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_list->RowIndex ?>_document_type","forceSelect":true});
 </script>
@@ -822,8 +1167,19 @@ fdocument_detailslist.updateLists(<?php echo $document_details_list->RowIndex ?>
 </tbody>
 </table><!-- /.ew-table -->
 <?php } ?>
+<?php if ($document_details->isAdd() || $document_details->isCopy()) { ?>
+<input type="hidden" name="<?php echo $document_details_list->FormKeyCountName ?>" id="<?php echo $document_details_list->FormKeyCountName ?>" value="<?php echo $document_details_list->KeyCount ?>">
+<?php } ?>
 <?php if ($document_details->isGridAdd()) { ?>
 <input type="hidden" name="action" id="action" value="gridinsert">
+<input type="hidden" name="<?php echo $document_details_list->FormKeyCountName ?>" id="<?php echo $document_details_list->FormKeyCountName ?>" value="<?php echo $document_details_list->KeyCount ?>">
+<?php echo $document_details_list->MultiSelectKey ?>
+<?php } ?>
+<?php if ($document_details->isEdit()) { ?>
+<input type="hidden" name="<?php echo $document_details_list->FormKeyCountName ?>" id="<?php echo $document_details_list->FormKeyCountName ?>" value="<?php echo $document_details_list->KeyCount ?>">
+<?php } ?>
+<?php if ($document_details->isGridEdit()) { ?>
+<input type="hidden" name="action" id="action" value="gridupdate">
 <input type="hidden" name="<?php echo $document_details_list->FormKeyCountName ?>" id="<?php echo $document_details_list->FormKeyCountName ?>" value="<?php echo $document_details_list->KeyCount ?>">
 <?php echo $document_details_list->MultiSelectKey ?>
 <?php } ?>

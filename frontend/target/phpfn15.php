@@ -6846,9 +6846,9 @@ class AdvancedSecurity
 			$filter = str_replace("%u", AdjustSql($usr, USER_TABLE_DBID), USER_NAME_FILTER);
 			$filter .= " AND " . USER_ACTIVATE_FILTER;
 
-			// User table object (user_dtls)
+			// User table object (users)
 			if (!isset($UserTable)) {
-				$UserTable = new user_dtls();
+				$UserTable = new users();
 				$UserTableConn = Conn($UserTable->Dbid);
 			}
 
@@ -6856,7 +6856,7 @@ class AdvancedSecurity
 			$sql = $UserTable->getSql($filter);
 			if ($rs = $UserTableConn->execute($sql)) {
 				if (!$rs->EOF) {
-					$valid = $customValid || ComparePassword($rs->fields('password'), $pwd);
+					$valid = $customValid || ComparePassword($rs->fields('uPassword'), $pwd);
 
 					// Set up retry count from manual login
 					if (!$autologin) {
@@ -6898,20 +6898,20 @@ class AdvancedSecurity
 						$this->_isLoggedIn = TRUE;
 						$_SESSION[SESSION_STATUS] = "login";
 						$_SESSION[SESSION_SYS_ADMIN] = 0; // Non System Administrator
-						$this->setCurrentUserName($rs->fields('username')); // Load user name
-						$this->setSessionUserID($rs->fields('user_id')); // Load User ID
-						$this->setSessionParentUserID($rs->fields('reports_to')); // Load parent User ID
-						if ($rs->fields('UserLevel') == NULL) {
+						$this->setCurrentUserName($rs->fields('userLoginId')); // Load user name
+						$this->setSessionUserID($rs->fields('seqid')); // Load User ID
+						$this->setSessionParentUserID($rs->fields('uParentUserID')); // Load parent User ID
+						if ($rs->fields('uLevel') == NULL) {
 							$this->setSessionUserLevelID(0);
 						} else {
-							$this->setSessionUserLevelID((int)$rs->fields('UserLevel')); // Load User Level
+							$this->setSessionUserLevelID((int)$rs->fields('uLevel')); // Load User Level
 						}
 						$this->setupUserLevel();
 
 						// Call User Validated event
 						$row = $rs->fields;
 						$UserProfile->assign($row);
-						$UserProfile->delete('password'); // Delete password
+						$UserProfile->delete('uPassword'); // Delete password
 						$valid = $this->User_Validated($row) !== FALSE; // For backward compatibility
 					}
 				} else { // User not found in user table
@@ -7554,7 +7554,7 @@ class AdvancedSecurity
 	// Get user email
 	public function currentUserEmail()
 	{
-		return $this->currentUserInfo("email_addreess");
+		return $this->currentUserInfo("uEmail");
 	}
 
 	// Get current user info
@@ -7592,7 +7592,7 @@ class AdvancedSecurity
 			$filter = str_replace("%u", AdjustSql($userName, USER_TABLE_DBID), USER_NAME_FILTER);
 			$sql = $UserTable->getSql($filter);
 			if (($rsUser = $UserTableConn->execute($sql)) && !$rsUser->EOF) {
-				$userID = $rsUser->fields('user_id');
+				$userID = $rsUser->fields('seqid');
 				$rsUser->close();
 				return $userID;
 			}
@@ -7613,14 +7613,14 @@ class AdvancedSecurity
 			// Get first level
 			$this->addUserID($this->CurrentUserID);
 			if (!isset($UserTable)) {
-				$UserTable = new user_dtls();
+				$UserTable = new users();
 				$UserTableConn = Conn($UserTable->Dbid);
 			}
 			$filter = $UserTable->getUserIDFilter($this->CurrentUserID);
 			$sql = $UserTable->getSql($filter);
 			if ($rsUser = $UserTableConn->execute($sql)) {
 				while (!$rsUser->EOF) {
-					$this->addUserID($rsUser->fields('user_id'));
+					$this->addUserID($rsUser->fields('seqid'));
 					$rsUser->moveNext();
 				}
 				$rsUser->close();
@@ -7631,11 +7631,11 @@ class AdvancedSecurity
 				$curUserIDList = $this->userIDList();
 				$userIDList = "";
 				while ($userIDList <> $curUserIDList) {
-					$filter = '"reports_to" IN (' . $curUserIDList . ')';
+					$filter = '"uParentUserID" IN (' . $curUserIDList . ')';
 					$sql = $UserTable->getSql($filter);
 					if ($rsUser = $UserTableConn->execute($sql)) {
 						while (!$rsUser->EOF) {
-							$this->addUserID($rsUser->fields('user_id'));
+							$this->addUserID($rsUser->fields('seqid'));
 							$rsUser->moveNext();
 						}
 						$rsUser->close();

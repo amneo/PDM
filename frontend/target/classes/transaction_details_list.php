@@ -64,9 +64,9 @@ class transaction_details_list extends transaction_details
 	public $AuditTrailOnAdd = TRUE;
 	public $AuditTrailOnEdit = TRUE;
 	public $AuditTrailOnDelete = TRUE;
-	public $AuditTrailOnView = FALSE;
-	public $AuditTrailOnViewData = FALSE;
-	public $AuditTrailOnSearch = FALSE;
+	public $AuditTrailOnView = TRUE;
+	public $AuditTrailOnViewData = TRUE;
+	public $AuditTrailOnSearch = TRUE;
 
 	// Page headings
 	public $Heading = "";
@@ -414,9 +414,9 @@ class transaction_details_list extends transaction_details
 		$this->MultiUpdateUrl = "transaction_detailsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -437,9 +437,9 @@ class transaction_details_list extends transaction_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -630,7 +630,7 @@ class transaction_details_list extends transaction_details
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -713,6 +713,11 @@ class transaction_details_list extends transaction_details
 				$Security->UserID_Loading();
 				$Security->loadUserID();
 				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate();
+					return;
+				}
 			}
 		}
 
@@ -783,7 +788,7 @@ class transaction_details_list extends transaction_details
 		$this->transmit_date->setVisibility();
 		$this->direction->setVisibility();
 		$this->approval_status->setVisibility();
-		$this->document_link->Visible = FALSE;
+		$this->document_link->setVisibility();
 		$this->transaction_date->Visible = FALSE;
 		$this->document_native->setVisibility();
 		$this->username->Visible = FALSE;
@@ -869,6 +874,7 @@ class transaction_details_list extends transaction_details
 							$this->setFailureMessage($FormError);
 						}
 						if ($gridInsert) {
+							$this->gridAddMode();
 						} else {
 							$this->EventCancelled = TRUE;
 							$this->gridAddMode(); // Stay in Grid add mode
@@ -947,7 +953,7 @@ class transaction_details_list extends transaction_details
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -1233,6 +1239,8 @@ class transaction_details_list extends transaction_details
 		if ($CurrentForm->hasValue("x_direction") && $CurrentForm->hasValue("o_direction") && $this->direction->CurrentValue <> $this->direction->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_approval_status") && $CurrentForm->hasValue("o_approval_status") && $this->approval_status->CurrentValue <> $this->approval_status->OldValue)
+			return FALSE;
+		if (!EmptyValue($this->document_link->Upload->Value))
 			return FALSE;
 		if ($CurrentForm->hasValue("x_document_native") && $CurrentForm->hasValue("o_document_native") && $this->document_native->CurrentValue <> $this->document_native->OldValue)
 			return FALSE;
@@ -1776,6 +1784,7 @@ class transaction_details_list extends transaction_details
 			$this->updateSort($this->transmit_date, $ctrl); // transmit_date
 			$this->updateSort($this->direction, $ctrl); // direction
 			$this->updateSort($this->approval_status, $ctrl); // approval_status
+			$this->updateSort($this->document_link, $ctrl); // document_link
 			$this->updateSort($this->document_native, $ctrl); // document_native
 			$this->updateSort($this->expiry_date, $ctrl); // expiry_date
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1823,6 +1832,7 @@ class transaction_details_list extends transaction_details
 				$this->transmit_date->setSort("");
 				$this->direction->setSort("");
 				$this->approval_status->setSort("");
+				$this->document_link->setSort("");
 				$this->document_native->setSort("");
 				$this->expiry_date->setSort("");
 			}
@@ -1940,7 +1950,7 @@ class transaction_details_list extends transaction_details
 		// "edit"
 		$opt = &$this->ListOptions->Items["edit"];
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
-		if ($Security->canEdit()) {
+		if ($Security->canEdit() && $this->showOptionLink('edit')) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -1949,7 +1959,7 @@ class transaction_details_list extends transaction_details
 		// "copy"
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
-		if ($Security->canAdd()) {
+		if ($Security->canAdd() && $this->showOptionLink('add')) {
 			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
@@ -2275,6 +2285,15 @@ class transaction_details_list extends transaction_details
 		}
 	}
 
+	// Get upload files
+	protected function getUploadFiles()
+	{
+		global $CurrentForm, $Language;
+		$this->document_link->Upload->Index = $CurrentForm->Index;
+		$this->document_link->Upload->uploadFile();
+		$this->document_link->CurrentValue = $this->document_link->Upload->FileName;
+	}
+
 	// Load default values
 	protected function loadDefaultValues()
 	{
@@ -2304,7 +2323,7 @@ class transaction_details_list extends transaction_details
 		$this->transaction_date->OldValue = $this->transaction_date->CurrentValue;
 		$this->document_native->CurrentValue = NULL;
 		$this->document_native->OldValue = $this->document_native->CurrentValue;
-		$this->username->CurrentValue = NULL;
+		$this->username->CurrentValue = CurrentUserID();
 		$this->username->OldValue = $this->username->CurrentValue;
 		$this->expiry_date->CurrentValue = NULL;
 		$this->expiry_date->OldValue = $this->expiry_date->CurrentValue;
@@ -2403,6 +2422,7 @@ class transaction_details_list extends transaction_details
 
 		// Load from form
 		global $CurrentForm;
+		$this->getUploadFiles(); // Get upload files
 
 		// Check field name 'firelink_doc_no' first before field var 'x_firelink_doc_no'
 		$val = $CurrentForm->hasValue("firelink_doc_no") ? $CurrentForm->getValue("firelink_doc_no") : $CurrentForm->getValue("x_firelink_doc_no");
@@ -2835,6 +2855,14 @@ class transaction_details_list extends transaction_details
 			}
 			$this->approval_status->ViewCustomAttributes = "";
 
+			// document_link
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->document_link->ViewValue = $this->document_link->Upload->DbValue;
+			} else {
+				$this->document_link->ViewValue = "";
+			}
+			$this->document_link->ViewCustomAttributes = "";
+
 			// transaction_date
 			$this->transaction_date->ViewValue = $this->transaction_date->CurrentValue;
 			$this->transaction_date->ViewValue = FormatDateTime($this->transaction_date->ViewValue, 0);
@@ -2867,15 +2895,11 @@ class transaction_details_list extends transaction_details
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
 			$this->project_name->TooltipValue = "";
-			if (!$this->isExport())
-				$this->project_name->ViewValue = $this->highlightValue($this->project_name);
 
 			// document_tittle
 			$this->document_tittle->LinkCustomAttributes = "";
 			$this->document_tittle->HrefValue = "";
 			$this->document_tittle->TooltipValue = "";
-			if (!$this->isExport())
-				$this->document_tittle->ViewValue = $this->highlightValue($this->document_tittle);
 
 			// submit_no
 			$this->submit_no->LinkCustomAttributes = "";
@@ -2908,6 +2932,18 @@ class transaction_details_list extends transaction_details
 			$this->approval_status->LinkCustomAttributes = "";
 			$this->approval_status->HrefValue = "";
 			$this->approval_status->TooltipValue = "";
+
+			// document_link
+			$this->document_link->LinkCustomAttributes = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->document_link->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->document_link->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->document_link->HrefValue = FullUrl($this->document_link->HrefValue, "href");
+			} else {
+				$this->document_link->HrefValue = "";
+			}
+			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
+			$this->document_link->TooltipValue = "";
 
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
@@ -3025,6 +3061,7 @@ class transaction_details_list extends transaction_details
 			$this->direction->EditValue = $this->direction->options(FALSE);
 
 			// approval_status
+			$this->approval_status->EditAttrs["class"] = "form-control";
 			$this->approval_status->EditCustomAttributes = "";
 			$curVal = trim(strval($this->approval_status->CurrentValue));
 			if ($curVal <> "")
@@ -3033,8 +3070,6 @@ class transaction_details_list extends transaction_details
 				$this->approval_status->ViewValue = $this->approval_status->Lookup !== NULL && is_array($this->approval_status->Lookup->Options) ? $curVal : NULL;
 			if ($this->approval_status->ViewValue !== NULL) { // Load from cache
 				$this->approval_status->EditValue = array_values($this->approval_status->Lookup->Options);
-				if ($this->approval_status->ViewValue == "")
-					$this->approval_status->ViewValue = $Language->phrase("PleaseSelect");
 			} else { // Lookup from database
 				if ($curVal == "") {
 					$filterWrk = "0=1";
@@ -3043,18 +3078,26 @@ class transaction_details_list extends transaction_details
 				}
 				$sqlWrk = $this->approval_status->Lookup->getSql(TRUE, $filterWrk, '', $this);
 				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = array();
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-					$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
-				} else {
-					$this->approval_status->ViewValue = $Language->phrase("PleaseSelect");
-				}
 				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 				if ($rswrk) $rswrk->Close();
 				$this->approval_status->EditValue = $arwrk;
 			}
+
+			// document_link
+			$this->document_link->EditAttrs["class"] = "form-control";
+			$this->document_link->EditCustomAttributes = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->document_link->EditValue = $this->document_link->Upload->DbValue;
+			} else {
+				$this->document_link->EditValue = "";
+			}
+			if (!EmptyValue($this->document_link->CurrentValue))
+					if ($this->RowIndex == '$rowindex$')
+						$this->document_link->Upload->FileName = "";
+					else
+						$this->document_link->Upload->FileName = $this->document_link->CurrentValue;
+			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
+				RenderUploadField($this->document_link, $this->RowIndex);
 
 			// document_native
 			$this->document_native->EditAttrs["class"] = "form-control";
@@ -3111,6 +3154,17 @@ class transaction_details_list extends transaction_details
 			// approval_status
 			$this->approval_status->LinkCustomAttributes = "";
 			$this->approval_status->HrefValue = "";
+
+			// document_link
+			$this->document_link->LinkCustomAttributes = "";
+			if (!EmptyValue($this->document_link->Upload->DbValue)) {
+				$this->document_link->HrefValue = GetFileUploadUrl($this->document_link, $this->document_link->Upload->DbValue); // Add prefix/suffix
+				$this->document_link->LinkAttrs["target"] = "_blank"; // Add target
+				if ($this->isExport()) $this->document_link->HrefValue = FullUrl($this->document_link->HrefValue, "href");
+			} else {
+				$this->document_link->HrefValue = "";
+			}
+			$this->document_link->ExportHrefValue = $this->document_link->UploadPath . $this->document_link->Upload->DbValue;
 
 			// document_native
 			$this->document_native->LinkCustomAttributes = "";
@@ -3178,7 +3232,16 @@ class transaction_details_list extends transaction_details
 			$this->direction->EditValue = $this->direction->options(FALSE);
 
 			// approval_status
+			$this->approval_status->EditAttrs["class"] = "form-control";
 			$this->approval_status->EditCustomAttributes = "";
+
+			// document_link
+			$this->document_link->EditAttrs["class"] = "form-control";
+			$this->document_link->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_link->AdvancedSearch->SearchValue = HtmlDecode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->EditValue = HtmlEncode($this->document_link->AdvancedSearch->SearchValue);
+			$this->document_link->PlaceHolder = RemoveHtml($this->document_link->caption());
 
 			// document_native
 			$this->document_native->EditAttrs["class"] = "form-control";
@@ -3281,7 +3344,7 @@ class transaction_details_list extends transaction_details
 			}
 		}
 		if ($this->approval_status->Required) {
-			if ($this->approval_status->FormValue == "") {
+			if (!$this->approval_status->IsDetailKey && $this->approval_status->FormValue != NULL && $this->approval_status->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->approval_status->caption(), $this->approval_status->RequiredErrorMessage));
 			}
 		}
@@ -3451,11 +3514,64 @@ class transaction_details_list extends transaction_details
 		// approval_status
 		$this->approval_status->setDbValueDef($rsnew, $this->approval_status->CurrentValue, "", strval($this->approval_status->CurrentValue) == "");
 
+		// document_link
+		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
+			$this->document_link->Upload->DbValue = ""; // No need to delete old file
+			if ($this->document_link->Upload->FileName == "") {
+				$rsnew['document_link'] = NULL;
+			} else {
+				$rsnew['document_link'] = $this->document_link->Upload->FileName;
+			}
+		}
+
 		// document_native
 		$this->document_native->setDbValueDef($rsnew, $this->document_native->CurrentValue, "", FALSE);
 
 		// expiry_date
 		$this->expiry_date->setDbValueDef($rsnew, UnFormatDateTime($this->expiry_date->CurrentValue, 0), NULL, strval($this->expiry_date->CurrentValue) == "");
+
+		// username
+		if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
+			$rsnew['username'] = CurrentUserID();
+		}
+		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
+			$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
+			if (!EmptyValue($this->document_link->Upload->FileName)) {
+				$newFiles = array($this->document_link->Upload->FileName);
+				$NewFileCount = count($newFiles);
+				for ($i = 0; $i < $NewFileCount; $i++) {
+					if ($newFiles[$i] <> "") {
+						$file = $newFiles[$i];
+						if (file_exists(UploadTempPath($this->document_link, $this->document_link->Upload->Index) . $file)) {
+							if (DELETE_UPLOADED_FILES) {
+								$oldFileFound = FALSE;
+								$oldFileCount = count($oldFiles);
+								for ($j = 0; $j < $oldFileCount; $j++) {
+									$oldFile = $oldFiles[$j];
+									if ($oldFile == $file) { // Old file found, no need to delete anymore
+										unset($oldFiles[$j]);
+										$oldFileFound = TRUE;
+										break;
+									}
+								}
+								if ($oldFileFound) // No need to check if file exists further
+									continue;
+							}
+							$file1 = UniqueFilename($this->document_link->physicalUploadPath(), $file); // Get new file name
+							if ($file1 <> $file) { // Rename temp file
+								while (file_exists(UploadTempPath($this->document_link, $this->document_link->Upload->Index) . $file1) || file_exists($this->document_link->physicalUploadPath() . $file1)) // Make sure no file name clash
+									$file1 = UniqueFilename($this->document_link->physicalUploadPath(), $file1, TRUE); // Use indexed name
+								rename(UploadTempPath($this->document_link, $this->document_link->Upload->Index) . $file, UploadTempPath($this->document_link, $this->document_link->Upload->Index) . $file1);
+								$newFiles[$i] = $file1;
+							}
+						}
+					}
+				}
+				$this->document_link->Upload->DbValue = empty($oldFiles) ? "" : implode(MULTIPLE_UPLOAD_SEPARATOR, $oldFiles);
+				$this->document_link->Upload->FileName = implode(MULTIPLE_UPLOAD_SEPARATOR, $newFiles);
+				$this->document_link->setDbValueDef($rsnew, $this->document_link->Upload->FileName, "", FALSE);
+			}
+		}
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;
@@ -3465,6 +3581,35 @@ class transaction_details_list extends transaction_details
 			$addRow = $this->insert($rsnew);
 			$conn->raiseErrorFn = '';
 			if ($addRow) {
+				if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
+					$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
+					if (!EmptyValue($this->document_link->Upload->FileName)) {
+						$newFiles = array($this->document_link->Upload->FileName);
+						$newFiles2 = array($rsnew['document_link']);
+						$newFileCount = count($newFiles);
+						for ($i = 0; $i < $newFileCount; $i++) {
+							if ($newFiles[$i] <> "") {
+								$file = UploadTempPath($this->document_link, $this->document_link->Upload->Index) . $newFiles[$i];
+								if (file_exists($file)) {
+									if (@$newFiles2[$i] <> "") // Use correct file name
+										$newFiles[$i] = $newFiles2[$i];
+									if (!$this->document_link->Upload->saveToFile($newFiles[$i], TRUE, $i)) { // Just replace
+										$this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+										return FALSE;
+									}
+								}
+							}
+						}
+					} else {
+						$newFiles = array();
+					}
+					if (DELETE_UPLOADED_FILES) {
+						foreach ($oldFiles as $oldFile) {
+							if ($oldFile <> "" && !in_array($oldFile, $newFiles))
+								@unlink($this->document_link->oldPhysicalUploadPath() . $oldFile);
+						}
+					}
+				}
 			}
 		} else {
 			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -3484,6 +3629,12 @@ class transaction_details_list extends transaction_details
 			$rs = ($rsold) ? $rsold->fields : NULL;
 			$this->Row_Inserted($rs, $rsnew);
 		}
+
+		// document_link
+		if ($this->document_link->Upload->FileToken <> "")
+			CleanUploadTempPath($this->document_link->Upload->FileToken, $this->document_link->Upload->Index);
+		else
+			CleanUploadTempPath($this->document_link, $this->document_link->Upload->Index);
 
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
@@ -3586,7 +3737,7 @@ class transaction_details_list extends transaction_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
@@ -3698,6 +3849,15 @@ class transaction_details_list extends transaction_details
 				return $content;
 			}
 		}
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->username->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

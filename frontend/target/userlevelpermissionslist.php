@@ -181,15 +181,6 @@ $userlevelpermissions_list->renderListOptions();
 // Render list options (header, left)
 $userlevelpermissions_list->ListOptions->render("header", "left");
 ?>
-<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-	<?php if ($userlevelpermissions->sortUrl($userlevelpermissions->userlevelid) == "") { ?>
-		<th data-name="userlevelid" class="<?php echo $userlevelpermissions->userlevelid->headerCellClass() ?>"><div id="elh_userlevelpermissions_userlevelid" class="userlevelpermissions_userlevelid"><div class="ew-table-header-caption"><?php echo $userlevelpermissions->userlevelid->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="userlevelid" class="<?php echo $userlevelpermissions->userlevelid->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $userlevelpermissions->SortUrl($userlevelpermissions->userlevelid) ?>',2);"><div id="elh_userlevelpermissions_userlevelid" class="userlevelpermissions_userlevelid">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $userlevelpermissions->userlevelid->caption() ?></span><span class="ew-table-header-sort"><?php if ($userlevelpermissions->userlevelid->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($userlevelpermissions->userlevelid->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
 	<?php if ($userlevelpermissions->sortUrl($userlevelpermissions->_tablename) == "") { ?>
 		<th data-name="_tablename" class="<?php echo $userlevelpermissions->_tablename->headerCellClass() ?>"><div id="elh_userlevelpermissions__tablename" class="userlevelpermissions__tablename"><div class="ew-table-header-caption"><?php echo $userlevelpermissions->_tablename->caption() ?></div></div></th>
@@ -273,14 +264,6 @@ while ($userlevelpermissions_list->RecCnt < $userlevelpermissions_list->StopRec)
 // Render list options (body, left)
 $userlevelpermissions_list->ListOptions->render("body", "left", $userlevelpermissions_list->RowCnt);
 ?>
-	<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-		<td data-name="userlevelid"<?php echo $userlevelpermissions->userlevelid->cellAttributes() ?>>
-<span id="el<?php echo $userlevelpermissions_list->RowCnt ?>_userlevelpermissions_userlevelid" class="userlevelpermissions_userlevelid">
-<span<?php echo $userlevelpermissions->userlevelid->viewAttributes() ?>>
-<?php echo $userlevelpermissions->userlevelid->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
 		<td data-name="_tablename"<?php echo $userlevelpermissions->_tablename->cellAttributes() ?>>
 <span id="el<?php echo $userlevelpermissions_list->RowCnt ?>_userlevelpermissions__tablename" class="userlevelpermissions__tablename">

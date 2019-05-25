@@ -54,10 +54,6 @@ fapproval_detailslist.validateRequired = <?php echo json_encode(CLIENT_VALIDATE)
 // Dynamic selection lists
 // Form object for search
 
-var fapproval_detailslistsrch = currentSearchForm = new ew.Form("fapproval_detailslistsrch");
-
-// Filters
-fapproval_detailslistsrch.filterList = <?php echo $approval_details_list->getFilterList() ?>;
 </script>
 <script>
 
@@ -72,47 +68,12 @@ fapproval_detailslistsrch.filterList = <?php echo $approval_details_list->getFil
 <?php if ($approval_details_list->ImportOptions->visible()) { ?>
 <?php $approval_details_list->ImportOptions->render("body") ?>
 <?php } ?>
-<?php if ($approval_details_list->SearchOptions->visible()) { ?>
-<?php $approval_details_list->SearchOptions->render("body") ?>
-<?php } ?>
-<?php if ($approval_details_list->FilterOptions->visible()) { ?>
-<?php $approval_details_list->FilterOptions->render("body") ?>
-<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
 $approval_details_list->renderOtherOptions();
 ?>
-<?php if ($Security->CanSearch()) { ?>
-<?php if (!$approval_details->isExport() && !$approval_details->CurrentAction) { ?>
-<form name="fapproval_detailslistsrch" id="fapproval_detailslistsrch" class="form-inline ew-form ew-ext-search-form" action="<?php echo CurrentPageName() ?>">
-<?php $searchPanelClass = ($approval_details_list->SearchWhere <> "") ? " show" : " show"; ?>
-<div id="fapproval_detailslistsrch-search-panel" class="ew-search-panel collapse<?php echo $searchPanelClass ?>">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="approval_details">
-	<div class="ew-basic-search">
-<div id="xsr_1" class="ew-row d-sm-flex">
-	<div class="ew-quick-search input-group">
-		<input type="text" name="<?php echo TABLE_BASIC_SEARCH ?>" id="<?php echo TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo HtmlEncode($approval_details_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo HtmlEncode($Language->phrase("Search")) ?>">
-		<input type="hidden" name="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo HtmlEncode($approval_details_list->BasicSearch->getType()) ?>">
-		<div class="input-group-append">
-			<button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?php echo $Language->phrase("SearchBtn") ?></button>
-			<button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?php echo $approval_details_list->BasicSearch->getTypeNameShort() ?></span></button>
-			<div class="dropdown-menu dropdown-menu-right">
-				<a class="dropdown-item<?php if ($approval_details_list->BasicSearch->getType() == "") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this)"><?php echo $Language->phrase("QuickSearchAuto") ?></a>
-				<a class="dropdown-item<?php if ($approval_details_list->BasicSearch->getType() == "=") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'=')"><?php echo $Language->phrase("QuickSearchExact") ?></a>
-				<a class="dropdown-item<?php if ($approval_details_list->BasicSearch->getType() == "AND") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'AND')"><?php echo $Language->phrase("QuickSearchAll") ?></a>
-				<a class="dropdown-item<?php if ($approval_details_list->BasicSearch->getType() == "OR") echo " active"; ?>" href="javascript:void(0);" onclick="ew.setSearchType(this,'OR')"><?php echo $Language->phrase("QuickSearchAny") ?></a>
-			</div>
-		</div>
-	</div>
-</div>
-	</div>
-</div>
-</form>
-<?php } ?>
-<?php } ?>
 <?php $approval_details_list->showPageHeader(); ?>
 <?php
 $approval_details_list->showMessage();
@@ -179,21 +140,12 @@ $approval_details_list->renderListOptions();
 // Render list options (header, left)
 $approval_details_list->ListOptions->render("header", "left");
 ?>
-<?php if ($approval_details->id->Visible) { // id ?>
-	<?php if ($approval_details->sortUrl($approval_details->id) == "") { ?>
-		<th data-name="id" class="<?php echo $approval_details->id->headerCellClass() ?>"><div id="elh_approval_details_id" class="approval_details_id"><div class="ew-table-header-caption"><?php echo $approval_details->id->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="id" class="<?php echo $approval_details->id->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->id) ?>',2);"><div id="elh_approval_details_id" class="approval_details_id">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->id->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->id->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->id->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($approval_details->short_code->Visible) { // short_code ?>
 	<?php if ($approval_details->sortUrl($approval_details->short_code) == "") { ?>
 		<th data-name="short_code" class="<?php echo $approval_details->short_code->headerCellClass() ?>"><div id="elh_approval_details_short_code" class="approval_details_short_code"><div class="ew-table-header-caption"><?php echo $approval_details->short_code->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="short_code" class="<?php echo $approval_details->short_code->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->short_code) ?>',2);"><div id="elh_approval_details_short_code" class="approval_details_short_code">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->short_code->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->short_code->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->short_code->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->short_code->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->short_code->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->short_code->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -202,7 +154,7 @@ $approval_details_list->ListOptions->render("header", "left");
 		<th data-name="Description" class="<?php echo $approval_details->Description->headerCellClass() ?>"><div id="elh_approval_details_Description" class="approval_details_Description"><div class="ew-table-header-caption"><?php echo $approval_details->Description->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Description" class="<?php echo $approval_details->Description->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->Description) ?>',2);"><div id="elh_approval_details_Description" class="approval_details_Description">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->Description->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->Description->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->Description->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->Description->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->Description->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->Description->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -211,7 +163,7 @@ $approval_details_list->ListOptions->render("header", "left");
 		<th data-name="out_status" class="<?php echo $approval_details->out_status->headerCellClass() ?>"><div id="elh_approval_details_out_status" class="approval_details_out_status"><div class="ew-table-header-caption"><?php echo $approval_details->out_status->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="out_status" class="<?php echo $approval_details->out_status->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->out_status) ?>',2);"><div id="elh_approval_details_out_status" class="approval_details_out_status">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->out_status->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->out_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->out_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->out_status->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->out_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->out_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -220,7 +172,7 @@ $approval_details_list->ListOptions->render("header", "left");
 		<th data-name="in_status" class="<?php echo $approval_details->in_status->headerCellClass() ?>"><div id="elh_approval_details_in_status" class="approval_details_in_status"><div class="ew-table-header-caption"><?php echo $approval_details->in_status->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="in_status" class="<?php echo $approval_details->in_status->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $approval_details->SortUrl($approval_details->in_status) ?>',2);"><div id="elh_approval_details_in_status" class="approval_details_in_status">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->in_status->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($approval_details->in_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->in_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $approval_details->in_status->caption() ?></span><span class="ew-table-header-sort"><?php if ($approval_details->in_status->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($approval_details->in_status->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -289,14 +241,6 @@ while ($approval_details_list->RecCnt < $approval_details_list->StopRec) {
 // Render list options (body, left)
 $approval_details_list->ListOptions->render("body", "left", $approval_details_list->RowCnt);
 ?>
-	<?php if ($approval_details->id->Visible) { // id ?>
-		<td data-name="id"<?php echo $approval_details->id->cellAttributes() ?>>
-<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_id" class="approval_details_id">
-<span<?php echo $approval_details->id->viewAttributes() ?>>
-<?php echo $approval_details->id->getViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($approval_details->short_code->Visible) { // short_code ?>
 		<td data-name="short_code"<?php echo $approval_details->short_code->cellAttributes() ?>>
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_short_code" class="approval_details_short_code">

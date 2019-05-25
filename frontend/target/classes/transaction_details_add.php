@@ -23,9 +23,9 @@ class transaction_details_add extends transaction_details
 	public $AuditTrailOnAdd = TRUE;
 	public $AuditTrailOnEdit = TRUE;
 	public $AuditTrailOnDelete = TRUE;
-	public $AuditTrailOnView = FALSE;
-	public $AuditTrailOnViewData = FALSE;
-	public $AuditTrailOnSearch = FALSE;
+	public $AuditTrailOnView = TRUE;
+	public $AuditTrailOnViewData = TRUE;
+	public $AuditTrailOnSearch = TRUE;
 
 	// Page headings
 	public $Heading = "";
@@ -358,9 +358,9 @@ class transaction_details_add extends transaction_details
 		}
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -381,9 +381,9 @@ class transaction_details_add extends transaction_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 	}
@@ -611,6 +611,11 @@ class transaction_details_add extends transaction_details
 				$Security->UserID_Loading();
 				$Security->loadUserID();
 				$Security->UserID_Loaded();
+				if (strval($Security->currentUserID()) == "") {
+					$this->setFailureMessage(DeniedMessage()); // Set no permission
+					$this->terminate(GetUrl("transaction_detailslist.php"));
+					return;
+				}
 			}
 		}
 
@@ -733,7 +738,7 @@ class transaction_details_add extends transaction_details
 				if ($this->addRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
-					$returnUrl = $this->getReturnUrl();
+					$returnUrl = $this->GetViewUrl();
 					if (GetPageName($returnUrl) == "transaction_detailslist.php")
 						$returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
 					elseif (GetPageName($returnUrl) == "transaction_detailsview.php")
@@ -806,8 +811,7 @@ class transaction_details_add extends transaction_details
 		$this->transaction_date->OldValue = $this->transaction_date->CurrentValue;
 		$this->document_native->CurrentValue = NULL;
 		$this->document_native->OldValue = $this->document_native->CurrentValue;
-		$this->username->CurrentValue = NULL;
-		$this->username->OldValue = $this->username->CurrentValue;
+		$this->username->CurrentValue = CurrentUserID();
 		$this->expiry_date->CurrentValue = NULL;
 		$this->expiry_date->OldValue = $this->expiry_date->CurrentValue;
 	}
@@ -943,6 +947,15 @@ class transaction_details_add extends transaction_details
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
 			$rs->close();
+		}
+
+		// Check if valid User ID
+		if ($res) {
+			$res = $this->showOptionLink('add');
+			if (!$res) {
+				$userIdMsg = DeniedMessage();
+				$this->setFailureMessage($userIdMsg);
+			}
 		}
 		return $res;
 	}
@@ -1352,6 +1365,7 @@ class transaction_details_add extends transaction_details
 			$this->direction->EditValue = $this->direction->options(FALSE);
 
 			// approval_status
+			$this->approval_status->EditAttrs["class"] = "form-control";
 			$this->approval_status->EditCustomAttributes = "";
 			$curVal = trim(strval($this->approval_status->CurrentValue));
 			if ($curVal <> "")
@@ -1360,8 +1374,6 @@ class transaction_details_add extends transaction_details
 				$this->approval_status->ViewValue = $this->approval_status->Lookup !== NULL && is_array($this->approval_status->Lookup->Options) ? $curVal : NULL;
 			if ($this->approval_status->ViewValue !== NULL) { // Load from cache
 				$this->approval_status->EditValue = array_values($this->approval_status->Lookup->Options);
-				if ($this->approval_status->ViewValue == "")
-					$this->approval_status->ViewValue = $Language->phrase("PleaseSelect");
 			} else { // Lookup from database
 				if ($curVal == "") {
 					$filterWrk = "0=1";
@@ -1370,14 +1382,6 @@ class transaction_details_add extends transaction_details
 				}
 				$sqlWrk = $this->approval_status->Lookup->getSql(TRUE, $filterWrk, '', $this);
 				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = array();
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
-					$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
-				} else {
-					$this->approval_status->ViewValue = $Language->phrase("PleaseSelect");
-				}
 				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 				if ($rswrk) $rswrk->Close();
 				$this->approval_status->EditValue = $arwrk;
@@ -1534,7 +1538,7 @@ class transaction_details_add extends transaction_details
 			}
 		}
 		if ($this->approval_status->Required) {
-			if ($this->approval_status->FormValue == "") {
+			if (!$this->approval_status->IsDetailKey && $this->approval_status->FormValue != NULL && $this->approval_status->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->approval_status->caption(), $this->approval_status->RequiredErrorMessage));
 			}
 		}
@@ -1627,6 +1631,11 @@ class transaction_details_add extends transaction_details
 
 		// expiry_date
 		$this->expiry_date->setDbValueDef($rsnew, UnFormatDateTime($this->expiry_date->CurrentValue, 0), NULL, strval($this->expiry_date->CurrentValue) == "");
+
+		// username
+		if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
+			$rsnew['username'] = CurrentUserID();
+		}
 		if ($this->document_link->Visible && !$this->document_link->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->document_link->Upload->DbValue) ? array() : array($this->document_link->Upload->DbValue);
 			if (!EmptyValue($this->document_link->Upload->FileName)) {
@@ -1735,6 +1744,15 @@ class transaction_details_add extends transaction_details
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $addRow;
+	}
+
+	// Show link optionally based on User ID
+	protected function showOptionLink($id = "")
+	{
+		global $Security;
+		if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id))
+			return $Security->isValidUserID($this->username->CurrentValue);
+		return TRUE;
 	}
 
 	// Set up Breadcrumb

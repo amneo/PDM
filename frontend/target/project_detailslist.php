@@ -41,6 +41,91 @@ currentPageID = ew.PAGE_ID = "list";
 var fproject_detailslist = currentForm = new ew.Form("fproject_detailslist", "list");
 fproject_detailslist.formKeyCountName = '<?php echo $project_details_list->FormKeyCountName ?>';
 
+// Validate form
+fproject_detailslist.validate = function() {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.getForm(), $fobj = $(fobj);
+	if ($fobj.find("#confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.formKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = ["insert", "gridinsert"].includes($fobj.find("#action").val()) && $k[0];
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.emptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		<?php if ($project_details_list->project_name->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_name");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_name->caption(), $project_details->project_name->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($project_details_list->project_our_client->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_our_client");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_our_client->caption(), $project_details->project_our_client->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($project_details_list->project_end_user->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_end_user");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_end_user->caption(), $project_details->project_end_user->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($project_details_list->project_sales_engg->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_sales_engg");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_sales_engg->caption(), $project_details->project_sales_engg->RequiredErrorMessage)) ?>");
+		<?php } ?>
+			elm = this.getElements("x" + infix + "_project_sales_engg");
+			if (elm && !ew.checkEmail(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($project_details->project_sales_engg->errorMessage()) ?>");
+		<?php if ($project_details_list->project_distribution->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_distribution");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_distribution->caption(), $project_details->project_distribution->RequiredErrorMessage)) ?>");
+		<?php } ?>
+			elm = this.getElements("x" + infix + "_project_distribution");
+			if (elm && !ew.checkEmail(elm.value))
+				return this.onError(elm, "<?php echo JsEncode($project_details->project_distribution->errorMessage()) ?>");
+		<?php if ($project_details_list->project_transmittal->Required) { ?>
+			elm = this.getElements("x" + infix + "_project_transmittal");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->project_transmittal->caption(), $project_details->project_transmittal->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($project_details_list->order_number->Required) { ?>
+			elm = this.getElements("x" + infix + "_order_number");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $project_details->order_number->caption(), $project_details->order_number->RequiredErrorMessage)) ?>");
+		<?php } ?>
+
+			// Fire Form_CustomValidate event
+			if (!this.Form_CustomValidate(fobj))
+				return false;
+		} // End Grid Add checking
+	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew.alert(ew.language.phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fproject_detailslist.emptyRow = function(infix) {
+	var fobj = this._form;
+	if (ew.valueChanged(fobj, infix, "project_name", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_our_client", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_end_user", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_sales_engg", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_distribution", false)) return false;
+	if (ew.valueChanged(fobj, infix, "project_transmittal", false)) return false;
+	if (ew.valueChanged(fobj, infix, "order_number", false)) return false;
+	return true;
+}
+
 // Form_CustomValidate event
 fproject_detailslist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
 
@@ -261,6 +346,15 @@ if ($project_details->ExportAll && $project_details->isExport()) {
 	else
 		$project_details_list->StopRec = $project_details_list->TotalRecs;
 }
+
+// Restore number of post back records
+if ($CurrentForm && $project_details_list->EventCancelled) {
+	$CurrentForm->Index = -1;
+	if ($CurrentForm->hasValue($project_details_list->FormKeyCountName) && ($project_details->isGridAdd() || $project_details->isGridEdit() || $project_details->isConfirm())) {
+		$project_details_list->KeyCount = $CurrentForm->getValue($project_details_list->FormKeyCountName);
+		$project_details_list->StopRec = $project_details_list->StartRec + $project_details_list->KeyCount - 1;
+	}
+}
 $project_details_list->RecCnt = $project_details_list->StartRec - 1;
 if ($project_details_list->Recordset && !$project_details_list->Recordset->EOF) {
 	$project_details_list->Recordset->moveFirst();
@@ -275,10 +369,22 @@ if ($project_details_list->Recordset && !$project_details_list->Recordset->EOF) 
 $project_details->RowType = ROWTYPE_AGGREGATEINIT;
 $project_details->resetAttributes();
 $project_details_list->renderRow();
+if ($project_details->isGridAdd())
+	$project_details_list->RowIndex = 0;
 while ($project_details_list->RecCnt < $project_details_list->StopRec) {
 	$project_details_list->RecCnt++;
 	if ($project_details_list->RecCnt >= $project_details_list->StartRec) {
 		$project_details_list->RowCnt++;
+		if ($project_details->isGridAdd() || $project_details->isGridEdit() || $project_details->isConfirm()) {
+			$project_details_list->RowIndex++;
+			$CurrentForm->Index = $project_details_list->RowIndex;
+			if ($CurrentForm->hasValue($project_details_list->FormActionName) && $project_details_list->EventCancelled)
+				$project_details_list->RowAction = strval($CurrentForm->getValue($project_details_list->FormActionName));
+			elseif ($project_details->isGridAdd())
+				$project_details_list->RowAction = "insert";
+			else
+				$project_details_list->RowAction = "";
+		}
 
 		// Set up key count
 		$project_details_list->KeyCount = $project_details_list->RowIndex;
@@ -287,10 +393,15 @@ while ($project_details_list->RecCnt < $project_details_list->StopRec) {
 		$project_details->resetAttributes();
 		$project_details->CssClass = "";
 		if ($project_details->isGridAdd()) {
+			$project_details_list->loadRowValues(); // Load default values
 		} else {
 			$project_details_list->loadRowValues($project_details_list->Recordset); // Load row values
 		}
 		$project_details->RowType = ROWTYPE_VIEW; // Render view
+		if ($project_details->isGridAdd()) // Grid add
+			$project_details->RowType = ROWTYPE_ADD; // Render add
+		if ($project_details->isGridAdd() && $project_details->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) // Insert failed
+			$project_details_list->restoreCurrentRowFormValues($project_details_list->RowIndex); // Restore form values
 
 		// Set up row id / data-rowindex
 		$project_details->RowAttrs = array_merge($project_details->RowAttrs, array('data-rowindex'=>$project_details_list->RowCnt, 'id'=>'r' . $project_details_list->RowCnt . '_project_details', 'data-rowtype'=>$project_details->RowType));
@@ -300,6 +411,9 @@ while ($project_details_list->RecCnt < $project_details_list->StopRec) {
 
 		// Render list options
 		$project_details_list->renderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if ($project_details_list->RowAction <> "delete" && $project_details_list->RowAction <> "insertdelete" && !($project_details_list->RowAction == "insert" && $project_details->isConfirm() && $project_details_list->emptyRow())) {
 ?>
 	<tr<?php echo $project_details->rowAttributes() ?>>
 <?php
@@ -309,58 +423,114 @@ $project_details_list->ListOptions->render("body", "left", $project_details_list
 ?>
 	<?php if ($project_details->project_name->Visible) { // project_name ?>
 		<td data-name="project_name"<?php echo $project_details->project_name->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_name" class="form-group project_details_project_name">
+<input type="text" data-table="project_details" data-field="x_project_name" name="x<?php echo $project_details_list->RowIndex ?>_project_name" id="x<?php echo $project_details_list->RowIndex ?>_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_name" name="o<?php echo $project_details_list->RowIndex ?>_project_name" id="o<?php echo $project_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($project_details->project_name->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_name" class="project_details_project_name">
 <span<?php echo $project_details->project_name->viewAttributes() ?>>
 <?php echo $project_details->project_name->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->project_our_client->Visible) { // project_our_client ?>
 		<td data-name="project_our_client"<?php echo $project_details->project_our_client->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_our_client" class="form-group project_details_project_our_client">
+<input type="text" data-table="project_details" data-field="x_project_our_client" name="x<?php echo $project_details_list->RowIndex ?>_project_our_client" id="x<?php echo $project_details_list->RowIndex ?>_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_our_client" name="o<?php echo $project_details_list->RowIndex ?>_project_our_client" id="o<?php echo $project_details_list->RowIndex ?>_project_our_client" value="<?php echo HtmlEncode($project_details->project_our_client->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_our_client" class="project_details_project_our_client">
 <span<?php echo $project_details->project_our_client->viewAttributes() ?>>
 <?php echo $project_details->project_our_client->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->project_end_user->Visible) { // project_end_user ?>
 		<td data-name="project_end_user"<?php echo $project_details->project_end_user->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_end_user" class="form-group project_details_project_end_user">
+<input type="text" data-table="project_details" data-field="x_project_end_user" name="x<?php echo $project_details_list->RowIndex ?>_project_end_user" id="x<?php echo $project_details_list->RowIndex ?>_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_end_user" name="o<?php echo $project_details_list->RowIndex ?>_project_end_user" id="o<?php echo $project_details_list->RowIndex ?>_project_end_user" value="<?php echo HtmlEncode($project_details->project_end_user->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_end_user" class="project_details_project_end_user">
 <span<?php echo $project_details->project_end_user->viewAttributes() ?>>
 <?php echo $project_details->project_end_user->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->project_sales_engg->Visible) { // project_sales_engg ?>
 		<td data-name="project_sales_engg"<?php echo $project_details->project_sales_engg->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_sales_engg" class="form-group project_details_project_sales_engg">
+<input type="text" data-table="project_details" data-field="x_project_sales_engg" name="x<?php echo $project_details_list->RowIndex ?>_project_sales_engg" id="x<?php echo $project_details_list->RowIndex ?>_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_sales_engg" name="o<?php echo $project_details_list->RowIndex ?>_project_sales_engg" id="o<?php echo $project_details_list->RowIndex ?>_project_sales_engg" value="<?php echo HtmlEncode($project_details->project_sales_engg->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_sales_engg" class="project_details_project_sales_engg">
 <span<?php echo $project_details->project_sales_engg->viewAttributes() ?>>
 <?php echo $project_details->project_sales_engg->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->project_distribution->Visible) { // project_distribution ?>
 		<td data-name="project_distribution"<?php echo $project_details->project_distribution->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_distribution" class="form-group project_details_project_distribution">
+<input type="text" data-table="project_details" data-field="x_project_distribution" name="x<?php echo $project_details_list->RowIndex ?>_project_distribution" id="x<?php echo $project_details_list->RowIndex ?>_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_distribution" name="o<?php echo $project_details_list->RowIndex ?>_project_distribution" id="o<?php echo $project_details_list->RowIndex ?>_project_distribution" value="<?php echo HtmlEncode($project_details->project_distribution->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_distribution" class="project_details_project_distribution">
 <span<?php echo $project_details->project_distribution->viewAttributes() ?>>
 <?php echo $project_details->project_distribution->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->project_transmittal->Visible) { // project_transmittal ?>
 		<td data-name="project_transmittal"<?php echo $project_details->project_transmittal->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_transmittal" class="form-group project_details_project_transmittal">
+<input type="text" data-table="project_details" data-field="x_project_transmittal" name="x<?php echo $project_details_list->RowIndex ?>_project_transmittal" id="x<?php echo $project_details_list->RowIndex ?>_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_transmittal" name="o<?php echo $project_details_list->RowIndex ?>_project_transmittal" id="o<?php echo $project_details_list->RowIndex ?>_project_transmittal" value="<?php echo HtmlEncode($project_details->project_transmittal->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_project_transmittal" class="project_details_project_transmittal">
 <span<?php echo $project_details->project_transmittal->viewAttributes() ?>>
 <?php echo $project_details->project_transmittal->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($project_details->order_number->Visible) { // order_number ?>
 		<td data-name="order_number"<?php echo $project_details->order_number->cellAttributes() ?>>
+<?php if ($project_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $project_details_list->RowCnt ?>_project_details_order_number" class="form-group project_details_order_number">
+<input type="text" data-table="project_details" data-field="x_order_number" name="x<?php echo $project_details_list->RowIndex ?>_order_number" id="x<?php echo $project_details_list->RowIndex ?>_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_order_number" name="o<?php echo $project_details_list->RowIndex ?>_order_number" id="o<?php echo $project_details_list->RowIndex ?>_order_number" value="<?php echo HtmlEncode($project_details->order_number->OldValue) ?>">
+<?php } ?>
+<?php if ($project_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $project_details_list->RowCnt ?>_project_details_order_number" class="project_details_order_number">
 <span<?php echo $project_details->order_number->viewAttributes() ?>>
 <?php echo $project_details->order_number->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 <?php
@@ -369,14 +539,118 @@ $project_details_list->ListOptions->render("body", "left", $project_details_list
 $project_details_list->ListOptions->render("body", "right", $project_details_list->RowCnt);
 ?>
 	</tr>
+<?php if ($project_details->RowType == ROWTYPE_ADD || $project_details->RowType == ROWTYPE_EDIT) { ?>
+<script>
+fproject_detailslist.updateLists(<?php echo $project_details_list->RowIndex ?>);
+</script>
+<?php } ?>
 <?php
 	}
+	} // End delete row checking
 	if (!$project_details->isGridAdd())
-		$project_details_list->Recordset->moveNext();
+		if (!$project_details_list->Recordset->EOF)
+			$project_details_list->Recordset->moveNext();
+}
+?>
+<?php
+	if ($project_details->isGridAdd() || $project_details->isGridEdit()) {
+		$project_details_list->RowIndex = '$rowindex$';
+		$project_details_list->loadRowValues();
+
+		// Set row properties
+		$project_details->resetAttributes();
+		$project_details->RowAttrs = array_merge($project_details->RowAttrs, array('data-rowindex'=>$project_details_list->RowIndex, 'id'=>'r0_project_details', 'data-rowtype'=>ROWTYPE_ADD));
+		AppendClass($project_details->RowAttrs["class"], "ew-template");
+		$project_details->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$project_details_list->renderRow();
+
+		// Render list options
+		$project_details_list->renderListOptions();
+		$project_details_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $project_details->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$project_details_list->ListOptions->render("body", "left", $project_details_list->RowIndex);
+?>
+	<?php if ($project_details->project_name->Visible) { // project_name ?>
+		<td data-name="project_name">
+<span id="el$rowindex$_project_details_project_name" class="form-group project_details_project_name">
+<input type="text" data-table="project_details" data-field="x_project_name" name="x<?php echo $project_details_list->RowIndex ?>_project_name" id="x<?php echo $project_details_list->RowIndex ?>_project_name" size="30" placeholder="<?php echo HtmlEncode($project_details->project_name->getPlaceHolder()) ?>" value="<?php echo $project_details->project_name->EditValue ?>"<?php echo $project_details->project_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_name" name="o<?php echo $project_details_list->RowIndex ?>_project_name" id="o<?php echo $project_details_list->RowIndex ?>_project_name" value="<?php echo HtmlEncode($project_details->project_name->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->project_our_client->Visible) { // project_our_client ?>
+		<td data-name="project_our_client">
+<span id="el$rowindex$_project_details_project_our_client" class="form-group project_details_project_our_client">
+<input type="text" data-table="project_details" data-field="x_project_our_client" name="x<?php echo $project_details_list->RowIndex ?>_project_our_client" id="x<?php echo $project_details_list->RowIndex ?>_project_our_client" size="30" placeholder="<?php echo HtmlEncode($project_details->project_our_client->getPlaceHolder()) ?>" value="<?php echo $project_details->project_our_client->EditValue ?>"<?php echo $project_details->project_our_client->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_our_client" name="o<?php echo $project_details_list->RowIndex ?>_project_our_client" id="o<?php echo $project_details_list->RowIndex ?>_project_our_client" value="<?php echo HtmlEncode($project_details->project_our_client->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->project_end_user->Visible) { // project_end_user ?>
+		<td data-name="project_end_user">
+<span id="el$rowindex$_project_details_project_end_user" class="form-group project_details_project_end_user">
+<input type="text" data-table="project_details" data-field="x_project_end_user" name="x<?php echo $project_details_list->RowIndex ?>_project_end_user" id="x<?php echo $project_details_list->RowIndex ?>_project_end_user" size="30" placeholder="<?php echo HtmlEncode($project_details->project_end_user->getPlaceHolder()) ?>" value="<?php echo $project_details->project_end_user->EditValue ?>"<?php echo $project_details->project_end_user->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_end_user" name="o<?php echo $project_details_list->RowIndex ?>_project_end_user" id="o<?php echo $project_details_list->RowIndex ?>_project_end_user" value="<?php echo HtmlEncode($project_details->project_end_user->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->project_sales_engg->Visible) { // project_sales_engg ?>
+		<td data-name="project_sales_engg">
+<span id="el$rowindex$_project_details_project_sales_engg" class="form-group project_details_project_sales_engg">
+<input type="text" data-table="project_details" data-field="x_project_sales_engg" name="x<?php echo $project_details_list->RowIndex ?>_project_sales_engg" id="x<?php echo $project_details_list->RowIndex ?>_project_sales_engg" size="30" placeholder="<?php echo HtmlEncode($project_details->project_sales_engg->getPlaceHolder()) ?>" value="<?php echo $project_details->project_sales_engg->EditValue ?>"<?php echo $project_details->project_sales_engg->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_sales_engg" name="o<?php echo $project_details_list->RowIndex ?>_project_sales_engg" id="o<?php echo $project_details_list->RowIndex ?>_project_sales_engg" value="<?php echo HtmlEncode($project_details->project_sales_engg->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->project_distribution->Visible) { // project_distribution ?>
+		<td data-name="project_distribution">
+<span id="el$rowindex$_project_details_project_distribution" class="form-group project_details_project_distribution">
+<input type="text" data-table="project_details" data-field="x_project_distribution" name="x<?php echo $project_details_list->RowIndex ?>_project_distribution" id="x<?php echo $project_details_list->RowIndex ?>_project_distribution" size="30" placeholder="<?php echo HtmlEncode($project_details->project_distribution->getPlaceHolder()) ?>" value="<?php echo $project_details->project_distribution->EditValue ?>"<?php echo $project_details->project_distribution->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_distribution" name="o<?php echo $project_details_list->RowIndex ?>_project_distribution" id="o<?php echo $project_details_list->RowIndex ?>_project_distribution" value="<?php echo HtmlEncode($project_details->project_distribution->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->project_transmittal->Visible) { // project_transmittal ?>
+		<td data-name="project_transmittal">
+<span id="el$rowindex$_project_details_project_transmittal" class="form-group project_details_project_transmittal">
+<input type="text" data-table="project_details" data-field="x_project_transmittal" name="x<?php echo $project_details_list->RowIndex ?>_project_transmittal" id="x<?php echo $project_details_list->RowIndex ?>_project_transmittal" size="30" placeholder="<?php echo HtmlEncode($project_details->project_transmittal->getPlaceHolder()) ?>" value="<?php echo $project_details->project_transmittal->EditValue ?>"<?php echo $project_details->project_transmittal->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_project_transmittal" name="o<?php echo $project_details_list->RowIndex ?>_project_transmittal" id="o<?php echo $project_details_list->RowIndex ?>_project_transmittal" value="<?php echo HtmlEncode($project_details->project_transmittal->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($project_details->order_number->Visible) { // order_number ?>
+		<td data-name="order_number">
+<span id="el$rowindex$_project_details_order_number" class="form-group project_details_order_number">
+<input type="text" data-table="project_details" data-field="x_order_number" name="x<?php echo $project_details_list->RowIndex ?>_order_number" id="x<?php echo $project_details_list->RowIndex ?>_order_number" size="30" placeholder="<?php echo HtmlEncode($project_details->order_number->getPlaceHolder()) ?>" value="<?php echo $project_details->order_number->EditValue ?>"<?php echo $project_details->order_number->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="project_details" data-field="x_order_number" name="o<?php echo $project_details_list->RowIndex ?>_order_number" id="o<?php echo $project_details_list->RowIndex ?>_order_number" value="<?php echo HtmlEncode($project_details->order_number->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$project_details_list->ListOptions->render("body", "right", $project_details_list->RowIndex);
+?>
+<script>
+fproject_detailslist.updateLists(<?php echo $project_details_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
 }
 ?>
 </tbody>
 </table><!-- /.ew-table -->
+<?php } ?>
+<?php if ($project_details->isGridAdd()) { ?>
+<input type="hidden" name="action" id="action" value="gridinsert">
+<input type="hidden" name="<?php echo $project_details_list->FormKeyCountName ?>" id="<?php echo $project_details_list->FormKeyCountName ?>" value="<?php echo $project_details_list->KeyCount ?>">
+<?php echo $project_details_list->MultiSelectKey ?>
 <?php } ?>
 <?php if (!$project_details->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">

@@ -126,7 +126,12 @@ $distribution_details_add->showMessage();
 <input type="hidden" name="<?php echo TOKEN_NAME ?>" value="<?php echo $distribution_details_add->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="distribution_details">
+<?php if ($distribution_details->isConfirm()) { // Confirm page ?>
 <input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="confirm" id="confirm" value="confirm">
+<?php } else { ?>
+<input type="hidden" name="action" id="action" value="confirm">
+<?php } ?>
 <input type="hidden" name="modal" value="<?php echo (int)$distribution_details_add->IsModal ?>">
 <?php if (!$distribution_details_add->IsMobileOrModal) { ?>
 <div class="ew-desktop"><!-- desktop -->
@@ -141,18 +146,34 @@ $distribution_details_add->showMessage();
 	<div id="r_to_Name" class="form-group row">
 		<label id="elh_distribution_details_to_Name" for="x_to_Name" class="<?php echo $distribution_details_add->LeftColumnClass ?>"><?php echo $distribution_details->to_Name->caption() ?><?php echo ($distribution_details->to_Name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $distribution_details_add->RightColumnClass ?>"><div<?php echo $distribution_details->to_Name->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_to_Name">
 <input type="text" data-table="distribution_details" data-field="x_to_Name" name="x_to_Name" id="x_to_Name" size="30" placeholder="<?php echo HtmlEncode($distribution_details->to_Name->getPlaceHolder()) ?>" value="<?php echo $distribution_details->to_Name->EditValue ?>"<?php echo $distribution_details->to_Name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_to_Name">
+<span<?php echo $distribution_details->to_Name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->to_Name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_to_Name" name="x_to_Name" id="x_to_Name" value="<?php echo HtmlEncode($distribution_details->to_Name->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->to_Name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_to_Name">
 		<td class="<?php echo $distribution_details_add->TableLeftColumnClass ?>"><span id="elh_distribution_details_to_Name"><?php echo $distribution_details->to_Name->caption() ?><?php echo ($distribution_details->to_Name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $distribution_details->to_Name->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_to_Name">
 <input type="text" data-table="distribution_details" data-field="x_to_Name" name="x_to_Name" id="x_to_Name" size="30" placeholder="<?php echo HtmlEncode($distribution_details->to_Name->getPlaceHolder()) ?>" value="<?php echo $distribution_details->to_Name->EditValue ?>"<?php echo $distribution_details->to_Name->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_to_Name">
+<span<?php echo $distribution_details->to_Name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->to_Name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_to_Name" name="x_to_Name" id="x_to_Name" value="<?php echo HtmlEncode($distribution_details->to_Name->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->to_Name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -162,18 +183,34 @@ $distribution_details_add->showMessage();
 	<div id="r_email_address" class="form-group row">
 		<label id="elh_distribution_details_email_address" for="x_email_address" class="<?php echo $distribution_details_add->LeftColumnClass ?>"><?php echo $distribution_details->email_address->caption() ?><?php echo ($distribution_details->email_address->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $distribution_details_add->RightColumnClass ?>"><div<?php echo $distribution_details->email_address->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_email_address">
-<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="250" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
+<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="50" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_email_address">
+<span<?php echo $distribution_details->email_address->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->email_address->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" value="<?php echo HtmlEncode($distribution_details->email_address->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->email_address->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_email_address">
 		<td class="<?php echo $distribution_details_add->TableLeftColumnClass ?>"><span id="elh_distribution_details_email_address"><?php echo $distribution_details->email_address->caption() ?><?php echo ($distribution_details->email_address->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $distribution_details->email_address->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_email_address">
-<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="250" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
+<input type="text" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" size="50" placeholder="<?php echo HtmlEncode($distribution_details->email_address->getPlaceHolder()) ?>" value="<?php echo $distribution_details->email_address->EditValue ?>"<?php echo $distribution_details->email_address->editAttributes() ?>>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_email_address">
+<span<?php echo $distribution_details->email_address->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->email_address->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_email_address" name="x_email_address" id="x_email_address" value="<?php echo HtmlEncode($distribution_details->email_address->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->email_address->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -183,6 +220,7 @@ $distribution_details_add->showMessage();
 	<div id="r_project_name" class="form-group row">
 		<label id="elh_distribution_details_project_name" class="<?php echo $distribution_details_add->LeftColumnClass ?>"><?php echo $distribution_details->project_name->caption() ?><?php echo ($distribution_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $distribution_details_add->RightColumnClass ?>"><div<?php echo $distribution_details->project_name->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_project_name">
 <?php
 $wrkonchange = "" . trim(@$distribution_details->project_name->EditAttrs["onchange"]);
@@ -198,12 +236,20 @@ fdistribution_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":
 </script>
 <?php echo $distribution_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_project_name">
+<span<?php echo $distribution_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($distribution_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->project_name->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_project_name">
 		<td class="<?php echo $distribution_details_add->TableLeftColumnClass ?>"><span id="elh_distribution_details_project_name"><?php echo $distribution_details->project_name->caption() ?><?php echo ($distribution_details->project_name->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $distribution_details->project_name->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_project_name">
 <?php
 $wrkonchange = "" . trim(@$distribution_details->project_name->EditAttrs["onchange"]);
@@ -219,6 +265,13 @@ fdistribution_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":
 </script>
 <?php echo $distribution_details->project_name->Lookup->getParamTag("p_x_project_name") ?>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_project_name">
+<span<?php echo $distribution_details->project_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->project_name->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_project_name" name="x_project_name" id="x_project_name" value="<?php echo HtmlEncode($distribution_details->project_name->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->project_name->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -228,24 +281,40 @@ fdistribution_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":
 	<div id="r_distribution_valid" class="form-group row">
 		<label id="elh_distribution_details_distribution_valid" class="<?php echo $distribution_details_add->LeftColumnClass ?>"><?php echo $distribution_details->distribution_valid->caption() ?><?php echo ($distribution_details->distribution_valid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $distribution_details_add->RightColumnClass ?>"><div<?php echo $distribution_details->distribution_valid->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_distribution_valid">
 <div id="tp_x_distribution_valid" class="ew-template"><input type="radio" class="form-check-input" data-table="distribution_details" data-field="x_distribution_valid" data-value-separator="<?php echo $distribution_details->distribution_valid->displayValueSeparatorAttribute() ?>" name="x_distribution_valid" id="x_distribution_valid" value="{value}"<?php echo $distribution_details->distribution_valid->editAttributes() ?>></div>
 <div id="dsl_x_distribution_valid" data-repeatcolumn="5" class="ew-item-list d-none"><div>
 <?php echo $distribution_details->distribution_valid->radioButtonListHtml(FALSE, "x_distribution_valid") ?>
 </div></div>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_distribution_valid">
+<span<?php echo $distribution_details->distribution_valid->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->distribution_valid->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_distribution_valid" name="x_distribution_valid" id="x_distribution_valid" value="<?php echo HtmlEncode($distribution_details->distribution_valid->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->distribution_valid->CustomMsg ?></div></div>
 	</div>
 <?php } else { ?>
 	<tr id="r_distribution_valid">
 		<td class="<?php echo $distribution_details_add->TableLeftColumnClass ?>"><span id="elh_distribution_details_distribution_valid"><?php echo $distribution_details->distribution_valid->caption() ?><?php echo ($distribution_details->distribution_valid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
 		<td<?php echo $distribution_details->distribution_valid->cellAttributes() ?>>
+<?php if (!$distribution_details->isConfirm()) { ?>
 <span id="el_distribution_details_distribution_valid">
 <div id="tp_x_distribution_valid" class="ew-template"><input type="radio" class="form-check-input" data-table="distribution_details" data-field="x_distribution_valid" data-value-separator="<?php echo $distribution_details->distribution_valid->displayValueSeparatorAttribute() ?>" name="x_distribution_valid" id="x_distribution_valid" value="{value}"<?php echo $distribution_details->distribution_valid->editAttributes() ?>></div>
 <div id="dsl_x_distribution_valid" data-repeatcolumn="5" class="ew-item-list d-none"><div>
 <?php echo $distribution_details->distribution_valid->radioButtonListHtml(FALSE, "x_distribution_valid") ?>
 </div></div>
 </span>
+<?php } else { ?>
+<span id="el_distribution_details_distribution_valid">
+<span<?php echo $distribution_details->distribution_valid->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($distribution_details->distribution_valid->ViewValue) ?>"></span>
+</span>
+<input type="hidden" data-table="distribution_details" data-field="x_distribution_valid" name="x_distribution_valid" id="x_distribution_valid" value="<?php echo HtmlEncode($distribution_details->distribution_valid->FormValue) ?>">
+<?php } ?>
 <?php echo $distribution_details->distribution_valid->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -258,8 +327,13 @@ fdistribution_detailsadd.createAutoSuggest({"id":"x_project_name","forceSelect":
 <?php if (!$distribution_details_add->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $distribution_details_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("AddBtn") ?></button>
+<?php if (!$distribution_details->isConfirm()) { // Confirm page ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" onclick="this.form.action.value='confirm';"><?php echo $Language->phrase("AddBtn") ?></button>
 <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?php echo $distribution_details_add->getReturnUrl() ?>"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?php echo $Language->phrase("ConfirmBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="submit" onclick="this.form.action.value='cancel';"><?php echo $Language->phrase("CancelBtn") ?></button>
+<?php } ?>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>

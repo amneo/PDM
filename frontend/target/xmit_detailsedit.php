@@ -54,11 +54,6 @@ fxmit_detailsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($xmit_details_edit->xmit_id->Required) { ?>
-			elm = this.getElements("x" + infix + "_xmit_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $xmit_details->xmit_id->caption(), $xmit_details->xmit_id->RequiredErrorMessage)) ?>");
-		<?php } ?>
 		<?php if ($xmit_details_edit->xmit_mode->Required) { ?>
 			elm = this.getElements("x" + infix + "_xmit_mode");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -118,31 +113,6 @@ $xmit_details_edit->showMessage();
 <?php } else { ?>
 <table id="tbl_xmit_detailsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
 <?php } ?>
-<?php if ($xmit_details->xmit_id->Visible) { // xmit_id ?>
-<?php if ($xmit_details_edit->IsMobileOrModal) { ?>
-	<div id="r_xmit_id" class="form-group row">
-		<label id="elh_xmit_details_xmit_id" class="<?php echo $xmit_details_edit->LeftColumnClass ?>"><?php echo $xmit_details->xmit_id->caption() ?><?php echo ($xmit_details->xmit_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $xmit_details_edit->RightColumnClass ?>"><div<?php echo $xmit_details->xmit_id->cellAttributes() ?>>
-<span id="el_xmit_details_xmit_id">
-<span<?php echo $xmit_details->xmit_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($xmit_details->xmit_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="x_xmit_id" id="x_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->CurrentValue) ?>">
-<?php echo $xmit_details->xmit_id->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_xmit_id">
-		<td class="<?php echo $xmit_details_edit->TableLeftColumnClass ?>"><span id="elh_xmit_details_xmit_id"><?php echo $xmit_details->xmit_id->caption() ?><?php echo ($xmit_details->xmit_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $xmit_details->xmit_id->cellAttributes() ?>>
-<span id="el_xmit_details_xmit_id">
-<span<?php echo $xmit_details->xmit_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($xmit_details->xmit_id->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="x_xmit_id" id="x_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->CurrentValue) ?>">
-<?php echo $xmit_details->xmit_id->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($xmit_details->xmit_mode->Visible) { // xmit_mode ?>
 <?php if ($xmit_details_edit->IsMobileOrModal) { ?>
 	<div id="r_xmit_mode" class="form-group row">
@@ -169,6 +139,7 @@ $xmit_details_edit->showMessage();
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="x_xmit_id" id="x_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->CurrentValue) ?>">
 <?php if (!$xmit_details_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $xmit_details_edit->OffsetColumnClass ?>"><!-- buttons offset -->

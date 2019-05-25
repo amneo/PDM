@@ -414,9 +414,9 @@ class userlevelpermissions_list extends userlevelpermissions
 		$this->MultiUpdateUrl = "userlevelpermissionsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -437,9 +437,9 @@ class userlevelpermissions_list extends userlevelpermissions
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -627,7 +627,7 @@ class userlevelpermissions_list extends userlevelpermissions
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -767,7 +767,7 @@ class userlevelpermissions_list extends userlevelpermissions
 
 		// Setup export options
 		$this->setupExportOptions();
-		$this->userlevelid->setVisibility();
+		$this->userlevelid->Visible = FALSE;
 		$this->_tablename->setVisibility();
 		$this->permission->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -876,7 +876,7 @@ class userlevelpermissions_list extends userlevelpermissions
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -1270,7 +1270,6 @@ class userlevelpermissions_list extends userlevelpermissions
 		if (Get("order") !== NULL) {
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
-			$this->updateSort($this->userlevelid, $ctrl); // userlevelid
 			$this->updateSort($this->_tablename, $ctrl); // tablename
 			$this->updateSort($this->permission, $ctrl); // permission
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1308,7 +1307,6 @@ class userlevelpermissions_list extends userlevelpermissions
 			if ($this->Command == "resetsort") {
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
-				$this->userlevelid->setSort("");
 				$this->_tablename->setSort("");
 				$this->permission->setSort("");
 			}
@@ -1837,15 +1835,13 @@ class userlevelpermissions_list extends userlevelpermissions
 
 		// Common render codes for all row types
 		// userlevelid
+
+		$this->userlevelid->CellCssStyle = "white-space: nowrap;";
+
 		// tablename
 		// permission
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
-
-			// userlevelid
-			$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-			$this->userlevelid->ViewValue = FormatNumber($this->userlevelid->ViewValue, 0, -2, -2, -2);
-			$this->userlevelid->ViewCustomAttributes = "";
 
 			// tablename
 			$arwrk = array();
@@ -1857,11 +1853,6 @@ class userlevelpermissions_list extends userlevelpermissions
 			$this->permission->ViewValue = $this->permission->CurrentValue;
 			$this->permission->ViewValue = FormatNumber($this->permission->ViewValue, 0, -2, -2, -2);
 			$this->permission->ViewCustomAttributes = "";
-
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
 
 			// tablename
 			$this->_tablename->LinkCustomAttributes = "";
@@ -1957,7 +1948,7 @@ class userlevelpermissions_list extends userlevelpermissions
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");

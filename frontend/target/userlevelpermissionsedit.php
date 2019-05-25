@@ -54,14 +54,6 @@ fuserlevelpermissionsedit.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($userlevelpermissions_edit->userlevelid->Required) { ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $userlevelpermissions->userlevelid->caption(), $userlevelpermissions->userlevelid->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_userlevelid");
-			if (elm && !ew.checkInteger(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($userlevelpermissions->userlevelid->errorMessage()) ?>");
 		<?php if ($userlevelpermissions_edit->_tablename->Required) { ?>
 			elm = this.getElements("x" + infix + "__tablename");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -131,31 +123,6 @@ $userlevelpermissions_edit->showMessage();
 <?php } else { ?>
 <table id="tbl_userlevelpermissionsedit" class="table table-striped table-sm ew-desktop-table"><!-- table* -->
 <?php } ?>
-<?php if ($userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-<?php if ($userlevelpermissions_edit->IsMobileOrModal) { ?>
-	<div id="r_userlevelid" class="form-group row">
-		<label id="elh_userlevelpermissions_userlevelid" for="x_userlevelid" class="<?php echo $userlevelpermissions_edit->LeftColumnClass ?>"><?php echo $userlevelpermissions->userlevelid->caption() ?><?php echo ($userlevelpermissions->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $userlevelpermissions_edit->RightColumnClass ?>"><div<?php echo $userlevelpermissions->userlevelid->cellAttributes() ?>>
-<span id="el_userlevelpermissions_userlevelid">
-<span<?php echo $userlevelpermissions->userlevelid->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($userlevelpermissions->userlevelid->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="userlevelpermissions" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevelpermissions->userlevelid->CurrentValue) ?>">
-<?php echo $userlevelpermissions->userlevelid->CustomMsg ?></div></div>
-	</div>
-<?php } else { ?>
-	<tr id="r_userlevelid">
-		<td class="<?php echo $userlevelpermissions_edit->TableLeftColumnClass ?>"><span id="elh_userlevelpermissions_userlevelid"><?php echo $userlevelpermissions->userlevelid->caption() ?><?php echo ($userlevelpermissions->userlevelid->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></span></td>
-		<td<?php echo $userlevelpermissions->userlevelid->cellAttributes() ?>>
-<span id="el_userlevelpermissions_userlevelid">
-<span<?php echo $userlevelpermissions->userlevelid->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($userlevelpermissions->userlevelid->EditValue) ?>"></span>
-</span>
-<input type="hidden" data-table="userlevelpermissions" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevelpermissions->userlevelid->CurrentValue) ?>">
-<?php echo $userlevelpermissions->userlevelid->CustomMsg ?></td>
-	</tr>
-<?php } ?>
-<?php } ?>
 <?php if ($userlevelpermissions->_tablename->Visible) { // tablename ?>
 <?php if ($userlevelpermissions_edit->IsMobileOrModal) { ?>
 	<div id="r__tablename" class="form-group row">
@@ -207,6 +174,7 @@ $userlevelpermissions_edit->showMessage();
 <?php } else { ?>
 </table><!-- /table* -->
 <?php } ?>
+	<input type="hidden" data-table="userlevelpermissions" data-field="x_userlevelid" name="x_userlevelid" id="x_userlevelid" value="<?php echo HtmlEncode($userlevelpermissions->userlevelid->CurrentValue) ?>">
 <?php if (!$userlevelpermissions_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $userlevelpermissions_edit->OffsetColumnClass ?>"><!-- buttons offset -->

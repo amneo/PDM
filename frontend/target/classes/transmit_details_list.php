@@ -414,9 +414,9 @@ class transmit_details_list extends transmit_details
 		$this->MultiUpdateUrl = "transmit_detailsupdate.php";
 		$this->CancelUrl = $this->pageUrl() . "action=cancel";
 
-		// Table object (user_dtls)
-		if (!isset($GLOBALS['user_dtls']))
-			$GLOBALS['user_dtls'] = new user_dtls();
+		// Table object (users)
+		if (!isset($GLOBALS['users']))
+			$GLOBALS['users'] = new users();
 
 		// Page ID
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
@@ -437,9 +437,9 @@ class transmit_details_list extends transmit_details
 		if (!isset($GLOBALS["Conn"]))
 			$GLOBALS["Conn"] = &$this->getConnection();
 
-		// User table object (user_dtls)
+		// User table object (users)
 		if (!isset($UserTable)) {
-			$UserTable = new user_dtls();
+			$UserTable = new users();
 			$UserTableConn = Conn($UserTable->Dbid);
 		}
 
@@ -628,7 +628,7 @@ class transmit_details_list extends transmit_details
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
-	public $DisplayRecs = 25;
+	public $DisplayRecs = 10;
 	public $StartRec;
 	public $StopRec;
 	public $TotalRecs = 0;
@@ -721,6 +721,9 @@ class transmit_details_list extends transmit_details
 			$this->terminate();
 		}
 
+		// Create form object
+		$CurrentForm = new HttpForm();
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -777,6 +780,7 @@ class transmit_details_list extends transmit_details
 		$this->ack_rcvd->setVisibility();
 		$this->ack_document->setVisibility();
 		$this->transmital_date->Visible = FALSE;
+		$this->transmit_mode->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -811,6 +815,7 @@ class transmit_details_list extends transmit_details
 
 		// Set up lookup cache
 		$this->setupLookupOptions($this->project_name);
+		$this->setupLookupOptions($this->transmit_mode);
 
 		// Search filters
 		$srchAdvanced = ""; // Advanced search filter
@@ -831,6 +836,62 @@ class transmit_details_list extends transmit_details
 			// Set up Breadcrumb
 			if (!$this->isExport())
 				$this->setupBreadcrumb();
+
+			// Check QueryString parameters
+			if (Get("action") !== NULL) {
+				$this->CurrentAction = Get("action");
+
+				// Clear inline mode
+				if ($this->isCancel())
+					$this->clearInlineMode();
+
+				// Switch to grid edit mode
+				if ($this->isGridEdit())
+					$this->gridEditMode();
+
+				// Switch to grid add mode
+				if ($this->isGridAdd())
+					$this->gridAddMode();
+			} else {
+				if (Post("action") !== NULL) {
+					$this->CurrentAction = Post("action"); // Get action
+
+					// Grid Update
+					if (($this->isGridUpdate() || $this->isGridOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "gridedit") {
+						if ($this->validateGridForm()) {
+							$gridUpdate = $this->gridUpdate();
+						} else {
+							$gridUpdate = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridUpdate) {
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridEditMode(); // Stay in Grid edit mode
+						}
+					}
+
+					// Grid Insert
+					if ($this->isGridInsert() && @$_SESSION[SESSION_INLINE_MODE] == "gridadd") {
+						if ($this->validateGridForm()) {
+							$gridInsert = $this->gridInsert();
+						} else {
+							$gridInsert = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridInsert) {
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridAddMode(); // Stay in Grid add mode
+						}
+					}
+				} elseif (@$_SESSION[SESSION_INLINE_MODE] == "gridedit") { // Previously in grid edit mode
+					if (Get(TABLE_START_REC) !== NULL || Get(TABLE_PAGE_NO) !== NULL) // Stay in grid edit mode if paging
+						$this->gridEditMode();
+					else // Reset grid edit
+						$this->clearInlineMode();
+				}
+			}
 
 			// Hide list options
 			if ($this->isExport()) {
@@ -853,6 +914,15 @@ class transmit_details_list extends transmit_details
 			// Hide other options
 			if ($this->isExport())
 				$this->OtherOptions->hideAllOptions();
+
+			// Show grid delete link for grid add / grid edit
+			if ($this->AllowAddDeleteRow) {
+				if ($this->isGridAdd() || $this->isGridEdit()) {
+					$item = &$this->ListOptions->getItem("griddelete");
+					if ($item)
+						$item->Visible = TRUE;
+				}
+			}
 
 			// Get default search criteria
 			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
@@ -883,7 +953,7 @@ class transmit_details_list extends transmit_details
 		if ($this->Command <> "json" && $this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 25; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -988,6 +1058,140 @@ class transmit_details_list extends transmit_details
 		}
 	}
 
+	// Exit inline mode
+	protected function clearInlineMode()
+	{
+		$this->LastAction = $this->CurrentAction; // Save last action
+		$this->CurrentAction = ""; // Clear action
+		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
+	}
+
+	// Switch to Grid Add mode
+	protected function gridAddMode()
+	{
+		$this->CurrentAction = "gridadd";
+		$_SESSION[SESSION_INLINE_MODE] = "gridadd";
+		$this->hideFieldsForAddEdit();
+	}
+
+	// Switch to Grid Edit mode
+	protected function gridEditMode()
+	{
+		$this->CurrentAction = "gridedit";
+		$_SESSION[SESSION_INLINE_MODE] = "gridedit";
+		$this->hideFieldsForAddEdit();
+	}
+
+	// Perform update to grid
+	public function gridUpdate()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$gridUpdate = TRUE;
+
+		// Get old recordset
+		$this->CurrentFilter = $this->buildKeyFilter();
+		if ($this->CurrentFilter == "")
+			$this->CurrentFilter = "0=1";
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		if ($rs = $conn->execute($sql)) {
+			$rsold = $rs->getRows();
+			$rs->close();
+		}
+
+		// Call Grid Updating event
+		if (!$this->Grid_Updating($rsold)) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridEditCancelled")); // Set grid edit cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+		if ($this->AuditTrailOnEdit)
+			$this->writeAuditTrailDummy($Language->phrase("BatchUpdateBegin")); // Batch update begin
+		$key = "";
+
+		// Update row index and get row key
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Update all rows based on key
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+			$CurrentForm->Index = $rowindex;
+			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+
+			// Load all values and keys
+			if ($rowaction <> "insertdelete") { // Skip insert then deleted rows
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "" || $rowaction == "edit" || $rowaction == "delete") {
+					$gridUpdate = $this->setupKeyValues($rowkey); // Set up key values
+				} else {
+					$gridUpdate = TRUE;
+				}
+
+				// Skip empty row
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// No action required
+				// Validate form and insert/update/delete record
+
+				} elseif ($gridUpdate) {
+					if ($rowaction == "delete") {
+						$this->CurrentFilter = $this->getRecordFilter();
+						$gridUpdate = $this->deleteRows(); // Delete this row
+					} else if (!$this->validateForm()) {
+						$gridUpdate = FALSE; // Form error, reset action
+						$this->setFailureMessage($FormError);
+					} else {
+						if ($rowaction == "insert") {
+							$gridUpdate = $this->addRow(); // Insert this row
+						} else {
+							if ($rowkey <> "") {
+								$this->SendEmail = FALSE; // Do not send email on update success
+								$gridUpdate = $this->editRow(); // Update this row
+							}
+						} // End update
+					}
+				}
+				if ($gridUpdate) {
+					if ($key <> "")
+						$key .= ", ";
+					$key .= $rowkey;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($gridUpdate) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Updated event
+			$this->Grid_Updated($rsold, $rsnew);
+			if ($this->AuditTrailOnEdit)
+				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateSuccess")); // Batch update success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
+			$this->clearInlineMode(); // Clear inline edit mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->AuditTrailOnEdit)
+				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateRollback")); // Batch update rollback
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
+		}
+		return $gridUpdate;
+	}
+
 	// Build filter for all keys
 	protected function buildKeyFilter()
 	{
@@ -1029,6 +1233,198 @@ class transmit_details_list extends transmit_details
 		return TRUE;
 	}
 
+	// Perform Grid Add
+	public function gridInsert()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$rowindex = 1;
+		$gridInsert = FALSE;
+		$conn = &$this->getConnection();
+
+		// Call Grid Inserting event
+		if (!$this->Grid_Inserting()) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridAddCancelled")); // Set grid add cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+
+		// Init key filter
+		$wrkfilter = "";
+		$addcnt = 0;
+		if ($this->AuditTrailOnAdd)
+			$this->writeAuditTrailDummy($Language->phrase("BatchInsertBegin")); // Batch insert begin
+		$key = "";
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Insert all rows
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "" && $rowaction <> "insert")
+				continue; // Skip
+			$this->loadFormValues(); // Get form values
+			if (!$this->emptyRow()) {
+				$addcnt++;
+				$this->SendEmail = FALSE; // Do not send email on insert success
+
+				// Validate form
+				if (!$this->validateForm()) {
+					$gridInsert = FALSE; // Form error, reset action
+					$this->setFailureMessage($FormError);
+				} else {
+					$gridInsert = $this->addRow($this->OldRecordset); // Insert this row
+				}
+				if ($gridInsert) {
+					if ($key <> "")
+						$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+					$key .= $this->transmit_id->CurrentValue;
+
+					// Add filter for this record
+					$filter = $this->getRecordFilter();
+					if ($wrkfilter <> "")
+						$wrkfilter .= " OR ";
+					$wrkfilter .= $filter;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($addcnt == 0) { // No record inserted
+			$this->setFailureMessage($Language->phrase("NoAddRecord"));
+			$gridInsert = FALSE;
+		}
+		if ($gridInsert) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			$this->CurrentFilter = $wrkfilter;
+			$sql = $this->getCurrentSql();
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Inserted event
+			$this->Grid_Inserted($rsnew);
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailDummy($Language->phrase("BatchInsertSuccess")); // Batch insert success
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("InsertSuccess")); // Set up insert success message
+			$this->clearInlineMode(); // Clear grid add mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->AuditTrailOnAdd)
+				$this->writeAuditTrailDummy($Language->phrase("BatchInsertRollback")); // Batch insert rollback
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("InsertFailed")); // Set insert failed message
+		}
+		return $gridInsert;
+	}
+
+	// Check if empty row
+	public function emptyRow()
+	{
+		global $CurrentForm;
+		if ($CurrentForm->hasValue("x_transmittal_no") && $CurrentForm->hasValue("o_transmittal_no") && $this->transmittal_no->CurrentValue <> $this->transmittal_no->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_project_name") && $CurrentForm->hasValue("o_project_name") && $this->project_name->CurrentValue <> $this->project_name->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_delivery_location") && $CurrentForm->hasValue("o_delivery_location") && $this->delivery_location->CurrentValue <> $this->delivery_location->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_addressed_to") && $CurrentForm->hasValue("o_addressed_to") && $this->addressed_to->CurrentValue <> $this->addressed_to->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_remarks") && $CurrentForm->hasValue("o_remarks") && $this->remarks->CurrentValue <> $this->remarks->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_ack_rcvd") && $CurrentForm->hasValue("o_ack_rcvd") && ConvertToBool($this->ack_rcvd->CurrentValue) <> ConvertToBool($this->ack_rcvd->OldValue))
+			return FALSE;
+		if (!EmptyValue($this->ack_document->Upload->Value))
+			return FALSE;
+		if ($CurrentForm->hasValue("x_transmit_mode") && $CurrentForm->hasValue("o_transmit_mode") && $this->transmit_mode->CurrentValue <> $this->transmit_mode->OldValue)
+			return FALSE;
+		return TRUE;
+	}
+
+	// Validate grid form
+	public function validateGridForm()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Validate all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else if (!$this->validateForm()) {
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	}
+
+	// Get all form values of the grid
+	public function getGridFormValues()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+		$rows = array();
+
+		// Loop through all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else {
+					$rows[] = $this->getFieldValues("FormValue"); // Return row as array
+				}
+			}
+		}
+		return $rows; // Return as array of array
+	}
+
+	// Restore form values for current row
+	public function restoreCurrentRowFormValues($idx)
+	{
+		global $CurrentForm;
+
+		// Get row based on current index
+		$CurrentForm->Index = $idx;
+		$this->loadFormValues(); // Load form values
+	}
+
 	// Get list of filters
 	public function getFilterList()
 	{
@@ -1049,6 +1445,7 @@ class transmit_details_list extends transmit_details
 		$filterList = Concat($filterList, $this->remarks->AdvancedSearch->toJson(), ","); // Field remarks
 		$filterList = Concat($filterList, $this->ack_rcvd->AdvancedSearch->toJson(), ","); // Field ack_rcvd
 		$filterList = Concat($filterList, $this->ack_document->AdvancedSearch->toJson(), ","); // Field ack_document
+		$filterList = Concat($filterList, $this->transmit_mode->AdvancedSearch->toJson(), ","); // Field transmit_mode
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1150,6 +1547,14 @@ class transmit_details_list extends transmit_details
 		$this->ack_document->AdvancedSearch->SearchValue2 = @$filter["y_ack_document"];
 		$this->ack_document->AdvancedSearch->SearchOperator2 = @$filter["w_ack_document"];
 		$this->ack_document->AdvancedSearch->save();
+
+		// Field transmit_mode
+		$this->transmit_mode->AdvancedSearch->SearchValue = @$filter["x_transmit_mode"];
+		$this->transmit_mode->AdvancedSearch->SearchOperator = @$filter["z_transmit_mode"];
+		$this->transmit_mode->AdvancedSearch->SearchCondition = @$filter["v_transmit_mode"];
+		$this->transmit_mode->AdvancedSearch->SearchValue2 = @$filter["y_transmit_mode"];
+		$this->transmit_mode->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_mode"];
+		$this->transmit_mode->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1164,6 +1569,7 @@ class transmit_details_list extends transmit_details
 		$this->buildBasicSearchSql($where, $this->addressed_to, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->remarks, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->ack_document, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->transmit_mode, $arKeywords, $type);
 		return $where;
 	}
 
@@ -1333,6 +1739,7 @@ class transmit_details_list extends transmit_details
 			$this->updateSort($this->remarks, $ctrl); // remarks
 			$this->updateSort($this->ack_rcvd, $ctrl); // ack_rcvd
 			$this->updateSort($this->ack_document, $ctrl); // ack_document
+			$this->updateSort($this->transmit_mode, $ctrl); // transmit_mode
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1376,6 +1783,7 @@ class transmit_details_list extends transmit_details
 				$this->remarks->setSort("");
 				$this->ack_rcvd->setSort("");
 				$this->ack_document->setSort("");
+				$this->transmit_mode->setSort("");
 			}
 
 			// Reset start position
@@ -1389,17 +1797,19 @@ class transmit_details_list extends transmit_details
 	{
 		global $Security, $Language;
 
+		// "griddelete"
+		if ($this->AllowAddDeleteRow) {
+			$item = &$this->ListOptions->add("griddelete");
+			$item->CssClass = "text-nowrap";
+			$item->OnLeft = TRUE;
+			$item->Visible = FALSE; // Default hidden
+		}
+
 		// Add group option item
 		$item = &$this->ListOptions->add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
-
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
@@ -1455,16 +1865,35 @@ class transmit_details_list extends transmit_details
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
 
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView()) {
-			if (IsMobile())
-				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-			else
-				$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"transmit_details\" data-caption=\"" . $viewcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($this->ViewUrl) . "',btn:null});\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
+		// Set up row action and key
+		if (is_numeric($this->RowIndex) && $this->CurrentMode <> "view") {
+			$CurrentForm->Index = $this->RowIndex;
+			$actionName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormActionName);
+			$oldKeyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormOldKeyName);
+			$keyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormKeyName);
+			$blankRowName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormBlankRowName);
+			if ($this->RowAction <> "")
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $actionName . "\" id=\"" . $actionName . "\" value=\"" . $this->RowAction . "\">";
+			if ($this->RowAction == "delete") {
+				$rowkey = $CurrentForm->getValue($this->FormKeyName);
+				$this->setupKeyValues($rowkey);
+			}
+			if ($this->RowAction == "insert" && $this->isConfirm() && $this->emptyRow())
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $blankRowName . "\" id=\"" . $blankRowName . "\" value=\"1\">";
+		}
+
+		// "delete"
+		if ($this->AllowAddDeleteRow) {
+			if ($this->isGridAdd() || $this->isGridEdit()) {
+				$options = &$this->ListOptions;
+				$options->UseButtonGroup = TRUE; // Use button group for grid delete button
+				$opt = &$options->Items["griddelete"];
+				if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+					$opt->Body = "&nbsp;";
+				} else {
+					$opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
+				}
+			}
 		}
 
 		// "edit"
@@ -1520,6 +1949,9 @@ class transmit_details_list extends transmit_details
 		// "checkbox"
 		$opt = &$this->ListOptions->Items["checkbox"];
 		$opt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ew-multi-select\" value=\"" . HtmlEncode($this->transmit_id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\">";
+		if ($this->isGridEdit() && is_numeric($this->RowIndex)) {
+			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $keyName . "\" id=\"" . $keyName . "\" value=\"" . $this->transmit_id->CurrentValue . "\">";
+		}
 		$this->renderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1541,6 +1973,15 @@ class transmit_details_list extends transmit_details
 		else
 			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"transmit_details\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode($this->AddUrl) . "'});\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
+		$item = &$option->add("gridadd");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
+		$item->Visible = ($this->GridAddUrl <> "" && $Security->canAdd());
+
+		// Add grid edit
+		$option = $options["addedit"];
+		$item = &$option->add("gridedit");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-edit\" title=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" href=\"" . HtmlEncode($this->GridEditUrl) . "\">" . $Language->phrase("GridEditLink") . "</a>";
+		$item->Visible = ($this->GridEditUrl <> "" && $Security->canEdit());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1579,6 +2020,7 @@ class transmit_details_list extends transmit_details
 	{
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
+		if (!$this->isGridAdd() && !$this->isGridEdit()) { // Not grid add/edit mode
 			$option = &$options["action"];
 
 			// Set up list action buttons
@@ -1600,6 +2042,50 @@ class transmit_details_list extends transmit_details
 				$option = &$options["action"];
 				$option->hideAllOptions();
 			}
+		} else { // Grid add/edit mode
+
+			// Hide all options first
+			foreach ($options as &$option)
+				$option->hideAllOptions();
+			if ($this->isGridAdd()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+
+				// Add grid insert
+				$item = &$option->add("gridinsert");
+				$item->Body = "<a class=\"ew-action ew-grid-insert\" title=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridInsertLink") . "</a>";
+
+				// Add grid cancel
+				$item = &$option->add("gridcancel");
+				$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+			if ($this->isGridEdit()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+					$item = &$option->add("gridsave");
+					$item->Body = "<a class=\"ew-action ew-grid-save\" title=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridSaveLink") . "</a>";
+					$item = &$option->add("gridcancel");
+					$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+		}
 	}
 
 	// Process list action
@@ -1767,6 +2253,40 @@ class transmit_details_list extends transmit_details
 		}
 	}
 
+	// Get upload files
+	protected function getUploadFiles()
+	{
+		global $CurrentForm, $Language;
+		$this->ack_document->Upload->Index = $CurrentForm->Index;
+		$this->ack_document->Upload->uploadFile();
+		$this->ack_document->CurrentValue = $this->ack_document->Upload->FileName;
+	}
+
+	// Load default values
+	protected function loadDefaultValues()
+	{
+		$this->transmit_id->CurrentValue = NULL;
+		$this->transmit_id->OldValue = $this->transmit_id->CurrentValue;
+		$this->transmittal_no->CurrentValue = NULL;
+		$this->transmittal_no->OldValue = $this->transmittal_no->CurrentValue;
+		$this->project_name->CurrentValue = NULL;
+		$this->project_name->OldValue = $this->project_name->CurrentValue;
+		$this->delivery_location->CurrentValue = NULL;
+		$this->delivery_location->OldValue = $this->delivery_location->CurrentValue;
+		$this->addressed_to->CurrentValue = NULL;
+		$this->addressed_to->OldValue = $this->addressed_to->CurrentValue;
+		$this->remarks->CurrentValue = NULL;
+		$this->remarks->OldValue = $this->remarks->CurrentValue;
+		$this->ack_rcvd->CurrentValue = NULL;
+		$this->ack_rcvd->OldValue = $this->ack_rcvd->CurrentValue;
+		$this->ack_document->Upload->DbValue = NULL;
+		$this->ack_document->OldValue = $this->ack_document->Upload->DbValue;
+		$this->transmital_date->CurrentValue = NULL;
+		$this->transmital_date->OldValue = $this->transmital_date->CurrentValue;
+		$this->transmit_mode->CurrentValue = NULL;
+		$this->transmit_mode->OldValue = $this->transmit_mode->CurrentValue;
+	}
+
 	// Load basic search values
 	protected function loadBasicSearchValues()
 	{
@@ -1774,6 +2294,105 @@ class transmit_details_list extends transmit_details
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load form values
+	protected function loadFormValues()
+	{
+
+		// Load from form
+		global $CurrentForm;
+		$this->getUploadFiles(); // Get upload files
+
+		// Check field name 'transmittal_no' first before field var 'x_transmittal_no'
+		$val = $CurrentForm->hasValue("transmittal_no") ? $CurrentForm->getValue("transmittal_no") : $CurrentForm->getValue("x_transmittal_no");
+		if (!$this->transmittal_no->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmittal_no->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmittal_no->setFormValue($val);
+		}
+		$this->transmittal_no->setOldValue($CurrentForm->getValue("o_transmittal_no"));
+
+		// Check field name 'project_name' first before field var 'x_project_name'
+		$val = $CurrentForm->hasValue("project_name") ? $CurrentForm->getValue("project_name") : $CurrentForm->getValue("x_project_name");
+		if (!$this->project_name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->project_name->Visible = FALSE; // Disable update for API request
+			else
+				$this->project_name->setFormValue($val);
+		}
+		$this->project_name->setOldValue($CurrentForm->getValue("o_project_name"));
+
+		// Check field name 'delivery_location' first before field var 'x_delivery_location'
+		$val = $CurrentForm->hasValue("delivery_location") ? $CurrentForm->getValue("delivery_location") : $CurrentForm->getValue("x_delivery_location");
+		if (!$this->delivery_location->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->delivery_location->Visible = FALSE; // Disable update for API request
+			else
+				$this->delivery_location->setFormValue($val);
+		}
+		$this->delivery_location->setOldValue($CurrentForm->getValue("o_delivery_location"));
+
+		// Check field name 'addressed_to' first before field var 'x_addressed_to'
+		$val = $CurrentForm->hasValue("addressed_to") ? $CurrentForm->getValue("addressed_to") : $CurrentForm->getValue("x_addressed_to");
+		if (!$this->addressed_to->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->addressed_to->Visible = FALSE; // Disable update for API request
+			else
+				$this->addressed_to->setFormValue($val);
+		}
+		$this->addressed_to->setOldValue($CurrentForm->getValue("o_addressed_to"));
+
+		// Check field name 'remarks' first before field var 'x_remarks'
+		$val = $CurrentForm->hasValue("remarks") ? $CurrentForm->getValue("remarks") : $CurrentForm->getValue("x_remarks");
+		if (!$this->remarks->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->remarks->Visible = FALSE; // Disable update for API request
+			else
+				$this->remarks->setFormValue($val);
+		}
+		$this->remarks->setOldValue($CurrentForm->getValue("o_remarks"));
+
+		// Check field name 'ack_rcvd' first before field var 'x_ack_rcvd'
+		$val = $CurrentForm->hasValue("ack_rcvd") ? $CurrentForm->getValue("ack_rcvd") : $CurrentForm->getValue("x_ack_rcvd");
+		if (!$this->ack_rcvd->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->ack_rcvd->Visible = FALSE; // Disable update for API request
+			else
+				$this->ack_rcvd->setFormValue($val);
+		}
+		$this->ack_rcvd->setOldValue($CurrentForm->getValue("o_ack_rcvd"));
+
+		// Check field name 'transmit_mode' first before field var 'x_transmit_mode'
+		$val = $CurrentForm->hasValue("transmit_mode") ? $CurrentForm->getValue("transmit_mode") : $CurrentForm->getValue("x_transmit_mode");
+		if (!$this->transmit_mode->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->transmit_mode->Visible = FALSE; // Disable update for API request
+			else
+				$this->transmit_mode->setFormValue($val);
+		}
+		$this->transmit_mode->setOldValue($CurrentForm->getValue("o_transmit_mode"));
+
+		// Check field name 'transmit_id' first before field var 'x_transmit_id'
+		$val = $CurrentForm->hasValue("transmit_id") ? $CurrentForm->getValue("transmit_id") : $CurrentForm->getValue("x_transmit_id");
+		if (!$this->transmit_id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
+			$this->transmit_id->setFormValue($val);
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		if (!$this->isGridAdd() && !$this->isAdd())
+			$this->transmit_id->CurrentValue = $this->transmit_id->FormValue;
+		$this->transmittal_no->CurrentValue = $this->transmittal_no->FormValue;
+		$this->project_name->CurrentValue = $this->project_name->FormValue;
+		$this->delivery_location->CurrentValue = $this->delivery_location->FormValue;
+		$this->addressed_to->CurrentValue = $this->addressed_to->FormValue;
+		$this->remarks->CurrentValue = $this->remarks->FormValue;
+		$this->ack_rcvd->CurrentValue = $this->ack_rcvd->FormValue;
+		$this->transmit_mode->CurrentValue = $this->transmit_mode->FormValue;
 	}
 
 	// Load recordset
@@ -1821,6 +2440,8 @@ class transmit_details_list extends transmit_details
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
+			if (!$this->EventCancelled)
+				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -1853,21 +2474,24 @@ class transmit_details_list extends transmit_details
 		$this->ack_document->Upload->DbValue = $row['ack_document'];
 		$this->ack_document->setDbValue($this->ack_document->Upload->DbValue);
 		$this->transmital_date->setDbValue($row['transmital_date']);
+		$this->transmit_mode->setDbValue($row['transmit_mode']);
 	}
 
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['transmit_id'] = NULL;
-		$row['transmittal_no'] = NULL;
-		$row['project_name'] = NULL;
-		$row['delivery_location'] = NULL;
-		$row['addressed_to'] = NULL;
-		$row['remarks'] = NULL;
-		$row['ack_rcvd'] = NULL;
-		$row['ack_document'] = NULL;
-		$row['transmital_date'] = NULL;
+		$row['transmit_id'] = $this->transmit_id->CurrentValue;
+		$row['transmittal_no'] = $this->transmittal_no->CurrentValue;
+		$row['project_name'] = $this->project_name->CurrentValue;
+		$row['delivery_location'] = $this->delivery_location->CurrentValue;
+		$row['addressed_to'] = $this->addressed_to->CurrentValue;
+		$row['remarks'] = $this->remarks->CurrentValue;
+		$row['ack_rcvd'] = $this->ack_rcvd->CurrentValue;
+		$row['ack_document'] = $this->ack_document->Upload->DbValue;
+		$row['transmital_date'] = $this->transmital_date->CurrentValue;
+		$row['transmit_mode'] = $this->transmit_mode->CurrentValue;
 		return $row;
 	}
 
@@ -1922,6 +2546,8 @@ class transmit_details_list extends transmit_details
 		// transmital_date
 
 		$this->transmital_date->CellCssStyle = "white-space: nowrap;";
+
+		// transmit_mode
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
 			// transmit_id
@@ -1988,6 +2614,40 @@ class transmit_details_list extends transmit_details
 			}
 			$this->ack_document->ViewCustomAttributes = "";
 
+			// transmit_mode
+			$curVal = strval($this->transmit_mode->CurrentValue);
+			if ($curVal <> "") {
+				$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+				if ($this->transmit_mode->ViewValue === NULL) { // Lookup from database
+					$arwrk = explode(",", $curVal);
+					$filterWrk = "";
+					foreach ($arwrk as $wrk) {
+						if ($filterWrk <> "")
+							$filterWrk .= " OR ";
+						$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+					}
+					$sqlWrk = $this->transmit_mode->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$this->transmit_mode->ViewValue = new OptionValues();
+						$ari = 0;
+						while (!$rswrk->EOF) {
+							$arwrk = array();
+							$arwrk[1] = $rswrk->fields('df');
+							$this->transmit_mode->ViewValue->add($this->transmit_mode->displayValue($arwrk));
+							$rswrk->MoveNext();
+							$ari++;
+						}
+						$rswrk->Close();
+					} else {
+						$this->transmit_mode->ViewValue = $this->transmit_mode->CurrentValue;
+					}
+				}
+			} else {
+				$this->transmit_mode->ViewValue = NULL;
+			}
+			$this->transmit_mode->ViewCustomAttributes = "";
+
 			// transmittal_no
 			$this->transmittal_no->LinkCustomAttributes = "";
 			$this->transmittal_no->HrefValue = "";
@@ -2029,11 +2689,843 @@ class transmit_details_list extends transmit_details
 			}
 			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
 			$this->ack_document->TooltipValue = "";
+
+			// transmit_mode
+			$this->transmit_mode->LinkCustomAttributes = "";
+			$this->transmit_mode->HrefValue = "";
+			$this->transmit_mode->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// transmittal_no
+			$this->transmittal_no->EditAttrs["class"] = "form-control";
+			$this->transmittal_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmittal_no->CurrentValue = HtmlDecode($this->transmittal_no->CurrentValue);
+			$this->transmittal_no->EditValue = HtmlEncode($this->transmittal_no->CurrentValue);
+			$this->transmittal_no->PlaceHolder = RemoveHtml($this->transmittal_no->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->CurrentValue = HtmlDecode($this->project_name->CurrentValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = HtmlEncode($this->project_name->CurrentValue);
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// delivery_location
+			$this->delivery_location->EditAttrs["class"] = "form-control";
+			$this->delivery_location->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->delivery_location->CurrentValue = HtmlDecode($this->delivery_location->CurrentValue);
+			$this->delivery_location->EditValue = HtmlEncode($this->delivery_location->CurrentValue);
+			$this->delivery_location->PlaceHolder = RemoveHtml($this->delivery_location->caption());
+
+			// addressed_to
+			$this->addressed_to->EditAttrs["class"] = "form-control";
+			$this->addressed_to->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->addressed_to->CurrentValue = HtmlDecode($this->addressed_to->CurrentValue);
+			$this->addressed_to->EditValue = HtmlEncode($this->addressed_to->CurrentValue);
+			$this->addressed_to->PlaceHolder = RemoveHtml($this->addressed_to->caption());
+
+			// remarks
+			$this->remarks->EditAttrs["class"] = "form-control";
+			$this->remarks->EditCustomAttributes = "";
+			$this->remarks->EditValue = HtmlEncode($this->remarks->CurrentValue);
+			$this->remarks->PlaceHolder = RemoveHtml($this->remarks->caption());
+
+			// ack_rcvd
+			$this->ack_rcvd->EditCustomAttributes = "";
+			$this->ack_rcvd->EditValue = $this->ack_rcvd->options(FALSE);
+
+			// ack_document
+			$this->ack_document->EditAttrs["class"] = "form-control";
+			$this->ack_document->EditCustomAttributes = "";
+			if (!EmptyValue($this->ack_document->Upload->DbValue)) {
+				$this->ack_document->EditValue = $this->ack_document->Upload->DbValue;
+			} else {
+				$this->ack_document->EditValue = "";
+			}
+			if (!EmptyValue($this->ack_document->CurrentValue))
+					if ($this->RowIndex == '$rowindex$')
+						$this->ack_document->Upload->FileName = "";
+					else
+						$this->ack_document->Upload->FileName = $this->ack_document->CurrentValue;
+			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
+				RenderUploadField($this->ack_document, $this->RowIndex);
+
+			// transmit_mode
+			$this->transmit_mode->EditCustomAttributes = "";
+			$curVal = trim(strval($this->transmit_mode->CurrentValue));
+			if ($curVal <> "")
+				$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+			else
+				$this->transmit_mode->ViewValue = $this->transmit_mode->Lookup !== NULL && is_array($this->transmit_mode->Lookup->Options) ? $curVal : NULL;
+			if ($this->transmit_mode->ViewValue !== NULL) { // Load from cache
+				$this->transmit_mode->EditValue = array_values($this->transmit_mode->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$arwrk = explode(",", $curVal);
+					$filterWrk = "";
+					foreach ($arwrk as $wrk) {
+						if ($filterWrk <> "") $filterWrk .= " OR ";
+						$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+					}
+				}
+				$sqlWrk = $this->transmit_mode->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->transmit_mode->EditValue = $arwrk;
+			}
+
+			// Add refer script
+			// transmittal_no
+
+			$this->transmittal_no->LinkCustomAttributes = "";
+			$this->transmittal_no->HrefValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+
+			// delivery_location
+			$this->delivery_location->LinkCustomAttributes = "";
+			$this->delivery_location->HrefValue = "";
+
+			// addressed_to
+			$this->addressed_to->LinkCustomAttributes = "";
+			$this->addressed_to->HrefValue = "";
+
+			// remarks
+			$this->remarks->LinkCustomAttributes = "";
+			$this->remarks->HrefValue = "";
+
+			// ack_rcvd
+			$this->ack_rcvd->LinkCustomAttributes = "";
+			$this->ack_rcvd->HrefValue = "";
+
+			// ack_document
+			$this->ack_document->LinkCustomAttributes = "";
+			if (!EmptyValue($this->ack_document->Upload->DbValue)) {
+				$this->ack_document->HrefValue = GetFileUploadUrl($this->ack_document, $this->ack_document->Upload->DbValue); // Add prefix/suffix
+				$this->ack_document->LinkAttrs["target"] = ""; // Add target
+				if ($this->isExport()) $this->ack_document->HrefValue = FullUrl($this->ack_document->HrefValue, "href");
+			} else {
+				$this->ack_document->HrefValue = "";
+			}
+			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
+
+			// transmit_mode
+			$this->transmit_mode->LinkCustomAttributes = "";
+			$this->transmit_mode->HrefValue = "";
+		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// transmittal_no
+			$this->transmittal_no->EditAttrs["class"] = "form-control";
+			$this->transmittal_no->EditCustomAttributes = "";
+			$this->transmittal_no->EditValue = $this->transmittal_no->CurrentValue;
+			$this->transmittal_no->ViewCustomAttributes = "";
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if ($this->project_name->VirtualValue <> "") {
+				$this->project_name->EditValue = $this->project_name->VirtualValue;
+			} else {
+				$this->project_name->EditValue = $this->project_name->CurrentValue;
+			$curVal = strval($this->project_name->CurrentValue);
+			if ($curVal <> "") {
+				$this->project_name->EditValue = $this->project_name->lookupCacheOption($curVal);
+				if ($this->project_name->EditValue === NULL) { // Lookup from database
+					$filterWrk = "\"project_name\"" . SearchString("=", $curVal, DATATYPE_STRING, "");
+					$sqlWrk = $this->project_name->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = array();
+						$arwrk[1] = $rswrk->fields('df');
+						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->project_name->EditValue = $this->project_name->CurrentValue;
+					}
+				}
+			} else {
+				$this->project_name->EditValue = NULL;
+			}
+			}
+			$this->project_name->ViewCustomAttributes = "";
+
+			// delivery_location
+			$this->delivery_location->EditAttrs["class"] = "form-control";
+			$this->delivery_location->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->delivery_location->CurrentValue = HtmlDecode($this->delivery_location->CurrentValue);
+			$this->delivery_location->EditValue = HtmlEncode($this->delivery_location->CurrentValue);
+			$this->delivery_location->PlaceHolder = RemoveHtml($this->delivery_location->caption());
+
+			// addressed_to
+			$this->addressed_to->EditAttrs["class"] = "form-control";
+			$this->addressed_to->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->addressed_to->CurrentValue = HtmlDecode($this->addressed_to->CurrentValue);
+			$this->addressed_to->EditValue = HtmlEncode($this->addressed_to->CurrentValue);
+			$this->addressed_to->PlaceHolder = RemoveHtml($this->addressed_to->caption());
+
+			// remarks
+			$this->remarks->EditAttrs["class"] = "form-control";
+			$this->remarks->EditCustomAttributes = "";
+			$this->remarks->EditValue = HtmlEncode($this->remarks->CurrentValue);
+			$this->remarks->PlaceHolder = RemoveHtml($this->remarks->caption());
+
+			// ack_rcvd
+			$this->ack_rcvd->EditCustomAttributes = "";
+			$this->ack_rcvd->EditValue = $this->ack_rcvd->options(FALSE);
+
+			// ack_document
+			$this->ack_document->EditAttrs["class"] = "form-control";
+			$this->ack_document->EditCustomAttributes = "";
+			if (!EmptyValue($this->ack_document->Upload->DbValue)) {
+				$this->ack_document->EditValue = $this->ack_document->Upload->DbValue;
+			} else {
+				$this->ack_document->EditValue = "";
+			}
+			if (!EmptyValue($this->ack_document->CurrentValue))
+					if ($this->RowIndex == '$rowindex$')
+						$this->ack_document->Upload->FileName = "";
+					else
+						$this->ack_document->Upload->FileName = $this->ack_document->CurrentValue;
+			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
+				RenderUploadField($this->ack_document, $this->RowIndex);
+
+			// transmit_mode
+			$this->transmit_mode->EditCustomAttributes = "";
+			$curVal = trim(strval($this->transmit_mode->CurrentValue));
+			if ($curVal <> "")
+				$this->transmit_mode->ViewValue = $this->transmit_mode->lookupCacheOption($curVal);
+			else
+				$this->transmit_mode->ViewValue = $this->transmit_mode->Lookup !== NULL && is_array($this->transmit_mode->Lookup->Options) ? $curVal : NULL;
+			if ($this->transmit_mode->ViewValue !== NULL) { // Load from cache
+				$this->transmit_mode->EditValue = array_values($this->transmit_mode->Lookup->Options);
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$arwrk = explode(",", $curVal);
+					$filterWrk = "";
+					foreach ($arwrk as $wrk) {
+						if ($filterWrk <> "") $filterWrk .= " OR ";
+						$filterWrk .= "\"xmit_mode\"" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+					}
+				}
+				$sqlWrk = $this->transmit_mode->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+				if ($rswrk) $rswrk->Close();
+				$this->transmit_mode->EditValue = $arwrk;
+			}
+
+			// Edit refer script
+			// transmittal_no
+
+			$this->transmittal_no->LinkCustomAttributes = "";
+			$this->transmittal_no->HrefValue = "";
+			$this->transmittal_no->TooltipValue = "";
+
+			// project_name
+			$this->project_name->LinkCustomAttributes = "";
+			$this->project_name->HrefValue = "";
+			$this->project_name->TooltipValue = "";
+
+			// delivery_location
+			$this->delivery_location->LinkCustomAttributes = "";
+			$this->delivery_location->HrefValue = "";
+
+			// addressed_to
+			$this->addressed_to->LinkCustomAttributes = "";
+			$this->addressed_to->HrefValue = "";
+
+			// remarks
+			$this->remarks->LinkCustomAttributes = "";
+			$this->remarks->HrefValue = "";
+
+			// ack_rcvd
+			$this->ack_rcvd->LinkCustomAttributes = "";
+			$this->ack_rcvd->HrefValue = "";
+
+			// ack_document
+			$this->ack_document->LinkCustomAttributes = "";
+			if (!EmptyValue($this->ack_document->Upload->DbValue)) {
+				$this->ack_document->HrefValue = GetFileUploadUrl($this->ack_document, $this->ack_document->Upload->DbValue); // Add prefix/suffix
+				$this->ack_document->LinkAttrs["target"] = ""; // Add target
+				if ($this->isExport()) $this->ack_document->HrefValue = FullUrl($this->ack_document->HrefValue, "href");
+			} else {
+				$this->ack_document->HrefValue = "";
+			}
+			$this->ack_document->ExportHrefValue = $this->ack_document->UploadPath . $this->ack_document->Upload->DbValue;
+
+			// transmit_mode
+			$this->transmit_mode->LinkCustomAttributes = "";
+			$this->transmit_mode->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate form
+	protected function validateForm()
+	{
+		global $Language, $FormError;
+
+		// Initialize form error message
+		$FormError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->transmit_id->Required) {
+			if (!$this->transmit_id->IsDetailKey && $this->transmit_id->FormValue != NULL && $this->transmit_id->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->transmit_id->caption(), $this->transmit_id->RequiredErrorMessage));
+			}
+		}
+		if ($this->transmittal_no->Required) {
+			if (!$this->transmittal_no->IsDetailKey && $this->transmittal_no->FormValue != NULL && $this->transmittal_no->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->transmittal_no->caption(), $this->transmittal_no->RequiredErrorMessage));
+			}
+		}
+		if ($this->project_name->Required) {
+			if (!$this->project_name->IsDetailKey && $this->project_name->FormValue != NULL && $this->project_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->project_name->caption(), $this->project_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->delivery_location->Required) {
+			if (!$this->delivery_location->IsDetailKey && $this->delivery_location->FormValue != NULL && $this->delivery_location->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->delivery_location->caption(), $this->delivery_location->RequiredErrorMessage));
+			}
+		}
+		if ($this->addressed_to->Required) {
+			if (!$this->addressed_to->IsDetailKey && $this->addressed_to->FormValue != NULL && $this->addressed_to->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->addressed_to->caption(), $this->addressed_to->RequiredErrorMessage));
+			}
+		}
+		if ($this->remarks->Required) {
+			if (!$this->remarks->IsDetailKey && $this->remarks->FormValue != NULL && $this->remarks->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->remarks->caption(), $this->remarks->RequiredErrorMessage));
+			}
+		}
+		if ($this->ack_rcvd->Required) {
+			if ($this->ack_rcvd->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->ack_rcvd->caption(), $this->ack_rcvd->RequiredErrorMessage));
+			}
+		}
+		if ($this->ack_document->Required) {
+			if ($this->ack_document->Upload->FileName == "" && !$this->ack_document->Upload->KeepFile) {
+				AddMessage($FormError, str_replace("%s", $this->ack_document->caption(), $this->ack_document->RequiredErrorMessage));
+			}
+		}
+		if ($this->transmital_date->Required) {
+			if (!$this->transmital_date->IsDetailKey && $this->transmital_date->FormValue != NULL && $this->transmital_date->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->transmital_date->caption(), $this->transmital_date->RequiredErrorMessage));
+			}
+		}
+		if ($this->transmit_mode->Required) {
+			if ($this->transmit_mode->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->transmit_mode->caption(), $this->transmit_mode->RequiredErrorMessage));
+			}
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Delete records based on current filter
+	protected function deleteRows()
+	{
+		global $Language, $Security;
+		if (!$Security->canDelete()) {
+			$this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
+			return FALSE;
+		}
+		$deleteRows = TRUE;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE) {
+			return FALSE;
+		} elseif ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+			$rs->close();
+			return FALSE;
+		}
+		$rows = ($rs) ? $rs->getRows() : [];
+		if ($this->AuditTrailOnDelete)
+			$this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+
+		// Clone old rows
+		$rsold = $rows;
+		if ($rs)
+			$rs->close();
+
+		// Call row deleting event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$deleteRows = $this->Row_Deleting($row);
+				if (!$deleteRows)
+					break;
+			}
+		}
+		if ($deleteRows) {
+			$key = "";
+			foreach ($rsold as $row) {
+				$thisKey = "";
+				if ($thisKey <> "")
+					$thisKey .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+				$thisKey .= $row['transmit_id'];
+				if (DELETE_UPLOADED_FILES) // Delete old files
+					$this->deleteUploadedFiles($row);
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				$deleteRows = $this->delete($row); // Delete
+				$conn->raiseErrorFn = '';
+				if ($deleteRows === FALSE)
+					break;
+				if ($key <> "")
+					$key .= ", ";
+				$key .= $thisKey;
+			}
+		}
+		if (!$deleteRows) {
+
+			// Set up error message
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("DeleteCancelled"));
+			}
+		}
+
+		// Call Row Deleted event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$this->Row_Deleted($row);
+			}
+		}
+
+		// Write JSON for API request (Support single row only)
+		if (IsApi() && $deleteRows) {
+			$row = $this->getRecordsFromRecordset($rsold, TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $deleteRows;
+	}
+
+	// Update record based on key values
+	protected function editRow()
+	{
+		global $Security, $Language;
+		$filter = $this->getRecordFilter();
+		$filter = $this->applyUserIDFilters($filter);
+		$conn = &$this->getConnection();
+		if ($this->transmittal_no->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"transmittal_no\" = '" . AdjustSql($this->transmittal_no->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->transmittal_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->transmittal_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+			$editRow = FALSE; // Update Failed
+		} else {
+
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->loadDbValues($rsold);
+			$rsnew = [];
+
+			// delivery_location
+			$this->delivery_location->setDbValueDef($rsnew, $this->delivery_location->CurrentValue, NULL, $this->delivery_location->ReadOnly);
+
+			// addressed_to
+			$this->addressed_to->setDbValueDef($rsnew, $this->addressed_to->CurrentValue, NULL, $this->addressed_to->ReadOnly);
+
+			// remarks
+			$this->remarks->setDbValueDef($rsnew, $this->remarks->CurrentValue, NULL, $this->remarks->ReadOnly);
+
+			// ack_rcvd
+			$this->ack_rcvd->setDbValueDef($rsnew, ((strval($this->ack_rcvd->CurrentValue) == "1") ? "1" : "0"), NULL, $this->ack_rcvd->ReadOnly);
+
+			// ack_document
+			if ($this->ack_document->Visible && !$this->ack_document->ReadOnly && !$this->ack_document->Upload->KeepFile) {
+				$this->ack_document->Upload->DbValue = $rsold['ack_document']; // Get original value
+				if ($this->ack_document->Upload->FileName == "") {
+					$rsnew['ack_document'] = NULL;
+				} else {
+					$rsnew['ack_document'] = $this->ack_document->Upload->FileName;
+				}
+			}
+
+			// transmit_mode
+			$this->transmit_mode->setDbValueDef($rsnew, $this->transmit_mode->CurrentValue, NULL, $this->transmit_mode->ReadOnly);
+			if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
+				$oldFiles = EmptyValue($this->ack_document->Upload->DbValue) ? array() : array($this->ack_document->Upload->DbValue);
+				if (!EmptyValue($this->ack_document->Upload->FileName)) {
+					$newFiles = array($this->ack_document->Upload->FileName);
+					$NewFileCount = count($newFiles);
+					for ($i = 0; $i < $NewFileCount; $i++) {
+						if ($newFiles[$i] <> "") {
+							$file = $newFiles[$i];
+							if (file_exists(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file)) {
+								if (DELETE_UPLOADED_FILES) {
+									$oldFileFound = FALSE;
+									$oldFileCount = count($oldFiles);
+									for ($j = 0; $j < $oldFileCount; $j++) {
+										$oldFile = $oldFiles[$j];
+										if ($oldFile == $file) { // Old file found, no need to delete anymore
+											unset($oldFiles[$j]);
+											$oldFileFound = TRUE;
+											break;
+										}
+									}
+									if ($oldFileFound) // No need to check if file exists further
+										continue;
+								}
+								$file1 = UniqueFilename($this->ack_document->physicalUploadPath(), $file); // Get new file name
+								if ($file1 <> $file) { // Rename temp file
+									while (file_exists(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file1) || file_exists($this->ack_document->physicalUploadPath() . $file1)) // Make sure no file name clash
+										$file1 = UniqueFilename($this->ack_document->physicalUploadPath(), $file1, TRUE); // Use indexed name
+									rename(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file, UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file1);
+									$newFiles[$i] = $file1;
+								}
+							}
+						}
+					}
+					$this->ack_document->Upload->DbValue = empty($oldFiles) ? "" : implode(MULTIPLE_UPLOAD_SEPARATOR, $oldFiles);
+					$this->ack_document->Upload->FileName = implode(MULTIPLE_UPLOAD_SEPARATOR, $newFiles);
+					$this->ack_document->setDbValueDef($rsnew, $this->ack_document->Upload->FileName, NULL, $this->ack_document->ReadOnly);
+				}
+			}
+
+			// Call Row Updating event
+			$updateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($updateRow) {
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				if (count($rsnew) > 0)
+					$editRow = $this->update($rsnew, "", $rsold);
+				else
+					$editRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($editRow) {
+					if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
+						$oldFiles = EmptyValue($this->ack_document->Upload->DbValue) ? array() : array($this->ack_document->Upload->DbValue);
+						if (!EmptyValue($this->ack_document->Upload->FileName)) {
+							$newFiles = array($this->ack_document->Upload->FileName);
+							$newFiles2 = array($rsnew['ack_document']);
+							$newFileCount = count($newFiles);
+							for ($i = 0; $i < $newFileCount; $i++) {
+								if ($newFiles[$i] <> "") {
+									$file = UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $newFiles[$i];
+									if (file_exists($file)) {
+										if (@$newFiles2[$i] <> "") // Use correct file name
+											$newFiles[$i] = $newFiles2[$i];
+										if (!$this->ack_document->Upload->saveToFile($newFiles[$i], TRUE, $i)) { // Just replace
+											$this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+											return FALSE;
+										}
+									}
+								}
+							}
+						} else {
+							$newFiles = array();
+						}
+						if (DELETE_UPLOADED_FILES) {
+							foreach ($oldFiles as $oldFile) {
+								if ($oldFile <> "" && !in_array($oldFile, $newFiles))
+									@unlink($this->ack_document->oldPhysicalUploadPath() . $oldFile);
+							}
+						}
+					}
+				}
+			} else {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
+				}
+				$editRow = FALSE;
+			}
+		}
+
+		// Call Row_Updated event
+		if ($editRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->close();
+
+		// ack_document
+		if ($this->ack_document->Upload->FileToken <> "")
+			CleanUploadTempPath($this->ack_document->Upload->FileToken, $this->ack_document->Upload->Index);
+		else
+			CleanUploadTempPath($this->ack_document, $this->ack_document->Upload->Index);
+
+		// Write JSON for API request
+		if (IsApi() && $editRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $editRow;
+	}
+
+	// Load row hash
+	protected function loadRowHash()
+	{
+		$filter = $this->getRecordFilter();
+
+		// Load SQL based on filter
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rsRow = $conn->Execute($sql);
+		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
+		$rsRow->close();
+	}
+
+	// Get Row Hash
+	public function getRowHash(&$rs)
+	{
+		if (!$rs)
+			return "";
+		$hash = "";
+		$hash .= GetFieldHash($rs->fields('delivery_location')); // delivery_location
+		$hash .= GetFieldHash($rs->fields('addressed_to')); // addressed_to
+		$hash .= GetFieldHash($rs->fields('remarks')); // remarks
+		$hash .= GetFieldHash($rs->fields('ack_rcvd')); // ack_rcvd
+		$hash .= GetFieldHash($rs->fields('ack_document')); // ack_document
+		$hash .= GetFieldHash($rs->fields('transmit_mode')); // transmit_mode
+		return md5($hash);
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
+	{
+		global $Language, $Security;
+		if ($this->transmittal_no->CurrentValue <> "") { // Check field with unique index
+			$filter = "(transmittal_no = '" . AdjustSql($this->transmittal_no->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->transmittal_no->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->transmittal_no->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		$conn = &$this->getConnection();
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
+		}
+		$rsnew = [];
+
+		// transmittal_no
+		$this->transmittal_no->setDbValueDef($rsnew, $this->transmittal_no->CurrentValue, "", FALSE);
+
+		// project_name
+		$this->project_name->setDbValueDef($rsnew, $this->project_name->CurrentValue, "", FALSE);
+
+		// delivery_location
+		$this->delivery_location->setDbValueDef($rsnew, $this->delivery_location->CurrentValue, NULL, FALSE);
+
+		// addressed_to
+		$this->addressed_to->setDbValueDef($rsnew, $this->addressed_to->CurrentValue, NULL, FALSE);
+
+		// remarks
+		$this->remarks->setDbValueDef($rsnew, $this->remarks->CurrentValue, NULL, FALSE);
+
+		// ack_rcvd
+		$this->ack_rcvd->setDbValueDef($rsnew, ((strval($this->ack_rcvd->CurrentValue) == "1") ? "1" : "0"), NULL, strval($this->ack_rcvd->CurrentValue) == "");
+
+		// ack_document
+		if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
+			$this->ack_document->Upload->DbValue = ""; // No need to delete old file
+			if ($this->ack_document->Upload->FileName == "") {
+				$rsnew['ack_document'] = NULL;
+			} else {
+				$rsnew['ack_document'] = $this->ack_document->Upload->FileName;
+			}
+		}
+
+		// transmit_mode
+		$this->transmit_mode->setDbValueDef($rsnew, $this->transmit_mode->CurrentValue, NULL, FALSE);
+		if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
+			$oldFiles = EmptyValue($this->ack_document->Upload->DbValue) ? array() : array($this->ack_document->Upload->DbValue);
+			if (!EmptyValue($this->ack_document->Upload->FileName)) {
+				$newFiles = array($this->ack_document->Upload->FileName);
+				$NewFileCount = count($newFiles);
+				for ($i = 0; $i < $NewFileCount; $i++) {
+					if ($newFiles[$i] <> "") {
+						$file = $newFiles[$i];
+						if (file_exists(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file)) {
+							if (DELETE_UPLOADED_FILES) {
+								$oldFileFound = FALSE;
+								$oldFileCount = count($oldFiles);
+								for ($j = 0; $j < $oldFileCount; $j++) {
+									$oldFile = $oldFiles[$j];
+									if ($oldFile == $file) { // Old file found, no need to delete anymore
+										unset($oldFiles[$j]);
+										$oldFileFound = TRUE;
+										break;
+									}
+								}
+								if ($oldFileFound) // No need to check if file exists further
+									continue;
+							}
+							$file1 = UniqueFilename($this->ack_document->physicalUploadPath(), $file); // Get new file name
+							if ($file1 <> $file) { // Rename temp file
+								while (file_exists(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file1) || file_exists($this->ack_document->physicalUploadPath() . $file1)) // Make sure no file name clash
+									$file1 = UniqueFilename($this->ack_document->physicalUploadPath(), $file1, TRUE); // Use indexed name
+								rename(UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file, UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $file1);
+								$newFiles[$i] = $file1;
+							}
+						}
+					}
+				}
+				$this->ack_document->Upload->DbValue = empty($oldFiles) ? "" : implode(MULTIPLE_UPLOAD_SEPARATOR, $oldFiles);
+				$this->ack_document->Upload->FileName = implode(MULTIPLE_UPLOAD_SEPARATOR, $newFiles);
+				$this->ack_document->setDbValueDef($rsnew, $this->ack_document->Upload->FileName, NULL, strval($this->ack_document->CurrentValue) == "");
+			}
+		}
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
+				if ($this->ack_document->Visible && !$this->ack_document->Upload->KeepFile) {
+					$oldFiles = EmptyValue($this->ack_document->Upload->DbValue) ? array() : array($this->ack_document->Upload->DbValue);
+					if (!EmptyValue($this->ack_document->Upload->FileName)) {
+						$newFiles = array($this->ack_document->Upload->FileName);
+						$newFiles2 = array($rsnew['ack_document']);
+						$newFileCount = count($newFiles);
+						for ($i = 0; $i < $newFileCount; $i++) {
+							if ($newFiles[$i] <> "") {
+								$file = UploadTempPath($this->ack_document, $this->ack_document->Upload->Index) . $newFiles[$i];
+								if (file_exists($file)) {
+									if (@$newFiles2[$i] <> "") // Use correct file name
+										$newFiles[$i] = $newFiles2[$i];
+									if (!$this->ack_document->Upload->saveToFile($newFiles[$i], TRUE, $i)) { // Just replace
+										$this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+										return FALSE;
+									}
+								}
+							}
+						}
+					} else {
+						$newFiles = array();
+					}
+					if (DELETE_UPLOADED_FILES) {
+						foreach ($oldFiles as $oldFile) {
+							if ($oldFile <> "" && !in_array($oldFile, $newFiles))
+								@unlink($this->ack_document->oldPhysicalUploadPath() . $oldFile);
+						}
+					}
+				}
+			}
+		} else {
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
+			}
+			$addRow = FALSE;
+		}
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// ack_document
+		if ($this->ack_document->Upload->FileToken <> "")
+			CleanUploadTempPath($this->ack_document->Upload->FileToken, $this->ack_document->Upload->Index);
+		else
+			CleanUploadTempPath($this->ack_document, $this->ack_document->Upload->Index);
+
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $addRow;
 	}
 
 	// Get export HTML tag
@@ -2114,7 +3606,7 @@ class transmit_details_list extends transmit_details
 
 		// Drop down button for export
 		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
 		if ($this->ExportOptions->UseButtonGroup && IsMobile())
 			$this->ExportOptions->UseDropDownButton = TRUE;
 		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
@@ -2270,6 +3762,8 @@ class transmit_details_list extends transmit_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							break;
+						case "x_transmit_mode":
 							break;
 					}
 					$ar[strval($row[0])] = $row;
