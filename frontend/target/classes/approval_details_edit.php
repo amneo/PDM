@@ -1089,6 +1089,25 @@ class approval_details_edit extends approval_details
 		$filter = $this->getRecordFilter();
 		$filter = $this->applyUserIDFilters($filter);
 		$conn = &$this->getConnection();
+		if ($this->short_code->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"short_code\" = '" . AdjustSql($this->short_code->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->short_code->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->short_code->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
 		$this->CurrentFilter = $filter;
 		$sql = $this->getCurrentSql();
 		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];

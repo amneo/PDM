@@ -62,10 +62,9 @@ class document_type extends DbTable
 		$this->BasicSearch = new BasicSearch($this->TableVar);
 
 		// type_id
-		$this->type_id = new DbField('document_type', 'document_type', 'x_type_id', 'type_id', '"type_id"', 'CAST("type_id" AS varchar(255))', 3, -1, FALSE, '"type_id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->type_id->IsAutoIncrement = TRUE; // Autoincrement field
-		$this->type_id->IsPrimaryKey = TRUE; // Primary key field
+		$this->type_id = new DbField('document_type', 'document_type', 'x_type_id', 'type_id', '"type_id"', 'CAST("type_id" AS varchar(255))', 3, -1, FALSE, '"type_id"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->type_id->Nullable = FALSE; // NOT NULL field
+		$this->type_id->Required = TRUE; // Required field
 		$this->type_id->Sortable = FALSE; // Allow sort
 		$this->type_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['type_id'] = &$this->type_id;
@@ -367,10 +366,6 @@ class document_type extends DbTable
 		$conn = &$this->getConnection();
 		$success = $conn->execute($this->insertSql($rs));
 		if ($success) {
-
-			// Get insert id if necessary
-			$this->type_id->setDbValue($conn->getOne("SELECT currval('table_type_id_seq'::regclass)"));
-			$rs['type_id'] = $this->type_id->DbValue;
 		}
 		return $success;
 	}
@@ -410,8 +405,6 @@ class document_type extends DbTable
 		if (is_array($where))
 			$where = $this->arrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('type_id', $rs))
-				AddFilter($where, QuotedName('type_id', $this->Dbid) . '=' . QuotedValue($rs['type_id'], $this->type_id->DataType, $this->Dbid));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		AddFilter($filter, $where);
@@ -452,20 +445,13 @@ class document_type extends DbTable
 	// Record filter WHERE clause
 	protected function sqlKeyFilter()
 	{
-		return "\"type_id\" = @type_id@";
+		return "";
 	}
 
 	// Get record filter
 	public function getRecordFilter($row = NULL)
 	{
 		$keyFilter = $this->sqlKeyFilter();
-		$val = is_array($row) ? (array_key_exists('type_id', $row) ? $row['type_id'] : NULL) : $this->type_id->CurrentValue;
-		if (!is_numeric($val))
-			return "0=1"; // Invalid key
-		if ($val == NULL)
-			return "0=1"; // Invalid key
-		else
-			$keyFilter = str_replace("@type_id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
 		return $keyFilter;
 	}
 
@@ -570,7 +556,6 @@ class document_type extends DbTable
 	public function keyToJson($htmlEncode = FALSE)
 	{
 		$json = "";
-		$json .= "type_id:" . JsonEncode($this->type_id->CurrentValue, "number");
 		$json = "{" . $json . "}";
 		if ($htmlEncode)
 			$json = HtmlEncode($json);
@@ -583,11 +568,6 @@ class document_type extends DbTable
 		$url = $url . "?";
 		if ($parm <> "")
 			$url .= $parm . "&";
-		if ($this->type_id->CurrentValue != NULL) {
-			$url .= "type_id=" . urlencode($this->type_id->CurrentValue);
-		} else {
-			return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
-		}
 		return $url;
 	}
 
@@ -615,14 +595,6 @@ class document_type extends DbTable
 			$arKeys = Param("key_m");
 			$cnt = count($arKeys);
 		} else {
-			if (Param("type_id") !== NULL)
-				$arKeys[] = Param("type_id");
-			elseif (IsApi() && Key(0) !== NULL)
-				$arKeys[] = Key(0);
-			elseif (IsApi() && Route(2) !== NULL)
-				$arKeys[] = Route(2);
-			else
-				$arKeys = NULL; // Do not setup
 
 			//return $arKeys; // Do not return yet, so the values will also be checked by the following code
 		}
@@ -631,8 +603,6 @@ class document_type extends DbTable
 		$ar = array();
 		if (is_array($arKeys)) {
 			foreach ($arKeys as $key) {
-				if (!is_numeric($key))
-					continue;
 				$ar[] = $key;
 			}
 		}
@@ -646,7 +616,6 @@ class document_type extends DbTable
 		$keyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($keyFilter <> "") $keyFilter .= " OR ";
-			$this->type_id->CurrentValue = $key;
 			$keyFilter .= "(" . $this->getRecordFilter() . ")";
 		}
 		return $keyFilter;
@@ -730,7 +699,7 @@ class document_type extends DbTable
 		$this->type_id->EditAttrs["class"] = "form-control";
 		$this->type_id->EditCustomAttributes = "";
 		$this->type_id->EditValue = $this->type_id->CurrentValue;
-		$this->type_id->ViewCustomAttributes = "";
+		$this->type_id->PlaceHolder = RemoveHtml($this->type_id->caption());
 
 		// document_type
 		$this->document_type->EditAttrs["class"] = "form-control";
@@ -777,7 +746,6 @@ class document_type extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
-					$doc->exportCaption($this->type_id);
 					$doc->exportCaption($this->document_type);
 					$doc->exportCaption($this->document_category);
 				} else {
@@ -814,7 +782,6 @@ class document_type extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
-						$doc->exportField($this->type_id);
 						$doc->exportField($this->document_type);
 						$doc->exportField($this->document_category);
 					} else {

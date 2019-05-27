@@ -1069,6 +1069,17 @@ class approval_details_add extends approval_details
 	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
+		if ($this->short_code->CurrentValue <> "") { // Check field with unique index
+			$filter = "(short_code = '" . AdjustSql($this->short_code->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->short_code->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->short_code->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
 		$conn = &$this->getConnection();
 
 		// Load db values from rsold

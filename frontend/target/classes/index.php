@@ -442,8 +442,6 @@ class index
 			$this->terminate("xmit_detailslist.php");
 		if ($Security->allowList(CurrentProjectID() . 'document_log'))
 			$this->terminate("document_loglist.php");
-		if ($Security->allowList(CurrentProjectID() . 'cron_file.php'))
-			$this->terminate("./cron_file.php");
 		if ($Security->allowList(CurrentProjectID() . 'document_type'))
 			$this->terminate("document_typelist.php");
 		if ($Security->allowList(CurrentProjectID() . 'users'))

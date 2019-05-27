@@ -655,14 +655,7 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_expiry_date", {"ignoreRead
 <?php } else { ?>
 <span id="el_transaction_details_expiry_date">
 <span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
-<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
-<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></a>
-<?php } else { ?>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>">
-<?php } ?>
-<span id="tt_transaction_details_x_expiry_date" class="d-none">
-<?php echo $transaction_details->expiry_date->TooltipValue ?>
-</span></span>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></span>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_expiry_date" name="x_expiry_date" id="x_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->FormValue) ?>">
 <?php } ?>
@@ -684,14 +677,7 @@ ew.createDateTimePicker("ftransaction_detailsadd", "x_expiry_date", {"ignoreRead
 <?php } else { ?>
 <span id="el_transaction_details_expiry_date">
 <span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
-<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
-<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></a>
-<?php } else { ?>
-<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>">
-<?php } ?>
-<span id="tt_transaction_details_x_expiry_date" class="d-none">
-<?php echo $transaction_details->expiry_date->TooltipValue ?>
-</span></span>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($transaction_details->expiry_date->ViewValue) ?>"></span>
 </span>
 <input type="hidden" data-table="transaction_details" data-field="x_expiry_date" name="x_expiry_date" id="x_expiry_date" value="<?php echo HtmlEncode($transaction_details->expiry_date->FormValue) ?>">
 <?php } ?>

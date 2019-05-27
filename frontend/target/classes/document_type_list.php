@@ -594,7 +594,6 @@ class document_type_list extends document_type
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
-			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -606,8 +605,6 @@ class document_type_list extends document_type
 	 */
 	protected function hideFieldsForAddEdit()
 	{
-		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
-			$this->type_id->Visible = FALSE;
 	}
 
 	// Class variables
@@ -828,20 +825,12 @@ class document_type_list extends document_type
 				if ($this->isCancel())
 					$this->clearInlineMode();
 
-				// Switch to inline edit mode
-				if ($this->isEdit())
-					$this->inlineEditMode();
-
 				// Switch to inline add mode
 				if ($this->isAdd() || $this->isCopy())
 					$this->inlineAddMode();
 			} else {
 				if (Post("action") !== NULL) {
 					$this->CurrentAction = Post("action"); // Get action
-
-					// Inline Update
-					if (($this->isUpdate() || $this->isOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "edit")
-						$this->inlineUpdate();
 
 					// Insert Inline
 					if ($this->isInsert() && @$_SESSION[SESSION_INLINE_MODE] == "add")
@@ -1001,75 +990,9 @@ class document_type_list extends document_type
 	// Exit inline mode
 	protected function clearInlineMode()
 	{
-		$this->setKey("type_id", ""); // Clear inline edit key
 		$this->LastAction = $this->CurrentAction; // Save last action
 		$this->CurrentAction = ""; // Clear action
 		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
-	}
-
-	// Switch to Inline Edit mode
-	protected function inlineEditMode()
-	{
-		global $Security, $Language;
-		if (!$Security->canEdit())
-			return FALSE; // Edit not allowed
-		$inlineEdit = TRUE;
-		if (Get("type_id") !== NULL) {
-			$this->type_id->setQueryStringValue(Get("type_id"));
-		} else {
-			$inlineEdit = FALSE;
-		}
-		if ($inlineEdit) {
-			if ($this->loadRow()) {
-				$this->setKey("type_id", $this->type_id->CurrentValue); // Set up inline edit key
-				$_SESSION[SESSION_INLINE_MODE] = "edit"; // Enable inline edit
-			}
-		}
-		return TRUE;
-	}
-
-	// Perform update to Inline Edit record
-	protected function inlineUpdate()
-	{
-		global $Language, $CurrentForm, $FormError;
-		$CurrentForm->Index = 1;
-		$this->loadFormValues(); // Get form values
-
-		// Validate form
-		$inlineUpdate = TRUE;
-		if (!$this->validateForm()) {
-			$inlineUpdate = FALSE; // Form error, reset action
-			$this->setFailureMessage($FormError);
-		} else {
-			$inlineUpdate = FALSE;
-			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
-			if ($this->setupKeyValues($rowkey)) { // Set up key values
-				if ($this->checkInlineEditKey()) { // Check key
-					$this->SendEmail = TRUE; // Send email on update success
-					$inlineUpdate = $this->editRow(); // Update record
-				} else {
-					$inlineUpdate = FALSE;
-				}
-			}
-		}
-		if ($inlineUpdate) { // Update success
-			if ($this->getSuccessMessage() == "")
-				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up success message
-			$this->clearInlineMode(); // Clear inline edit mode
-		} else {
-			if ($this->getFailureMessage() == "")
-				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
-			$this->EventCancelled = TRUE; // Cancel event
-			$this->CurrentAction = "edit"; // Stay in edit mode
-		}
-	}
-
-	// Check Inline Edit key
-	public function checkInlineEditKey()
-	{
-		if (strval($this->getKey("type_id")) <> strval($this->type_id->CurrentValue))
-			return FALSE;
-		return TRUE;
 	}
 
 	// Switch to Inline Add mode
@@ -1078,15 +1001,7 @@ class document_type_list extends document_type
 		global $Security, $Language;
 		if (!$Security->canAdd())
 			return FALSE; // Add not allowed
-		if ($this->isCopy()) {
-			if (Get("type_id") !== NULL) {
-				$this->type_id->setQueryStringValue(Get("type_id"));
-				$this->setKey("type_id", $this->type_id->CurrentValue); // Set up key
-			} else {
-				$this->setKey("type_id", ""); // Clear key
-				$this->CurrentAction = "add";
-			}
-		}
+		$this->CurrentAction = "add";
 		$_SESSION[SESSION_INLINE_MODE] = "add"; // Enable inline add
 		return TRUE;
 	}
@@ -1150,10 +1065,7 @@ class document_type_list extends document_type
 	protected function setupKeyValues($key)
 	{
 		$arKeyFlds = explode($GLOBALS["COMPOSITE_KEY_SEPARATOR"], $key);
-		if (count($arKeyFlds) >= 1) {
-			$this->type_id->setFormValue($arKeyFlds[0]);
-			if (!is_numeric($this->type_id->FormValue))
-				return FALSE;
+		if (count($arKeyFlds) >= 0) {
 		}
 		return TRUE;
 	}
@@ -1170,7 +1082,6 @@ class document_type_list extends document_type
 		// Load server side filters
 		if (SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
 			$savedFilterList = $UserProfile->getSearchFilters(CurrentUserName(), "fdocument_typelistsrch");
-		$filterList = Concat($filterList, $this->type_id->AdvancedSearch->toJson(), ","); // Field type_id
 		$filterList = Concat($filterList, $this->document_type->AdvancedSearch->toJson(), ","); // Field document_type
 		$filterList = Concat($filterList, $this->document_category->AdvancedSearch->toJson(), ","); // Field document_category
 		if ($this->BasicSearch->Keyword <> "") {
@@ -1210,14 +1121,6 @@ class document_type_list extends document_type
 			return FALSE;
 		$filter = json_decode(Post("filter"), TRUE);
 		$this->Command = "search";
-
-		// Field type_id
-		$this->type_id->AdvancedSearch->SearchValue = @$filter["x_type_id"];
-		$this->type_id->AdvancedSearch->SearchOperator = @$filter["z_type_id"];
-		$this->type_id->AdvancedSearch->SearchCondition = @$filter["v_type_id"];
-		$this->type_id->AdvancedSearch->SearchValue2 = @$filter["y_type_id"];
-		$this->type_id->AdvancedSearch->SearchOperator2 = @$filter["w_type_id"];
-		$this->type_id->AdvancedSearch->save();
 
 		// Field document_type
 		$this->document_type->AdvancedSearch->SearchValue = @$filter["x_document_type"];
@@ -1464,28 +1367,10 @@ class document_type_list extends document_type
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = TRUE;
-
-		// "edit"
-		$item = &$this->ListOptions->add("edit");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canEdit();
-		$item->OnLeft = TRUE;
-
 		// "copy"
 		$item = &$this->ListOptions->add("copy");
 		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canAdd();
-		$item->OnLeft = TRUE;
-
-		// "delete"
-		$item = &$this->ListOptions->add("delete");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canDelete();
+		$item->Visible = $Security->canAdd() && ($this->isAdd());
 		$item->OnLeft = TRUE;
 
 		// List actions
@@ -1558,54 +1443,6 @@ class document_type_list extends document_type
 			return;
 		}
 
-		// "edit"
-		$opt = &$this->ListOptions->Items["edit"];
-		if ($this->isInlineEditRow()) { // Inline-Edit
-			$this->ListOptions->CustomItem = "edit"; // Show edit column only
-				$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
-					"<a class=\"ew-grid-link ew-inline-update\" title=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . UrlAddHash($this->pageName(), "r" . $this->RowCnt . "_" . $this->TableVar) . "');\">" . $Language->phrase("UpdateLink") . "</a>&nbsp;" .
-					"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("CancelLink") . "</a>" .
-					"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"update\"></div>";
-			$opt->Body .= "<input type=\"hidden\" name=\"k" . $this->RowIndex . "_key\" id=\"k" . $this->RowIndex . "_key\" value=\"" . HtmlEncode($this->type_id->CurrentValue) . "\">";
-			return;
-		}
-
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView()) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
-		}
-
-		// "edit"
-		$opt = &$this->ListOptions->Items["edit"];
-		$editcaption = HtmlTitle($Language->phrase("EditLink"));
-		if ($Security->canEdit()) {
-			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
-			$opt->Body .= "<a class=\"ew-row-link ew-inline-edit\" title=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" href=\"" . HtmlEncode(UrlAddHash($this->InlineEditUrl, "r" . $this->RowCnt . "_" . $this->TableVar)) . "\">" . $Language->phrase("InlineEditLink") . "</a>";
-		} else {
-			$opt->Body = "";
-		}
-
-		// "copy"
-		$opt = &$this->ListOptions->Items["copy"];
-		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
-		if ($Security->canAdd()) {
-			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
-			$opt->Body .= "<a class=\"ew-row-link ew-inline-copy\" title=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" href=\"" . HtmlEncode($this->InlineCopyUrl) . "\">" . $Language->phrase("InlineCopyLink") . "</a>";
-		} else {
-			$opt->Body = "";
-		}
-
-		// "delete"
-		$opt = &$this->ListOptions->Items["delete"];
-		if ($Security->canDelete())
-			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-		else
-			$opt->Body = "";
-
 		// Set up list action buttons
 		$opt = &$this->ListOptions->getItem("listactions");
 		if ($opt && !$this->isExport() && !$this->CurrentAction) {
@@ -1637,7 +1474,6 @@ class document_type_list extends document_type
 
 		// "checkbox"
 		$opt = &$this->ListOptions->Items["checkbox"];
-		$opt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ew-multi-select\" value=\"" . HtmlEncode($this->type_id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\">";
 		$this->renderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1931,19 +1767,12 @@ class document_type_list extends document_type
 			else
 				$this->document_category->setFormValue($val);
 		}
-
-		// Check field name 'type_id' first before field var 'x_type_id'
-		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
-		if (!$this->type_id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
-			$this->type_id->setFormValue($val);
 	}
 
 	// Restore form values
 	public function restoreFormValues()
 	{
 		global $CurrentForm;
-		if (!$this->isGridAdd() && !$this->isAdd())
-			$this->type_id->CurrentValue = $this->type_id->FormValue;
 		$this->document_type->CurrentValue = $this->document_type->FormValue;
 		$this->document_category->CurrentValue = $this->document_category->FormValue;
 	}
@@ -1993,8 +1822,6 @@ class document_type_list extends document_type
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
-			if (!$this->EventCancelled)
-				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -2031,24 +1858,7 @@ class document_type_list extends document_type
 	// Load old record
 	protected function loadOldRecord()
 	{
-
-		// Load key values from Session
-		$validKey = TRUE;
-		if (strval($this->getKey("type_id")) <> "")
-			$this->type_id->CurrentValue = $this->getKey("type_id"); // type_id
-		else
-			$validKey = FALSE;
-
-		// Load old record
-		$this->OldRecordset = NULL;
-		if ($validKey) {
-			$this->CurrentFilter = $this->getRecordFilter();
-			$sql = $this->getCurrentSql();
-			$conn = &$this->getConnection();
-			$this->OldRecordset = LoadRecordset($sql, $conn);
-		}
-		$this->loadRowValues($this->OldRecordset); // Load row values
-		return $validKey;
+		return FALSE;
 	}
 
 	// Render row values based on field settings
@@ -2118,33 +1928,6 @@ class document_type_list extends document_type
 			// document_category
 			$this->document_category->LinkCustomAttributes = "";
 			$this->document_category->HrefValue = "";
-		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
-
-			// document_type
-			$this->document_type->EditAttrs["class"] = "form-control";
-			$this->document_type->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->document_type->CurrentValue = HtmlDecode($this->document_type->CurrentValue);
-			$this->document_type->EditValue = HtmlEncode($this->document_type->CurrentValue);
-			$this->document_type->PlaceHolder = RemoveHtml($this->document_type->caption());
-
-			// document_category
-			$this->document_category->EditAttrs["class"] = "form-control";
-			$this->document_category->EditCustomAttributes = "";
-			if (REMOVE_XSS)
-				$this->document_category->CurrentValue = HtmlDecode($this->document_category->CurrentValue);
-			$this->document_category->EditValue = HtmlEncode($this->document_category->CurrentValue);
-			$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
-
-			// Edit refer script
-			// document_type
-
-			$this->document_type->LinkCustomAttributes = "";
-			$this->document_type->HrefValue = "";
-
-			// document_category
-			$this->document_category->LinkCustomAttributes = "";
-			$this->document_category->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -2191,118 +1974,6 @@ class document_type_list extends document_type
 			AddMessage($FormError, $formCustomError);
 		}
 		return $validateForm;
-	}
-
-	// Update record based on key values
-	protected function editRow()
-	{
-		global $Security, $Language;
-		$filter = $this->getRecordFilter();
-		$filter = $this->applyUserIDFilters($filter);
-		$conn = &$this->getConnection();
-		if ($this->document_type->CurrentValue <> "") { // Check field with unique index
-			$filterChk = "(\"document_type\" = '" . AdjustSql($this->document_type->CurrentValue, $this->Dbid) . "')";
-			$filterChk .= " AND NOT (" . $filter . ")";
-			$this->CurrentFilter = $filterChk;
-			$sqlChk = $this->getCurrentSql();
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			$rsChk = $conn->Execute($sqlChk);
-			$conn->raiseErrorFn = '';
-			if ($rsChk === FALSE) {
-				return FALSE;
-			} elseif (!$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->document_type->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->document_type->CurrentValue, $idxErrMsg);
-				$this->setFailureMessage($idxErrMsg);
-				$rsChk->close();
-				return FALSE;
-			}
-			$rsChk->close();
-		}
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-		$rs = $conn->execute($sql);
-		$conn->raiseErrorFn = '';
-		if ($rs === FALSE)
-			return FALSE;
-		if ($rs->EOF) {
-			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-			$editRow = FALSE; // Update Failed
-		} else {
-
-			// Save old values
-			$rsold = &$rs->fields;
-			$this->loadDbValues($rsold);
-			$rsnew = [];
-
-			// document_type
-			$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", $this->document_type->ReadOnly);
-
-			// document_category
-			$this->document_category->setDbValueDef($rsnew, $this->document_category->CurrentValue, "", $this->document_category->ReadOnly);
-
-			// Call Row Updating event
-			$updateRow = $this->Row_Updating($rsold, $rsnew);
-			if ($updateRow) {
-				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-				if (count($rsnew) > 0)
-					$editRow = $this->update($rsnew, "", $rsold);
-				else
-					$editRow = TRUE; // No field to update
-				$conn->raiseErrorFn = '';
-				if ($editRow) {
-				}
-			} else {
-				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
-
-					// Use the message, do nothing
-				} elseif ($this->CancelMessage <> "") {
-					$this->setFailureMessage($this->CancelMessage);
-					$this->CancelMessage = "";
-				} else {
-					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
-				}
-				$editRow = FALSE;
-			}
-		}
-
-		// Call Row_Updated event
-		if ($editRow)
-			$this->Row_Updated($rsold, $rsnew);
-		$rs->close();
-
-		// Write JSON for API request
-		if (IsApi() && $editRow) {
-			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
-			WriteJson(["success" => TRUE, $this->TableVar => $row]);
-		}
-		return $editRow;
-	}
-
-	// Load row hash
-	protected function loadRowHash()
-	{
-		$filter = $this->getRecordFilter();
-
-		// Load SQL based on filter
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn = &$this->getConnection();
-		$rsRow = $conn->Execute($sql);
-		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
-		$rsRow->close();
-	}
-
-	// Get Row Hash
-	public function getRowHash(&$rs)
-	{
-		if (!$rs)
-			return "";
-		$hash = "";
-		$hash .= GetFieldHash($rs->fields('document_type')); // document_type
-		$hash .= GetFieldHash($rs->fields('document_category')); // document_category
-		return md5($hash);
 	}
 
 	// Add record

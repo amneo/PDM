@@ -1227,14 +1227,7 @@ class transaction_details_edit extends transaction_details
 			// expiry_date
 			$this->expiry_date->LinkCustomAttributes = "";
 			$this->expiry_date->HrefValue = "";
-			if (!$this->isExport()) {
-				$this->expiry_date->TooltipValue = ($this->expiry_date->ViewValue <> "") ? $this->expiry_date->ViewValue : $this->expiry_date->CurrentValue;
-				if ($this->expiry_date->HrefValue == "") $this->expiry_date->HrefValue = "javascript:void(0);";
-				AppendClass($this->expiry_date->LinkAttrs["class"], "ew-tooltip-link");
-				$this->expiry_date->LinkAttrs["data-tooltip-id"] = "tt_transaction_details_x_expiry_date";
-				$this->expiry_date->LinkAttrs["data-tooltip-width"] = $this->expiry_date->TooltipWidth;
-				$this->expiry_date->LinkAttrs["data-placement"] = $GLOBALS["CSS_FLIP"] ? "left" : "right";
-			}
+			$this->expiry_date->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// firelink_doc_no

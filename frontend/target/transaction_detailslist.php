@@ -845,14 +845,7 @@ ew.createDateTimePicker("ftransaction_detailslist", "x<?php echo $transaction_de
 <?php if ($transaction_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $transaction_details_list->RowCnt ?>_transaction_details_expiry_date" class="transaction_details_expiry_date">
 <span<?php echo $transaction_details->expiry_date->viewAttributes() ?>>
-<?php if ((!EmptyString($transaction_details->expiry_date->TooltipValue)) && $transaction_details->expiry_date->linkAttributes() <> "") { ?>
-<a<?php echo $transaction_details->expiry_date->linkAttributes() ?>><?php echo $transaction_details->expiry_date->getViewValue() ?></a>
-<?php } else { ?>
-<?php echo $transaction_details->expiry_date->getViewValue() ?>
-<?php } ?>
-<span id="tt_transaction_details_x<?php echo $transaction_details_list->RowCnt ?>_expiry_date" class="d-none">
-<?php echo $transaction_details->expiry_date->TooltipValue ?>
-</span></span>
+<?php echo $transaction_details->expiry_date->getViewValue() ?></span>
 </span>
 <?php } ?>
 </td>

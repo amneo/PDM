@@ -1020,9 +1020,9 @@ WITH (oids = false);
 -- Structure for table document_type (OID = 62951) : 
 --
 CREATE TABLE public.document_type (
-    type_id integer DEFAULT nextval('table_type_id_seq'::regclass) NOT NULL,
     document_type varchar NOT NULL,
-    document_category varchar NOT NULL
+    document_category varchar NOT NULL,
+    type_id serial NOT NULL
 )
 WITH (oids = false);
 ALTER TABLE ONLY public.document_type ALTER COLUMN document_category SET STATISTICS 0;
@@ -1201,12 +1201,6 @@ ALTER TABLE ONLY document_log
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_project_name
     FOREIGN KEY (project_name) REFERENCES project_details(project_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
---
--- Definition for index table_pkey (OID = 62958) : 
---
-ALTER TABLE ONLY document_type
-    ADD CONSTRAINT table_pkey
-    PRIMARY KEY (type_id);
 --
 -- Definition for index document_type_document_type_key (OID = 63033) : 
 --

@@ -503,7 +503,6 @@ class document_type_addopt extends document_type
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
-			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -515,8 +514,6 @@ class document_type_addopt extends document_type
 	 */
 	protected function hideFieldsForAddEdit()
 	{
-		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
-			$this->type_id->Visible = FALSE;
 	}
 
 	//
@@ -588,7 +585,7 @@ class document_type_addopt extends document_type
 		// Create form object
 		$CurrentForm = new HttpForm();
 		$this->CurrentAction = Param("action"); // Set up current action
-		$this->type_id->Visible = FALSE;
+		$this->type_id->setVisibility();
 		$this->document_type->setVisibility();
 		$this->document_category->setVisibility();
 		$this->hideFieldsForAddEdit();
@@ -649,6 +646,12 @@ class document_type_addopt extends document_type
 		// Load from form
 		global $CurrentForm;
 
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+		if (!$this->type_id->IsDetailKey) {
+			$this->type_id->setFormValue(ConvertFromUtf8($val));
+		}
+
 		// Check field name 'document_type' first before field var 'x_document_type'
 		$val = $CurrentForm->hasValue("document_type") ? $CurrentForm->getValue("document_type") : $CurrentForm->getValue("x_document_type");
 		if (!$this->document_type->IsDetailKey) {
@@ -660,15 +663,13 @@ class document_type_addopt extends document_type
 		if (!$this->document_category->IsDetailKey) {
 			$this->document_category->setFormValue(ConvertFromUtf8($val));
 		}
-
-		// Check field name 'type_id' first before field var 'x_type_id'
-		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
 	}
 
 	// Restore form values
 	public function restoreFormValues()
 	{
 		global $CurrentForm;
+		$this->type_id->CurrentValue = ConvertToUtf8($this->type_id->FormValue);
 		$this->document_type->CurrentValue = ConvertToUtf8($this->document_type->FormValue);
 		$this->document_category->CurrentValue = ConvertToUtf8($this->document_category->FormValue);
 	}
@@ -741,6 +742,10 @@ class document_type_addopt extends document_type
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
+			// type_id
+			$this->type_id->ViewValue = $this->type_id->CurrentValue;
+			$this->type_id->ViewCustomAttributes = "";
+
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
 			$this->document_type->ViewCustomAttributes = "";
@@ -748,6 +753,11 @@ class document_type_addopt extends document_type
 			// document_category
 			$this->document_category->ViewValue = $this->document_category->CurrentValue;
 			$this->document_category->ViewCustomAttributes = "";
+
+			// type_id
+			$this->type_id->LinkCustomAttributes = "";
+			$this->type_id->HrefValue = "";
+			$this->type_id->TooltipValue = "";
 
 			// document_type
 			$this->document_type->LinkCustomAttributes = "";
@@ -759,6 +769,12 @@ class document_type_addopt extends document_type
 			$this->document_category->HrefValue = "";
 			$this->document_category->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// type_id
+			$this->type_id->EditAttrs["class"] = "form-control";
+			$this->type_id->EditCustomAttributes = "";
+			$this->type_id->EditValue = HtmlEncode($this->type_id->CurrentValue);
+			$this->type_id->PlaceHolder = RemoveHtml($this->type_id->caption());
 
 			// document_type
 			$this->document_type->EditAttrs["class"] = "form-control";
@@ -777,8 +793,12 @@ class document_type_addopt extends document_type
 			$this->document_category->PlaceHolder = RemoveHtml($this->document_category->caption());
 
 			// Add refer script
-			// document_type
+			// type_id
 
+			$this->type_id->LinkCustomAttributes = "";
+			$this->type_id->HrefValue = "";
+
+			// document_type
 			$this->document_type->LinkCustomAttributes = "";
 			$this->document_type->HrefValue = "";
 
@@ -809,6 +829,9 @@ class document_type_addopt extends document_type
 			if (!$this->type_id->IsDetailKey && $this->type_id->FormValue != NULL && $this->type_id->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->type_id->caption(), $this->type_id->RequiredErrorMessage));
 			}
+		}
+		if (!CheckInteger($this->type_id->FormValue)) {
+			AddMessage($FormError, $this->type_id->errorMessage());
 		}
 		if ($this->document_type->Required) {
 			if (!$this->document_type->IsDetailKey && $this->document_type->FormValue != NULL && $this->document_type->FormValue == "") {
@@ -855,6 +878,9 @@ class document_type_addopt extends document_type
 		if ($rsold) {
 		}
 		$rsnew = [];
+
+		// type_id
+		$this->type_id->setDbValueDef($rsnew, $this->type_id->CurrentValue, 0, strval($this->type_id->CurrentValue) == "");
 
 		// document_type
 		$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", FALSE);

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/5/25" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/5/27" version="15.0.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -698,10 +698,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="Project Document Management-FireLink" />
-    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal. Launch-Version-01 Beta Date:25-05-2019" />
-    <menu id="36">
-      <phrase id="menutext" value="cron" />
-    </menu>
+    <phrase id="footertext" value="Actively Maintained by Estimation &amp; Engineering Team-Vishal. Launch-Version-01 Beta 2 Date:27-05-2019" />
     <menu id="18">
       <phrase id="menutext" value="Workplace" />
     </menu>
@@ -1342,9 +1339,6 @@
         <phrase id="fldcaption" value="Log Last Updated On" />
       </field>
     </table>
-    <table id="cron_file">
-      <phrase id="tblcaption" value="cron" />
-    </table>
     <table id="document_type">
       <phrase id="tblcaption" value="Document Type" />
       <field id="type_id">
@@ -1358,7 +1352,7 @@
       </field>
     </table>
     <table id="users">
-      <phrase id="tblcaption" value="users" />
+      <phrase id="tblcaption" value="Users" />
       <field id="seqid">
         <phrase id="fldcaption" value="seqid" />
       </field>
