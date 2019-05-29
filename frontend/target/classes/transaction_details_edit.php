@@ -1076,8 +1076,8 @@ class transaction_details_edit extends transaction_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1097,6 +1097,7 @@ class transaction_details_edit extends transaction_details
 
 			// document_tittle
 			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewValue = strtoupper($this->document_tittle->ViewValue);
 			$this->document_tittle->ViewCustomAttributes = "";
 
 			// submit_no
@@ -1107,6 +1108,7 @@ class transaction_details_edit extends transaction_details
 
 			// revision_no
 			$this->revision_no->ViewValue = $this->revision_no->CurrentValue;
+			$this->revision_no->ViewValue = strtoupper($this->revision_no->ViewValue);
 			$this->revision_no->ViewCustomAttributes = "";
 
 			// transmit_no
@@ -1123,7 +1125,7 @@ class transaction_details_edit extends transaction_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1160,8 +1162,8 @@ class transaction_details_edit extends transaction_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1246,8 +1248,8 @@ class transaction_details_edit extends transaction_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1273,6 +1275,7 @@ class transaction_details_edit extends transaction_details
 			$this->revision_no->EditAttrs["class"] = "form-control";
 			$this->revision_no->EditCustomAttributes = "";
 			$this->revision_no->EditValue = $this->revision_no->CurrentValue;
+			$this->revision_no->EditValue = strtoupper($this->revision_no->EditValue);
 			$this->revision_no->ViewCustomAttributes = "";
 
 			// transmit_no
@@ -1291,7 +1294,7 @@ class transaction_details_edit extends transaction_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1595,10 +1598,20 @@ class transaction_details_edit extends transaction_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_firelink_doc_no":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_transmit_no":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 						case "x_approval_status":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

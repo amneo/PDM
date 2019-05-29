@@ -898,6 +898,7 @@ class xmit_details_edit extends xmit_details
 
 			// xmit_mode
 			$this->xmit_mode->ViewValue = $this->xmit_mode->CurrentValue;
+			$this->xmit_mode->ViewValue = strtoupper($this->xmit_mode->ViewValue);
 			$this->xmit_mode->ViewCustomAttributes = "";
 
 			// xmit_mode

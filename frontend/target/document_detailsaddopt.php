@@ -84,7 +84,7 @@ fdocument_detailsaddopt.validate = function() {
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->planned_date->caption(), $document_details->planned_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
 			elm = this.getElements("x" + infix + "_planned_date");
-			if (elm && !ew.checkDate(elm.value))
+			if (elm && !ew.checkDateDef(elm.value))
 				return this.onError(elm, "<?php echo JsEncode($document_details->planned_date->errorMessage()) ?>");
 		<?php if ($document_details_addopt->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
@@ -209,10 +209,10 @@ fdocument_detailsaddopt.createAutoSuggest({"id":"x_project_name","forceSelect":t
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_planned_date"><?php echo $document_details->planned_date->caption() ?><?php echo ($document_details->planned_date->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailsaddopt", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailsaddopt", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 <?php echo $document_details->planned_date->CustomMsg ?></div>

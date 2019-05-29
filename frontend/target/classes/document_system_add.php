@@ -896,6 +896,7 @@ class document_system_add extends document_system
 
 			// system_group
 			$this->system_group->ViewValue = $this->system_group->CurrentValue;
+			$this->system_group->ViewValue = strtoupper($this->system_group->ViewValue);
 			$this->system_group->ViewCustomAttributes = "";
 
 			// system_name

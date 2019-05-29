@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'pmM6ZETi7nUn8cQC'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'NZwwqG0th6b3HHhj'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -461,7 +461,7 @@ define(PROJECT_NAMESPACE . "AUDIT_TRAIL_PATH", ""); // Audit trail path (relativ
 define(PROJECT_NAMESPACE . "IMPORT_CSV_DELIMITER", ","); // Import to CSV delimiter
 define(PROJECT_NAMESPACE . "IMPORT_CSV_QUOTE_CHARACTER", "\""); // Import to CSV quote character
 define(PROJECT_NAMESPACE . "IMPORT_MAX_EXECUTION_TIME", 300); // Import max execution time
-define(PROJECT_NAMESPACE . "IMPORT_FILE_ALLOWED_EXT", "csv,xls,xlsx"); // Import file allowed extensions
+define(PROJECT_NAMESPACE . "IMPORT_FILE_ALLOWED_EXT", "xls,xlsx"); // Import file allowed extensions
 define(PROJECT_NAMESPACE . "IMPORT_INSERT_ONLY", TRUE); // Import by insert only
 define(PROJECT_NAMESPACE . "IMPORT_USE_TRANSACTION", TRUE); // Import use transaction
 

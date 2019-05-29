@@ -85,7 +85,7 @@ fdocument_detailsedit.validate = function() {
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->planned_date->caption(), $document_details->planned_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
 			elm = this.getElements("x" + infix + "_planned_date");
-			if (elm && !ew.checkDate(elm.value))
+			if (elm && !ew.checkDateDef(elm.value))
 				return this.onError(elm, "<?php echo JsEncode($document_details->planned_date->errorMessage()) ?>");
 		<?php if ($document_details_edit->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
@@ -409,10 +409,10 @@ fdocument_detailsedit.createAutoSuggest({"id":"x_project_name","forceSelect":tru
 		<div class="<?php echo $document_details_edit->RightColumnClass ?>"><div<?php echo $document_details->planned_date->cellAttributes() ?>>
 <?php if (!$document_details->isConfirm()) { ?>
 <span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>
@@ -431,10 +431,10 @@ ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReado
 		<td<?php echo $document_details->planned_date->cellAttributes() ?>>
 <?php if (!$document_details->isConfirm()) { ?>
 <span id="el_document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x_planned_date" id="x_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailsedit", "x_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>

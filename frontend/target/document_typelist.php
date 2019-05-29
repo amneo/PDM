@@ -56,6 +56,9 @@ fdocument_typelist.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.emptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
 		<?php if ($document_type_list->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -70,7 +73,20 @@ fdocument_typelist.validate = function() {
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
 				return false;
+		} // End Grid Add checking
 	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew.alert(ew.language.phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fdocument_typelist.emptyRow = function(infix) {
+	var fobj = this._form;
+	if (ew.valueChanged(fobj, infix, "document_type", false)) return false;
+	if (ew.valueChanged(fobj, infix, "document_category", false)) return false;
 	return true;
 }
 
@@ -327,10 +343,22 @@ if ($document_type_list->Recordset && !$document_type_list->Recordset->EOF) {
 $document_type->RowType = ROWTYPE_AGGREGATEINIT;
 $document_type->resetAttributes();
 $document_type_list->renderRow();
+if ($document_type->isGridAdd())
+	$document_type_list->RowIndex = 0;
 while ($document_type_list->RecCnt < $document_type_list->StopRec) {
 	$document_type_list->RecCnt++;
 	if ($document_type_list->RecCnt >= $document_type_list->StartRec) {
 		$document_type_list->RowCnt++;
+		if ($document_type->isGridAdd() || $document_type->isGridEdit() || $document_type->isConfirm()) {
+			$document_type_list->RowIndex++;
+			$CurrentForm->Index = $document_type_list->RowIndex;
+			if ($CurrentForm->hasValue($document_type_list->FormActionName) && $document_type_list->EventCancelled)
+				$document_type_list->RowAction = strval($CurrentForm->getValue($document_type_list->FormActionName));
+			elseif ($document_type->isGridAdd())
+				$document_type_list->RowAction = "insert";
+			else
+				$document_type_list->RowAction = "";
+		}
 
 		// Set up key count
 		$document_type_list->KeyCount = $document_type_list->RowIndex;
@@ -344,6 +372,10 @@ while ($document_type_list->RecCnt < $document_type_list->StopRec) {
 			$document_type_list->loadRowValues($document_type_list->Recordset); // Load row values
 		}
 		$document_type->RowType = ROWTYPE_VIEW; // Render view
+		if ($document_type->isGridAdd()) // Grid add
+			$document_type->RowType = ROWTYPE_ADD; // Render add
+		if ($document_type->isGridAdd() && $document_type->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) // Insert failed
+			$document_type_list->restoreCurrentRowFormValues($document_type_list->RowIndex); // Restore form values
 
 		// Set up row id / data-rowindex
 		$document_type->RowAttrs = array_merge($document_type->RowAttrs, array('data-rowindex'=>$document_type_list->RowCnt, 'id'=>'r' . $document_type_list->RowCnt . '_document_type', 'data-rowtype'=>$document_type->RowType));
@@ -353,6 +385,9 @@ while ($document_type_list->RecCnt < $document_type_list->StopRec) {
 
 		// Render list options
 		$document_type_list->renderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if ($document_type_list->RowAction <> "delete" && $document_type_list->RowAction <> "insertdelete" && !($document_type_list->RowAction == "insert" && $document_type->isConfirm() && $document_type_list->emptyRow())) {
 ?>
 	<tr<?php echo $document_type->rowAttributes() ?>>
 <?php
@@ -362,18 +397,34 @@ $document_type_list->ListOptions->render("body", "left", $document_type_list->Ro
 ?>
 	<?php if ($document_type->document_type->Visible) { // document_type ?>
 		<td data-name="document_type"<?php echo $document_type->document_type->cellAttributes() ?>>
+<?php if ($document_type->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $document_type_list->RowCnt ?>_document_type_document_type" class="form-group document_type_document_type">
+<input type="text" data-table="document_type" data-field="x_document_type" name="x<?php echo $document_type_list->RowIndex ?>_document_type" id="x<?php echo $document_type_list->RowIndex ?>_document_type" size="30" placeholder="<?php echo HtmlEncode($document_type->document_type->getPlaceHolder()) ?>" value="<?php echo $document_type->document_type->EditValue ?>"<?php echo $document_type->document_type->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_type" data-field="x_document_type" name="o<?php echo $document_type_list->RowIndex ?>_document_type" id="o<?php echo $document_type_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_type->document_type->OldValue) ?>">
+<?php } ?>
+<?php if ($document_type->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_type_list->RowCnt ?>_document_type_document_type" class="document_type_document_type">
 <span<?php echo $document_type->document_type->viewAttributes() ?>>
 <?php echo $document_type->document_type->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($document_type->document_category->Visible) { // document_category ?>
 		<td data-name="document_category"<?php echo $document_type->document_category->cellAttributes() ?>>
+<?php if ($document_type->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $document_type_list->RowCnt ?>_document_type_document_category" class="form-group document_type_document_category">
+<input type="text" data-table="document_type" data-field="x_document_category" name="x<?php echo $document_type_list->RowIndex ?>_document_category" id="x<?php echo $document_type_list->RowIndex ?>_document_category" size="30" placeholder="<?php echo HtmlEncode($document_type->document_category->getPlaceHolder()) ?>" value="<?php echo $document_type->document_category->EditValue ?>"<?php echo $document_type->document_category->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_type" data-field="x_document_category" name="o<?php echo $document_type_list->RowIndex ?>_document_category" id="o<?php echo $document_type_list->RowIndex ?>_document_category" value="<?php echo HtmlEncode($document_type->document_category->OldValue) ?>">
+<?php } ?>
+<?php if ($document_type->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_type_list->RowCnt ?>_document_type_document_category" class="document_type_document_category">
 <span<?php echo $document_type->document_category->viewAttributes() ?>>
 <?php echo $document_type->document_category->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 <?php
@@ -382,10 +433,69 @@ $document_type_list->ListOptions->render("body", "left", $document_type_list->Ro
 $document_type_list->ListOptions->render("body", "right", $document_type_list->RowCnt);
 ?>
 	</tr>
+<?php if ($document_type->RowType == ROWTYPE_ADD || $document_type->RowType == ROWTYPE_EDIT) { ?>
+<script>
+fdocument_typelist.updateLists(<?php echo $document_type_list->RowIndex ?>);
+</script>
+<?php } ?>
 <?php
 	}
+	} // End delete row checking
 	if (!$document_type->isGridAdd())
-		$document_type_list->Recordset->moveNext();
+		if (!$document_type_list->Recordset->EOF)
+			$document_type_list->Recordset->moveNext();
+}
+?>
+<?php
+	if ($document_type->isGridAdd() || $document_type->isGridEdit()) {
+		$document_type_list->RowIndex = '$rowindex$';
+		$document_type_list->loadRowValues();
+
+		// Set row properties
+		$document_type->resetAttributes();
+		$document_type->RowAttrs = array_merge($document_type->RowAttrs, array('data-rowindex'=>$document_type_list->RowIndex, 'id'=>'r0_document_type', 'data-rowtype'=>ROWTYPE_ADD));
+		AppendClass($document_type->RowAttrs["class"], "ew-template");
+		$document_type->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$document_type_list->renderRow();
+
+		// Render list options
+		$document_type_list->renderListOptions();
+		$document_type_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $document_type->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$document_type_list->ListOptions->render("body", "left", $document_type_list->RowIndex);
+?>
+	<?php if ($document_type->document_type->Visible) { // document_type ?>
+		<td data-name="document_type">
+<span id="el$rowindex$_document_type_document_type" class="form-group document_type_document_type">
+<input type="text" data-table="document_type" data-field="x_document_type" name="x<?php echo $document_type_list->RowIndex ?>_document_type" id="x<?php echo $document_type_list->RowIndex ?>_document_type" size="30" placeholder="<?php echo HtmlEncode($document_type->document_type->getPlaceHolder()) ?>" value="<?php echo $document_type->document_type->EditValue ?>"<?php echo $document_type->document_type->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_type" data-field="x_document_type" name="o<?php echo $document_type_list->RowIndex ?>_document_type" id="o<?php echo $document_type_list->RowIndex ?>_document_type" value="<?php echo HtmlEncode($document_type->document_type->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_type->document_category->Visible) { // document_category ?>
+		<td data-name="document_category">
+<span id="el$rowindex$_document_type_document_category" class="form-group document_type_document_category">
+<input type="text" data-table="document_type" data-field="x_document_category" name="x<?php echo $document_type_list->RowIndex ?>_document_category" id="x<?php echo $document_type_list->RowIndex ?>_document_category" size="30" placeholder="<?php echo HtmlEncode($document_type->document_category->getPlaceHolder()) ?>" value="<?php echo $document_type->document_category->EditValue ?>"<?php echo $document_type->document_category->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_type" data-field="x_document_category" name="o<?php echo $document_type_list->RowIndex ?>_document_category" id="o<?php echo $document_type_list->RowIndex ?>_document_category" value="<?php echo HtmlEncode($document_type->document_category->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$document_type_list->ListOptions->render("body", "right", $document_type_list->RowIndex);
+?>
+<script>
+fdocument_typelist.updateLists(<?php echo $document_type_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
 }
 ?>
 </tbody>
@@ -393,6 +503,11 @@ $document_type_list->ListOptions->render("body", "right", $document_type_list->R
 <?php } ?>
 <?php if ($document_type->isAdd() || $document_type->isCopy()) { ?>
 <input type="hidden" name="<?php echo $document_type_list->FormKeyCountName ?>" id="<?php echo $document_type_list->FormKeyCountName ?>" value="<?php echo $document_type_list->KeyCount ?>">
+<?php } ?>
+<?php if ($document_type->isGridAdd()) { ?>
+<input type="hidden" name="action" id="action" value="gridinsert">
+<input type="hidden" name="<?php echo $document_type_list->FormKeyCountName ?>" id="<?php echo $document_type_list->FormKeyCountName ?>" value="<?php echo $document_type_list->KeyCount ?>">
+<?php echo $document_type_list->MultiSelectKey ?>
 <?php } ?>
 <?php if (!$document_type->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">

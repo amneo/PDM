@@ -937,13 +937,19 @@ class document_log_list extends document_log
 
 			// Get default search criteria
 			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
+			AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(TRUE));
 
 			// Get basic search values
 			$this->loadBasicSearchValues();
 
+			// Get and validate search values for advanced search
+			$this->loadSearchValues(); // Get search values
+
 			// Process filter list
 			if ($this->processFilterList())
 				$this->terminate();
+			if (!$this->validateSearch())
+				$this->setFailureMessage($SearchError);
 
 			// Restore search parms from Session if not searching / reset / export
 			if (($this->isExport() || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->checkSearchParms())
@@ -958,6 +964,10 @@ class document_log_list extends document_log
 			// Get basic search criteria
 			if ($SearchError == "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Get search criteria for advanced search
+			if ($SearchError == "")
+				$srchAdvanced = $this->advancedSearchWhere();
 		}
 
 		// Restore display records
@@ -978,6 +988,11 @@ class document_log_list extends document_log
 			$this->BasicSearch->loadDefault();
 			if ($this->BasicSearch->Keyword != "")
 				$srchBasic = $this->basicSearchWhere();
+
+			// Load advanced search from default
+			if ($this->loadAdvancedSearchDefault()) {
+				$srchAdvanced = $this->advancedSearchWhere();
+			}
 		}
 
 		// Build search criteria
@@ -1121,79 +1136,6 @@ class document_log_list extends document_log
 		$filterList = Concat($filterList, $this->project_name->AdvancedSearch->toJson(), ","); // Field project_name
 		$filterList = Concat($filterList, $this->document_tittle->AdvancedSearch->toJson(), ","); // Field document_tittle
 		$filterList = Concat($filterList, $this->current_status->AdvancedSearch->toJson(), ","); // Field current_status
-		$filterList = Concat($filterList, $this->submit_no_1->AdvancedSearch->toJson(), ","); // Field submit_no_1
-		$filterList = Concat($filterList, $this->revision_no_1->AdvancedSearch->toJson(), ","); // Field revision_no_1
-		$filterList = Concat($filterList, $this->direction_1->AdvancedSearch->toJson(), ","); // Field direction_1
-		$filterList = Concat($filterList, $this->transmit_no_1->AdvancedSearch->toJson(), ","); // Field transmit_no_1
-		$filterList = Concat($filterList, $this->approval_status_1->AdvancedSearch->toJson(), ","); // Field approval_status_1
-		$filterList = Concat($filterList, $this->submit_no_2->AdvancedSearch->toJson(), ","); // Field submit_no_2
-		$filterList = Concat($filterList, $this->revision_no_2->AdvancedSearch->toJson(), ","); // Field revision_no_2
-		$filterList = Concat($filterList, $this->direction_2->AdvancedSearch->toJson(), ","); // Field direction_2
-		$filterList = Concat($filterList, $this->planned_date_2->AdvancedSearch->toJson(), ","); // Field planned_date_2
-		$filterList = Concat($filterList, $this->transmit_date_2->AdvancedSearch->toJson(), ","); // Field transmit_date_2
-		$filterList = Concat($filterList, $this->transmit_no_2->AdvancedSearch->toJson(), ","); // Field transmit_no_2
-		$filterList = Concat($filterList, $this->approval_status_2->AdvancedSearch->toJson(), ","); // Field approval_status_2
-		$filterList = Concat($filterList, $this->submit_no_3->AdvancedSearch->toJson(), ","); // Field submit_no_3
-		$filterList = Concat($filterList, $this->revision_no_3->AdvancedSearch->toJson(), ","); // Field revision_no_3
-		$filterList = Concat($filterList, $this->direction_3->AdvancedSearch->toJson(), ","); // Field direction_3
-		$filterList = Concat($filterList, $this->transmit_no_3->AdvancedSearch->toJson(), ","); // Field transmit_no_3
-		$filterList = Concat($filterList, $this->approval_status_3->AdvancedSearch->toJson(), ","); // Field approval_status_3
-		$filterList = Concat($filterList, $this->submit_no_4->AdvancedSearch->toJson(), ","); // Field submit_no_4
-		$filterList = Concat($filterList, $this->revision_no_4->AdvancedSearch->toJson(), ","); // Field revision_no_4
-		$filterList = Concat($filterList, $this->direction_4->AdvancedSearch->toJson(), ","); // Field direction_4
-		$filterList = Concat($filterList, $this->planned_date_4->AdvancedSearch->toJson(), ","); // Field planned_date_4
-		$filterList = Concat($filterList, $this->transmit_date_4->AdvancedSearch->toJson(), ","); // Field transmit_date_4
-		$filterList = Concat($filterList, $this->transmit_no_4->AdvancedSearch->toJson(), ","); // Field transmit_no_4
-		$filterList = Concat($filterList, $this->approval_status_4->AdvancedSearch->toJson(), ","); // Field approval_status_4
-		$filterList = Concat($filterList, $this->direction_file_4->AdvancedSearch->toJson(), ","); // Field direction_file_4
-		$filterList = Concat($filterList, $this->submit_no_5->AdvancedSearch->toJson(), ","); // Field submit_no_5
-		$filterList = Concat($filterList, $this->revision_no_5->AdvancedSearch->toJson(), ","); // Field revision_no_5
-		$filterList = Concat($filterList, $this->direction_5->AdvancedSearch->toJson(), ","); // Field direction_5
-		$filterList = Concat($filterList, $this->planned_date_5->AdvancedSearch->toJson(), ","); // Field planned_date_5
-		$filterList = Concat($filterList, $this->transmit_date_5->AdvancedSearch->toJson(), ","); // Field transmit_date_5
-		$filterList = Concat($filterList, $this->transmit_no_5->AdvancedSearch->toJson(), ","); // Field transmit_no_5
-		$filterList = Concat($filterList, $this->approval_status_5->AdvancedSearch->toJson(), ","); // Field approval_status_5
-		$filterList = Concat($filterList, $this->direction_file_5->AdvancedSearch->toJson(), ","); // Field direction_file_5
-		$filterList = Concat($filterList, $this->submit_no_6->AdvancedSearch->toJson(), ","); // Field submit_no_6
-		$filterList = Concat($filterList, $this->revision_no_6->AdvancedSearch->toJson(), ","); // Field revision_no_6
-		$filterList = Concat($filterList, $this->direction_6->AdvancedSearch->toJson(), ","); // Field direction_6
-		$filterList = Concat($filterList, $this->planned_date_6->AdvancedSearch->toJson(), ","); // Field planned_date_6
-		$filterList = Concat($filterList, $this->transmit_date_6->AdvancedSearch->toJson(), ","); // Field transmit_date_6
-		$filterList = Concat($filterList, $this->transmit_no_6->AdvancedSearch->toJson(), ","); // Field transmit_no_6
-		$filterList = Concat($filterList, $this->approval_status_6->AdvancedSearch->toJson(), ","); // Field approval_status_6
-		$filterList = Concat($filterList, $this->direction_file_6->AdvancedSearch->toJson(), ","); // Field direction_file_6
-		$filterList = Concat($filterList, $this->submit_no_7->AdvancedSearch->toJson(), ","); // Field submit_no_7
-		$filterList = Concat($filterList, $this->revision_no_7->AdvancedSearch->toJson(), ","); // Field revision_no_7
-		$filterList = Concat($filterList, $this->direction_7->AdvancedSearch->toJson(), ","); // Field direction_7
-		$filterList = Concat($filterList, $this->planned_date_7->AdvancedSearch->toJson(), ","); // Field planned_date_7
-		$filterList = Concat($filterList, $this->transmit_date_7->AdvancedSearch->toJson(), ","); // Field transmit_date_7
-		$filterList = Concat($filterList, $this->transmit_no_7->AdvancedSearch->toJson(), ","); // Field transmit_no_7
-		$filterList = Concat($filterList, $this->approval_status_7->AdvancedSearch->toJson(), ","); // Field approval_status_7
-		$filterList = Concat($filterList, $this->direction_file_7->AdvancedSearch->toJson(), ","); // Field direction_file_7
-		$filterList = Concat($filterList, $this->submit_no_8->AdvancedSearch->toJson(), ","); // Field submit_no_8
-		$filterList = Concat($filterList, $this->revision_no_8->AdvancedSearch->toJson(), ","); // Field revision_no_8
-		$filterList = Concat($filterList, $this->direction_8->AdvancedSearch->toJson(), ","); // Field direction_8
-		$filterList = Concat($filterList, $this->planned_date_8->AdvancedSearch->toJson(), ","); // Field planned_date_8
-		$filterList = Concat($filterList, $this->transmit_date_8->AdvancedSearch->toJson(), ","); // Field transmit_date_8
-		$filterList = Concat($filterList, $this->transmit_no_8->AdvancedSearch->toJson(), ","); // Field transmit_no_8
-		$filterList = Concat($filterList, $this->approval_status_8->AdvancedSearch->toJson(), ","); // Field approval_status_8
-		$filterList = Concat($filterList, $this->direction_file_8->AdvancedSearch->toJson(), ","); // Field direction_file_8
-		$filterList = Concat($filterList, $this->submit_no_9->AdvancedSearch->toJson(), ","); // Field submit_no_9
-		$filterList = Concat($filterList, $this->revision_no_9->AdvancedSearch->toJson(), ","); // Field revision_no_9
-		$filterList = Concat($filterList, $this->direction_9->AdvancedSearch->toJson(), ","); // Field direction_9
-		$filterList = Concat($filterList, $this->planned_date_9->AdvancedSearch->toJson(), ","); // Field planned_date_9
-		$filterList = Concat($filterList, $this->transmit_date_9->AdvancedSearch->toJson(), ","); // Field transmit_date_9
-		$filterList = Concat($filterList, $this->transmit_no_9->AdvancedSearch->toJson(), ","); // Field transmit_no_9
-		$filterList = Concat($filterList, $this->approval_status_9->AdvancedSearch->toJson(), ","); // Field approval_status_9
-		$filterList = Concat($filterList, $this->submit_no_10->AdvancedSearch->toJson(), ","); // Field submit_no_10
-		$filterList = Concat($filterList, $this->revision_no_10->AdvancedSearch->toJson(), ","); // Field revision_no_10
-		$filterList = Concat($filterList, $this->direction_10->AdvancedSearch->toJson(), ","); // Field direction_10
-		$filterList = Concat($filterList, $this->planned_date_10->AdvancedSearch->toJson(), ","); // Field planned_date_10
-		$filterList = Concat($filterList, $this->transmit_date_10->AdvancedSearch->toJson(), ","); // Field transmit_date_10
-		$filterList = Concat($filterList, $this->transmit_no_10->AdvancedSearch->toJson(), ","); // Field transmit_no_10
-		$filterList = Concat($filterList, $this->approval_status_10->AdvancedSearch->toJson(), ","); // Field approval_status_10
-		$filterList = Concat($filterList, $this->direction_file_10->AdvancedSearch->toJson(), ","); // Field direction_file_10
-		$filterList = Concat($filterList, $this->log_updatedon->AdvancedSearch->toJson(), ","); // Field log_updatedon
 		if ($this->BasicSearch->Keyword <> "") {
 			$wrk = "\"" . TABLE_BASIC_SEARCH . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . TABLE_BASIC_SEARCH_TYPE . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1279,592 +1221,89 @@ class document_log_list extends document_log
 		$this->current_status->AdvancedSearch->SearchValue2 = @$filter["y_current_status"];
 		$this->current_status->AdvancedSearch->SearchOperator2 = @$filter["w_current_status"];
 		$this->current_status->AdvancedSearch->save();
-
-		// Field submit_no_1
-		$this->submit_no_1->AdvancedSearch->SearchValue = @$filter["x_submit_no_1"];
-		$this->submit_no_1->AdvancedSearch->SearchOperator = @$filter["z_submit_no_1"];
-		$this->submit_no_1->AdvancedSearch->SearchCondition = @$filter["v_submit_no_1"];
-		$this->submit_no_1->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_1"];
-		$this->submit_no_1->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_1"];
-		$this->submit_no_1->AdvancedSearch->save();
-
-		// Field revision_no_1
-		$this->revision_no_1->AdvancedSearch->SearchValue = @$filter["x_revision_no_1"];
-		$this->revision_no_1->AdvancedSearch->SearchOperator = @$filter["z_revision_no_1"];
-		$this->revision_no_1->AdvancedSearch->SearchCondition = @$filter["v_revision_no_1"];
-		$this->revision_no_1->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_1"];
-		$this->revision_no_1->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_1"];
-		$this->revision_no_1->AdvancedSearch->save();
-
-		// Field direction_1
-		$this->direction_1->AdvancedSearch->SearchValue = @$filter["x_direction_1"];
-		$this->direction_1->AdvancedSearch->SearchOperator = @$filter["z_direction_1"];
-		$this->direction_1->AdvancedSearch->SearchCondition = @$filter["v_direction_1"];
-		$this->direction_1->AdvancedSearch->SearchValue2 = @$filter["y_direction_1"];
-		$this->direction_1->AdvancedSearch->SearchOperator2 = @$filter["w_direction_1"];
-		$this->direction_1->AdvancedSearch->save();
-
-		// Field transmit_no_1
-		$this->transmit_no_1->AdvancedSearch->SearchValue = @$filter["x_transmit_no_1"];
-		$this->transmit_no_1->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_1"];
-		$this->transmit_no_1->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_1"];
-		$this->transmit_no_1->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_1"];
-		$this->transmit_no_1->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_1"];
-		$this->transmit_no_1->AdvancedSearch->save();
-
-		// Field approval_status_1
-		$this->approval_status_1->AdvancedSearch->SearchValue = @$filter["x_approval_status_1"];
-		$this->approval_status_1->AdvancedSearch->SearchOperator = @$filter["z_approval_status_1"];
-		$this->approval_status_1->AdvancedSearch->SearchCondition = @$filter["v_approval_status_1"];
-		$this->approval_status_1->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_1"];
-		$this->approval_status_1->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_1"];
-		$this->approval_status_1->AdvancedSearch->save();
-
-		// Field submit_no_2
-		$this->submit_no_2->AdvancedSearch->SearchValue = @$filter["x_submit_no_2"];
-		$this->submit_no_2->AdvancedSearch->SearchOperator = @$filter["z_submit_no_2"];
-		$this->submit_no_2->AdvancedSearch->SearchCondition = @$filter["v_submit_no_2"];
-		$this->submit_no_2->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_2"];
-		$this->submit_no_2->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_2"];
-		$this->submit_no_2->AdvancedSearch->save();
-
-		// Field revision_no_2
-		$this->revision_no_2->AdvancedSearch->SearchValue = @$filter["x_revision_no_2"];
-		$this->revision_no_2->AdvancedSearch->SearchOperator = @$filter["z_revision_no_2"];
-		$this->revision_no_2->AdvancedSearch->SearchCondition = @$filter["v_revision_no_2"];
-		$this->revision_no_2->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_2"];
-		$this->revision_no_2->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_2"];
-		$this->revision_no_2->AdvancedSearch->save();
-
-		// Field direction_2
-		$this->direction_2->AdvancedSearch->SearchValue = @$filter["x_direction_2"];
-		$this->direction_2->AdvancedSearch->SearchOperator = @$filter["z_direction_2"];
-		$this->direction_2->AdvancedSearch->SearchCondition = @$filter["v_direction_2"];
-		$this->direction_2->AdvancedSearch->SearchValue2 = @$filter["y_direction_2"];
-		$this->direction_2->AdvancedSearch->SearchOperator2 = @$filter["w_direction_2"];
-		$this->direction_2->AdvancedSearch->save();
-
-		// Field planned_date_2
-		$this->planned_date_2->AdvancedSearch->SearchValue = @$filter["x_planned_date_2"];
-		$this->planned_date_2->AdvancedSearch->SearchOperator = @$filter["z_planned_date_2"];
-		$this->planned_date_2->AdvancedSearch->SearchCondition = @$filter["v_planned_date_2"];
-		$this->planned_date_2->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_2"];
-		$this->planned_date_2->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_2"];
-		$this->planned_date_2->AdvancedSearch->save();
-
-		// Field transmit_date_2
-		$this->transmit_date_2->AdvancedSearch->SearchValue = @$filter["x_transmit_date_2"];
-		$this->transmit_date_2->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_2"];
-		$this->transmit_date_2->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_2"];
-		$this->transmit_date_2->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_2"];
-		$this->transmit_date_2->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_2"];
-		$this->transmit_date_2->AdvancedSearch->save();
-
-		// Field transmit_no_2
-		$this->transmit_no_2->AdvancedSearch->SearchValue = @$filter["x_transmit_no_2"];
-		$this->transmit_no_2->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_2"];
-		$this->transmit_no_2->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_2"];
-		$this->transmit_no_2->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_2"];
-		$this->transmit_no_2->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_2"];
-		$this->transmit_no_2->AdvancedSearch->save();
-
-		// Field approval_status_2
-		$this->approval_status_2->AdvancedSearch->SearchValue = @$filter["x_approval_status_2"];
-		$this->approval_status_2->AdvancedSearch->SearchOperator = @$filter["z_approval_status_2"];
-		$this->approval_status_2->AdvancedSearch->SearchCondition = @$filter["v_approval_status_2"];
-		$this->approval_status_2->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_2"];
-		$this->approval_status_2->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_2"];
-		$this->approval_status_2->AdvancedSearch->save();
-
-		// Field submit_no_3
-		$this->submit_no_3->AdvancedSearch->SearchValue = @$filter["x_submit_no_3"];
-		$this->submit_no_3->AdvancedSearch->SearchOperator = @$filter["z_submit_no_3"];
-		$this->submit_no_3->AdvancedSearch->SearchCondition = @$filter["v_submit_no_3"];
-		$this->submit_no_3->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_3"];
-		$this->submit_no_3->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_3"];
-		$this->submit_no_3->AdvancedSearch->save();
-
-		// Field revision_no_3
-		$this->revision_no_3->AdvancedSearch->SearchValue = @$filter["x_revision_no_3"];
-		$this->revision_no_3->AdvancedSearch->SearchOperator = @$filter["z_revision_no_3"];
-		$this->revision_no_3->AdvancedSearch->SearchCondition = @$filter["v_revision_no_3"];
-		$this->revision_no_3->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_3"];
-		$this->revision_no_3->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_3"];
-		$this->revision_no_3->AdvancedSearch->save();
-
-		// Field direction_3
-		$this->direction_3->AdvancedSearch->SearchValue = @$filter["x_direction_3"];
-		$this->direction_3->AdvancedSearch->SearchOperator = @$filter["z_direction_3"];
-		$this->direction_3->AdvancedSearch->SearchCondition = @$filter["v_direction_3"];
-		$this->direction_3->AdvancedSearch->SearchValue2 = @$filter["y_direction_3"];
-		$this->direction_3->AdvancedSearch->SearchOperator2 = @$filter["w_direction_3"];
-		$this->direction_3->AdvancedSearch->save();
-
-		// Field transmit_no_3
-		$this->transmit_no_3->AdvancedSearch->SearchValue = @$filter["x_transmit_no_3"];
-		$this->transmit_no_3->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_3"];
-		$this->transmit_no_3->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_3"];
-		$this->transmit_no_3->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_3"];
-		$this->transmit_no_3->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_3"];
-		$this->transmit_no_3->AdvancedSearch->save();
-
-		// Field approval_status_3
-		$this->approval_status_3->AdvancedSearch->SearchValue = @$filter["x_approval_status_3"];
-		$this->approval_status_3->AdvancedSearch->SearchOperator = @$filter["z_approval_status_3"];
-		$this->approval_status_3->AdvancedSearch->SearchCondition = @$filter["v_approval_status_3"];
-		$this->approval_status_3->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_3"];
-		$this->approval_status_3->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_3"];
-		$this->approval_status_3->AdvancedSearch->save();
-
-		// Field submit_no_4
-		$this->submit_no_4->AdvancedSearch->SearchValue = @$filter["x_submit_no_4"];
-		$this->submit_no_4->AdvancedSearch->SearchOperator = @$filter["z_submit_no_4"];
-		$this->submit_no_4->AdvancedSearch->SearchCondition = @$filter["v_submit_no_4"];
-		$this->submit_no_4->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_4"];
-		$this->submit_no_4->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_4"];
-		$this->submit_no_4->AdvancedSearch->save();
-
-		// Field revision_no_4
-		$this->revision_no_4->AdvancedSearch->SearchValue = @$filter["x_revision_no_4"];
-		$this->revision_no_4->AdvancedSearch->SearchOperator = @$filter["z_revision_no_4"];
-		$this->revision_no_4->AdvancedSearch->SearchCondition = @$filter["v_revision_no_4"];
-		$this->revision_no_4->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_4"];
-		$this->revision_no_4->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_4"];
-		$this->revision_no_4->AdvancedSearch->save();
-
-		// Field direction_4
-		$this->direction_4->AdvancedSearch->SearchValue = @$filter["x_direction_4"];
-		$this->direction_4->AdvancedSearch->SearchOperator = @$filter["z_direction_4"];
-		$this->direction_4->AdvancedSearch->SearchCondition = @$filter["v_direction_4"];
-		$this->direction_4->AdvancedSearch->SearchValue2 = @$filter["y_direction_4"];
-		$this->direction_4->AdvancedSearch->SearchOperator2 = @$filter["w_direction_4"];
-		$this->direction_4->AdvancedSearch->save();
-
-		// Field planned_date_4
-		$this->planned_date_4->AdvancedSearch->SearchValue = @$filter["x_planned_date_4"];
-		$this->planned_date_4->AdvancedSearch->SearchOperator = @$filter["z_planned_date_4"];
-		$this->planned_date_4->AdvancedSearch->SearchCondition = @$filter["v_planned_date_4"];
-		$this->planned_date_4->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_4"];
-		$this->planned_date_4->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_4"];
-		$this->planned_date_4->AdvancedSearch->save();
-
-		// Field transmit_date_4
-		$this->transmit_date_4->AdvancedSearch->SearchValue = @$filter["x_transmit_date_4"];
-		$this->transmit_date_4->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_4"];
-		$this->transmit_date_4->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_4"];
-		$this->transmit_date_4->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_4"];
-		$this->transmit_date_4->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_4"];
-		$this->transmit_date_4->AdvancedSearch->save();
-
-		// Field transmit_no_4
-		$this->transmit_no_4->AdvancedSearch->SearchValue = @$filter["x_transmit_no_4"];
-		$this->transmit_no_4->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_4"];
-		$this->transmit_no_4->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_4"];
-		$this->transmit_no_4->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_4"];
-		$this->transmit_no_4->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_4"];
-		$this->transmit_no_4->AdvancedSearch->save();
-
-		// Field approval_status_4
-		$this->approval_status_4->AdvancedSearch->SearchValue = @$filter["x_approval_status_4"];
-		$this->approval_status_4->AdvancedSearch->SearchOperator = @$filter["z_approval_status_4"];
-		$this->approval_status_4->AdvancedSearch->SearchCondition = @$filter["v_approval_status_4"];
-		$this->approval_status_4->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_4"];
-		$this->approval_status_4->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_4"];
-		$this->approval_status_4->AdvancedSearch->save();
-
-		// Field direction_file_4
-		$this->direction_file_4->AdvancedSearch->SearchValue = @$filter["x_direction_file_4"];
-		$this->direction_file_4->AdvancedSearch->SearchOperator = @$filter["z_direction_file_4"];
-		$this->direction_file_4->AdvancedSearch->SearchCondition = @$filter["v_direction_file_4"];
-		$this->direction_file_4->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_4"];
-		$this->direction_file_4->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_4"];
-		$this->direction_file_4->AdvancedSearch->save();
-
-		// Field submit_no_5
-		$this->submit_no_5->AdvancedSearch->SearchValue = @$filter["x_submit_no_5"];
-		$this->submit_no_5->AdvancedSearch->SearchOperator = @$filter["z_submit_no_5"];
-		$this->submit_no_5->AdvancedSearch->SearchCondition = @$filter["v_submit_no_5"];
-		$this->submit_no_5->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_5"];
-		$this->submit_no_5->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_5"];
-		$this->submit_no_5->AdvancedSearch->save();
-
-		// Field revision_no_5
-		$this->revision_no_5->AdvancedSearch->SearchValue = @$filter["x_revision_no_5"];
-		$this->revision_no_5->AdvancedSearch->SearchOperator = @$filter["z_revision_no_5"];
-		$this->revision_no_5->AdvancedSearch->SearchCondition = @$filter["v_revision_no_5"];
-		$this->revision_no_5->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_5"];
-		$this->revision_no_5->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_5"];
-		$this->revision_no_5->AdvancedSearch->save();
-
-		// Field direction_5
-		$this->direction_5->AdvancedSearch->SearchValue = @$filter["x_direction_5"];
-		$this->direction_5->AdvancedSearch->SearchOperator = @$filter["z_direction_5"];
-		$this->direction_5->AdvancedSearch->SearchCondition = @$filter["v_direction_5"];
-		$this->direction_5->AdvancedSearch->SearchValue2 = @$filter["y_direction_5"];
-		$this->direction_5->AdvancedSearch->SearchOperator2 = @$filter["w_direction_5"];
-		$this->direction_5->AdvancedSearch->save();
-
-		// Field planned_date_5
-		$this->planned_date_5->AdvancedSearch->SearchValue = @$filter["x_planned_date_5"];
-		$this->planned_date_5->AdvancedSearch->SearchOperator = @$filter["z_planned_date_5"];
-		$this->planned_date_5->AdvancedSearch->SearchCondition = @$filter["v_planned_date_5"];
-		$this->planned_date_5->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_5"];
-		$this->planned_date_5->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_5"];
-		$this->planned_date_5->AdvancedSearch->save();
-
-		// Field transmit_date_5
-		$this->transmit_date_5->AdvancedSearch->SearchValue = @$filter["x_transmit_date_5"];
-		$this->transmit_date_5->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_5"];
-		$this->transmit_date_5->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_5"];
-		$this->transmit_date_5->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_5"];
-		$this->transmit_date_5->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_5"];
-		$this->transmit_date_5->AdvancedSearch->save();
-
-		// Field transmit_no_5
-		$this->transmit_no_5->AdvancedSearch->SearchValue = @$filter["x_transmit_no_5"];
-		$this->transmit_no_5->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_5"];
-		$this->transmit_no_5->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_5"];
-		$this->transmit_no_5->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_5"];
-		$this->transmit_no_5->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_5"];
-		$this->transmit_no_5->AdvancedSearch->save();
-
-		// Field approval_status_5
-		$this->approval_status_5->AdvancedSearch->SearchValue = @$filter["x_approval_status_5"];
-		$this->approval_status_5->AdvancedSearch->SearchOperator = @$filter["z_approval_status_5"];
-		$this->approval_status_5->AdvancedSearch->SearchCondition = @$filter["v_approval_status_5"];
-		$this->approval_status_5->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_5"];
-		$this->approval_status_5->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_5"];
-		$this->approval_status_5->AdvancedSearch->save();
-
-		// Field direction_file_5
-		$this->direction_file_5->AdvancedSearch->SearchValue = @$filter["x_direction_file_5"];
-		$this->direction_file_5->AdvancedSearch->SearchOperator = @$filter["z_direction_file_5"];
-		$this->direction_file_5->AdvancedSearch->SearchCondition = @$filter["v_direction_file_5"];
-		$this->direction_file_5->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_5"];
-		$this->direction_file_5->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_5"];
-		$this->direction_file_5->AdvancedSearch->save();
-
-		// Field submit_no_6
-		$this->submit_no_6->AdvancedSearch->SearchValue = @$filter["x_submit_no_6"];
-		$this->submit_no_6->AdvancedSearch->SearchOperator = @$filter["z_submit_no_6"];
-		$this->submit_no_6->AdvancedSearch->SearchCondition = @$filter["v_submit_no_6"];
-		$this->submit_no_6->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_6"];
-		$this->submit_no_6->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_6"];
-		$this->submit_no_6->AdvancedSearch->save();
-
-		// Field revision_no_6
-		$this->revision_no_6->AdvancedSearch->SearchValue = @$filter["x_revision_no_6"];
-		$this->revision_no_6->AdvancedSearch->SearchOperator = @$filter["z_revision_no_6"];
-		$this->revision_no_6->AdvancedSearch->SearchCondition = @$filter["v_revision_no_6"];
-		$this->revision_no_6->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_6"];
-		$this->revision_no_6->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_6"];
-		$this->revision_no_6->AdvancedSearch->save();
-
-		// Field direction_6
-		$this->direction_6->AdvancedSearch->SearchValue = @$filter["x_direction_6"];
-		$this->direction_6->AdvancedSearch->SearchOperator = @$filter["z_direction_6"];
-		$this->direction_6->AdvancedSearch->SearchCondition = @$filter["v_direction_6"];
-		$this->direction_6->AdvancedSearch->SearchValue2 = @$filter["y_direction_6"];
-		$this->direction_6->AdvancedSearch->SearchOperator2 = @$filter["w_direction_6"];
-		$this->direction_6->AdvancedSearch->save();
-
-		// Field planned_date_6
-		$this->planned_date_6->AdvancedSearch->SearchValue = @$filter["x_planned_date_6"];
-		$this->planned_date_6->AdvancedSearch->SearchOperator = @$filter["z_planned_date_6"];
-		$this->planned_date_6->AdvancedSearch->SearchCondition = @$filter["v_planned_date_6"];
-		$this->planned_date_6->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_6"];
-		$this->planned_date_6->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_6"];
-		$this->planned_date_6->AdvancedSearch->save();
-
-		// Field transmit_date_6
-		$this->transmit_date_6->AdvancedSearch->SearchValue = @$filter["x_transmit_date_6"];
-		$this->transmit_date_6->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_6"];
-		$this->transmit_date_6->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_6"];
-		$this->transmit_date_6->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_6"];
-		$this->transmit_date_6->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_6"];
-		$this->transmit_date_6->AdvancedSearch->save();
-
-		// Field transmit_no_6
-		$this->transmit_no_6->AdvancedSearch->SearchValue = @$filter["x_transmit_no_6"];
-		$this->transmit_no_6->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_6"];
-		$this->transmit_no_6->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_6"];
-		$this->transmit_no_6->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_6"];
-		$this->transmit_no_6->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_6"];
-		$this->transmit_no_6->AdvancedSearch->save();
-
-		// Field approval_status_6
-		$this->approval_status_6->AdvancedSearch->SearchValue = @$filter["x_approval_status_6"];
-		$this->approval_status_6->AdvancedSearch->SearchOperator = @$filter["z_approval_status_6"];
-		$this->approval_status_6->AdvancedSearch->SearchCondition = @$filter["v_approval_status_6"];
-		$this->approval_status_6->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_6"];
-		$this->approval_status_6->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_6"];
-		$this->approval_status_6->AdvancedSearch->save();
-
-		// Field direction_file_6
-		$this->direction_file_6->AdvancedSearch->SearchValue = @$filter["x_direction_file_6"];
-		$this->direction_file_6->AdvancedSearch->SearchOperator = @$filter["z_direction_file_6"];
-		$this->direction_file_6->AdvancedSearch->SearchCondition = @$filter["v_direction_file_6"];
-		$this->direction_file_6->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_6"];
-		$this->direction_file_6->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_6"];
-		$this->direction_file_6->AdvancedSearch->save();
-
-		// Field submit_no_7
-		$this->submit_no_7->AdvancedSearch->SearchValue = @$filter["x_submit_no_7"];
-		$this->submit_no_7->AdvancedSearch->SearchOperator = @$filter["z_submit_no_7"];
-		$this->submit_no_7->AdvancedSearch->SearchCondition = @$filter["v_submit_no_7"];
-		$this->submit_no_7->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_7"];
-		$this->submit_no_7->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_7"];
-		$this->submit_no_7->AdvancedSearch->save();
-
-		// Field revision_no_7
-		$this->revision_no_7->AdvancedSearch->SearchValue = @$filter["x_revision_no_7"];
-		$this->revision_no_7->AdvancedSearch->SearchOperator = @$filter["z_revision_no_7"];
-		$this->revision_no_7->AdvancedSearch->SearchCondition = @$filter["v_revision_no_7"];
-		$this->revision_no_7->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_7"];
-		$this->revision_no_7->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_7"];
-		$this->revision_no_7->AdvancedSearch->save();
-
-		// Field direction_7
-		$this->direction_7->AdvancedSearch->SearchValue = @$filter["x_direction_7"];
-		$this->direction_7->AdvancedSearch->SearchOperator = @$filter["z_direction_7"];
-		$this->direction_7->AdvancedSearch->SearchCondition = @$filter["v_direction_7"];
-		$this->direction_7->AdvancedSearch->SearchValue2 = @$filter["y_direction_7"];
-		$this->direction_7->AdvancedSearch->SearchOperator2 = @$filter["w_direction_7"];
-		$this->direction_7->AdvancedSearch->save();
-
-		// Field planned_date_7
-		$this->planned_date_7->AdvancedSearch->SearchValue = @$filter["x_planned_date_7"];
-		$this->planned_date_7->AdvancedSearch->SearchOperator = @$filter["z_planned_date_7"];
-		$this->planned_date_7->AdvancedSearch->SearchCondition = @$filter["v_planned_date_7"];
-		$this->planned_date_7->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_7"];
-		$this->planned_date_7->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_7"];
-		$this->planned_date_7->AdvancedSearch->save();
-
-		// Field transmit_date_7
-		$this->transmit_date_7->AdvancedSearch->SearchValue = @$filter["x_transmit_date_7"];
-		$this->transmit_date_7->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_7"];
-		$this->transmit_date_7->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_7"];
-		$this->transmit_date_7->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_7"];
-		$this->transmit_date_7->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_7"];
-		$this->transmit_date_7->AdvancedSearch->save();
-
-		// Field transmit_no_7
-		$this->transmit_no_7->AdvancedSearch->SearchValue = @$filter["x_transmit_no_7"];
-		$this->transmit_no_7->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_7"];
-		$this->transmit_no_7->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_7"];
-		$this->transmit_no_7->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_7"];
-		$this->transmit_no_7->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_7"];
-		$this->transmit_no_7->AdvancedSearch->save();
-
-		// Field approval_status_7
-		$this->approval_status_7->AdvancedSearch->SearchValue = @$filter["x_approval_status_7"];
-		$this->approval_status_7->AdvancedSearch->SearchOperator = @$filter["z_approval_status_7"];
-		$this->approval_status_7->AdvancedSearch->SearchCondition = @$filter["v_approval_status_7"];
-		$this->approval_status_7->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_7"];
-		$this->approval_status_7->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_7"];
-		$this->approval_status_7->AdvancedSearch->save();
-
-		// Field direction_file_7
-		$this->direction_file_7->AdvancedSearch->SearchValue = @$filter["x_direction_file_7"];
-		$this->direction_file_7->AdvancedSearch->SearchOperator = @$filter["z_direction_file_7"];
-		$this->direction_file_7->AdvancedSearch->SearchCondition = @$filter["v_direction_file_7"];
-		$this->direction_file_7->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_7"];
-		$this->direction_file_7->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_7"];
-		$this->direction_file_7->AdvancedSearch->save();
-
-		// Field submit_no_8
-		$this->submit_no_8->AdvancedSearch->SearchValue = @$filter["x_submit_no_8"];
-		$this->submit_no_8->AdvancedSearch->SearchOperator = @$filter["z_submit_no_8"];
-		$this->submit_no_8->AdvancedSearch->SearchCondition = @$filter["v_submit_no_8"];
-		$this->submit_no_8->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_8"];
-		$this->submit_no_8->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_8"];
-		$this->submit_no_8->AdvancedSearch->save();
-
-		// Field revision_no_8
-		$this->revision_no_8->AdvancedSearch->SearchValue = @$filter["x_revision_no_8"];
-		$this->revision_no_8->AdvancedSearch->SearchOperator = @$filter["z_revision_no_8"];
-		$this->revision_no_8->AdvancedSearch->SearchCondition = @$filter["v_revision_no_8"];
-		$this->revision_no_8->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_8"];
-		$this->revision_no_8->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_8"];
-		$this->revision_no_8->AdvancedSearch->save();
-
-		// Field direction_8
-		$this->direction_8->AdvancedSearch->SearchValue = @$filter["x_direction_8"];
-		$this->direction_8->AdvancedSearch->SearchOperator = @$filter["z_direction_8"];
-		$this->direction_8->AdvancedSearch->SearchCondition = @$filter["v_direction_8"];
-		$this->direction_8->AdvancedSearch->SearchValue2 = @$filter["y_direction_8"];
-		$this->direction_8->AdvancedSearch->SearchOperator2 = @$filter["w_direction_8"];
-		$this->direction_8->AdvancedSearch->save();
-
-		// Field planned_date_8
-		$this->planned_date_8->AdvancedSearch->SearchValue = @$filter["x_planned_date_8"];
-		$this->planned_date_8->AdvancedSearch->SearchOperator = @$filter["z_planned_date_8"];
-		$this->planned_date_8->AdvancedSearch->SearchCondition = @$filter["v_planned_date_8"];
-		$this->planned_date_8->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_8"];
-		$this->planned_date_8->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_8"];
-		$this->planned_date_8->AdvancedSearch->save();
-
-		// Field transmit_date_8
-		$this->transmit_date_8->AdvancedSearch->SearchValue = @$filter["x_transmit_date_8"];
-		$this->transmit_date_8->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_8"];
-		$this->transmit_date_8->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_8"];
-		$this->transmit_date_8->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_8"];
-		$this->transmit_date_8->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_8"];
-		$this->transmit_date_8->AdvancedSearch->save();
-
-		// Field transmit_no_8
-		$this->transmit_no_8->AdvancedSearch->SearchValue = @$filter["x_transmit_no_8"];
-		$this->transmit_no_8->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_8"];
-		$this->transmit_no_8->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_8"];
-		$this->transmit_no_8->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_8"];
-		$this->transmit_no_8->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_8"];
-		$this->transmit_no_8->AdvancedSearch->save();
-
-		// Field approval_status_8
-		$this->approval_status_8->AdvancedSearch->SearchValue = @$filter["x_approval_status_8"];
-		$this->approval_status_8->AdvancedSearch->SearchOperator = @$filter["z_approval_status_8"];
-		$this->approval_status_8->AdvancedSearch->SearchCondition = @$filter["v_approval_status_8"];
-		$this->approval_status_8->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_8"];
-		$this->approval_status_8->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_8"];
-		$this->approval_status_8->AdvancedSearch->save();
-
-		// Field direction_file_8
-		$this->direction_file_8->AdvancedSearch->SearchValue = @$filter["x_direction_file_8"];
-		$this->direction_file_8->AdvancedSearch->SearchOperator = @$filter["z_direction_file_8"];
-		$this->direction_file_8->AdvancedSearch->SearchCondition = @$filter["v_direction_file_8"];
-		$this->direction_file_8->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_8"];
-		$this->direction_file_8->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_8"];
-		$this->direction_file_8->AdvancedSearch->save();
-
-		// Field submit_no_9
-		$this->submit_no_9->AdvancedSearch->SearchValue = @$filter["x_submit_no_9"];
-		$this->submit_no_9->AdvancedSearch->SearchOperator = @$filter["z_submit_no_9"];
-		$this->submit_no_9->AdvancedSearch->SearchCondition = @$filter["v_submit_no_9"];
-		$this->submit_no_9->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_9"];
-		$this->submit_no_9->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_9"];
-		$this->submit_no_9->AdvancedSearch->save();
-
-		// Field revision_no_9
-		$this->revision_no_9->AdvancedSearch->SearchValue = @$filter["x_revision_no_9"];
-		$this->revision_no_9->AdvancedSearch->SearchOperator = @$filter["z_revision_no_9"];
-		$this->revision_no_9->AdvancedSearch->SearchCondition = @$filter["v_revision_no_9"];
-		$this->revision_no_9->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_9"];
-		$this->revision_no_9->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_9"];
-		$this->revision_no_9->AdvancedSearch->save();
-
-		// Field direction_9
-		$this->direction_9->AdvancedSearch->SearchValue = @$filter["x_direction_9"];
-		$this->direction_9->AdvancedSearch->SearchOperator = @$filter["z_direction_9"];
-		$this->direction_9->AdvancedSearch->SearchCondition = @$filter["v_direction_9"];
-		$this->direction_9->AdvancedSearch->SearchValue2 = @$filter["y_direction_9"];
-		$this->direction_9->AdvancedSearch->SearchOperator2 = @$filter["w_direction_9"];
-		$this->direction_9->AdvancedSearch->save();
-
-		// Field planned_date_9
-		$this->planned_date_9->AdvancedSearch->SearchValue = @$filter["x_planned_date_9"];
-		$this->planned_date_9->AdvancedSearch->SearchOperator = @$filter["z_planned_date_9"];
-		$this->planned_date_9->AdvancedSearch->SearchCondition = @$filter["v_planned_date_9"];
-		$this->planned_date_9->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_9"];
-		$this->planned_date_9->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_9"];
-		$this->planned_date_9->AdvancedSearch->save();
-
-		// Field transmit_date_9
-		$this->transmit_date_9->AdvancedSearch->SearchValue = @$filter["x_transmit_date_9"];
-		$this->transmit_date_9->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_9"];
-		$this->transmit_date_9->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_9"];
-		$this->transmit_date_9->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_9"];
-		$this->transmit_date_9->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_9"];
-		$this->transmit_date_9->AdvancedSearch->save();
-
-		// Field transmit_no_9
-		$this->transmit_no_9->AdvancedSearch->SearchValue = @$filter["x_transmit_no_9"];
-		$this->transmit_no_9->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_9"];
-		$this->transmit_no_9->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_9"];
-		$this->transmit_no_9->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_9"];
-		$this->transmit_no_9->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_9"];
-		$this->transmit_no_9->AdvancedSearch->save();
-
-		// Field approval_status_9
-		$this->approval_status_9->AdvancedSearch->SearchValue = @$filter["x_approval_status_9"];
-		$this->approval_status_9->AdvancedSearch->SearchOperator = @$filter["z_approval_status_9"];
-		$this->approval_status_9->AdvancedSearch->SearchCondition = @$filter["v_approval_status_9"];
-		$this->approval_status_9->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_9"];
-		$this->approval_status_9->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_9"];
-		$this->approval_status_9->AdvancedSearch->save();
-
-		// Field submit_no_10
-		$this->submit_no_10->AdvancedSearch->SearchValue = @$filter["x_submit_no_10"];
-		$this->submit_no_10->AdvancedSearch->SearchOperator = @$filter["z_submit_no_10"];
-		$this->submit_no_10->AdvancedSearch->SearchCondition = @$filter["v_submit_no_10"];
-		$this->submit_no_10->AdvancedSearch->SearchValue2 = @$filter["y_submit_no_10"];
-		$this->submit_no_10->AdvancedSearch->SearchOperator2 = @$filter["w_submit_no_10"];
-		$this->submit_no_10->AdvancedSearch->save();
-
-		// Field revision_no_10
-		$this->revision_no_10->AdvancedSearch->SearchValue = @$filter["x_revision_no_10"];
-		$this->revision_no_10->AdvancedSearch->SearchOperator = @$filter["z_revision_no_10"];
-		$this->revision_no_10->AdvancedSearch->SearchCondition = @$filter["v_revision_no_10"];
-		$this->revision_no_10->AdvancedSearch->SearchValue2 = @$filter["y_revision_no_10"];
-		$this->revision_no_10->AdvancedSearch->SearchOperator2 = @$filter["w_revision_no_10"];
-		$this->revision_no_10->AdvancedSearch->save();
-
-		// Field direction_10
-		$this->direction_10->AdvancedSearch->SearchValue = @$filter["x_direction_10"];
-		$this->direction_10->AdvancedSearch->SearchOperator = @$filter["z_direction_10"];
-		$this->direction_10->AdvancedSearch->SearchCondition = @$filter["v_direction_10"];
-		$this->direction_10->AdvancedSearch->SearchValue2 = @$filter["y_direction_10"];
-		$this->direction_10->AdvancedSearch->SearchOperator2 = @$filter["w_direction_10"];
-		$this->direction_10->AdvancedSearch->save();
-
-		// Field planned_date_10
-		$this->planned_date_10->AdvancedSearch->SearchValue = @$filter["x_planned_date_10"];
-		$this->planned_date_10->AdvancedSearch->SearchOperator = @$filter["z_planned_date_10"];
-		$this->planned_date_10->AdvancedSearch->SearchCondition = @$filter["v_planned_date_10"];
-		$this->planned_date_10->AdvancedSearch->SearchValue2 = @$filter["y_planned_date_10"];
-		$this->planned_date_10->AdvancedSearch->SearchOperator2 = @$filter["w_planned_date_10"];
-		$this->planned_date_10->AdvancedSearch->save();
-
-		// Field transmit_date_10
-		$this->transmit_date_10->AdvancedSearch->SearchValue = @$filter["x_transmit_date_10"];
-		$this->transmit_date_10->AdvancedSearch->SearchOperator = @$filter["z_transmit_date_10"];
-		$this->transmit_date_10->AdvancedSearch->SearchCondition = @$filter["v_transmit_date_10"];
-		$this->transmit_date_10->AdvancedSearch->SearchValue2 = @$filter["y_transmit_date_10"];
-		$this->transmit_date_10->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_date_10"];
-		$this->transmit_date_10->AdvancedSearch->save();
-
-		// Field transmit_no_10
-		$this->transmit_no_10->AdvancedSearch->SearchValue = @$filter["x_transmit_no_10"];
-		$this->transmit_no_10->AdvancedSearch->SearchOperator = @$filter["z_transmit_no_10"];
-		$this->transmit_no_10->AdvancedSearch->SearchCondition = @$filter["v_transmit_no_10"];
-		$this->transmit_no_10->AdvancedSearch->SearchValue2 = @$filter["y_transmit_no_10"];
-		$this->transmit_no_10->AdvancedSearch->SearchOperator2 = @$filter["w_transmit_no_10"];
-		$this->transmit_no_10->AdvancedSearch->save();
-
-		// Field approval_status_10
-		$this->approval_status_10->AdvancedSearch->SearchValue = @$filter["x_approval_status_10"];
-		$this->approval_status_10->AdvancedSearch->SearchOperator = @$filter["z_approval_status_10"];
-		$this->approval_status_10->AdvancedSearch->SearchCondition = @$filter["v_approval_status_10"];
-		$this->approval_status_10->AdvancedSearch->SearchValue2 = @$filter["y_approval_status_10"];
-		$this->approval_status_10->AdvancedSearch->SearchOperator2 = @$filter["w_approval_status_10"];
-		$this->approval_status_10->AdvancedSearch->save();
-
-		// Field direction_file_10
-		$this->direction_file_10->AdvancedSearch->SearchValue = @$filter["x_direction_file_10"];
-		$this->direction_file_10->AdvancedSearch->SearchOperator = @$filter["z_direction_file_10"];
-		$this->direction_file_10->AdvancedSearch->SearchCondition = @$filter["v_direction_file_10"];
-		$this->direction_file_10->AdvancedSearch->SearchValue2 = @$filter["y_direction_file_10"];
-		$this->direction_file_10->AdvancedSearch->SearchOperator2 = @$filter["w_direction_file_10"];
-		$this->direction_file_10->AdvancedSearch->save();
-
-		// Field log_updatedon
-		$this->log_updatedon->AdvancedSearch->SearchValue = @$filter["x_log_updatedon"];
-		$this->log_updatedon->AdvancedSearch->SearchOperator = @$filter["z_log_updatedon"];
-		$this->log_updatedon->AdvancedSearch->SearchCondition = @$filter["v_log_updatedon"];
-		$this->log_updatedon->AdvancedSearch->SearchValue2 = @$filter["y_log_updatedon"];
-		$this->log_updatedon->AdvancedSearch->SearchOperator2 = @$filter["w_log_updatedon"];
-		$this->log_updatedon->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[TABLE_BASIC_SEARCH_TYPE]);
+	}
+
+	// Advanced search WHERE clause based on QueryString
+	protected function advancedSearchWhere($default = FALSE)
+	{
+		global $Security;
+		$where = "";
+		if (!$Security->canSearch())
+			return "";
+		$this->buildSearchSql($where, $this->firelink_doc_no, $default, FALSE); // firelink_doc_no
+		$this->buildSearchSql($where, $this->client_doc_no, $default, FALSE); // client_doc_no
+		$this->buildSearchSql($where, $this->order_number, $default, FALSE); // order_number
+		$this->buildSearchSql($where, $this->project_name, $default, FALSE); // project_name
+		$this->buildSearchSql($where, $this->document_tittle, $default, FALSE); // document_tittle
+		$this->buildSearchSql($where, $this->current_status, $default, FALSE); // current_status
+
+		// Set up search parm
+		if (!$default && $where <> "" && in_array($this->Command, array("", "reset", "resetall"))) {
+			$this->Command = "search";
+		}
+		if (!$default && $this->Command == "search") {
+			$this->firelink_doc_no->AdvancedSearch->save(); // firelink_doc_no
+			$this->client_doc_no->AdvancedSearch->save(); // client_doc_no
+			$this->order_number->AdvancedSearch->save(); // order_number
+			$this->project_name->AdvancedSearch->save(); // project_name
+			$this->document_tittle->AdvancedSearch->save(); // document_tittle
+			$this->current_status->AdvancedSearch->save(); // current_status
+		}
+		return $where;
+	}
+
+	// Build search SQL
+	protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
+	{
+		$fldParm = $fld->Param;
+		$fldVal = ($default) ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+		$fldOpr = ($default) ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+		$fldCond = ($default) ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+		$fldVal2 = ($default) ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+		$fldOpr2 = ($default) ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+		$wrk = "";
+		if (is_array($fldVal))
+			$fldVal = implode(",", $fldVal);
+		if (is_array($fldVal2))
+			$fldVal2 = implode(",", $fldVal2);
+		$fldOpr = strtoupper(trim($fldOpr));
+		if ($fldOpr == "")
+			$fldOpr = "=";
+		$fldOpr2 = strtoupper(trim($fldOpr2));
+		if ($fldOpr2 == "")
+			$fldOpr2 = "=";
+		if (SEARCH_MULTI_VALUE_OPTION == 1)
+			$multiValue = FALSE;
+		if ($multiValue) {
+			$wrk1 = ($fldVal <> "") ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+			$wrk2 = ($fldVal2 <> "") ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+			$wrk = $wrk1; // Build final SQL
+			if ($wrk2 <> "")
+				$wrk = ($wrk <> "") ? "($wrk) $fldCond ($wrk2)" : $wrk2;
+		} else {
+			$fldVal = $this->convertSearchValue($fld, $fldVal);
+			$fldVal2 = $this->convertSearchValue($fld, $fldVal2);
+			$wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+		}
+		AddFilter($where, $wrk);
+	}
+
+	// Convert search value
+	protected function convertSearchValue(&$fld, $fldVal)
+	{
+		if ($fldVal == NULL_VALUE || $fldVal == NOT_NULL_VALUE)
+			return $fldVal;
+		$value = $fldVal;
+		if ($fld->DataType == DATATYPE_BOOLEAN) {
+			if ($fldVal <> "")
+				$value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
+		} elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
+			if ($fldVal <> "")
+				$value = UnFormatDateTime($fldVal, $fld->DateTimeFormat);
+		}
+		return $value;
 	}
 
 	// Return basic search SQL
@@ -2033,6 +1472,18 @@ class document_log_list extends document_log
 		// Check basic search
 		if ($this->BasicSearch->issetSession())
 			return TRUE;
+		if ($this->firelink_doc_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->client_doc_no->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->order_number->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->project_name->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->document_tittle->AdvancedSearch->issetSession())
+			return TRUE;
+		if ($this->current_status->AdvancedSearch->issetSession())
+			return TRUE;
 		return FALSE;
 	}
 
@@ -2046,6 +1497,9 @@ class document_log_list extends document_log
 
 		// Clear basic search parameters
 		$this->resetBasicSearchParms();
+
+		// Clear advanced search parameters
+		$this->resetAdvancedSearchParms();
 	}
 
 	// Load advanced search default values
@@ -2060,6 +1514,17 @@ class document_log_list extends document_log
 		$this->BasicSearch->unsetSession();
 	}
 
+	// Clear all advanced search parameters
+	protected function resetAdvancedSearchParms()
+	{
+		$this->firelink_doc_no->AdvancedSearch->unsetSession();
+		$this->client_doc_no->AdvancedSearch->unsetSession();
+		$this->order_number->AdvancedSearch->unsetSession();
+		$this->project_name->AdvancedSearch->unsetSession();
+		$this->document_tittle->AdvancedSearch->unsetSession();
+		$this->current_status->AdvancedSearch->unsetSession();
+	}
+
 	// Restore all search parameters
 	protected function restoreSearchParms()
 	{
@@ -2067,6 +1532,14 @@ class document_log_list extends document_log
 
 		// Restore basic search values
 		$this->BasicSearch->load();
+
+		// Restore advanced search values
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->client_doc_no->AdvancedSearch->load();
+		$this->order_number->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
+		$this->current_status->AdvancedSearch->load();
 	}
 
 	// Set up sort parameters
@@ -2169,6 +1642,7 @@ class document_log_list extends document_log
 			if ($this->getSqlOrderBy() <> "") {
 				$orderBy = $this->getSqlOrderBy();
 				$this->setSessionOrderBy($orderBy);
+				$this->firelink_doc_no->setSort("DESC");
 			}
 		}
 	}
@@ -2546,6 +2020,16 @@ class document_log_list extends document_log
 		$item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $this->pageUrl() . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
 		$item->Visible = ($this->SearchWhere <> $this->DefaultSearchWhere && $this->SearchWhere <> "0=101");
 
+		// Advanced search button
+		$item = &$this->SearchOptions->add("advancedsearch");
+		$item->Body = "<a class=\"btn btn-default ew-advanced-aearch\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"document_logsrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
+		$item->Visible = TRUE;
+
+		// Search highlight button
+		$item = &$this->SearchOptions->add("searchhighlight");
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ew-highlight active\" title=\"" . $Language->phrase("Highlight") . "\" data-caption=\"" . $Language->phrase("Highlight") . "\" data-toggle=\"button\" data-form=\"fdocument_loglistsrch\" data-name=\"" . $this->highlightName() . "\">" . $Language->phrase("HighlightBtn") . "</button>";
+		$item->Visible = ($this->SearchWhere <> "" && $this->TotalRecs > 0);
+
 		// Button group for search
 		$this->SearchOptions->UseDropDownButton = FALSE;
 		$this->SearchOptions->UseButtonGroup = TRUE;
@@ -2618,6 +2102,56 @@ class document_log_list extends document_log
 		if ($this->BasicSearch->Keyword <> "" && $this->Command == "")
 			$this->Command = "search";
 		$this->BasicSearch->setType(Get(TABLE_BASIC_SEARCH_TYPE, ""), FALSE);
+	}
+
+	// Load search values for validation
+	protected function loadSearchValues()
+	{
+		global $CurrentForm;
+
+		// Load search values
+		// firelink_doc_no
+
+		if (!$this->isAddOrEdit())
+			$this->firelink_doc_no->AdvancedSearch->setSearchValue(Get("x_firelink_doc_no", Get("firelink_doc_no", "")));
+		if ($this->firelink_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->firelink_doc_no->AdvancedSearch->setSearchOperator(Get("z_firelink_doc_no", ""));
+
+		// client_doc_no
+		if (!$this->isAddOrEdit())
+			$this->client_doc_no->AdvancedSearch->setSearchValue(Get("x_client_doc_no", Get("client_doc_no", "")));
+		if ($this->client_doc_no->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->client_doc_no->AdvancedSearch->setSearchOperator(Get("z_client_doc_no", ""));
+
+		// order_number
+		if (!$this->isAddOrEdit())
+			$this->order_number->AdvancedSearch->setSearchValue(Get("x_order_number", Get("order_number", "")));
+		if ($this->order_number->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->order_number->AdvancedSearch->setSearchOperator(Get("z_order_number", ""));
+
+		// project_name
+		if (!$this->isAddOrEdit())
+			$this->project_name->AdvancedSearch->setSearchValue(Get("x_project_name", Get("project_name", "")));
+		if ($this->project_name->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->project_name->AdvancedSearch->setSearchOperator(Get("z_project_name", ""));
+
+		// document_tittle
+		if (!$this->isAddOrEdit())
+			$this->document_tittle->AdvancedSearch->setSearchValue(Get("x_document_tittle", Get("document_tittle", "")));
+		if ($this->document_tittle->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->document_tittle->AdvancedSearch->setSearchOperator(Get("z_document_tittle", ""));
+
+		// current_status
+		if (!$this->isAddOrEdit())
+			$this->current_status->AdvancedSearch->setSearchValue(Get("x_current_status", Get("current_status", "")));
+		if ($this->current_status->AdvancedSearch->SearchValue <> "" && $this->Command == "")
+			$this->Command = "search";
+		$this->current_status->AdvancedSearch->setSearchOperator(Get("z_current_status", ""));
 	}
 
 	// Load recordset
@@ -3113,8 +2647,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_1->ViewValue = $this->approval_status_1->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3163,8 +2697,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_2->ViewValue = $this->approval_status_2->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3213,8 +2747,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_3->ViewValue = $this->approval_status_3->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3263,8 +2797,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_4->ViewValue = $this->approval_status_4->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3313,8 +2847,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_5->ViewValue = $this->approval_status_5->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3363,8 +2897,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_6->ViewValue = $this->approval_status_6->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3413,8 +2947,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_7->ViewValue = $this->approval_status_7->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3463,8 +2997,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_8->ViewValue = $this->approval_status_8->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3513,8 +3047,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_9->ViewValue = $this->approval_status_9->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3564,8 +3098,8 @@ class document_log_list extends document_log
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$this->approval_status_10->ViewValue = $this->approval_status_10->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -3586,26 +3120,36 @@ class document_log_list extends document_log
 			$this->firelink_doc_no->LinkCustomAttributes = "";
 			$this->firelink_doc_no->HrefValue = "";
 			$this->firelink_doc_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->firelink_doc_no->ViewValue = $this->highlightValue($this->firelink_doc_no);
 
 			// client_doc_no
 			$this->client_doc_no->LinkCustomAttributes = "";
 			$this->client_doc_no->HrefValue = "";
 			$this->client_doc_no->TooltipValue = "";
+			if (!$this->isExport())
+				$this->client_doc_no->ViewValue = $this->highlightValue($this->client_doc_no);
 
 			// order_number
 			$this->order_number->LinkCustomAttributes = "";
 			$this->order_number->HrefValue = "";
 			$this->order_number->TooltipValue = "";
+			if (!$this->isExport())
+				$this->order_number->ViewValue = $this->highlightValue($this->order_number);
 
 			// project_name
 			$this->project_name->LinkCustomAttributes = "";
 			$this->project_name->HrefValue = "";
 			$this->project_name->TooltipValue = "";
+			if (!$this->isExport())
+				$this->project_name->ViewValue = $this->highlightValue($this->project_name);
 
 			// document_tittle
 			$this->document_tittle->LinkCustomAttributes = "";
 			$this->document_tittle->HrefValue = "";
 			$this->document_tittle->TooltipValue = "";
+			if (!$this->isExport())
+				$this->document_tittle->ViewValue = $this->highlightValue($this->document_tittle);
 
 			// current_status
 			$this->current_status->LinkCustomAttributes = "";
@@ -3617,6 +3161,8 @@ class document_log_list extends document_log
 				$this->current_status->HrefValue = "";
 			}
 			$this->current_status->TooltipValue = "";
+			if (!$this->isExport())
+				$this->current_status->ViewValue = $this->highlightValue($this->current_status);
 
 			// submit_no_1
 			$this->submit_no_1->LinkCustomAttributes = "";
@@ -3627,11 +3173,15 @@ class document_log_list extends document_log
 			$this->revision_no_1->LinkCustomAttributes = "";
 			$this->revision_no_1->HrefValue = "";
 			$this->revision_no_1->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_1->ViewValue = $this->highlightValue($this->revision_no_1);
 
 			// direction_1
 			$this->direction_1->LinkCustomAttributes = "";
 			$this->direction_1->HrefValue = "";
 			$this->direction_1->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_1->ViewValue = $this->highlightValue($this->direction_1);
 
 			// planned_date_1
 			$this->planned_date_1->LinkCustomAttributes = "";
@@ -3647,6 +3197,8 @@ class document_log_list extends document_log
 			$this->transmit_no_1->LinkCustomAttributes = "";
 			$this->transmit_no_1->HrefValue = "";
 			$this->transmit_no_1->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_1->ViewValue = $this->highlightValue($this->transmit_no_1);
 
 			// approval_status_1
 			$this->approval_status_1->LinkCustomAttributes = "";
@@ -3658,6 +3210,8 @@ class document_log_list extends document_log
 				$this->approval_status_1->HrefValue = "";
 			}
 			$this->approval_status_1->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_1->ViewValue = $this->highlightValue($this->approval_status_1);
 
 			// submit_no_2
 			$this->submit_no_2->LinkCustomAttributes = "";
@@ -3668,11 +3222,15 @@ class document_log_list extends document_log
 			$this->revision_no_2->LinkCustomAttributes = "";
 			$this->revision_no_2->HrefValue = "";
 			$this->revision_no_2->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_2->ViewValue = $this->highlightValue($this->revision_no_2);
 
 			// direction_2
 			$this->direction_2->LinkCustomAttributes = "";
 			$this->direction_2->HrefValue = "";
 			$this->direction_2->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_2->ViewValue = $this->highlightValue($this->direction_2);
 
 			// planned_date_2
 			$this->planned_date_2->LinkCustomAttributes = "";
@@ -3688,6 +3246,8 @@ class document_log_list extends document_log
 			$this->transmit_no_2->LinkCustomAttributes = "";
 			$this->transmit_no_2->HrefValue = "";
 			$this->transmit_no_2->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_2->ViewValue = $this->highlightValue($this->transmit_no_2);
 
 			// approval_status_2
 			$this->approval_status_2->LinkCustomAttributes = "";
@@ -3699,6 +3259,8 @@ class document_log_list extends document_log
 				$this->approval_status_2->HrefValue = "";
 			}
 			$this->approval_status_2->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_2->ViewValue = $this->highlightValue($this->approval_status_2);
 
 			// submit_no_3
 			$this->submit_no_3->LinkCustomAttributes = "";
@@ -3709,11 +3271,15 @@ class document_log_list extends document_log
 			$this->revision_no_3->LinkCustomAttributes = "";
 			$this->revision_no_3->HrefValue = "";
 			$this->revision_no_3->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_3->ViewValue = $this->highlightValue($this->revision_no_3);
 
 			// direction_3
 			$this->direction_3->LinkCustomAttributes = "";
 			$this->direction_3->HrefValue = "";
 			$this->direction_3->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_3->ViewValue = $this->highlightValue($this->direction_3);
 
 			// planned_date_3
 			$this->planned_date_3->LinkCustomAttributes = "";
@@ -3729,6 +3295,8 @@ class document_log_list extends document_log
 			$this->transmit_no_3->LinkCustomAttributes = "";
 			$this->transmit_no_3->HrefValue = "";
 			$this->transmit_no_3->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_3->ViewValue = $this->highlightValue($this->transmit_no_3);
 
 			// approval_status_3
 			$this->approval_status_3->LinkCustomAttributes = "";
@@ -3740,6 +3308,8 @@ class document_log_list extends document_log
 				$this->approval_status_3->HrefValue = "";
 			}
 			$this->approval_status_3->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_3->ViewValue = $this->highlightValue($this->approval_status_3);
 
 			// submit_no_4
 			$this->submit_no_4->LinkCustomAttributes = "";
@@ -3750,11 +3320,15 @@ class document_log_list extends document_log
 			$this->revision_no_4->LinkCustomAttributes = "";
 			$this->revision_no_4->HrefValue = "";
 			$this->revision_no_4->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_4->ViewValue = $this->highlightValue($this->revision_no_4);
 
 			// direction_4
 			$this->direction_4->LinkCustomAttributes = "";
 			$this->direction_4->HrefValue = "";
 			$this->direction_4->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_4->ViewValue = $this->highlightValue($this->direction_4);
 
 			// planned_date_4
 			$this->planned_date_4->LinkCustomAttributes = "";
@@ -3770,6 +3344,8 @@ class document_log_list extends document_log
 			$this->transmit_no_4->LinkCustomAttributes = "";
 			$this->transmit_no_4->HrefValue = "";
 			$this->transmit_no_4->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_4->ViewValue = $this->highlightValue($this->transmit_no_4);
 
 			// approval_status_4
 			$this->approval_status_4->LinkCustomAttributes = "";
@@ -3781,6 +3357,8 @@ class document_log_list extends document_log
 				$this->approval_status_4->HrefValue = "";
 			}
 			$this->approval_status_4->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_4->ViewValue = $this->highlightValue($this->approval_status_4);
 
 			// submit_no_5
 			$this->submit_no_5->LinkCustomAttributes = "";
@@ -3791,11 +3369,15 @@ class document_log_list extends document_log
 			$this->revision_no_5->LinkCustomAttributes = "";
 			$this->revision_no_5->HrefValue = "";
 			$this->revision_no_5->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_5->ViewValue = $this->highlightValue($this->revision_no_5);
 
 			// direction_5
 			$this->direction_5->LinkCustomAttributes = "";
 			$this->direction_5->HrefValue = "";
 			$this->direction_5->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_5->ViewValue = $this->highlightValue($this->direction_5);
 
 			// planned_date_5
 			$this->planned_date_5->LinkCustomAttributes = "";
@@ -3811,11 +3393,15 @@ class document_log_list extends document_log
 			$this->transmit_no_5->LinkCustomAttributes = "";
 			$this->transmit_no_5->HrefValue = "";
 			$this->transmit_no_5->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_5->ViewValue = $this->highlightValue($this->transmit_no_5);
 
 			// approval_status_5
 			$this->approval_status_5->LinkCustomAttributes = "";
 			$this->approval_status_5->HrefValue = "";
 			$this->approval_status_5->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_5->ViewValue = $this->highlightValue($this->approval_status_5);
 
 			// submit_no_6
 			$this->submit_no_6->LinkCustomAttributes = "";
@@ -3826,11 +3412,15 @@ class document_log_list extends document_log
 			$this->revision_no_6->LinkCustomAttributes = "";
 			$this->revision_no_6->HrefValue = "";
 			$this->revision_no_6->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_6->ViewValue = $this->highlightValue($this->revision_no_6);
 
 			// direction_6
 			$this->direction_6->LinkCustomAttributes = "";
 			$this->direction_6->HrefValue = "";
 			$this->direction_6->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_6->ViewValue = $this->highlightValue($this->direction_6);
 
 			// planned_date_6
 			$this->planned_date_6->LinkCustomAttributes = "";
@@ -3846,6 +3436,8 @@ class document_log_list extends document_log
 			$this->transmit_no_6->LinkCustomAttributes = "";
 			$this->transmit_no_6->HrefValue = "";
 			$this->transmit_no_6->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_6->ViewValue = $this->highlightValue($this->transmit_no_6);
 
 			// approval_status_6
 			$this->approval_status_6->LinkCustomAttributes = "";
@@ -3857,6 +3449,8 @@ class document_log_list extends document_log
 				$this->approval_status_6->HrefValue = "";
 			}
 			$this->approval_status_6->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_6->ViewValue = $this->highlightValue($this->approval_status_6);
 
 			// submit_no_7
 			$this->submit_no_7->LinkCustomAttributes = "";
@@ -3867,11 +3461,15 @@ class document_log_list extends document_log
 			$this->revision_no_7->LinkCustomAttributes = "";
 			$this->revision_no_7->HrefValue = "";
 			$this->revision_no_7->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_7->ViewValue = $this->highlightValue($this->revision_no_7);
 
 			// direction_7
 			$this->direction_7->LinkCustomAttributes = "";
 			$this->direction_7->HrefValue = "";
 			$this->direction_7->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_7->ViewValue = $this->highlightValue($this->direction_7);
 
 			// planned_date_7
 			$this->planned_date_7->LinkCustomAttributes = "";
@@ -3887,6 +3485,8 @@ class document_log_list extends document_log
 			$this->transmit_no_7->LinkCustomAttributes = "";
 			$this->transmit_no_7->HrefValue = "";
 			$this->transmit_no_7->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_7->ViewValue = $this->highlightValue($this->transmit_no_7);
 
 			// approval_status_7
 			$this->approval_status_7->LinkCustomAttributes = "";
@@ -3898,6 +3498,8 @@ class document_log_list extends document_log
 				$this->approval_status_7->HrefValue = "";
 			}
 			$this->approval_status_7->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_7->ViewValue = $this->highlightValue($this->approval_status_7);
 
 			// submit_no_8
 			$this->submit_no_8->LinkCustomAttributes = "";
@@ -3908,11 +3510,15 @@ class document_log_list extends document_log
 			$this->revision_no_8->LinkCustomAttributes = "";
 			$this->revision_no_8->HrefValue = "";
 			$this->revision_no_8->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_8->ViewValue = $this->highlightValue($this->revision_no_8);
 
 			// direction_8
 			$this->direction_8->LinkCustomAttributes = "";
 			$this->direction_8->HrefValue = "";
 			$this->direction_8->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_8->ViewValue = $this->highlightValue($this->direction_8);
 
 			// planned_date_8
 			$this->planned_date_8->LinkCustomAttributes = "";
@@ -3928,6 +3534,8 @@ class document_log_list extends document_log
 			$this->transmit_no_8->LinkCustomAttributes = "";
 			$this->transmit_no_8->HrefValue = "";
 			$this->transmit_no_8->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_8->ViewValue = $this->highlightValue($this->transmit_no_8);
 
 			// approval_status_8
 			$this->approval_status_8->LinkCustomAttributes = "";
@@ -3939,21 +3547,29 @@ class document_log_list extends document_log
 				$this->approval_status_8->HrefValue = "";
 			}
 			$this->approval_status_8->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_8->ViewValue = $this->highlightValue($this->approval_status_8);
 
 			// submit_no_9
 			$this->submit_no_9->LinkCustomAttributes = "";
 			$this->submit_no_9->HrefValue = "";
 			$this->submit_no_9->TooltipValue = "";
+			if (!$this->isExport())
+				$this->submit_no_9->ViewValue = $this->highlightValue($this->submit_no_9);
 
 			// revision_no_9
 			$this->revision_no_9->LinkCustomAttributes = "";
 			$this->revision_no_9->HrefValue = "";
 			$this->revision_no_9->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_9->ViewValue = $this->highlightValue($this->revision_no_9);
 
 			// direction_9
 			$this->direction_9->LinkCustomAttributes = "";
 			$this->direction_9->HrefValue = "";
 			$this->direction_9->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_9->ViewValue = $this->highlightValue($this->direction_9);
 
 			// planned_date_9
 			$this->planned_date_9->LinkCustomAttributes = "";
@@ -3969,6 +3585,8 @@ class document_log_list extends document_log
 			$this->transmit_no_9->LinkCustomAttributes = "";
 			$this->transmit_no_9->HrefValue = "";
 			$this->transmit_no_9->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_9->ViewValue = $this->highlightValue($this->transmit_no_9);
 
 			// approval_status_9
 			$this->approval_status_9->LinkCustomAttributes = "";
@@ -3980,6 +3598,8 @@ class document_log_list extends document_log
 				$this->approval_status_9->HrefValue = "";
 			}
 			$this->approval_status_9->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_9->ViewValue = $this->highlightValue($this->approval_status_9);
 
 			// submit_no_10
 			$this->submit_no_10->LinkCustomAttributes = "";
@@ -3990,11 +3610,15 @@ class document_log_list extends document_log
 			$this->revision_no_10->LinkCustomAttributes = "";
 			$this->revision_no_10->HrefValue = "";
 			$this->revision_no_10->TooltipValue = "";
+			if (!$this->isExport())
+				$this->revision_no_10->ViewValue = $this->highlightValue($this->revision_no_10);
 
 			// direction_10
 			$this->direction_10->LinkCustomAttributes = "";
 			$this->direction_10->HrefValue = "";
 			$this->direction_10->TooltipValue = "";
+			if (!$this->isExport())
+				$this->direction_10->ViewValue = $this->highlightValue($this->direction_10);
 
 			// planned_date_10
 			$this->planned_date_10->LinkCustomAttributes = "";
@@ -4010,6 +3634,8 @@ class document_log_list extends document_log
 			$this->transmit_no_10->LinkCustomAttributes = "";
 			$this->transmit_no_10->HrefValue = "";
 			$this->transmit_no_10->TooltipValue = "";
+			if (!$this->isExport())
+				$this->transmit_no_10->ViewValue = $this->highlightValue($this->transmit_no_10);
 
 			// approval_status_10
 			$this->approval_status_10->LinkCustomAttributes = "";
@@ -4021,16 +3647,610 @@ class document_log_list extends document_log
 				$this->approval_status_10->HrefValue = "";
 			}
 			$this->approval_status_10->TooltipValue = "";
+			if (!$this->isExport())
+				$this->approval_status_10->ViewValue = $this->highlightValue($this->approval_status_10);
 
 			// log_updatedon
 			$this->log_updatedon->LinkCustomAttributes = "";
 			$this->log_updatedon->HrefValue = "";
 			$this->log_updatedon->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
+
+			// firelink_doc_no
+			$this->firelink_doc_no->EditAttrs["class"] = "form-control";
+			$this->firelink_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->firelink_doc_no->AdvancedSearch->SearchValue = HtmlDecode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->EditValue = HtmlEncode($this->firelink_doc_no->AdvancedSearch->SearchValue);
+			$this->firelink_doc_no->PlaceHolder = RemoveHtml($this->firelink_doc_no->caption());
+
+			// client_doc_no
+			$this->client_doc_no->EditAttrs["class"] = "form-control";
+			$this->client_doc_no->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->client_doc_no->AdvancedSearch->SearchValue = HtmlDecode($this->client_doc_no->AdvancedSearch->SearchValue);
+			$this->client_doc_no->EditValue = HtmlEncode($this->client_doc_no->AdvancedSearch->SearchValue);
+			$this->client_doc_no->PlaceHolder = RemoveHtml($this->client_doc_no->caption());
+
+			// order_number
+			$this->order_number->EditAttrs["class"] = "form-control";
+			$this->order_number->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->order_number->AdvancedSearch->SearchValue = HtmlDecode($this->order_number->AdvancedSearch->SearchValue);
+			$this->order_number->EditValue = HtmlEncode($this->order_number->AdvancedSearch->SearchValue);
+			$this->order_number->PlaceHolder = RemoveHtml($this->order_number->caption());
+
+			// project_name
+			$this->project_name->EditAttrs["class"] = "form-control";
+			$this->project_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->project_name->AdvancedSearch->SearchValue = HtmlDecode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->EditValue = HtmlEncode($this->project_name->AdvancedSearch->SearchValue);
+			$this->project_name->PlaceHolder = RemoveHtml($this->project_name->caption());
+
+			// document_tittle
+			$this->document_tittle->EditAttrs["class"] = "form-control";
+			$this->document_tittle->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->document_tittle->AdvancedSearch->SearchValue = HtmlDecode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->EditValue = HtmlEncode($this->document_tittle->AdvancedSearch->SearchValue);
+			$this->document_tittle->PlaceHolder = RemoveHtml($this->document_tittle->caption());
+
+			// current_status
+			$this->current_status->EditAttrs["class"] = "form-control";
+			$this->current_status->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->current_status->AdvancedSearch->SearchValue = HtmlDecode($this->current_status->AdvancedSearch->SearchValue);
+			$this->current_status->EditValue = HtmlEncode($this->current_status->AdvancedSearch->SearchValue);
+			$this->current_status->PlaceHolder = RemoveHtml($this->current_status->caption());
+
+			// submit_no_1
+			$this->submit_no_1->EditAttrs["class"] = "form-control";
+			$this->submit_no_1->EditCustomAttributes = "";
+			$this->submit_no_1->EditValue = HtmlEncode($this->submit_no_1->AdvancedSearch->SearchValue);
+			$this->submit_no_1->PlaceHolder = RemoveHtml($this->submit_no_1->caption());
+
+			// revision_no_1
+			$this->revision_no_1->EditAttrs["class"] = "form-control";
+			$this->revision_no_1->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_1->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_1->AdvancedSearch->SearchValue);
+			$this->revision_no_1->EditValue = HtmlEncode($this->revision_no_1->AdvancedSearch->SearchValue);
+			$this->revision_no_1->PlaceHolder = RemoveHtml($this->revision_no_1->caption());
+
+			// direction_1
+			$this->direction_1->EditAttrs["class"] = "form-control";
+			$this->direction_1->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_1->AdvancedSearch->SearchValue = HtmlDecode($this->direction_1->AdvancedSearch->SearchValue);
+			$this->direction_1->EditValue = HtmlEncode($this->direction_1->AdvancedSearch->SearchValue);
+			$this->direction_1->PlaceHolder = RemoveHtml($this->direction_1->caption());
+
+			// planned_date_1
+			$this->planned_date_1->EditAttrs["class"] = "form-control";
+			$this->planned_date_1->EditCustomAttributes = "";
+			$this->planned_date_1->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_1->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_1->PlaceHolder = RemoveHtml($this->planned_date_1->caption());
+
+			// transmit_date_1
+			$this->transmit_date_1->EditAttrs["class"] = "form-control";
+			$this->transmit_date_1->EditCustomAttributes = "";
+			$this->transmit_date_1->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_1->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_1->PlaceHolder = RemoveHtml($this->transmit_date_1->caption());
+
+			// transmit_no_1
+			$this->transmit_no_1->EditAttrs["class"] = "form-control";
+			$this->transmit_no_1->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_1->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_1->AdvancedSearch->SearchValue);
+			$this->transmit_no_1->EditValue = HtmlEncode($this->transmit_no_1->AdvancedSearch->SearchValue);
+			$this->transmit_no_1->PlaceHolder = RemoveHtml($this->transmit_no_1->caption());
+
+			// approval_status_1
+			$this->approval_status_1->EditAttrs["class"] = "form-control";
+			$this->approval_status_1->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_1->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_1->AdvancedSearch->SearchValue);
+			$this->approval_status_1->EditValue = HtmlEncode($this->approval_status_1->AdvancedSearch->SearchValue);
+			$this->approval_status_1->PlaceHolder = RemoveHtml($this->approval_status_1->caption());
+
+			// submit_no_2
+			$this->submit_no_2->EditAttrs["class"] = "form-control";
+			$this->submit_no_2->EditCustomAttributes = "";
+			$this->submit_no_2->EditValue = HtmlEncode($this->submit_no_2->AdvancedSearch->SearchValue);
+			$this->submit_no_2->PlaceHolder = RemoveHtml($this->submit_no_2->caption());
+
+			// revision_no_2
+			$this->revision_no_2->EditAttrs["class"] = "form-control";
+			$this->revision_no_2->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_2->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_2->AdvancedSearch->SearchValue);
+			$this->revision_no_2->EditValue = HtmlEncode($this->revision_no_2->AdvancedSearch->SearchValue);
+			$this->revision_no_2->PlaceHolder = RemoveHtml($this->revision_no_2->caption());
+
+			// direction_2
+			$this->direction_2->EditAttrs["class"] = "form-control";
+			$this->direction_2->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_2->AdvancedSearch->SearchValue = HtmlDecode($this->direction_2->AdvancedSearch->SearchValue);
+			$this->direction_2->EditValue = HtmlEncode($this->direction_2->AdvancedSearch->SearchValue);
+			$this->direction_2->PlaceHolder = RemoveHtml($this->direction_2->caption());
+
+			// planned_date_2
+			$this->planned_date_2->EditAttrs["class"] = "form-control";
+			$this->planned_date_2->EditCustomAttributes = "";
+			$this->planned_date_2->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_2->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_2->PlaceHolder = RemoveHtml($this->planned_date_2->caption());
+
+			// transmit_date_2
+			$this->transmit_date_2->EditAttrs["class"] = "form-control";
+			$this->transmit_date_2->EditCustomAttributes = "";
+			$this->transmit_date_2->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_2->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_2->PlaceHolder = RemoveHtml($this->transmit_date_2->caption());
+
+			// transmit_no_2
+			$this->transmit_no_2->EditAttrs["class"] = "form-control";
+			$this->transmit_no_2->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_2->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_2->AdvancedSearch->SearchValue);
+			$this->transmit_no_2->EditValue = HtmlEncode($this->transmit_no_2->AdvancedSearch->SearchValue);
+			$this->transmit_no_2->PlaceHolder = RemoveHtml($this->transmit_no_2->caption());
+
+			// approval_status_2
+			$this->approval_status_2->EditAttrs["class"] = "form-control";
+			$this->approval_status_2->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_2->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_2->AdvancedSearch->SearchValue);
+			$this->approval_status_2->EditValue = HtmlEncode($this->approval_status_2->AdvancedSearch->SearchValue);
+			$this->approval_status_2->PlaceHolder = RemoveHtml($this->approval_status_2->caption());
+
+			// submit_no_3
+			$this->submit_no_3->EditAttrs["class"] = "form-control";
+			$this->submit_no_3->EditCustomAttributes = "";
+			$this->submit_no_3->EditValue = HtmlEncode($this->submit_no_3->AdvancedSearch->SearchValue);
+			$this->submit_no_3->PlaceHolder = RemoveHtml($this->submit_no_3->caption());
+
+			// revision_no_3
+			$this->revision_no_3->EditAttrs["class"] = "form-control";
+			$this->revision_no_3->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_3->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_3->AdvancedSearch->SearchValue);
+			$this->revision_no_3->EditValue = HtmlEncode($this->revision_no_3->AdvancedSearch->SearchValue);
+			$this->revision_no_3->PlaceHolder = RemoveHtml($this->revision_no_3->caption());
+
+			// direction_3
+			$this->direction_3->EditAttrs["class"] = "form-control";
+			$this->direction_3->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_3->AdvancedSearch->SearchValue = HtmlDecode($this->direction_3->AdvancedSearch->SearchValue);
+			$this->direction_3->EditValue = HtmlEncode($this->direction_3->AdvancedSearch->SearchValue);
+			$this->direction_3->PlaceHolder = RemoveHtml($this->direction_3->caption());
+
+			// planned_date_3
+			$this->planned_date_3->EditAttrs["class"] = "form-control";
+			$this->planned_date_3->EditCustomAttributes = "";
+			$this->planned_date_3->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_3->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_3->PlaceHolder = RemoveHtml($this->planned_date_3->caption());
+
+			// transmit_date_3
+			$this->transmit_date_3->EditAttrs["class"] = "form-control";
+			$this->transmit_date_3->EditCustomAttributes = "";
+			$this->transmit_date_3->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_3->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_3->PlaceHolder = RemoveHtml($this->transmit_date_3->caption());
+
+			// transmit_no_3
+			$this->transmit_no_3->EditAttrs["class"] = "form-control";
+			$this->transmit_no_3->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_3->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_3->AdvancedSearch->SearchValue);
+			$this->transmit_no_3->EditValue = HtmlEncode($this->transmit_no_3->AdvancedSearch->SearchValue);
+			$this->transmit_no_3->PlaceHolder = RemoveHtml($this->transmit_no_3->caption());
+
+			// approval_status_3
+			$this->approval_status_3->EditAttrs["class"] = "form-control";
+			$this->approval_status_3->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_3->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_3->AdvancedSearch->SearchValue);
+			$this->approval_status_3->EditValue = HtmlEncode($this->approval_status_3->AdvancedSearch->SearchValue);
+			$this->approval_status_3->PlaceHolder = RemoveHtml($this->approval_status_3->caption());
+
+			// submit_no_4
+			$this->submit_no_4->EditAttrs["class"] = "form-control";
+			$this->submit_no_4->EditCustomAttributes = "";
+			$this->submit_no_4->EditValue = HtmlEncode($this->submit_no_4->AdvancedSearch->SearchValue);
+			$this->submit_no_4->PlaceHolder = RemoveHtml($this->submit_no_4->caption());
+
+			// revision_no_4
+			$this->revision_no_4->EditAttrs["class"] = "form-control";
+			$this->revision_no_4->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_4->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_4->AdvancedSearch->SearchValue);
+			$this->revision_no_4->EditValue = HtmlEncode($this->revision_no_4->AdvancedSearch->SearchValue);
+			$this->revision_no_4->PlaceHolder = RemoveHtml($this->revision_no_4->caption());
+
+			// direction_4
+			$this->direction_4->EditAttrs["class"] = "form-control";
+			$this->direction_4->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_4->AdvancedSearch->SearchValue = HtmlDecode($this->direction_4->AdvancedSearch->SearchValue);
+			$this->direction_4->EditValue = HtmlEncode($this->direction_4->AdvancedSearch->SearchValue);
+			$this->direction_4->PlaceHolder = RemoveHtml($this->direction_4->caption());
+
+			// planned_date_4
+			$this->planned_date_4->EditAttrs["class"] = "form-control";
+			$this->planned_date_4->EditCustomAttributes = "";
+			$this->planned_date_4->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_4->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_4->PlaceHolder = RemoveHtml($this->planned_date_4->caption());
+
+			// transmit_date_4
+			$this->transmit_date_4->EditAttrs["class"] = "form-control";
+			$this->transmit_date_4->EditCustomAttributes = "";
+			$this->transmit_date_4->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_4->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_4->PlaceHolder = RemoveHtml($this->transmit_date_4->caption());
+
+			// transmit_no_4
+			$this->transmit_no_4->EditAttrs["class"] = "form-control";
+			$this->transmit_no_4->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_4->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_4->AdvancedSearch->SearchValue);
+			$this->transmit_no_4->EditValue = HtmlEncode($this->transmit_no_4->AdvancedSearch->SearchValue);
+			$this->transmit_no_4->PlaceHolder = RemoveHtml($this->transmit_no_4->caption());
+
+			// approval_status_4
+			$this->approval_status_4->EditAttrs["class"] = "form-control";
+			$this->approval_status_4->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_4->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_4->AdvancedSearch->SearchValue);
+			$this->approval_status_4->EditValue = HtmlEncode($this->approval_status_4->AdvancedSearch->SearchValue);
+			$this->approval_status_4->PlaceHolder = RemoveHtml($this->approval_status_4->caption());
+
+			// submit_no_5
+			$this->submit_no_5->EditAttrs["class"] = "form-control";
+			$this->submit_no_5->EditCustomAttributes = "";
+			$this->submit_no_5->EditValue = HtmlEncode($this->submit_no_5->AdvancedSearch->SearchValue);
+			$this->submit_no_5->PlaceHolder = RemoveHtml($this->submit_no_5->caption());
+
+			// revision_no_5
+			$this->revision_no_5->EditAttrs["class"] = "form-control";
+			$this->revision_no_5->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_5->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_5->AdvancedSearch->SearchValue);
+			$this->revision_no_5->EditValue = HtmlEncode($this->revision_no_5->AdvancedSearch->SearchValue);
+			$this->revision_no_5->PlaceHolder = RemoveHtml($this->revision_no_5->caption());
+
+			// direction_5
+			$this->direction_5->EditAttrs["class"] = "form-control";
+			$this->direction_5->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_5->AdvancedSearch->SearchValue = HtmlDecode($this->direction_5->AdvancedSearch->SearchValue);
+			$this->direction_5->EditValue = HtmlEncode($this->direction_5->AdvancedSearch->SearchValue);
+			$this->direction_5->PlaceHolder = RemoveHtml($this->direction_5->caption());
+
+			// planned_date_5
+			$this->planned_date_5->EditAttrs["class"] = "form-control";
+			$this->planned_date_5->EditCustomAttributes = "";
+			$this->planned_date_5->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_5->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_5->PlaceHolder = RemoveHtml($this->planned_date_5->caption());
+
+			// transmit_date_5
+			$this->transmit_date_5->EditAttrs["class"] = "form-control";
+			$this->transmit_date_5->EditCustomAttributes = "";
+			$this->transmit_date_5->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_5->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_5->PlaceHolder = RemoveHtml($this->transmit_date_5->caption());
+
+			// transmit_no_5
+			$this->transmit_no_5->EditAttrs["class"] = "form-control";
+			$this->transmit_no_5->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_5->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_5->AdvancedSearch->SearchValue);
+			$this->transmit_no_5->EditValue = HtmlEncode($this->transmit_no_5->AdvancedSearch->SearchValue);
+			$this->transmit_no_5->PlaceHolder = RemoveHtml($this->transmit_no_5->caption());
+
+			// approval_status_5
+			$this->approval_status_5->EditAttrs["class"] = "form-control";
+			$this->approval_status_5->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_5->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_5->AdvancedSearch->SearchValue);
+			$this->approval_status_5->EditValue = HtmlEncode($this->approval_status_5->AdvancedSearch->SearchValue);
+			$this->approval_status_5->PlaceHolder = RemoveHtml($this->approval_status_5->caption());
+
+			// submit_no_6
+			$this->submit_no_6->EditAttrs["class"] = "form-control";
+			$this->submit_no_6->EditCustomAttributes = "";
+			$this->submit_no_6->EditValue = HtmlEncode($this->submit_no_6->AdvancedSearch->SearchValue);
+			$this->submit_no_6->PlaceHolder = RemoveHtml($this->submit_no_6->caption());
+
+			// revision_no_6
+			$this->revision_no_6->EditAttrs["class"] = "form-control";
+			$this->revision_no_6->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_6->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_6->AdvancedSearch->SearchValue);
+			$this->revision_no_6->EditValue = HtmlEncode($this->revision_no_6->AdvancedSearch->SearchValue);
+			$this->revision_no_6->PlaceHolder = RemoveHtml($this->revision_no_6->caption());
+
+			// direction_6
+			$this->direction_6->EditAttrs["class"] = "form-control";
+			$this->direction_6->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_6->AdvancedSearch->SearchValue = HtmlDecode($this->direction_6->AdvancedSearch->SearchValue);
+			$this->direction_6->EditValue = HtmlEncode($this->direction_6->AdvancedSearch->SearchValue);
+			$this->direction_6->PlaceHolder = RemoveHtml($this->direction_6->caption());
+
+			// planned_date_6
+			$this->planned_date_6->EditAttrs["class"] = "form-control";
+			$this->planned_date_6->EditCustomAttributes = "";
+			$this->planned_date_6->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_6->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_6->PlaceHolder = RemoveHtml($this->planned_date_6->caption());
+
+			// transmit_date_6
+			$this->transmit_date_6->EditAttrs["class"] = "form-control";
+			$this->transmit_date_6->EditCustomAttributes = "";
+			$this->transmit_date_6->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_6->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_6->PlaceHolder = RemoveHtml($this->transmit_date_6->caption());
+
+			// transmit_no_6
+			$this->transmit_no_6->EditAttrs["class"] = "form-control";
+			$this->transmit_no_6->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_6->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_6->AdvancedSearch->SearchValue);
+			$this->transmit_no_6->EditValue = HtmlEncode($this->transmit_no_6->AdvancedSearch->SearchValue);
+			$this->transmit_no_6->PlaceHolder = RemoveHtml($this->transmit_no_6->caption());
+
+			// approval_status_6
+			$this->approval_status_6->EditAttrs["class"] = "form-control";
+			$this->approval_status_6->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_6->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_6->AdvancedSearch->SearchValue);
+			$this->approval_status_6->EditValue = HtmlEncode($this->approval_status_6->AdvancedSearch->SearchValue);
+			$this->approval_status_6->PlaceHolder = RemoveHtml($this->approval_status_6->caption());
+
+			// submit_no_7
+			$this->submit_no_7->EditAttrs["class"] = "form-control";
+			$this->submit_no_7->EditCustomAttributes = "";
+			$this->submit_no_7->EditValue = HtmlEncode($this->submit_no_7->AdvancedSearch->SearchValue);
+			$this->submit_no_7->PlaceHolder = RemoveHtml($this->submit_no_7->caption());
+
+			// revision_no_7
+			$this->revision_no_7->EditAttrs["class"] = "form-control";
+			$this->revision_no_7->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_7->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_7->AdvancedSearch->SearchValue);
+			$this->revision_no_7->EditValue = HtmlEncode($this->revision_no_7->AdvancedSearch->SearchValue);
+			$this->revision_no_7->PlaceHolder = RemoveHtml($this->revision_no_7->caption());
+
+			// direction_7
+			$this->direction_7->EditAttrs["class"] = "form-control";
+			$this->direction_7->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_7->AdvancedSearch->SearchValue = HtmlDecode($this->direction_7->AdvancedSearch->SearchValue);
+			$this->direction_7->EditValue = HtmlEncode($this->direction_7->AdvancedSearch->SearchValue);
+			$this->direction_7->PlaceHolder = RemoveHtml($this->direction_7->caption());
+
+			// planned_date_7
+			$this->planned_date_7->EditAttrs["class"] = "form-control";
+			$this->planned_date_7->EditCustomAttributes = "";
+			$this->planned_date_7->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_7->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_7->PlaceHolder = RemoveHtml($this->planned_date_7->caption());
+
+			// transmit_date_7
+			$this->transmit_date_7->EditAttrs["class"] = "form-control";
+			$this->transmit_date_7->EditCustomAttributes = "";
+			$this->transmit_date_7->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_7->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_7->PlaceHolder = RemoveHtml($this->transmit_date_7->caption());
+
+			// transmit_no_7
+			$this->transmit_no_7->EditAttrs["class"] = "form-control";
+			$this->transmit_no_7->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_7->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_7->AdvancedSearch->SearchValue);
+			$this->transmit_no_7->EditValue = HtmlEncode($this->transmit_no_7->AdvancedSearch->SearchValue);
+			$this->transmit_no_7->PlaceHolder = RemoveHtml($this->transmit_no_7->caption());
+
+			// approval_status_7
+			$this->approval_status_7->EditAttrs["class"] = "form-control";
+			$this->approval_status_7->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_7->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_7->AdvancedSearch->SearchValue);
+			$this->approval_status_7->EditValue = HtmlEncode($this->approval_status_7->AdvancedSearch->SearchValue);
+			$this->approval_status_7->PlaceHolder = RemoveHtml($this->approval_status_7->caption());
+
+			// submit_no_8
+			$this->submit_no_8->EditAttrs["class"] = "form-control";
+			$this->submit_no_8->EditCustomAttributes = "";
+			$this->submit_no_8->EditValue = HtmlEncode($this->submit_no_8->AdvancedSearch->SearchValue);
+			$this->submit_no_8->PlaceHolder = RemoveHtml($this->submit_no_8->caption());
+
+			// revision_no_8
+			$this->revision_no_8->EditAttrs["class"] = "form-control";
+			$this->revision_no_8->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_8->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_8->AdvancedSearch->SearchValue);
+			$this->revision_no_8->EditValue = HtmlEncode($this->revision_no_8->AdvancedSearch->SearchValue);
+			$this->revision_no_8->PlaceHolder = RemoveHtml($this->revision_no_8->caption());
+
+			// direction_8
+			$this->direction_8->EditAttrs["class"] = "form-control";
+			$this->direction_8->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_8->AdvancedSearch->SearchValue = HtmlDecode($this->direction_8->AdvancedSearch->SearchValue);
+			$this->direction_8->EditValue = HtmlEncode($this->direction_8->AdvancedSearch->SearchValue);
+			$this->direction_8->PlaceHolder = RemoveHtml($this->direction_8->caption());
+
+			// planned_date_8
+			$this->planned_date_8->EditAttrs["class"] = "form-control";
+			$this->planned_date_8->EditCustomAttributes = "";
+			$this->planned_date_8->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_8->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_8->PlaceHolder = RemoveHtml($this->planned_date_8->caption());
+
+			// transmit_date_8
+			$this->transmit_date_8->EditAttrs["class"] = "form-control";
+			$this->transmit_date_8->EditCustomAttributes = "";
+			$this->transmit_date_8->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_8->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_8->PlaceHolder = RemoveHtml($this->transmit_date_8->caption());
+
+			// transmit_no_8
+			$this->transmit_no_8->EditAttrs["class"] = "form-control";
+			$this->transmit_no_8->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_8->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_8->AdvancedSearch->SearchValue);
+			$this->transmit_no_8->EditValue = HtmlEncode($this->transmit_no_8->AdvancedSearch->SearchValue);
+			$this->transmit_no_8->PlaceHolder = RemoveHtml($this->transmit_no_8->caption());
+
+			// approval_status_8
+			$this->approval_status_8->EditAttrs["class"] = "form-control";
+			$this->approval_status_8->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_8->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_8->AdvancedSearch->SearchValue);
+			$this->approval_status_8->EditValue = HtmlEncode($this->approval_status_8->AdvancedSearch->SearchValue);
+			$this->approval_status_8->PlaceHolder = RemoveHtml($this->approval_status_8->caption());
+
+			// submit_no_9
+			$this->submit_no_9->EditAttrs["class"] = "form-control";
+			$this->submit_no_9->EditCustomAttributes = "";
+			$this->submit_no_9->EditValue = HtmlEncode($this->submit_no_9->AdvancedSearch->SearchValue);
+			$this->submit_no_9->PlaceHolder = RemoveHtml($this->submit_no_9->caption());
+
+			// revision_no_9
+			$this->revision_no_9->EditAttrs["class"] = "form-control";
+			$this->revision_no_9->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_9->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_9->AdvancedSearch->SearchValue);
+			$this->revision_no_9->EditValue = HtmlEncode($this->revision_no_9->AdvancedSearch->SearchValue);
+			$this->revision_no_9->PlaceHolder = RemoveHtml($this->revision_no_9->caption());
+
+			// direction_9
+			$this->direction_9->EditAttrs["class"] = "form-control";
+			$this->direction_9->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_9->AdvancedSearch->SearchValue = HtmlDecode($this->direction_9->AdvancedSearch->SearchValue);
+			$this->direction_9->EditValue = HtmlEncode($this->direction_9->AdvancedSearch->SearchValue);
+			$this->direction_9->PlaceHolder = RemoveHtml($this->direction_9->caption());
+
+			// planned_date_9
+			$this->planned_date_9->EditAttrs["class"] = "form-control";
+			$this->planned_date_9->EditCustomAttributes = "";
+			$this->planned_date_9->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_9->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_9->PlaceHolder = RemoveHtml($this->planned_date_9->caption());
+
+			// transmit_date_9
+			$this->transmit_date_9->EditAttrs["class"] = "form-control";
+			$this->transmit_date_9->EditCustomAttributes = "";
+			$this->transmit_date_9->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_9->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_9->PlaceHolder = RemoveHtml($this->transmit_date_9->caption());
+
+			// transmit_no_9
+			$this->transmit_no_9->EditAttrs["class"] = "form-control";
+			$this->transmit_no_9->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_9->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_9->AdvancedSearch->SearchValue);
+			$this->transmit_no_9->EditValue = HtmlEncode($this->transmit_no_9->AdvancedSearch->SearchValue);
+			$this->transmit_no_9->PlaceHolder = RemoveHtml($this->transmit_no_9->caption());
+
+			// approval_status_9
+			$this->approval_status_9->EditAttrs["class"] = "form-control";
+			$this->approval_status_9->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_9->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_9->AdvancedSearch->SearchValue);
+			$this->approval_status_9->EditValue = HtmlEncode($this->approval_status_9->AdvancedSearch->SearchValue);
+			$this->approval_status_9->PlaceHolder = RemoveHtml($this->approval_status_9->caption());
+
+			// submit_no_10
+			$this->submit_no_10->EditAttrs["class"] = "form-control";
+			$this->submit_no_10->EditCustomAttributes = "";
+			$this->submit_no_10->EditValue = HtmlEncode($this->submit_no_10->AdvancedSearch->SearchValue);
+			$this->submit_no_10->PlaceHolder = RemoveHtml($this->submit_no_10->caption());
+
+			// revision_no_10
+			$this->revision_no_10->EditAttrs["class"] = "form-control";
+			$this->revision_no_10->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->revision_no_10->AdvancedSearch->SearchValue = HtmlDecode($this->revision_no_10->AdvancedSearch->SearchValue);
+			$this->revision_no_10->EditValue = HtmlEncode($this->revision_no_10->AdvancedSearch->SearchValue);
+			$this->revision_no_10->PlaceHolder = RemoveHtml($this->revision_no_10->caption());
+
+			// direction_10
+			$this->direction_10->EditAttrs["class"] = "form-control";
+			$this->direction_10->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->direction_10->AdvancedSearch->SearchValue = HtmlDecode($this->direction_10->AdvancedSearch->SearchValue);
+			$this->direction_10->EditValue = HtmlEncode($this->direction_10->AdvancedSearch->SearchValue);
+			$this->direction_10->PlaceHolder = RemoveHtml($this->direction_10->caption());
+
+			// planned_date_10
+			$this->planned_date_10->EditAttrs["class"] = "form-control";
+			$this->planned_date_10->EditCustomAttributes = "";
+			$this->planned_date_10->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date_10->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date_10->PlaceHolder = RemoveHtml($this->planned_date_10->caption());
+
+			// transmit_date_10
+			$this->transmit_date_10->EditAttrs["class"] = "form-control";
+			$this->transmit_date_10->EditCustomAttributes = "";
+			$this->transmit_date_10->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->transmit_date_10->AdvancedSearch->SearchValue, 5), 5));
+			$this->transmit_date_10->PlaceHolder = RemoveHtml($this->transmit_date_10->caption());
+
+			// transmit_no_10
+			$this->transmit_no_10->EditAttrs["class"] = "form-control";
+			$this->transmit_no_10->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->transmit_no_10->AdvancedSearch->SearchValue = HtmlDecode($this->transmit_no_10->AdvancedSearch->SearchValue);
+			$this->transmit_no_10->EditValue = HtmlEncode($this->transmit_no_10->AdvancedSearch->SearchValue);
+			$this->transmit_no_10->PlaceHolder = RemoveHtml($this->transmit_no_10->caption());
+
+			// approval_status_10
+			$this->approval_status_10->EditAttrs["class"] = "form-control";
+			$this->approval_status_10->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->approval_status_10->AdvancedSearch->SearchValue = HtmlDecode($this->approval_status_10->AdvancedSearch->SearchValue);
+			$this->approval_status_10->EditValue = HtmlEncode($this->approval_status_10->AdvancedSearch->SearchValue);
+			$this->approval_status_10->PlaceHolder = RemoveHtml($this->approval_status_10->caption());
+
+			// log_updatedon
+			$this->log_updatedon->EditAttrs["class"] = "form-control";
+			$this->log_updatedon->EditCustomAttributes = "";
+			$this->log_updatedon->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->log_updatedon->AdvancedSearch->SearchValue, 109), 109));
+			$this->log_updatedon->PlaceHolder = RemoveHtml($this->log_updatedon->caption());
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate search
+	protected function validateSearch()
+	{
+		global $SearchError;
+
+		// Initialize
+		$SearchError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return TRUE;
+
+		// Return validate result
+		$validateSearch = ($SearchError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateSearch = $validateSearch && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($SearchError, $formCustomError);
+		}
+		return $validateSearch;
+	}
+
+	// Load advanced search
+	public function loadAdvancedSearch()
+	{
+		$this->firelink_doc_no->AdvancedSearch->load();
+		$this->client_doc_no->AdvancedSearch->load();
+		$this->order_number->AdvancedSearch->load();
+		$this->project_name->AdvancedSearch->load();
+		$this->document_tittle->AdvancedSearch->load();
+		$this->current_status->AdvancedSearch->load();
 	}
 
 	// Get export HTML tag
@@ -4267,24 +4487,64 @@ class document_log_list extends document_log
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_approval_status_1":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_2":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_3":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_4":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_5":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_6":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_7":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_8":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_9":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 						case "x_approval_status_10":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

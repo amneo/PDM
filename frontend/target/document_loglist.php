@@ -86,7 +86,32 @@ fdocument_loglist.autoSuggests["x_approval_status_10"] = <?php echo json_encode(
 // Form object for search
 var fdocument_loglistsrch = currentSearchForm = new ew.Form("fdocument_loglistsrch");
 
+// Validate function for search
+fdocument_loglistsrch.validate = function(fobj) {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	fobj = fobj || this._form;
+	var infix = "";
+
+	// Fire Form_CustomValidate event
+	if (!this.Form_CustomValidate(fobj))
+		return false;
+	return true;
+}
+
+// Form_CustomValidate event
+fdocument_loglistsrch.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+
+	// Your custom validation code here, return false if invalid.
+	return true;
+}
+
+// Use JavaScript validation or not
+fdocument_loglistsrch.validateRequired = <?php echo json_encode(CLIENT_VALIDATE) ?>;
+
+// Dynamic selection lists
 // Filters
+
 fdocument_loglistsrch.filterList = <?php echo $document_log_list->getFilterList() ?>;
 </script>
 <script src="phpjs/ewscrolltable.js"></script>
@@ -123,7 +148,73 @@ $document_log_list->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="document_log">
 	<div class="ew-basic-search">
+<?php
+if ($SearchError == "")
+	$document_log_list->LoadAdvancedSearch(); // Load advanced search
+
+// Render for search
+$document_log->RowType = ROWTYPE_SEARCH;
+
+// Render row
+$document_log->resetAttributes();
+$document_log_list->renderRow();
+?>
 <div id="xsr_1" class="ew-row d-sm-flex">
+<?php if ($document_log->firelink_doc_no->Visible) { // firelink_doc_no ?>
+	<div id="xsc_firelink_doc_no" class="ew-cell form-group">
+		<label for="x_firelink_doc_no" class="ew-search-caption ew-label"><?php echo $document_log->firelink_doc_no->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_firelink_doc_no" id="z_firelink_doc_no" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="document_log" data-field="x_firelink_doc_no" name="x_firelink_doc_no" id="x_firelink_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_log->firelink_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_log->firelink_doc_no->EditValue ?>"<?php echo $document_log->firelink_doc_no->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_2" class="ew-row d-sm-flex">
+<?php if ($document_log->client_doc_no->Visible) { // client_doc_no ?>
+	<div id="xsc_client_doc_no" class="ew-cell form-group">
+		<label for="x_client_doc_no" class="ew-search-caption ew-label"><?php echo $document_log->client_doc_no->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_client_doc_no" id="z_client_doc_no" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="document_log" data-field="x_client_doc_no" name="x_client_doc_no" id="x_client_doc_no" size="30" placeholder="<?php echo HtmlEncode($document_log->client_doc_no->getPlaceHolder()) ?>" value="<?php echo $document_log->client_doc_no->EditValue ?>"<?php echo $document_log->client_doc_no->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_3" class="ew-row d-sm-flex">
+<?php if ($document_log->order_number->Visible) { // order_number ?>
+	<div id="xsc_order_number" class="ew-cell form-group">
+		<label for="x_order_number" class="ew-search-caption ew-label"><?php echo $document_log->order_number->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_order_number" id="z_order_number" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="document_log" data-field="x_order_number" name="x_order_number" id="x_order_number" size="30" placeholder="<?php echo HtmlEncode($document_log->order_number->getPlaceHolder()) ?>" value="<?php echo $document_log->order_number->EditValue ?>"<?php echo $document_log->order_number->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_4" class="ew-row d-sm-flex">
+<?php if ($document_log->project_name->Visible) { // project_name ?>
+	<div id="xsc_project_name" class="ew-cell form-group">
+		<label for="x_project_name" class="ew-search-caption ew-label"><?php echo $document_log->project_name->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_project_name" id="z_project_name" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="document_log" data-field="x_project_name" name="x_project_name" id="x_project_name" size="30" placeholder="<?php echo HtmlEncode($document_log->project_name->getPlaceHolder()) ?>" value="<?php echo $document_log->project_name->EditValue ?>"<?php echo $document_log->project_name->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_5" class="ew-row d-sm-flex">
+<?php if ($document_log->document_tittle->Visible) { // document_tittle ?>
+	<div id="xsc_document_tittle" class="ew-cell form-group">
+		<label for="x_document_tittle" class="ew-search-caption ew-label"><?php echo $document_log->document_tittle->caption() ?></label>
+		<span class="ew-search-operator"><?php echo $Language->phrase("LIKE") ?><input type="hidden" name="z_document_tittle" id="z_document_tittle" value="LIKE"></span>
+		<span class="ew-search-field">
+<input type="text" data-table="document_log" data-field="x_document_tittle" name="x_document_tittle" id="x_document_tittle" size="30" placeholder="<?php echo HtmlEncode($document_log->document_tittle->getPlaceHolder()) ?>" value="<?php echo $document_log->document_tittle->EditValue ?>"<?php echo $document_log->document_tittle->editAttributes() ?>>
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_6" class="ew-row d-sm-flex">
 	<div class="ew-quick-search input-group">
 		<input type="text" name="<?php echo TABLE_BASIC_SEARCH ?>" id="<?php echo TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo HtmlEncode($document_log_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo HtmlEncode($Language->phrase("Search")) ?>">
 		<input type="hidden" name="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo HtmlEncode($document_log_list->BasicSearch->getType()) ?>">

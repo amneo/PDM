@@ -41,6 +41,49 @@ currentPageID = ew.PAGE_ID = "list";
 var fxmit_detailslist = currentForm = new ew.Form("fxmit_detailslist", "list");
 fxmit_detailslist.formKeyCountName = '<?php echo $xmit_details_list->FormKeyCountName ?>';
 
+// Validate form
+fxmit_detailslist.validate = function() {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.getForm(), $fobj = $(fobj);
+	if ($fobj.find("#confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.formKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = ["insert", "gridinsert"].includes($fobj.find("#action").val()) && $k[0];
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.emptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		<?php if ($xmit_details_list->xmit_mode->Required) { ?>
+			elm = this.getElements("x" + infix + "_xmit_mode");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $xmit_details->xmit_mode->caption(), $xmit_details->xmit_mode->RequiredErrorMessage)) ?>");
+		<?php } ?>
+
+			// Fire Form_CustomValidate event
+			if (!this.Form_CustomValidate(fobj))
+				return false;
+		} // End Grid Add checking
+	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew.alert(ew.language.phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fxmit_detailslist.emptyRow = function(infix) {
+	var fobj = this._form;
+	if (ew.valueChanged(fobj, infix, "xmit_mode", false)) return false;
+	return true;
+}
+
 // Form_CustomValidate event
 fxmit_detailslist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
 
@@ -168,6 +211,15 @@ if ($xmit_details->ExportAll && $xmit_details->isExport()) {
 	else
 		$xmit_details_list->StopRec = $xmit_details_list->TotalRecs;
 }
+
+// Restore number of post back records
+if ($CurrentForm && $xmit_details_list->EventCancelled) {
+	$CurrentForm->Index = -1;
+	if ($CurrentForm->hasValue($xmit_details_list->FormKeyCountName) && ($xmit_details->isGridAdd() || $xmit_details->isGridEdit() || $xmit_details->isConfirm())) {
+		$xmit_details_list->KeyCount = $CurrentForm->getValue($xmit_details_list->FormKeyCountName);
+		$xmit_details_list->StopRec = $xmit_details_list->StartRec + $xmit_details_list->KeyCount - 1;
+	}
+}
 $xmit_details_list->RecCnt = $xmit_details_list->StartRec - 1;
 if ($xmit_details_list->Recordset && !$xmit_details_list->Recordset->EOF) {
 	$xmit_details_list->Recordset->moveFirst();
@@ -182,10 +234,24 @@ if ($xmit_details_list->Recordset && !$xmit_details_list->Recordset->EOF) {
 $xmit_details->RowType = ROWTYPE_AGGREGATEINIT;
 $xmit_details->resetAttributes();
 $xmit_details_list->renderRow();
+if ($xmit_details->isGridAdd())
+	$xmit_details_list->RowIndex = 0;
+if ($xmit_details->isGridEdit())
+	$xmit_details_list->RowIndex = 0;
 while ($xmit_details_list->RecCnt < $xmit_details_list->StopRec) {
 	$xmit_details_list->RecCnt++;
 	if ($xmit_details_list->RecCnt >= $xmit_details_list->StartRec) {
 		$xmit_details_list->RowCnt++;
+		if ($xmit_details->isGridAdd() || $xmit_details->isGridEdit() || $xmit_details->isConfirm()) {
+			$xmit_details_list->RowIndex++;
+			$CurrentForm->Index = $xmit_details_list->RowIndex;
+			if ($CurrentForm->hasValue($xmit_details_list->FormActionName) && $xmit_details_list->EventCancelled)
+				$xmit_details_list->RowAction = strval($CurrentForm->getValue($xmit_details_list->FormActionName));
+			elseif ($xmit_details->isGridAdd())
+				$xmit_details_list->RowAction = "insert";
+			else
+				$xmit_details_list->RowAction = "";
+		}
 
 		// Set up key count
 		$xmit_details_list->KeyCount = $xmit_details_list->RowIndex;
@@ -194,10 +260,27 @@ while ($xmit_details_list->RecCnt < $xmit_details_list->StopRec) {
 		$xmit_details->resetAttributes();
 		$xmit_details->CssClass = "";
 		if ($xmit_details->isGridAdd()) {
+			$xmit_details_list->loadRowValues(); // Load default values
 		} else {
 			$xmit_details_list->loadRowValues($xmit_details_list->Recordset); // Load row values
 		}
 		$xmit_details->RowType = ROWTYPE_VIEW; // Render view
+		if ($xmit_details->isGridAdd()) // Grid add
+			$xmit_details->RowType = ROWTYPE_ADD; // Render add
+		if ($xmit_details->isGridAdd() && $xmit_details->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) // Insert failed
+			$xmit_details_list->restoreCurrentRowFormValues($xmit_details_list->RowIndex); // Restore form values
+		if ($xmit_details->isGridEdit()) { // Grid edit
+			if ($xmit_details->EventCancelled)
+				$xmit_details_list->restoreCurrentRowFormValues($xmit_details_list->RowIndex); // Restore form values
+			if ($xmit_details_list->RowAction == "insert")
+				$xmit_details->RowType = ROWTYPE_ADD; // Render add
+			else
+				$xmit_details->RowType = ROWTYPE_EDIT; // Render edit
+		}
+		if ($xmit_details->isGridEdit() && ($xmit_details->RowType == ROWTYPE_EDIT || $xmit_details->RowType == ROWTYPE_ADD) && $xmit_details->EventCancelled) // Update failed
+			$xmit_details_list->restoreCurrentRowFormValues($xmit_details_list->RowIndex); // Restore form values
+		if ($xmit_details->RowType == ROWTYPE_EDIT) // Edit row
+			$xmit_details_list->EditRowCnt++;
 
 		// Set up row id / data-rowindex
 		$xmit_details->RowAttrs = array_merge($xmit_details->RowAttrs, array('data-rowindex'=>$xmit_details_list->RowCnt, 'id'=>'r' . $xmit_details_list->RowCnt . '_xmit_details', 'data-rowtype'=>$xmit_details->RowType));
@@ -207,6 +290,9 @@ while ($xmit_details_list->RecCnt < $xmit_details_list->StopRec) {
 
 		// Render list options
 		$xmit_details_list->renderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if ($xmit_details_list->RowAction <> "delete" && $xmit_details_list->RowAction <> "insertdelete" && !($xmit_details_list->RowAction == "insert" && $xmit_details->isConfirm() && $xmit_details_list->emptyRow())) {
 ?>
 	<tr<?php echo $xmit_details->rowAttributes() ?>>
 <?php
@@ -216,26 +302,107 @@ $xmit_details_list->ListOptions->render("body", "left", $xmit_details_list->RowC
 ?>
 	<?php if ($xmit_details->xmit_mode->Visible) { // xmit_mode ?>
 		<td data-name="xmit_mode"<?php echo $xmit_details->xmit_mode->cellAttributes() ?>>
+<?php if ($xmit_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $xmit_details_list->RowCnt ?>_xmit_details_xmit_mode" class="form-group xmit_details_xmit_mode">
+<input type="text" data-table="xmit_details" data-field="x_xmit_mode" name="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" id="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" size="30" placeholder="<?php echo HtmlEncode($xmit_details->xmit_mode->getPlaceHolder()) ?>" value="<?php echo $xmit_details->xmit_mode->EditValue ?>"<?php echo $xmit_details->xmit_mode->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="xmit_details" data-field="x_xmit_mode" name="o<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" id="o<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" value="<?php echo HtmlEncode($xmit_details->xmit_mode->OldValue) ?>">
+<?php } ?>
+<?php if ($xmit_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $xmit_details_list->RowCnt ?>_xmit_details_xmit_mode" class="form-group xmit_details_xmit_mode">
+<input type="text" data-table="xmit_details" data-field="x_xmit_mode" name="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" id="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" size="30" placeholder="<?php echo HtmlEncode($xmit_details->xmit_mode->getPlaceHolder()) ?>" value="<?php echo $xmit_details->xmit_mode->EditValue ?>"<?php echo $xmit_details->xmit_mode->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($xmit_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $xmit_details_list->RowCnt ?>_xmit_details_xmit_mode" class="xmit_details_xmit_mode">
 <span<?php echo $xmit_details->xmit_mode->viewAttributes() ?>>
 <?php echo $xmit_details->xmit_mode->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
+<?php if ($xmit_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="x<?php echo $xmit_details_list->RowIndex ?>_xmit_id" id="x<?php echo $xmit_details_list->RowIndex ?>_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->CurrentValue) ?>">
+<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="o<?php echo $xmit_details_list->RowIndex ?>_xmit_id" id="o<?php echo $xmit_details_list->RowIndex ?>_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->OldValue) ?>">
+<?php } ?>
+<?php if ($xmit_details->RowType == ROWTYPE_EDIT || $xmit_details->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="xmit_details" data-field="x_xmit_id" name="x<?php echo $xmit_details_list->RowIndex ?>_xmit_id" id="x<?php echo $xmit_details_list->RowIndex ?>_xmit_id" value="<?php echo HtmlEncode($xmit_details->xmit_id->CurrentValue) ?>">
+<?php } ?>
 <?php
 
 // Render list options (body, right)
 $xmit_details_list->ListOptions->render("body", "right", $xmit_details_list->RowCnt);
 ?>
 	</tr>
+<?php if ($xmit_details->RowType == ROWTYPE_ADD || $xmit_details->RowType == ROWTYPE_EDIT) { ?>
+<script>
+fxmit_detailslist.updateLists(<?php echo $xmit_details_list->RowIndex ?>);
+</script>
+<?php } ?>
 <?php
 	}
+	} // End delete row checking
 	if (!$xmit_details->isGridAdd())
-		$xmit_details_list->Recordset->moveNext();
+		if (!$xmit_details_list->Recordset->EOF)
+			$xmit_details_list->Recordset->moveNext();
+}
+?>
+<?php
+	if ($xmit_details->isGridAdd() || $xmit_details->isGridEdit()) {
+		$xmit_details_list->RowIndex = '$rowindex$';
+		$xmit_details_list->loadRowValues();
+
+		// Set row properties
+		$xmit_details->resetAttributes();
+		$xmit_details->RowAttrs = array_merge($xmit_details->RowAttrs, array('data-rowindex'=>$xmit_details_list->RowIndex, 'id'=>'r0_xmit_details', 'data-rowtype'=>ROWTYPE_ADD));
+		AppendClass($xmit_details->RowAttrs["class"], "ew-template");
+		$xmit_details->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$xmit_details_list->renderRow();
+
+		// Render list options
+		$xmit_details_list->renderListOptions();
+		$xmit_details_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $xmit_details->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$xmit_details_list->ListOptions->render("body", "left", $xmit_details_list->RowIndex);
+?>
+	<?php if ($xmit_details->xmit_mode->Visible) { // xmit_mode ?>
+		<td data-name="xmit_mode">
+<span id="el$rowindex$_xmit_details_xmit_mode" class="form-group xmit_details_xmit_mode">
+<input type="text" data-table="xmit_details" data-field="x_xmit_mode" name="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" id="x<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" size="30" placeholder="<?php echo HtmlEncode($xmit_details->xmit_mode->getPlaceHolder()) ?>" value="<?php echo $xmit_details->xmit_mode->EditValue ?>"<?php echo $xmit_details->xmit_mode->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="xmit_details" data-field="x_xmit_mode" name="o<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" id="o<?php echo $xmit_details_list->RowIndex ?>_xmit_mode" value="<?php echo HtmlEncode($xmit_details->xmit_mode->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$xmit_details_list->ListOptions->render("body", "right", $xmit_details_list->RowIndex);
+?>
+<script>
+fxmit_detailslist.updateLists(<?php echo $xmit_details_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
 }
 ?>
 </tbody>
 </table><!-- /.ew-table -->
+<?php } ?>
+<?php if ($xmit_details->isGridAdd()) { ?>
+<input type="hidden" name="action" id="action" value="gridinsert">
+<input type="hidden" name="<?php echo $xmit_details_list->FormKeyCountName ?>" id="<?php echo $xmit_details_list->FormKeyCountName ?>" value="<?php echo $xmit_details_list->KeyCount ?>">
+<?php echo $xmit_details_list->MultiSelectKey ?>
+<?php } ?>
+<?php if ($xmit_details->isGridEdit()) { ?>
+<input type="hidden" name="action" id="action" value="gridupdate">
+<input type="hidden" name="<?php echo $xmit_details_list->FormKeyCountName ?>" id="<?php echo $xmit_details_list->FormKeyCountName ?>" value="<?php echo $xmit_details_list->KeyCount ?>">
+<?php echo $xmit_details_list->MultiSelectKey ?>
 <?php } ?>
 <?php if (!$xmit_details->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">

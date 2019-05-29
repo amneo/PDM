@@ -778,10 +778,12 @@ class approval_details_delete extends approval_details
 
 			// short_code
 			$this->short_code->ViewValue = $this->short_code->CurrentValue;
+			$this->short_code->ViewValue = strtoupper($this->short_code->ViewValue);
 			$this->short_code->ViewCustomAttributes = "";
 
 			// Description
 			$this->Description->ViewValue = $this->Description->CurrentValue;
+			$this->Description->ViewValue = strtoupper($this->Description->ViewValue);
 			$this->Description->ViewCustomAttributes = "";
 
 			// out_status

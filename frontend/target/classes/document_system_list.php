@@ -713,6 +713,9 @@ class document_system_list extends document_system
 			$this->terminate();
 		}
 
+		// Create form object
+		$CurrentForm = new HttpForm();
+
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -817,6 +820,62 @@ class document_system_list extends document_system
 			if (!$this->isExport())
 				$this->setupBreadcrumb();
 
+			// Check QueryString parameters
+			if (Get("action") !== NULL) {
+				$this->CurrentAction = Get("action");
+
+				// Clear inline mode
+				if ($this->isCancel())
+					$this->clearInlineMode();
+
+				// Switch to grid edit mode
+				if ($this->isGridEdit())
+					$this->gridEditMode();
+
+				// Switch to grid add mode
+				if ($this->isGridAdd())
+					$this->gridAddMode();
+			} else {
+				if (Post("action") !== NULL) {
+					$this->CurrentAction = Post("action"); // Get action
+
+					// Grid Update
+					if (($this->isGridUpdate() || $this->isGridOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "gridedit") {
+						if ($this->validateGridForm()) {
+							$gridUpdate = $this->gridUpdate();
+						} else {
+							$gridUpdate = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridUpdate) {
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridEditMode(); // Stay in Grid edit mode
+						}
+					}
+
+					// Grid Insert
+					if ($this->isGridInsert() && @$_SESSION[SESSION_INLINE_MODE] == "gridadd") {
+						if ($this->validateGridForm()) {
+							$gridInsert = $this->gridInsert();
+						} else {
+							$gridInsert = FALSE;
+							$this->setFailureMessage($FormError);
+						}
+						if ($gridInsert) {
+						} else {
+							$this->EventCancelled = TRUE;
+							$this->gridAddMode(); // Stay in Grid add mode
+						}
+					}
+				} elseif (@$_SESSION[SESSION_INLINE_MODE] == "gridedit") { // Previously in grid edit mode
+					if (Get(TABLE_START_REC) !== NULL || Get(TABLE_PAGE_NO) !== NULL) // Stay in grid edit mode if paging
+						$this->gridEditMode();
+					else // Reset grid edit
+						$this->clearInlineMode();
+				}
+			}
+
 			// Hide list options
 			if ($this->isExport()) {
 				$this->ListOptions->hideAllOptions(array("sequence"));
@@ -838,6 +897,15 @@ class document_system_list extends document_system
 			// Hide other options
 			if ($this->isExport())
 				$this->OtherOptions->hideAllOptions();
+
+			// Show grid delete link for grid add / grid edit
+			if ($this->AllowAddDeleteRow) {
+				if ($this->isGridAdd() || $this->isGridEdit()) {
+					$item = &$this->ListOptions->getItem("griddelete");
+					if ($item)
+						$item->Visible = TRUE;
+				}
+			}
 
 			// Set up sorting order
 			$this->setupSortOrder();
@@ -920,6 +988,134 @@ class document_system_list extends document_system
 		}
 	}
 
+	// Exit inline mode
+	protected function clearInlineMode()
+	{
+		$this->LastAction = $this->CurrentAction; // Save last action
+		$this->CurrentAction = ""; // Clear action
+		$_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
+	}
+
+	// Switch to Grid Add mode
+	protected function gridAddMode()
+	{
+		$this->CurrentAction = "gridadd";
+		$_SESSION[SESSION_INLINE_MODE] = "gridadd";
+		$this->hideFieldsForAddEdit();
+	}
+
+	// Switch to Grid Edit mode
+	protected function gridEditMode()
+	{
+		$this->CurrentAction = "gridedit";
+		$_SESSION[SESSION_INLINE_MODE] = "gridedit";
+		$this->hideFieldsForAddEdit();
+	}
+
+	// Perform update to grid
+	public function gridUpdate()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$gridUpdate = TRUE;
+
+		// Get old recordset
+		$this->CurrentFilter = $this->buildKeyFilter();
+		if ($this->CurrentFilter == "")
+			$this->CurrentFilter = "0=1";
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		if ($rs = $conn->execute($sql)) {
+			$rsold = $rs->getRows();
+			$rs->close();
+		}
+
+		// Call Grid Updating event
+		if (!$this->Grid_Updating($rsold)) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridEditCancelled")); // Set grid edit cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+		$key = "";
+
+		// Update row index and get row key
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Update all rows based on key
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+			$CurrentForm->Index = $rowindex;
+			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+
+			// Load all values and keys
+			if ($rowaction <> "insertdelete") { // Skip insert then deleted rows
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "" || $rowaction == "edit" || $rowaction == "delete") {
+					$gridUpdate = $this->setupKeyValues($rowkey); // Set up key values
+				} else {
+					$gridUpdate = TRUE;
+				}
+
+				// Skip empty row
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// No action required
+				// Validate form and insert/update/delete record
+
+				} elseif ($gridUpdate) {
+					if ($rowaction == "delete") {
+						$this->CurrentFilter = $this->getRecordFilter();
+						$gridUpdate = $this->deleteRows(); // Delete this row
+					} else if (!$this->validateForm()) {
+						$gridUpdate = FALSE; // Form error, reset action
+						$this->setFailureMessage($FormError);
+					} else {
+						if ($rowaction == "insert") {
+							$gridUpdate = $this->addRow(); // Insert this row
+						} else {
+							if ($rowkey <> "") {
+								$this->SendEmail = FALSE; // Do not send email on update success
+								$gridUpdate = $this->editRow(); // Update this row
+							}
+						} // End update
+					}
+				}
+				if ($gridUpdate) {
+					if ($key <> "")
+						$key .= ", ";
+					$key .= $rowkey;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($gridUpdate) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Updated event
+			$this->Grid_Updated($rsold, $rsnew);
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
+			$this->clearInlineMode(); // Clear inline edit mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
+		}
+		return $gridUpdate;
+	}
+
 	// Build filter for all keys
 	protected function buildKeyFilter()
 	{
@@ -959,6 +1155,180 @@ class document_system_list extends document_system
 				return FALSE;
 		}
 		return TRUE;
+	}
+
+	// Perform Grid Add
+	public function gridInsert()
+	{
+		global $Language, $CurrentForm, $FormError;
+		$rowindex = 1;
+		$gridInsert = FALSE;
+		$conn = &$this->getConnection();
+
+		// Call Grid Inserting event
+		if (!$this->Grid_Inserting()) {
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("GridAddCancelled")); // Set grid add cancelled message
+			return FALSE;
+		}
+
+		// Begin transaction
+		$conn->beginTrans();
+
+		// Init key filter
+		$wrkfilter = "";
+		$addcnt = 0;
+		$key = "";
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Insert all rows
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "" && $rowaction <> "insert")
+				continue; // Skip
+			$this->loadFormValues(); // Get form values
+			if (!$this->emptyRow()) {
+				$addcnt++;
+				$this->SendEmail = FALSE; // Do not send email on insert success
+
+				// Validate form
+				if (!$this->validateForm()) {
+					$gridInsert = FALSE; // Form error, reset action
+					$this->setFailureMessage($FormError);
+				} else {
+					$gridInsert = $this->addRow($this->OldRecordset); // Insert this row
+				}
+				if ($gridInsert) {
+					if ($key <> "")
+						$key .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+					$key .= $this->type_id->CurrentValue;
+
+					// Add filter for this record
+					$filter = $this->getRecordFilter();
+					if ($wrkfilter <> "")
+						$wrkfilter .= " OR ";
+					$wrkfilter .= $filter;
+				} else {
+					break;
+				}
+			}
+		}
+		if ($addcnt == 0) { // No record inserted
+			$this->setFailureMessage($Language->phrase("NoAddRecord"));
+			$gridInsert = FALSE;
+		}
+		if ($gridInsert) {
+			$conn->commitTrans(); // Commit transaction
+
+			// Get new recordset
+			$this->CurrentFilter = $wrkfilter;
+			$sql = $this->getCurrentSql();
+			if ($rs = $conn->execute($sql)) {
+				$rsnew = $rs->getRows();
+				$rs->close();
+			}
+
+			// Call Grid_Inserted event
+			$this->Grid_Inserted($rsnew);
+			if ($this->getSuccessMessage() == "")
+				$this->setSuccessMessage($Language->phrase("InsertSuccess")); // Set up insert success message
+			$this->clearInlineMode(); // Clear grid add mode
+		} else {
+			$conn->rollbackTrans(); // Rollback transaction
+			if ($this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->phrase("InsertFailed")); // Set insert failed message
+		}
+		return $gridInsert;
+	}
+
+	// Check if empty row
+	public function emptyRow()
+	{
+		global $CurrentForm;
+		if ($CurrentForm->hasValue("x_system_name") && $CurrentForm->hasValue("o_system_name") && $this->system_name->CurrentValue <> $this->system_name->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_system_group") && $CurrentForm->hasValue("o_system_group") && $this->system_group->CurrentValue <> $this->system_group->OldValue)
+			return FALSE;
+		return TRUE;
+	}
+
+	// Validate grid form
+	public function validateGridForm()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+
+		// Validate all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else if (!$this->validateForm()) {
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	}
+
+	// Get all form values of the grid
+	public function getGridFormValues()
+	{
+		global $CurrentForm;
+
+		// Get row count
+		$CurrentForm->Index = -1;
+		$rowcnt = strval($CurrentForm->getValue($this->FormKeyCountName));
+		if ($rowcnt == "" || !is_numeric($rowcnt))
+			$rowcnt = 0;
+		$rows = array();
+
+		// Loop through all records
+		for ($rowindex = 1; $rowindex <= $rowcnt; $rowindex++) {
+
+			// Load current row values
+			$CurrentForm->Index = $rowindex;
+			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
+			if ($rowaction <> "delete" && $rowaction <> "insertdelete") {
+				$this->loadFormValues(); // Get form values
+				if ($rowaction == "insert" && $this->emptyRow()) {
+
+					// Ignore
+				} else {
+					$rows[] = $this->getFieldValues("FormValue"); // Return row as array
+				}
+			}
+		}
+		return $rows; // Return as array of array
+	}
+
+	// Restore form values for current row
+	public function restoreCurrentRowFormValues($idx)
+	{
+		global $CurrentForm;
+
+		// Get row based on current index
+		$CurrentForm->Index = $idx;
+		$this->loadFormValues(); // Load form values
 	}
 
 	// Set up sort parameters
@@ -1020,6 +1390,14 @@ class document_system_list extends document_system
 	{
 		global $Security, $Language;
 
+		// "griddelete"
+		if ($this->AllowAddDeleteRow) {
+			$item = &$this->ListOptions->add("griddelete");
+			$item->CssClass = "text-nowrap";
+			$item->OnLeft = TRUE;
+			$item->Visible = FALSE; // Default hidden
+		}
+
 		// Add group option item
 		$item = &$this->ListOptions->add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
@@ -1074,6 +1452,37 @@ class document_system_list extends document_system
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
 
+		// Set up row action and key
+		if (is_numeric($this->RowIndex) && $this->CurrentMode <> "view") {
+			$CurrentForm->Index = $this->RowIndex;
+			$actionName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormActionName);
+			$oldKeyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormOldKeyName);
+			$keyName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormKeyName);
+			$blankRowName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormBlankRowName);
+			if ($this->RowAction <> "")
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $actionName . "\" id=\"" . $actionName . "\" value=\"" . $this->RowAction . "\">";
+			if ($this->RowAction == "delete") {
+				$rowkey = $CurrentForm->getValue($this->FormKeyName);
+				$this->setupKeyValues($rowkey);
+			}
+			if ($this->RowAction == "insert" && $this->isConfirm() && $this->emptyRow())
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $blankRowName . "\" id=\"" . $blankRowName . "\" value=\"1\">";
+		}
+
+		// "delete"
+		if ($this->AllowAddDeleteRow) {
+			if ($this->isGridAdd() || $this->isGridEdit()) {
+				$options = &$this->ListOptions;
+				$options->UseButtonGroup = TRUE; // Use button group for grid delete button
+				$opt = &$options->Items["griddelete"];
+				if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+					$opt->Body = "&nbsp;";
+				} else {
+					$opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
+				}
+			}
+		}
+
 		// "copy"
 		$opt = &$this->ListOptions->Items["copy"];
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
@@ -1115,6 +1524,9 @@ class document_system_list extends document_system
 		// "checkbox"
 		$opt = &$this->ListOptions->Items["checkbox"];
 		$opt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ew-multi-select\" value=\"" . HtmlEncode($this->type_id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\">";
+		if ($this->isGridEdit() && is_numeric($this->RowIndex)) {
+			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $keyName . "\" id=\"" . $keyName . "\" value=\"" . $this->type_id->CurrentValue . "\">";
+		}
 		$this->renderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1133,6 +1545,15 @@ class document_system_list extends document_system
 		$addcaption = HtmlTitle($Language->phrase("AddLink"));
 		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->canAdd());
+		$item = &$option->add("gridadd");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
+		$item->Visible = ($this->GridAddUrl <> "" && $Security->canAdd());
+
+		// Add grid edit
+		$option = $options["addedit"];
+		$item = &$option->add("gridedit");
+		$item->Body = "<a class=\"ew-add-edit ew-grid-edit\" title=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" href=\"" . HtmlEncode($this->GridEditUrl) . "\">" . $Language->phrase("GridEditLink") . "</a>";
+		$item->Visible = ($this->GridEditUrl <> "" && $Security->canEdit());
 		$option = $options["action"];
 
 		// Set up options default
@@ -1171,6 +1592,7 @@ class document_system_list extends document_system
 	{
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
+		if (!$this->isGridAdd() && !$this->isGridEdit()) { // Not grid add/edit mode
 			$option = &$options["action"];
 
 			// Set up list action buttons
@@ -1192,6 +1614,50 @@ class document_system_list extends document_system
 				$option = &$options["action"];
 				$option->hideAllOptions();
 			}
+		} else { // Grid add/edit mode
+
+			// Hide all options first
+			foreach ($options as &$option)
+				$option->hideAllOptions();
+			if ($this->isGridAdd()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+
+				// Add grid insert
+				$item = &$option->add("gridinsert");
+				$item->Body = "<a class=\"ew-action ew-grid-insert\" title=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridInsertLink") . "</a>";
+
+				// Add grid cancel
+				$item = &$option->add("gridcancel");
+				$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+			if ($this->isGridEdit()) {
+				if ($this->AllowAddDeleteRow) {
+
+					// Add add blank row
+					$option = &$options["addedit"];
+					$option->UseDropDownButton = FALSE;
+					$item = &$option->add("addblankrow");
+					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+					$item->Visible = $Security->canAdd();
+				}
+				$option = &$options["action"];
+				$option->UseDropDownButton = FALSE;
+					$item = &$option->add("gridsave");
+					$item->Body = "<a class=\"ew-action ew-grid-save\" title=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" href=\"\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridSaveLink") . "</a>";
+					$item = &$option->add("gridcancel");
+					$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $this->CancelUrl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+			}
+		}
 	}
 
 	// Process list action
@@ -1348,6 +1814,60 @@ class document_system_list extends document_system
 		}
 	}
 
+	// Load default values
+	protected function loadDefaultValues()
+	{
+		$this->type_id->CurrentValue = NULL;
+		$this->type_id->OldValue = $this->type_id->CurrentValue;
+		$this->system_name->CurrentValue = NULL;
+		$this->system_name->OldValue = $this->system_name->CurrentValue;
+		$this->system_group->CurrentValue = NULL;
+		$this->system_group->OldValue = $this->system_group->CurrentValue;
+	}
+
+	// Load form values
+	protected function loadFormValues()
+	{
+
+		// Load from form
+		global $CurrentForm;
+
+		// Check field name 'system_name' first before field var 'x_system_name'
+		$val = $CurrentForm->hasValue("system_name") ? $CurrentForm->getValue("system_name") : $CurrentForm->getValue("x_system_name");
+		if (!$this->system_name->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->system_name->Visible = FALSE; // Disable update for API request
+			else
+				$this->system_name->setFormValue($val);
+		}
+		$this->system_name->setOldValue($CurrentForm->getValue("o_system_name"));
+
+		// Check field name 'system_group' first before field var 'x_system_group'
+		$val = $CurrentForm->hasValue("system_group") ? $CurrentForm->getValue("system_group") : $CurrentForm->getValue("x_system_group");
+		if (!$this->system_group->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->system_group->Visible = FALSE; // Disable update for API request
+			else
+				$this->system_group->setFormValue($val);
+		}
+		$this->system_group->setOldValue($CurrentForm->getValue("o_system_group"));
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
+		if (!$this->type_id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
+			$this->type_id->setFormValue($val);
+	}
+
+	// Restore form values
+	public function restoreFormValues()
+	{
+		global $CurrentForm;
+		if (!$this->isGridAdd() && !$this->isAdd())
+			$this->type_id->CurrentValue = $this->type_id->FormValue;
+		$this->system_name->CurrentValue = $this->system_name->FormValue;
+		$this->system_group->CurrentValue = $this->system_group->FormValue;
+	}
+
 	// Load recordset
 	public function loadRecordset($offset = -1, $rowcnt = -1)
 	{
@@ -1393,6 +1913,8 @@ class document_system_list extends document_system
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
+			if (!$this->EventCancelled)
+				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -1418,10 +1940,11 @@ class document_system_list extends document_system
 	// Return a row with default values
 	protected function newRow()
 	{
+		$this->loadDefaultValues();
 		$row = [];
-		$row['type_id'] = NULL;
-		$row['system_name'] = NULL;
-		$row['system_group'] = NULL;
+		$row['type_id'] = $this->type_id->CurrentValue;
+		$row['system_name'] = $this->system_name->CurrentValue;
+		$row['system_group'] = $this->system_group->CurrentValue;
 		return $row;
 	}
 
@@ -1480,6 +2003,7 @@ class document_system_list extends document_system
 
 			// system_group
 			$this->system_group->ViewValue = $this->system_group->CurrentValue;
+			$this->system_group->ViewValue = strtoupper($this->system_group->ViewValue);
 			$this->system_group->ViewCustomAttributes = "";
 
 			// system_name
@@ -1491,11 +2015,362 @@ class document_system_list extends document_system
 			$this->system_group->LinkCustomAttributes = "";
 			$this->system_group->HrefValue = "";
 			$this->system_group->TooltipValue = "";
+		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
+
+			// system_name
+			$this->system_name->EditAttrs["class"] = "form-control";
+			$this->system_name->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->system_name->CurrentValue = HtmlDecode($this->system_name->CurrentValue);
+			$this->system_name->EditValue = HtmlEncode($this->system_name->CurrentValue);
+			$this->system_name->PlaceHolder = RemoveHtml($this->system_name->caption());
+
+			// system_group
+			$this->system_group->EditAttrs["class"] = "form-control";
+			$this->system_group->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->system_group->CurrentValue = HtmlDecode($this->system_group->CurrentValue);
+			$this->system_group->EditValue = HtmlEncode($this->system_group->CurrentValue);
+			$this->system_group->PlaceHolder = RemoveHtml($this->system_group->caption());
+
+			// Add refer script
+			// system_name
+
+			$this->system_name->LinkCustomAttributes = "";
+			$this->system_name->HrefValue = "";
+
+			// system_group
+			$this->system_group->LinkCustomAttributes = "";
+			$this->system_group->HrefValue = "";
+		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
+
+			// system_name
+			$this->system_name->EditAttrs["class"] = "form-control";
+			$this->system_name->EditCustomAttributes = "";
+			$this->system_name->EditValue = $this->system_name->CurrentValue;
+			$this->system_name->ViewCustomAttributes = "";
+
+			// system_group
+			$this->system_group->EditAttrs["class"] = "form-control";
+			$this->system_group->EditCustomAttributes = "";
+			if (REMOVE_XSS)
+				$this->system_group->CurrentValue = HtmlDecode($this->system_group->CurrentValue);
+			$this->system_group->EditValue = HtmlEncode($this->system_group->CurrentValue);
+			$this->system_group->PlaceHolder = RemoveHtml($this->system_group->caption());
+
+			// Edit refer script
+			// system_name
+
+			$this->system_name->LinkCustomAttributes = "";
+			$this->system_name->HrefValue = "";
+			$this->system_name->TooltipValue = "";
+
+			// system_group
+			$this->system_group->LinkCustomAttributes = "";
+			$this->system_group->HrefValue = "";
 		}
+		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
+			$this->setupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Validate form
+	protected function validateForm()
+	{
+		global $Language, $FormError;
+
+		// Initialize form error message
+		$FormError = "";
+
+		// Check if validation required
+		if (!SERVER_VALIDATE)
+			return ($FormError == "");
+		if ($this->type_id->Required) {
+			if (!$this->type_id->IsDetailKey && $this->type_id->FormValue != NULL && $this->type_id->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->type_id->caption(), $this->type_id->RequiredErrorMessage));
+			}
+		}
+		if ($this->system_name->Required) {
+			if (!$this->system_name->IsDetailKey && $this->system_name->FormValue != NULL && $this->system_name->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->system_name->caption(), $this->system_name->RequiredErrorMessage));
+			}
+		}
+		if ($this->system_group->Required) {
+			if (!$this->system_group->IsDetailKey && $this->system_group->FormValue != NULL && $this->system_group->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->system_group->caption(), $this->system_group->RequiredErrorMessage));
+			}
+		}
+
+		// Return validate result
+		$validateForm = ($FormError == "");
+
+		// Call Form_CustomValidate event
+		$formCustomError = "";
+		$validateForm = $validateForm && $this->Form_CustomValidate($formCustomError);
+		if ($formCustomError <> "") {
+			AddMessage($FormError, $formCustomError);
+		}
+		return $validateForm;
+	}
+
+	// Delete records based on current filter
+	protected function deleteRows()
+	{
+		global $Language, $Security;
+		if (!$Security->canDelete()) {
+			$this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
+			return FALSE;
+		}
+		$deleteRows = TRUE;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE) {
+			return FALSE;
+		} elseif ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+			$rs->close();
+			return FALSE;
+		}
+		$rows = ($rs) ? $rs->getRows() : [];
+
+		// Clone old rows
+		$rsold = $rows;
+		if ($rs)
+			$rs->close();
+
+		// Call row deleting event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$deleteRows = $this->Row_Deleting($row);
+				if (!$deleteRows)
+					break;
+			}
+		}
+		if ($deleteRows) {
+			$key = "";
+			foreach ($rsold as $row) {
+				$thisKey = "";
+				if ($thisKey <> "")
+					$thisKey .= $GLOBALS["COMPOSITE_KEY_SEPARATOR"];
+				$thisKey .= $row['type_id'];
+				if (DELETE_UPLOADED_FILES) // Delete old files
+					$this->deleteUploadedFiles($row);
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				$deleteRows = $this->delete($row); // Delete
+				$conn->raiseErrorFn = '';
+				if ($deleteRows === FALSE)
+					break;
+				if ($key <> "")
+					$key .= ", ";
+				$key .= $thisKey;
+			}
+		}
+		if (!$deleteRows) {
+
+			// Set up error message
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("DeleteCancelled"));
+			}
+		}
+
+		// Call Row Deleted event
+		if ($deleteRows) {
+			foreach ($rsold as $row) {
+				$this->Row_Deleted($row);
+			}
+		}
+
+		// Write JSON for API request (Support single row only)
+		if (IsApi() && $deleteRows) {
+			$row = $this->getRecordsFromRecordset($rsold, TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $deleteRows;
+	}
+
+	// Update record based on key values
+	protected function editRow()
+	{
+		global $Security, $Language;
+		$filter = $this->getRecordFilter();
+		$filter = $this->applyUserIDFilters($filter);
+		$conn = &$this->getConnection();
+		if ($this->system_name->CurrentValue <> "") { // Check field with unique index
+			$filterChk = "(\"system_name\" = '" . AdjustSql($this->system_name->CurrentValue, $this->Dbid) . "')";
+			$filterChk .= " AND NOT (" . $filter . ")";
+			$this->CurrentFilter = $filterChk;
+			$sqlChk = $this->getCurrentSql();
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$rsChk = $conn->Execute($sqlChk);
+			$conn->raiseErrorFn = '';
+			if ($rsChk === FALSE) {
+				return FALSE;
+			} elseif (!$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->system_name->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->system_name->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+			$rsChk->close();
+		}
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+		$rs = $conn->execute($sql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+			$editRow = FALSE; // Update Failed
+		} else {
+
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->loadDbValues($rsold);
+			$rsnew = [];
+
+			// system_group
+			$this->system_group->setDbValueDef($rsnew, $this->system_group->CurrentValue, "", $this->system_group->ReadOnly);
+
+			// Call Row Updating event
+			$updateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($updateRow) {
+				$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+				if (count($rsnew) > 0)
+					$editRow = $this->update($rsnew, "", $rsold);
+				else
+					$editRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($editRow) {
+				}
+			} else {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->phrase("UpdateCancelled"));
+				}
+				$editRow = FALSE;
+			}
+		}
+
+		// Call Row_Updated event
+		if ($editRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->close();
+
+		// Write JSON for API request
+		if (IsApi() && $editRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $editRow;
+	}
+
+	// Load row hash
+	protected function loadRowHash()
+	{
+		$filter = $this->getRecordFilter();
+
+		// Load SQL based on filter
+		$this->CurrentFilter = $filter;
+		$sql = $this->getCurrentSql();
+		$conn = &$this->getConnection();
+		$rsRow = $conn->Execute($sql);
+		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
+		$rsRow->close();
+	}
+
+	// Get Row Hash
+	public function getRowHash(&$rs)
+	{
+		if (!$rs)
+			return "";
+		$hash = "";
+		$hash .= GetFieldHash($rs->fields('system_group')); // system_group
+		return md5($hash);
+	}
+
+	// Add record
+	protected function addRow($rsold = NULL)
+	{
+		global $Language, $Security;
+		if ($this->system_name->CurrentValue <> "") { // Check field with unique index
+			$filter = "(system_name = '" . AdjustSql($this->system_name->CurrentValue, $this->Dbid) . "')";
+			$rsChk = $this->loadRs($filter);
+			if ($rsChk && !$rsChk->EOF) {
+				$idxErrMsg = str_replace("%f", $this->system_name->caption(), $Language->phrase("DupIndex"));
+				$idxErrMsg = str_replace("%v", $this->system_name->CurrentValue, $idxErrMsg);
+				$this->setFailureMessage($idxErrMsg);
+				$rsChk->close();
+				return FALSE;
+			}
+		}
+		$conn = &$this->getConnection();
+
+		// Load db values from rsold
+		$this->loadDbValues($rsold);
+		if ($rsold) {
+		}
+		$rsnew = [];
+
+		// system_name
+		$this->system_name->setDbValueDef($rsnew, $this->system_name->CurrentValue, "", FALSE);
+
+		// system_group
+		$this->system_group->setDbValueDef($rsnew, $this->system_group->CurrentValue, "", FALSE);
+
+		// Call Row Inserting event
+		$rs = ($rsold) ? $rsold->fields : NULL;
+		$insertRow = $this->Row_Inserting($rs, $rsnew);
+		if ($insertRow) {
+			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
+			$addRow = $this->insert($rsnew);
+			$conn->raiseErrorFn = '';
+			if ($addRow) {
+			}
+		} else {
+			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+				// Use the message, do nothing
+			} elseif ($this->CancelMessage <> "") {
+				$this->setFailureMessage($this->CancelMessage);
+				$this->CancelMessage = "";
+			} else {
+				$this->setFailureMessage($Language->phrase("InsertCancelled"));
+			}
+			$addRow = FALSE;
+		}
+		if ($addRow) {
+
+			// Call Row Inserted event
+			$rs = ($rsold) ? $rsold->fields : NULL;
+			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Write JSON for API request
+		if (IsApi() && $addRow) {
+			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
+			WriteJson(["success" => TRUE, $this->TableVar => $row]);
+		}
+		return $addRow;
 	}
 
 	// Get export HTML tag

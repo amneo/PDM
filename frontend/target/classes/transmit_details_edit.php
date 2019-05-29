@@ -1021,6 +1021,7 @@ class transmit_details_edit extends transmit_details
 
 			// transmittal_no
 			$this->transmittal_no->ViewValue = $this->transmittal_no->CurrentValue;
+			$this->transmittal_no->ViewValue = strtoupper($this->transmittal_no->ViewValue);
 			$this->transmittal_no->ViewCustomAttributes = "";
 
 			// project_name
@@ -1037,7 +1038,7 @@ class transmit_details_edit extends transmit_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1052,14 +1053,17 @@ class transmit_details_edit extends transmit_details
 
 			// delivery_location
 			$this->delivery_location->ViewValue = $this->delivery_location->CurrentValue;
+			$this->delivery_location->ViewValue = strtoupper($this->delivery_location->ViewValue);
 			$this->delivery_location->ViewCustomAttributes = "";
 
 			// addressed_to
 			$this->addressed_to->ViewValue = $this->addressed_to->CurrentValue;
+			$this->addressed_to->ViewValue = strtoupper($this->addressed_to->ViewValue);
 			$this->addressed_to->ViewCustomAttributes = "";
 
 			// remarks
 			$this->remarks->ViewValue = $this->remarks->CurrentValue;
+			$this->remarks->ViewValue = strtoupper($this->remarks->ViewValue);
 			$this->remarks->ViewCustomAttributes = "";
 
 			// ack_rcvd
@@ -1097,7 +1101,7 @@ class transmit_details_edit extends transmit_details
 						$ari = 0;
 						while (!$rswrk->EOF) {
 							$arwrk = array();
-							$arwrk[1] = $rswrk->fields('df');
+							$arwrk[1] = strtoupper($rswrk->fields('df'));
 							$this->transmit_mode->ViewValue->add($this->transmit_mode->displayValue($arwrk));
 							$rswrk->MoveNext();
 							$ari++;
@@ -1164,6 +1168,7 @@ class transmit_details_edit extends transmit_details
 			$this->transmittal_no->EditAttrs["class"] = "form-control";
 			$this->transmittal_no->EditCustomAttributes = "";
 			$this->transmittal_no->EditValue = $this->transmittal_no->CurrentValue;
+			$this->transmittal_no->EditValue = strtoupper($this->transmittal_no->EditValue);
 			$this->transmittal_no->ViewCustomAttributes = "";
 
 			// project_name
@@ -1182,7 +1187,7 @@ class transmit_details_edit extends transmit_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1258,6 +1263,10 @@ class transmit_details_edit extends transmit_details
 				$rswrk = Conn()->execute($sqlWrk);
 				$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 				if ($rswrk) $rswrk->Close();
+				$rowcnt = count($arwrk);
+				for ($i = 0; $i < $rowcnt; $i++) {
+					$arwrk[$i][1] = strtoupper($arwrk[$i][1]);
+				}
 				$this->transmit_mode->EditValue = $arwrk;
 			}
 
@@ -1608,8 +1617,12 @@ class transmit_details_edit extends transmit_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 						case "x_transmit_mode":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

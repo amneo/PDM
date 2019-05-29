@@ -218,13 +218,13 @@ class document_log extends DbTable
 
 		// planned_date_1
 		$this->planned_date_1 = new DbField('document_log', 'document_log', 'x_planned_date_1', 'planned_date_1', '"planned_date_1"', CastDateFieldForLike('"planned_date_1"', 5, "DB"), 133, 5, FALSE, '"planned_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->planned_date_1->Sortable = FALSE; // Allow sort
+		$this->planned_date_1->Sortable = TRUE; // Allow sort
 		$this->planned_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['planned_date_1'] = &$this->planned_date_1;
 
 		// transmit_date_1
 		$this->transmit_date_1 = new DbField('document_log', 'document_log', 'x_transmit_date_1', 'transmit_date_1', '"transmit_date_1"', CastDateFieldForLike('"transmit_date_1"', 5, "DB"), 133, 5, FALSE, '"transmit_date_1"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->transmit_date_1->Sortable = FALSE; // Allow sort
+		$this->transmit_date_1->Sortable = TRUE; // Allow sort
 		$this->transmit_date_1->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
 		$this->fields['transmit_date_1'] = &$this->transmit_date_1;
 
@@ -762,7 +762,7 @@ class document_log extends DbTable
 	}
 	public function getSqlOrderBy() // Order By
 	{
-		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "";
+		return ($this->SqlOrderBy <> "") ? $this->SqlOrderBy : "\"firelink_doc_no\" DESC";
 	}
 	public function sqlOrderBy() // For backward compatibility
 	{
@@ -1673,8 +1673,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_1->ViewValue = $this->approval_status_1->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1731,8 +1731,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_2->ViewValue = $this->approval_status_2->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1789,8 +1789,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_3->ViewValue = $this->approval_status_3->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1847,8 +1847,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_4->ViewValue = $this->approval_status_4->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1905,8 +1905,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_5->ViewValue = $this->approval_status_5->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1963,8 +1963,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_6->ViewValue = $this->approval_status_6->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -2021,8 +2021,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_7->ViewValue = $this->approval_status_7->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -2079,8 +2079,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_8->ViewValue = $this->approval_status_8->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -2137,8 +2137,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_9->ViewValue = $this->approval_status_9->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -2196,8 +2196,8 @@ class document_log extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status_10->ViewValue = $this->approval_status_10->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -3554,6 +3554,8 @@ class document_log extends DbTable
 					$doc->exportCaption($this->submit_no_1);
 					$doc->exportCaption($this->revision_no_1);
 					$doc->exportCaption($this->direction_1);
+					$doc->exportCaption($this->planned_date_1);
+					$doc->exportCaption($this->transmit_date_1);
 					$doc->exportCaption($this->transmit_no_1);
 					$doc->exportCaption($this->approval_status_1);
 					$doc->exportCaption($this->submit_no_2);
@@ -3736,6 +3738,8 @@ class document_log extends DbTable
 						$doc->exportField($this->submit_no_1);
 						$doc->exportField($this->revision_no_1);
 						$doc->exportField($this->direction_1);
+						$doc->exportField($this->planned_date_1);
+						$doc->exportField($this->transmit_date_1);
 						$doc->exportField($this->transmit_no_1);
 						$doc->exportField($this->approval_status_1);
 						$doc->exportField($this->submit_no_2);

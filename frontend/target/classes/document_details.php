@@ -94,8 +94,6 @@ class document_details extends DbTable
 
 		// client_doc_no
 		$this->client_doc_no = new DbField('document_details', 'document_details', 'x_client_doc_no', 'client_doc_no', '"client_doc_no"', '"client_doc_no"', 200, -1, FALSE, '"client_doc_no"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->client_doc_no->Nullable = FALSE; // NOT NULL field
-		$this->client_doc_no->Required = TRUE; // Required field
 		$this->client_doc_no->Sortable = TRUE; // Allow sort
 		$this->fields['client_doc_no'] = &$this->client_doc_no;
 
@@ -132,11 +130,11 @@ class document_details extends DbTable
 		$this->fields['create_date'] = &$this->create_date;
 
 		// planned_date
-		$this->planned_date = new DbField('document_details', 'document_details', 'x_planned_date', 'planned_date', '"planned_date"', CastDateFieldForLike('"planned_date"', 5, "DB"), 133, 5, FALSE, '"planned_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->planned_date = new DbField('document_details', 'document_details', 'x_planned_date', 'planned_date', '"planned_date"', CastDateFieldForLike('"planned_date"', 0, "DB"), 133, -1, FALSE, '"planned_date"', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->planned_date->Nullable = FALSE; // NOT NULL field
 		$this->planned_date->Required = TRUE; // Required field
 		$this->planned_date->Sortable = TRUE; // Allow sort
-		$this->planned_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateYMD"));
+		$this->planned_date->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
 		$this->fields['planned_date'] = &$this->planned_date;
 
 		// document_type
@@ -868,14 +866,17 @@ class document_details extends DbTable
 
 		// firelink_doc_no
 		$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
+		$this->firelink_doc_no->ViewValue = strtoupper($this->firelink_doc_no->ViewValue);
 		$this->firelink_doc_no->ViewCustomAttributes = "";
 
 		// client_doc_no
 		$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+		$this->client_doc_no->ViewValue = strtoupper($this->client_doc_no->ViewValue);
 		$this->client_doc_no->ViewCustomAttributes = "";
 
 		// document_tittle
 		$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+		$this->document_tittle->ViewValue = strtoupper($this->document_tittle->ViewValue);
 		$this->document_tittle->ViewCustomAttributes = "";
 
 		// project_name
@@ -892,7 +893,7 @@ class document_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$arwrk[2] = $rswrk->fields('df2');
 					$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 					$rswrk->Close();
@@ -935,7 +936,6 @@ class document_details extends DbTable
 
 		// planned_date
 		$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-		$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 		$this->planned_date->ViewCustomAttributes = "";
 
 		// document_type
@@ -952,7 +952,7 @@ class document_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1086,7 +1086,7 @@ class document_details extends DbTable
 		// planned_date
 		$this->planned_date->EditAttrs["class"] = "form-control";
 		$this->planned_date->EditCustomAttributes = "";
-		$this->planned_date->EditValue = FormatDateTime($this->planned_date->CurrentValue, 5);
+		$this->planned_date->EditValue = $this->planned_date->CurrentValue;
 		$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 		// document_type
@@ -1146,7 +1146,6 @@ class document_details extends DbTable
 					$doc->exportCaption($this->document_tittle);
 					$doc->exportCaption($this->project_name);
 					$doc->exportCaption($this->project_system);
-					$doc->exportCaption($this->create_date);
 					$doc->exportCaption($this->planned_date);
 					$doc->exportCaption($this->document_type);
 					$doc->exportCaption($this->expiry_date);
@@ -1195,7 +1194,6 @@ class document_details extends DbTable
 						$doc->exportField($this->document_tittle);
 						$doc->exportField($this->project_name);
 						$doc->exportField($this->project_system);
-						$doc->exportField($this->create_date);
 						$doc->exportField($this->planned_date);
 						$doc->exportField($this->document_type);
 						$doc->exportField($this->expiry_date);

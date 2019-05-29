@@ -845,14 +845,17 @@ class document_details_search extends document_details
 
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
+			$this->firelink_doc_no->ViewValue = strtoupper($this->firelink_doc_no->ViewValue);
 			$this->firelink_doc_no->ViewCustomAttributes = "";
 
 			// client_doc_no
 			$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+			$this->client_doc_no->ViewValue = strtoupper($this->client_doc_no->ViewValue);
 			$this->client_doc_no->ViewCustomAttributes = "";
 
 			// document_tittle
 			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewValue = strtoupper($this->document_tittle->ViewValue);
 			$this->document_tittle->ViewCustomAttributes = "";
 
 			// project_name
@@ -869,7 +872,7 @@ class document_details_search extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$arwrk[2] = $rswrk->fields('df2');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
@@ -905,14 +908,8 @@ class document_details_search extends document_details
 			}
 			$this->project_system->ViewCustomAttributes = "";
 
-			// create_date
-			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
-			$this->create_date->ViewCustomAttributes = "";
-
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
@@ -929,7 +926,7 @@ class document_details_search extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1046,7 +1043,7 @@ class document_details_search extends document_details
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
 			$this->planned_date->EditCustomAttributes = "";
-			$this->planned_date->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->planned_date->AdvancedSearch->SearchValue, 5), 5));
+			$this->planned_date->EditValue = HtmlEncode(UnFormatDateTime($this->planned_date->AdvancedSearch->SearchValue, 0));
 			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 			// document_type
@@ -1082,7 +1079,7 @@ class document_details_search extends document_details
 		// Check if validation required
 		if (!SERVER_VALIDATE)
 			return TRUE;
-		if (!CheckStdDate($this->planned_date->AdvancedSearch->SearchValue)) {
+		if (!CheckDate($this->planned_date->AdvancedSearch->SearchValue)) {
 			AddMessage($SearchError, $this->planned_date->errorMessage());
 		}
 		if (!CheckDate($this->expiry_date->AdvancedSearch->SearchValue)) {
@@ -1157,10 +1154,14 @@ class document_details_search extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 						case "x_project_system":
 							break;
 						case "x_document_type":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

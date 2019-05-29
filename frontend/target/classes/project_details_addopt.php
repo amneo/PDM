@@ -820,14 +820,17 @@ class project_details_addopt extends project_details
 
 			// project_name
 			$this->project_name->ViewValue = $this->project_name->CurrentValue;
+			$this->project_name->ViewValue = strtoupper($this->project_name->ViewValue);
 			$this->project_name->ViewCustomAttributes = "";
 
 			// project_our_client
 			$this->project_our_client->ViewValue = $this->project_our_client->CurrentValue;
+			$this->project_our_client->ViewValue = strtoupper($this->project_our_client->ViewValue);
 			$this->project_our_client->ViewCustomAttributes = "";
 
 			// project_end_user
 			$this->project_end_user->ViewValue = $this->project_end_user->CurrentValue;
+			$this->project_end_user->ViewValue = strtoupper($this->project_end_user->ViewValue);
 			$this->project_end_user->ViewCustomAttributes = "";
 
 			// project_sales_engg
@@ -840,6 +843,7 @@ class project_details_addopt extends project_details
 
 			// project_transmittal
 			$this->project_transmittal->ViewValue = $this->project_transmittal->CurrentValue;
+			$this->project_transmittal->ViewValue = strtoupper($this->project_transmittal->ViewValue);
 			$this->project_transmittal->ViewCustomAttributes = "";
 
 			// order_number

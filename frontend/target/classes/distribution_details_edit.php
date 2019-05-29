@@ -978,8 +978,8 @@ class distribution_details_edit extends distribution_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
-						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
+						$arwrk[2] = strtoupper($rswrk->fields('df2'));
 						$arwrk[3] = $rswrk->fields('df3');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
@@ -1064,8 +1064,8 @@ class distribution_details_edit extends distribution_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
+						$arwrk[1] = HtmlEncode(strtoupper($rswrk->fields('df')));
+						$arwrk[2] = HtmlEncode(strtoupper($rswrk->fields('df2')));
 						$arwrk[3] = HtmlEncode($rswrk->fields('df3'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
@@ -1281,6 +1281,10 @@ class distribution_details_edit extends distribution_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
+							$row[2] = strtoupper($row[2]);
+							$row['df2'] = $row[2];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

@@ -689,6 +689,7 @@ class document_system extends DbTable
 		// type_id
 
 		$this->type_id->ViewValue = $this->type_id->CurrentValue;
+		$this->type_id->ViewValue = strtoupper($this->type_id->ViewValue);
 		$this->type_id->ViewCustomAttributes = "";
 
 		// system_name
@@ -697,6 +698,7 @@ class document_system extends DbTable
 
 		// system_group
 		$this->system_group->ViewValue = $this->system_group->CurrentValue;
+		$this->system_group->ViewValue = strtoupper($this->system_group->ViewValue);
 		$this->system_group->ViewCustomAttributes = "";
 
 		// type_id
@@ -733,6 +735,7 @@ class document_system extends DbTable
 		$this->type_id->EditAttrs["class"] = "form-control";
 		$this->type_id->EditCustomAttributes = "";
 		$this->type_id->EditValue = $this->type_id->CurrentValue;
+		$this->type_id->EditValue = strtoupper($this->type_id->EditValue);
 		$this->type_id->ViewCustomAttributes = "";
 
 		// system_name

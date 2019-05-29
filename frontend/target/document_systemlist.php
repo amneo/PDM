@@ -41,6 +41,55 @@ currentPageID = ew.PAGE_ID = "list";
 var fdocument_systemlist = currentForm = new ew.Form("fdocument_systemlist", "list");
 fdocument_systemlist.formKeyCountName = '<?php echo $document_system_list->FormKeyCountName ?>';
 
+// Validate form
+fdocument_systemlist.validate = function() {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.getForm(), $fobj = $(fobj);
+	if ($fobj.find("#confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.formKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = ["insert", "gridinsert"].includes($fobj.find("#action").val()) && $k[0];
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.emptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		<?php if ($document_system_list->system_name->Required) { ?>
+			elm = this.getElements("x" + infix + "_system_name");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_system->system_name->caption(), $document_system->system_name->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($document_system_list->system_group->Required) { ?>
+			elm = this.getElements("x" + infix + "_system_group");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_system->system_group->caption(), $document_system->system_group->RequiredErrorMessage)) ?>");
+		<?php } ?>
+
+			// Fire Form_CustomValidate event
+			if (!this.Form_CustomValidate(fobj))
+				return false;
+		} // End Grid Add checking
+	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew.alert(ew.language.phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fdocument_systemlist.emptyRow = function(infix) {
+	var fobj = this._form;
+	if (ew.valueChanged(fobj, infix, "system_name", false)) return false;
+	if (ew.valueChanged(fobj, infix, "system_group", false)) return false;
+	return true;
+}
+
 // Form_CustomValidate event
 fdocument_systemlist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
 
@@ -177,6 +226,15 @@ if ($document_system->ExportAll && $document_system->isExport()) {
 	else
 		$document_system_list->StopRec = $document_system_list->TotalRecs;
 }
+
+// Restore number of post back records
+if ($CurrentForm && $document_system_list->EventCancelled) {
+	$CurrentForm->Index = -1;
+	if ($CurrentForm->hasValue($document_system_list->FormKeyCountName) && ($document_system->isGridAdd() || $document_system->isGridEdit() || $document_system->isConfirm())) {
+		$document_system_list->KeyCount = $CurrentForm->getValue($document_system_list->FormKeyCountName);
+		$document_system_list->StopRec = $document_system_list->StartRec + $document_system_list->KeyCount - 1;
+	}
+}
 $document_system_list->RecCnt = $document_system_list->StartRec - 1;
 if ($document_system_list->Recordset && !$document_system_list->Recordset->EOF) {
 	$document_system_list->Recordset->moveFirst();
@@ -191,10 +249,24 @@ if ($document_system_list->Recordset && !$document_system_list->Recordset->EOF) 
 $document_system->RowType = ROWTYPE_AGGREGATEINIT;
 $document_system->resetAttributes();
 $document_system_list->renderRow();
+if ($document_system->isGridAdd())
+	$document_system_list->RowIndex = 0;
+if ($document_system->isGridEdit())
+	$document_system_list->RowIndex = 0;
 while ($document_system_list->RecCnt < $document_system_list->StopRec) {
 	$document_system_list->RecCnt++;
 	if ($document_system_list->RecCnt >= $document_system_list->StartRec) {
 		$document_system_list->RowCnt++;
+		if ($document_system->isGridAdd() || $document_system->isGridEdit() || $document_system->isConfirm()) {
+			$document_system_list->RowIndex++;
+			$CurrentForm->Index = $document_system_list->RowIndex;
+			if ($CurrentForm->hasValue($document_system_list->FormActionName) && $document_system_list->EventCancelled)
+				$document_system_list->RowAction = strval($CurrentForm->getValue($document_system_list->FormActionName));
+			elseif ($document_system->isGridAdd())
+				$document_system_list->RowAction = "insert";
+			else
+				$document_system_list->RowAction = "";
+		}
 
 		// Set up key count
 		$document_system_list->KeyCount = $document_system_list->RowIndex;
@@ -203,10 +275,27 @@ while ($document_system_list->RecCnt < $document_system_list->StopRec) {
 		$document_system->resetAttributes();
 		$document_system->CssClass = "";
 		if ($document_system->isGridAdd()) {
+			$document_system_list->loadRowValues(); // Load default values
 		} else {
 			$document_system_list->loadRowValues($document_system_list->Recordset); // Load row values
 		}
 		$document_system->RowType = ROWTYPE_VIEW; // Render view
+		if ($document_system->isGridAdd()) // Grid add
+			$document_system->RowType = ROWTYPE_ADD; // Render add
+		if ($document_system->isGridAdd() && $document_system->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) // Insert failed
+			$document_system_list->restoreCurrentRowFormValues($document_system_list->RowIndex); // Restore form values
+		if ($document_system->isGridEdit()) { // Grid edit
+			if ($document_system->EventCancelled)
+				$document_system_list->restoreCurrentRowFormValues($document_system_list->RowIndex); // Restore form values
+			if ($document_system_list->RowAction == "insert")
+				$document_system->RowType = ROWTYPE_ADD; // Render add
+			else
+				$document_system->RowType = ROWTYPE_EDIT; // Render edit
+		}
+		if ($document_system->isGridEdit() && ($document_system->RowType == ROWTYPE_EDIT || $document_system->RowType == ROWTYPE_ADD) && $document_system->EventCancelled) // Update failed
+			$document_system_list->restoreCurrentRowFormValues($document_system_list->RowIndex); // Restore form values
+		if ($document_system->RowType == ROWTYPE_EDIT) // Edit row
+			$document_system_list->EditRowCnt++;
 
 		// Set up row id / data-rowindex
 		$document_system->RowAttrs = array_merge($document_system->RowAttrs, array('data-rowindex'=>$document_system_list->RowCnt, 'id'=>'r' . $document_system_list->RowCnt . '_document_system', 'data-rowtype'=>$document_system->RowType));
@@ -216,6 +305,9 @@ while ($document_system_list->RecCnt < $document_system_list->StopRec) {
 
 		// Render list options
 		$document_system_list->renderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if ($document_system_list->RowAction <> "delete" && $document_system_list->RowAction <> "insertdelete" && !($document_system_list->RowAction == "insert" && $document_system->isConfirm() && $document_system_list->emptyRow())) {
 ?>
 	<tr<?php echo $document_system->rowAttributes() ?>>
 <?php
@@ -225,18 +317,53 @@ $document_system_list->ListOptions->render("body", "left", $document_system_list
 ?>
 	<?php if ($document_system->system_name->Visible) { // system_name ?>
 		<td data-name="system_name"<?php echo $document_system->system_name->cellAttributes() ?>>
+<?php if ($document_system->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_name" class="form-group document_system_system_name">
+<input type="text" data-table="document_system" data-field="x_system_name" name="x<?php echo $document_system_list->RowIndex ?>_system_name" id="x<?php echo $document_system_list->RowIndex ?>_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="o<?php echo $document_system_list->RowIndex ?>_system_name" id="o<?php echo $document_system_list->RowIndex ?>_system_name" value="<?php echo HtmlEncode($document_system->system_name->OldValue) ?>">
+<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_name" class="form-group document_system_system_name">
+<span<?php echo $document_system->system_name->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?php echo RemoveHtml($document_system->system_name->EditValue) ?>"></span>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="x<?php echo $document_system_list->RowIndex ?>_system_name" id="x<?php echo $document_system_list->RowIndex ?>_system_name" value="<?php echo HtmlEncode($document_system->system_name->CurrentValue) ?>">
+<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_name" class="document_system_system_name">
 <span<?php echo $document_system->system_name->viewAttributes() ?>>
 <?php echo $document_system->system_name->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="document_system" data-field="x_type_id" name="x<?php echo $document_system_list->RowIndex ?>_type_id" id="x<?php echo $document_system_list->RowIndex ?>_type_id" value="<?php echo HtmlEncode($document_system->type_id->CurrentValue) ?>">
+<input type="hidden" data-table="document_system" data-field="x_type_id" name="o<?php echo $document_system_list->RowIndex ?>_type_id" id="o<?php echo $document_system_list->RowIndex ?>_type_id" value="<?php echo HtmlEncode($document_system->type_id->OldValue) ?>">
+<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_EDIT || $document_system->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="document_system" data-field="x_type_id" name="x<?php echo $document_system_list->RowIndex ?>_type_id" id="x<?php echo $document_system_list->RowIndex ?>_type_id" value="<?php echo HtmlEncode($document_system->type_id->CurrentValue) ?>">
+<?php } ?>
 	<?php if ($document_system->system_group->Visible) { // system_group ?>
 		<td data-name="system_group"<?php echo $document_system->system_group->cellAttributes() ?>>
+<?php if ($document_system->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_group" class="form-group document_system_system_group">
+<input type="text" data-table="document_system" data-field="x_system_group" name="x<?php echo $document_system_list->RowIndex ?>_system_group" id="x<?php echo $document_system_list->RowIndex ?>_system_group" size="30" placeholder="<?php echo HtmlEncode($document_system->system_group->getPlaceHolder()) ?>" value="<?php echo $document_system->system_group->EditValue ?>"<?php echo $document_system->system_group->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_group" name="o<?php echo $document_system_list->RowIndex ?>_system_group" id="o<?php echo $document_system_list->RowIndex ?>_system_group" value="<?php echo HtmlEncode($document_system->system_group->OldValue) ?>">
+<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_group" class="form-group document_system_system_group">
+<input type="text" data-table="document_system" data-field="x_system_group" name="x<?php echo $document_system_list->RowIndex ?>_system_group" id="x<?php echo $document_system_list->RowIndex ?>_system_group" size="30" placeholder="<?php echo HtmlEncode($document_system->system_group->getPlaceHolder()) ?>" value="<?php echo $document_system->system_group->EditValue ?>"<?php echo $document_system->system_group->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($document_system->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $document_system_list->RowCnt ?>_document_system_system_group" class="document_system_system_group">
 <span<?php echo $document_system->system_group->viewAttributes() ?>>
 <?php echo $document_system->system_group->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 <?php
@@ -245,14 +372,83 @@ $document_system_list->ListOptions->render("body", "left", $document_system_list
 $document_system_list->ListOptions->render("body", "right", $document_system_list->RowCnt);
 ?>
 	</tr>
+<?php if ($document_system->RowType == ROWTYPE_ADD || $document_system->RowType == ROWTYPE_EDIT) { ?>
+<script>
+fdocument_systemlist.updateLists(<?php echo $document_system_list->RowIndex ?>);
+</script>
+<?php } ?>
 <?php
 	}
+	} // End delete row checking
 	if (!$document_system->isGridAdd())
-		$document_system_list->Recordset->moveNext();
+		if (!$document_system_list->Recordset->EOF)
+			$document_system_list->Recordset->moveNext();
+}
+?>
+<?php
+	if ($document_system->isGridAdd() || $document_system->isGridEdit()) {
+		$document_system_list->RowIndex = '$rowindex$';
+		$document_system_list->loadRowValues();
+
+		// Set row properties
+		$document_system->resetAttributes();
+		$document_system->RowAttrs = array_merge($document_system->RowAttrs, array('data-rowindex'=>$document_system_list->RowIndex, 'id'=>'r0_document_system', 'data-rowtype'=>ROWTYPE_ADD));
+		AppendClass($document_system->RowAttrs["class"], "ew-template");
+		$document_system->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$document_system_list->renderRow();
+
+		// Render list options
+		$document_system_list->renderListOptions();
+		$document_system_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $document_system->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$document_system_list->ListOptions->render("body", "left", $document_system_list->RowIndex);
+?>
+	<?php if ($document_system->system_name->Visible) { // system_name ?>
+		<td data-name="system_name">
+<span id="el$rowindex$_document_system_system_name" class="form-group document_system_system_name">
+<input type="text" data-table="document_system" data-field="x_system_name" name="x<?php echo $document_system_list->RowIndex ?>_system_name" id="x<?php echo $document_system_list->RowIndex ?>_system_name" size="30" placeholder="<?php echo HtmlEncode($document_system->system_name->getPlaceHolder()) ?>" value="<?php echo $document_system->system_name->EditValue ?>"<?php echo $document_system->system_name->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_name" name="o<?php echo $document_system_list->RowIndex ?>_system_name" id="o<?php echo $document_system_list->RowIndex ?>_system_name" value="<?php echo HtmlEncode($document_system->system_name->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($document_system->system_group->Visible) { // system_group ?>
+		<td data-name="system_group">
+<span id="el$rowindex$_document_system_system_group" class="form-group document_system_system_group">
+<input type="text" data-table="document_system" data-field="x_system_group" name="x<?php echo $document_system_list->RowIndex ?>_system_group" id="x<?php echo $document_system_list->RowIndex ?>_system_group" size="30" placeholder="<?php echo HtmlEncode($document_system->system_group->getPlaceHolder()) ?>" value="<?php echo $document_system->system_group->EditValue ?>"<?php echo $document_system->system_group->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="document_system" data-field="x_system_group" name="o<?php echo $document_system_list->RowIndex ?>_system_group" id="o<?php echo $document_system_list->RowIndex ?>_system_group" value="<?php echo HtmlEncode($document_system->system_group->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$document_system_list->ListOptions->render("body", "right", $document_system_list->RowIndex);
+?>
+<script>
+fdocument_systemlist.updateLists(<?php echo $document_system_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
 }
 ?>
 </tbody>
 </table><!-- /.ew-table -->
+<?php } ?>
+<?php if ($document_system->isGridAdd()) { ?>
+<input type="hidden" name="action" id="action" value="gridinsert">
+<input type="hidden" name="<?php echo $document_system_list->FormKeyCountName ?>" id="<?php echo $document_system_list->FormKeyCountName ?>" value="<?php echo $document_system_list->KeyCount ?>">
+<?php echo $document_system_list->MultiSelectKey ?>
+<?php } ?>
+<?php if ($document_system->isGridEdit()) { ?>
+<input type="hidden" name="action" id="action" value="gridupdate">
+<input type="hidden" name="<?php echo $document_system_list->FormKeyCountName ?>" id="<?php echo $document_system_list->FormKeyCountName ?>" value="<?php echo $document_system_list->KeyCount ?>">
+<?php echo $document_system_list->MultiSelectKey ?>
 <?php } ?>
 <?php if (!$document_system->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">

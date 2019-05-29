@@ -947,8 +947,8 @@ class transaction_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -968,6 +968,7 @@ class transaction_details extends DbTable
 
 		// document_tittle
 		$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+		$this->document_tittle->ViewValue = strtoupper($this->document_tittle->ViewValue);
 		$this->document_tittle->ViewCustomAttributes = "";
 
 		// submit_no
@@ -978,6 +979,7 @@ class transaction_details extends DbTable
 
 		// revision_no
 		$this->revision_no->ViewValue = $this->revision_no->CurrentValue;
+		$this->revision_no->ViewValue = strtoupper($this->revision_no->ViewValue);
 		$this->revision_no->ViewCustomAttributes = "";
 
 		// transmit_no
@@ -994,7 +996,7 @@ class transaction_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$this->transmit_no->ViewValue = $this->transmit_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1031,8 +1033,8 @@ class transaction_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->approval_status->ViewValue = $this->approval_status->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1197,8 +1199,8 @@ class transaction_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$this->firelink_doc_no->EditValue = $this->firelink_doc_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1232,6 +1234,7 @@ class transaction_details extends DbTable
 		$this->revision_no->EditAttrs["class"] = "form-control";
 		$this->revision_no->EditCustomAttributes = "";
 		$this->revision_no->EditValue = $this->revision_no->CurrentValue;
+		$this->revision_no->EditValue = strtoupper($this->revision_no->EditValue);
 		$this->revision_no->ViewCustomAttributes = "";
 
 		// transmit_no
@@ -1250,7 +1253,7 @@ class transaction_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$this->transmit_no->EditValue = $this->transmit_no->displayValue($arwrk);
 					$rswrk->Close();
 				} else {

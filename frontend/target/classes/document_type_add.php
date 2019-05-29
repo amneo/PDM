@@ -519,6 +519,7 @@ class document_type_add extends document_type
 		global $COMPOSITE_KEY_SEPARATOR;
 		$key = "";
 		if (is_array($ar)) {
+			$key .= @$ar['type_id'];
 		}
 		return $key;
 	}
@@ -530,6 +531,8 @@ class document_type_add extends document_type
 	 */
 	protected function hideFieldsForAddEdit()
 	{
+		if ($this->isAdd() || $this->isCopy() || $this->isGridAdd())
+			$this->type_id->Visible = FALSE;
 	}
 	public $FormClassName = "ew-horizontal ew-form ew-add-form";
 	public $IsModal = FALSE;
@@ -653,7 +656,16 @@ class document_type_add extends document_type
 			$this->CurrentAction = Post("action"); // Get form action
 			$postBack = TRUE;
 		} else { // Not post back
-			$this->CopyRecord = FALSE;
+
+			// Load key values from QueryString
+			$this->CopyRecord = TRUE;
+			if (Get("type_id") !== NULL) {
+				$this->type_id->setQueryStringValue(Get("type_id"));
+				$this->setKey("type_id", $this->type_id->CurrentValue); // Set up key
+			} else {
+				$this->setKey("type_id", ""); // Clear key
+				$this->CopyRecord = FALSE;
+			}
 			if ($this->CopyRecord) {
 				$this->CurrentAction = "copy"; // Copy record
 			} else {
@@ -770,6 +782,9 @@ class document_type_add extends document_type
 			else
 				$this->document_category->setFormValue($val);
 		}
+
+		// Check field name 'type_id' first before field var 'x_type_id'
+		$val = $CurrentForm->hasValue("type_id") ? $CurrentForm->getValue("type_id") : $CurrentForm->getValue("x_type_id");
 	}
 
 	// Restore form values
@@ -834,7 +849,24 @@ class document_type_add extends document_type
 	// Load old record
 	protected function loadOldRecord()
 	{
-		return FALSE;
+
+		// Load key values from Session
+		$validKey = TRUE;
+		if (strval($this->getKey("type_id")) <> "")
+			$this->type_id->CurrentValue = $this->getKey("type_id"); // type_id
+		else
+			$validKey = FALSE;
+
+		// Load old record
+		$this->OldRecordset = NULL;
+		if ($validKey) {
+			$this->CurrentFilter = $this->getRecordFilter();
+			$sql = $this->getCurrentSql();
+			$conn = &$this->getConnection();
+			$this->OldRecordset = LoadRecordset($sql, $conn);
+		}
+		$this->loadRowValues($this->OldRecordset); // Load row values
+		return $validKey;
 	}
 
 	// Render row values based on field settings
@@ -856,10 +888,12 @@ class document_type_add extends document_type
 
 			// document_type
 			$this->document_type->ViewValue = $this->document_type->CurrentValue;
+			$this->document_type->ViewValue = strtoupper($this->document_type->ViewValue);
 			$this->document_type->ViewCustomAttributes = "";
 
 			// document_category
 			$this->document_category->ViewValue = $this->document_category->CurrentValue;
+			$this->document_category->ViewValue = strtoupper($this->document_category->ViewValue);
 			$this->document_category->ViewCustomAttributes = "";
 
 			// document_type

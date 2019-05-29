@@ -822,8 +822,8 @@ class distribution_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
-					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
+					$arwrk[2] = strtoupper($rswrk->fields('df2'));
 					$arwrk[3] = $rswrk->fields('df3');
 					$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 					$rswrk->Close();

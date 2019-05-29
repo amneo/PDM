@@ -84,21 +84,13 @@ fdocument_detailslist.validate = function() {
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->project_system->caption(), $document_details->project_system->RequiredErrorMessage)) ?>");
 		<?php } ?>
-		<?php if ($document_details_list->create_date->Required) { ?>
-			elm = this.getElements("x" + infix + "_create_date");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->create_date->caption(), $document_details->create_date->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_create_date");
-			if (elm && !ew.checkDate(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($document_details->create_date->errorMessage()) ?>");
 		<?php if ($document_details_list->planned_date->Required) { ?>
 			elm = this.getElements("x" + infix + "_planned_date");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_details->planned_date->caption(), $document_details->planned_date->RequiredErrorMessage)) ?>");
 		<?php } ?>
 			elm = this.getElements("x" + infix + "_planned_date");
-			if (elm && !ew.checkDate(elm.value))
+			if (elm && !ew.checkDateDef(elm.value))
 				return this.onError(elm, "<?php echo JsEncode($document_details->planned_date->errorMessage()) ?>");
 		<?php if ($document_details_list->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
@@ -134,7 +126,6 @@ fdocument_detailslist.emptyRow = function(infix) {
 	if (ew.valueChanged(fobj, infix, "document_tittle", false)) return false;
 	if (ew.valueChanged(fobj, infix, "project_name", false)) return false;
 	if (ew.valueChanged(fobj, infix, "project_system", false)) return false;
-	if (ew.valueChanged(fobj, infix, "create_date", false)) return false;
 	if (ew.valueChanged(fobj, infix, "planned_date", false)) return false;
 	if (ew.valueChanged(fobj, infix, "document_type", false)) return false;
 	if (ew.valueChanged(fobj, infix, "expiry_date", false)) return false;
@@ -332,15 +323,6 @@ $document_details_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($document_details->create_date->Visible) { // create_date ?>
-	<?php if ($document_details->sortUrl($document_details->create_date) == "") { ?>
-		<th data-name="create_date" class="<?php echo $document_details->create_date->headerCellClass() ?>"><div id="elh_document_details_create_date" class="document_details_create_date"><div class="ew-table-header-caption"><?php echo $document_details->create_date->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="create_date" class="<?php echo $document_details->create_date->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event,'<?php echo $document_details->SortUrl($document_details->create_date) ?>',2);"><div id="elh_document_details_create_date" class="document_details_create_date">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $document_details->create_date->caption() ?></span><span class="ew-table-header-sort"><?php if ($document_details->create_date->getSort() == "ASC") { ?><i class="fa fa-sort-up"></i><?php } elseif ($document_details->create_date->getSort() == "DESC") { ?><i class="fa fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
 <?php if ($document_details->planned_date->Visible) { // planned_date ?>
 	<?php if ($document_details->sortUrl($document_details->planned_date) == "") { ?>
 		<th data-name="planned_date" class="<?php echo $document_details->planned_date->headerCellClass() ?>"><div id="elh_document_details_planned_date" class="document_details_planned_date"><div class="ew-table-header-caption"><?php echo $document_details->planned_date->caption() ?></div></div></th>
@@ -470,26 +452,13 @@ fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_lis
 <input type="hidden" data-table="document_details" data-field="x_project_system" name="o<?php echo $document_details_list->RowIndex ?>_project_system" id="o<?php echo $document_details_list->RowIndex ?>_project_system" value="<?php echo HtmlEncode($document_details->project_system->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($document_details->create_date->Visible) { // create_date ?>
-		<td data-name="create_date">
-<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="form-group document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
-</script>
-<?php } ?>
-</span>
-<input type="hidden" data-table="document_details" data-field="x_create_date" name="o<?php echo $document_details_list->RowIndex ?>_create_date" id="o<?php echo $document_details_list->RowIndex ?>_create_date" value="<?php echo HtmlEncode($document_details->create_date->OldValue) ?>">
-</td>
-	<?php } ?>
 	<?php if ($document_details->planned_date->Visible) { // planned_date ?>
 		<td data-name="planned_date">
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="form-group document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>
@@ -823,45 +792,14 @@ fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_lis
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($document_details->create_date->Visible) { // create_date ?>
-		<td data-name="create_date"<?php echo $document_details->create_date->cellAttributes() ?>>
-<?php if ($document_details->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="form-group document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
-</script>
-<?php } ?>
-</span>
-<input type="hidden" data-table="document_details" data-field="x_create_date" name="o<?php echo $document_details_list->RowIndex ?>_create_date" id="o<?php echo $document_details_list->RowIndex ?>_create_date" value="<?php echo HtmlEncode($document_details->create_date->OldValue) ?>">
-<?php } ?>
-<?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="form-group document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
-</script>
-<?php } ?>
-</span>
-<?php } ?>
-<?php if ($document_details->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $document_details_list->RowCnt ?>_document_details_create_date" class="document_details_create_date">
-<span<?php echo $document_details->create_date->viewAttributes() ?>>
-<?php echo $document_details->create_date->getViewValue() ?></span>
-</span>
-<?php } ?>
-</td>
-	<?php } ?>
 	<?php if ($document_details->planned_date->Visible) { // planned_date ?>
 		<td data-name="planned_date"<?php echo $document_details->planned_date->cellAttributes() ?>>
 <?php if ($document_details->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="form-group document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>
@@ -869,10 +807,10 @@ ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_
 <?php } ?>
 <?php if ($document_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $document_details_list->RowCnt ?>_document_details_planned_date" class="form-group document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>
@@ -1085,26 +1023,13 @@ fdocument_detailslist.createAutoSuggest({"id":"x<?php echo $document_details_lis
 <input type="hidden" data-table="document_details" data-field="x_project_system" name="o<?php echo $document_details_list->RowIndex ?>_project_system" id="o<?php echo $document_details_list->RowIndex ?>_project_system" value="<?php echo HtmlEncode($document_details->project_system->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($document_details->create_date->Visible) { // create_date ?>
-		<td data-name="create_date">
-<span id="el$rowindex$_document_details_create_date" class="form-group document_details_create_date">
-<input type="text" data-table="document_details" data-field="x_create_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_create_date" id="x<?php echo $document_details_list->RowIndex ?>_create_date" placeholder="<?php echo HtmlEncode($document_details->create_date->getPlaceHolder()) ?>" value="<?php echo $document_details->create_date->EditValue ?>"<?php echo $document_details->create_date->editAttributes() ?>>
-<?php if (!$document_details->create_date->ReadOnly && !$document_details->create_date->Disabled && !isset($document_details->create_date->EditAttrs["readonly"]) && !isset($document_details->create_date->EditAttrs["disabled"])) { ?>
-<script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_create_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
-</script>
-<?php } ?>
-</span>
-<input type="hidden" data-table="document_details" data-field="x_create_date" name="o<?php echo $document_details_list->RowIndex ?>_create_date" id="o<?php echo $document_details_list->RowIndex ?>_create_date" value="<?php echo HtmlEncode($document_details->create_date->OldValue) ?>">
-</td>
-	<?php } ?>
 	<?php if ($document_details->planned_date->Visible) { // planned_date ?>
 		<td data-name="planned_date">
 <span id="el$rowindex$_document_details_planned_date" class="form-group document_details_planned_date">
-<input type="text" data-table="document_details" data-field="x_planned_date" data-format="5" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
+<input type="text" data-table="document_details" data-field="x_planned_date" name="x<?php echo $document_details_list->RowIndex ?>_planned_date" id="x<?php echo $document_details_list->RowIndex ?>_planned_date" placeholder="<?php echo HtmlEncode($document_details->planned_date->getPlaceHolder()) ?>" value="<?php echo $document_details->planned_date->EditValue ?>"<?php echo $document_details->planned_date->editAttributes() ?>>
 <?php if (!$document_details->planned_date->ReadOnly && !$document_details->planned_date->Disabled && !isset($document_details->planned_date->EditAttrs["readonly"]) && !isset($document_details->planned_date->EditAttrs["disabled"])) { ?>
 <script>
-ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":5});
+ew.createDateTimePicker("fdocument_detailslist", "x<?php echo $document_details_list->RowIndex ?>_planned_date", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 </script>
 <?php } ?>
 </span>

@@ -677,6 +677,7 @@ class xmit_details extends DbTable
 
 		// xmit_mode
 		$this->xmit_mode->ViewValue = $this->xmit_mode->CurrentValue;
+		$this->xmit_mode->ViewValue = strtoupper($this->xmit_mode->ViewValue);
 		$this->xmit_mode->ViewCustomAttributes = "";
 
 		// xmit_id

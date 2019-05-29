@@ -53,14 +53,6 @@ fdocument_typeaddopt.validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-		<?php if ($document_type_addopt->type_id->Required) { ?>
-			elm = this.getElements("x" + infix + "_type_id");
-			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $document_type->type_id->caption(), $document_type->type_id->RequiredErrorMessage)) ?>");
-		<?php } ?>
-			elm = this.getElements("x" + infix + "_type_id");
-			if (elm && !ew.checkInteger(elm.value))
-				return this.onError(elm, "<?php echo JsEncode($document_type->type_id->errorMessage()) ?>");
 		<?php if ($document_type_addopt->document_type->Required) { ?>
 			elm = this.getElements("x" + infix + "_document_type");
 			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -107,14 +99,6 @@ $document_type_addopt->showMessage();
 <?php //} ?>
 <input type="hidden" name="<?php echo API_ACTION_NAME ?>" id="<?php echo API_ACTION_NAME ?>" value="<?php echo API_ADD_ACTION ?>">
 <input type="hidden" name="<?php echo API_OBJECT_NAME ?>" id="<?php echo API_OBJECT_NAME ?>" value="<?php echo $document_type_addopt->TableVar ?>">
-<?php if ($document_type->type_id->Visible) { // type_id ?>
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label ew-label" for="x_type_id"><?php echo $document_type->type_id->caption() ?><?php echo ($document_type->type_id->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="col-sm-10">
-<input type="text" data-table="document_type" data-field="x_type_id" name="x_type_id" id="x_type_id" placeholder="<?php echo HtmlEncode($document_type->type_id->getPlaceHolder()) ?>" value="<?php echo $document_type->type_id->EditValue ?>"<?php echo $document_type->type_id->editAttributes() ?>>
-<?php echo $document_type->type_id->CustomMsg ?></div>
-	</div>
-<?php } ?>
 <?php if ($document_type->document_type->Visible) { // document_type ?>
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_document_type"><?php echo $document_type->document_type->caption() ?><?php echo ($document_type->document_type->Required) ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

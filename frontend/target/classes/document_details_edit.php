@@ -861,7 +861,7 @@ class document_details_edit extends document_details
 				$this->planned_date->Visible = FALSE; // Disable update for API request
 			else
 				$this->planned_date->setFormValue($val);
-			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
+			$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
 		}
 
 		// Check field name 'document_type' first before field var 'x_document_type'
@@ -900,7 +900,7 @@ class document_details_edit extends document_details
 		$this->project_name->CurrentValue = $this->project_name->FormValue;
 		$this->project_system->CurrentValue = $this->project_system->FormValue;
 		$this->planned_date->CurrentValue = $this->planned_date->FormValue;
-		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 5);
+		$this->planned_date->CurrentValue = UnFormatDateTime($this->planned_date->CurrentValue, 0);
 		$this->document_type->CurrentValue = $this->document_type->FormValue;
 		$this->expiry_date->CurrentValue = $this->expiry_date->FormValue;
 		$this->expiry_date->CurrentValue = UnFormatDateTime($this->expiry_date->CurrentValue, 0);
@@ -1029,14 +1029,17 @@ class document_details_edit extends document_details
 
 			// firelink_doc_no
 			$this->firelink_doc_no->ViewValue = $this->firelink_doc_no->CurrentValue;
+			$this->firelink_doc_no->ViewValue = strtoupper($this->firelink_doc_no->ViewValue);
 			$this->firelink_doc_no->ViewCustomAttributes = "";
 
 			// client_doc_no
 			$this->client_doc_no->ViewValue = $this->client_doc_no->CurrentValue;
+			$this->client_doc_no->ViewValue = strtoupper($this->client_doc_no->ViewValue);
 			$this->client_doc_no->ViewCustomAttributes = "";
 
 			// document_tittle
 			$this->document_tittle->ViewValue = $this->document_tittle->CurrentValue;
+			$this->document_tittle->ViewValue = strtoupper($this->document_tittle->ViewValue);
 			$this->document_tittle->ViewCustomAttributes = "";
 
 			// project_name
@@ -1053,7 +1056,7 @@ class document_details_edit extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$arwrk[2] = $rswrk->fields('df2');
 						$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
@@ -1089,14 +1092,8 @@ class document_details_edit extends document_details
 			}
 			$this->project_system->ViewCustomAttributes = "";
 
-			// create_date
-			$this->create_date->ViewValue = $this->create_date->CurrentValue;
-			$this->create_date->ViewValue = FormatDateTime($this->create_date->ViewValue, 5);
-			$this->create_date->ViewCustomAttributes = "";
-
 			// planned_date
 			$this->planned_date->ViewValue = $this->planned_date->CurrentValue;
-			$this->planned_date->ViewValue = FormatDateTime($this->planned_date->ViewValue, 5);
 			$this->planned_date->ViewCustomAttributes = "";
 
 			// document_type
@@ -1113,7 +1110,7 @@ class document_details_edit extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->document_type->ViewValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1211,7 +1208,7 @@ class document_details_edit extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[1] = HtmlEncode(strtoupper($rswrk->fields('df')));
 						$arwrk[2] = HtmlEncode($rswrk->fields('df2'));
 						$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 						$rswrk->Close();
@@ -1250,7 +1247,7 @@ class document_details_edit extends document_details
 			// planned_date
 			$this->planned_date->EditAttrs["class"] = "form-control";
 			$this->planned_date->EditCustomAttributes = "";
-			$this->planned_date->EditValue = HtmlEncode(FormatDateTime($this->planned_date->CurrentValue, 5));
+			$this->planned_date->EditValue = HtmlEncode($this->planned_date->CurrentValue);
 			$this->planned_date->PlaceHolder = RemoveHtml($this->planned_date->caption());
 
 			// document_type
@@ -1268,7 +1265,7 @@ class document_details_edit extends document_details
 					$rswrk = Conn()->execute($sqlWrk);
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = array();
-						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$arwrk[1] = HtmlEncode(strtoupper($rswrk->fields('df')));
 						$this->document_type->EditValue = $this->document_type->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
@@ -1379,7 +1376,7 @@ class document_details_edit extends document_details
 				AddMessage($FormError, str_replace("%s", $this->planned_date->caption(), $this->planned_date->RequiredErrorMessage));
 			}
 		}
-		if (!CheckStdDate($this->planned_date->FormValue)) {
+		if (!CheckDate($this->planned_date->FormValue)) {
 			AddMessage($FormError, $this->planned_date->errorMessage());
 		}
 		if ($this->document_type->Required) {
@@ -1434,25 +1431,6 @@ class document_details_edit extends document_details
 			}
 			$rsChk->close();
 		}
-		if ($this->client_doc_no->CurrentValue <> "") { // Check field with unique index
-			$filterChk = "(\"client_doc_no\" = '" . AdjustSql($this->client_doc_no->CurrentValue, $this->Dbid) . "')";
-			$filterChk .= " AND NOT (" . $filter . ")";
-			$this->CurrentFilter = $filterChk;
-			$sqlChk = $this->getCurrentSql();
-			$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
-			$rsChk = $conn->Execute($sqlChk);
-			$conn->raiseErrorFn = '';
-			if ($rsChk === FALSE) {
-				return FALSE;
-			} elseif (!$rsChk->EOF) {
-				$idxErrMsg = str_replace("%f", $this->client_doc_no->caption(), $Language->phrase("DupIndex"));
-				$idxErrMsg = str_replace("%v", $this->client_doc_no->CurrentValue, $idxErrMsg);
-				$this->setFailureMessage($idxErrMsg);
-				$rsChk->close();
-				return FALSE;
-			}
-			$rsChk->close();
-		}
 		$this->CurrentFilter = $filter;
 		$sql = $this->getCurrentSql();
 		$conn->raiseErrorFn = $GLOBALS["ERROR_FUNC"];
@@ -1474,7 +1452,7 @@ class document_details_edit extends document_details
 			$this->firelink_doc_no->setDbValueDef($rsnew, $this->firelink_doc_no->CurrentValue, "", $this->firelink_doc_no->ReadOnly);
 
 			// client_doc_no
-			$this->client_doc_no->setDbValueDef($rsnew, $this->client_doc_no->CurrentValue, "", $this->client_doc_no->ReadOnly);
+			$this->client_doc_no->setDbValueDef($rsnew, $this->client_doc_no->CurrentValue, NULL, $this->client_doc_no->ReadOnly);
 
 			// document_tittle
 			$this->document_tittle->setDbValueDef($rsnew, $this->document_tittle->CurrentValue, "", $this->document_tittle->ReadOnly);
@@ -1486,7 +1464,7 @@ class document_details_edit extends document_details
 			$this->project_system->setDbValueDef($rsnew, $this->project_system->CurrentValue, "", $this->project_system->ReadOnly);
 
 			// planned_date
-			$this->planned_date->setDbValueDef($rsnew, UnFormatDateTime($this->planned_date->CurrentValue, 5), CurrentDate(), $this->planned_date->ReadOnly);
+			$this->planned_date->setDbValueDef($rsnew, $this->planned_date->CurrentValue, CurrentDate(), $this->planned_date->ReadOnly);
 
 			// document_type
 			$this->document_type->setDbValueDef($rsnew, $this->document_type->CurrentValue, "", $this->document_type->ReadOnly);
@@ -1575,10 +1553,14 @@ class document_details_edit extends document_details
 					// Format the field values
 					switch ($fld->FieldVar) {
 						case "x_project_name":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 						case "x_project_system":
 							break;
 						case "x_document_type":
+							$row[1] = strtoupper($row[1]);
+							$row['df'] = $row[1];
 							break;
 					}
 					$ar[strval($row[0])] = $row;

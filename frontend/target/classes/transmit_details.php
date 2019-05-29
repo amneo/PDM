@@ -856,6 +856,7 @@ class transmit_details extends DbTable
 
 		// transmittal_no
 		$this->transmittal_no->ViewValue = $this->transmittal_no->CurrentValue;
+		$this->transmittal_no->ViewValue = strtoupper($this->transmittal_no->ViewValue);
 		$this->transmittal_no->ViewCustomAttributes = "";
 
 		// project_name
@@ -872,7 +873,7 @@ class transmit_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$this->project_name->ViewValue = $this->project_name->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -887,14 +888,17 @@ class transmit_details extends DbTable
 
 		// delivery_location
 		$this->delivery_location->ViewValue = $this->delivery_location->CurrentValue;
+		$this->delivery_location->ViewValue = strtoupper($this->delivery_location->ViewValue);
 		$this->delivery_location->ViewCustomAttributes = "";
 
 		// addressed_to
 		$this->addressed_to->ViewValue = $this->addressed_to->CurrentValue;
+		$this->addressed_to->ViewValue = strtoupper($this->addressed_to->ViewValue);
 		$this->addressed_to->ViewCustomAttributes = "";
 
 		// remarks
 		$this->remarks->ViewValue = $this->remarks->CurrentValue;
+		$this->remarks->ViewValue = strtoupper($this->remarks->ViewValue);
 		$this->remarks->ViewCustomAttributes = "";
 
 		// ack_rcvd
@@ -936,7 +940,7 @@ class transmit_details extends DbTable
 					$ari = 0;
 					while (!$rswrk->EOF) {
 						$arwrk = array();
-						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[1] = strtoupper($rswrk->fields('df'));
 						$this->transmit_mode->ViewValue->add($this->transmit_mode->displayValue($arwrk));
 						$rswrk->MoveNext();
 						$ari++;
@@ -1034,6 +1038,7 @@ class transmit_details extends DbTable
 		$this->transmittal_no->EditAttrs["class"] = "form-control";
 		$this->transmittal_no->EditCustomAttributes = "";
 		$this->transmittal_no->EditValue = $this->transmittal_no->CurrentValue;
+		$this->transmittal_no->EditValue = strtoupper($this->transmittal_no->EditValue);
 		$this->transmittal_no->ViewCustomAttributes = "";
 
 		// project_name
@@ -1052,7 +1057,7 @@ class transmit_details extends DbTable
 				$rswrk = Conn()->execute($sqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[1] = strtoupper($rswrk->fields('df'));
 					$this->project_name->EditValue = $this->project_name->displayValue($arwrk);
 					$rswrk->Close();
 				} else {

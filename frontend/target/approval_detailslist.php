@@ -41,6 +41,49 @@ currentPageID = ew.PAGE_ID = "list";
 var fapproval_detailslist = currentForm = new ew.Form("fapproval_detailslist", "list");
 fapproval_detailslist.formKeyCountName = '<?php echo $approval_details_list->FormKeyCountName ?>';
 
+// Validate form
+fapproval_detailslist.validate = function() {
+	if (!this.validateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.getForm(), $fobj = $(fobj);
+	if ($fobj.find("#confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.formKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = ["insert", "gridinsert"].includes($fobj.find("#action").val()) && $k[0];
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		<?php if ($approval_details_list->short_code->Required) { ?>
+			elm = this.getElements("x" + infix + "_short_code");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->short_code->caption(), $approval_details->short_code->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($approval_details_list->Description->Required) { ?>
+			elm = this.getElements("x" + infix + "_Description");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->Description->caption(), $approval_details->Description->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($approval_details_list->out_status->Required) { ?>
+			elm = this.getElements("x" + infix + "_out_status");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->out_status->caption(), $approval_details->out_status->RequiredErrorMessage)) ?>");
+		<?php } ?>
+		<?php if ($approval_details_list->in_status->Required) { ?>
+			elm = this.getElements("x" + infix + "_in_status");
+			if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+				return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $approval_details->in_status->caption(), $approval_details->in_status->RequiredErrorMessage)) ?>");
+		<?php } ?>
+
+			// Fire Form_CustomValidate event
+			if (!this.Form_CustomValidate(fobj))
+				return false;
+	}
+	return true;
+}
+
 // Form_CustomValidate event
 fapproval_detailslist.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
 
@@ -195,6 +238,15 @@ if ($approval_details->ExportAll && $approval_details->isExport()) {
 	else
 		$approval_details_list->StopRec = $approval_details_list->TotalRecs;
 }
+
+// Restore number of post back records
+if ($CurrentForm && $approval_details_list->EventCancelled) {
+	$CurrentForm->Index = -1;
+	if ($CurrentForm->hasValue($approval_details_list->FormKeyCountName) && ($approval_details->isGridAdd() || $approval_details->isGridEdit() || $approval_details->isConfirm())) {
+		$approval_details_list->KeyCount = $CurrentForm->getValue($approval_details_list->FormKeyCountName);
+		$approval_details_list->StopRec = $approval_details_list->StartRec + $approval_details_list->KeyCount - 1;
+	}
+}
 $approval_details_list->RecCnt = $approval_details_list->StartRec - 1;
 if ($approval_details_list->Recordset && !$approval_details_list->Recordset->EOF) {
 	$approval_details_list->Recordset->moveFirst();
@@ -209,10 +261,22 @@ if ($approval_details_list->Recordset && !$approval_details_list->Recordset->EOF
 $approval_details->RowType = ROWTYPE_AGGREGATEINIT;
 $approval_details->resetAttributes();
 $approval_details_list->renderRow();
+if ($approval_details->isGridEdit())
+	$approval_details_list->RowIndex = 0;
 while ($approval_details_list->RecCnt < $approval_details_list->StopRec) {
 	$approval_details_list->RecCnt++;
 	if ($approval_details_list->RecCnt >= $approval_details_list->StartRec) {
 		$approval_details_list->RowCnt++;
+		if ($approval_details->isGridAdd() || $approval_details->isGridEdit() || $approval_details->isConfirm()) {
+			$approval_details_list->RowIndex++;
+			$CurrentForm->Index = $approval_details_list->RowIndex;
+			if ($CurrentForm->hasValue($approval_details_list->FormActionName) && $approval_details_list->EventCancelled)
+				$approval_details_list->RowAction = strval($CurrentForm->getValue($approval_details_list->FormActionName));
+			elseif ($approval_details->isGridAdd())
+				$approval_details_list->RowAction = "insert";
+			else
+				$approval_details_list->RowAction = "";
+		}
 
 		// Set up key count
 		$approval_details_list->KeyCount = $approval_details_list->RowIndex;
@@ -221,10 +285,23 @@ while ($approval_details_list->RecCnt < $approval_details_list->StopRec) {
 		$approval_details->resetAttributes();
 		$approval_details->CssClass = "";
 		if ($approval_details->isGridAdd()) {
+			$approval_details_list->loadRowValues(); // Load default values
 		} else {
 			$approval_details_list->loadRowValues($approval_details_list->Recordset); // Load row values
 		}
 		$approval_details->RowType = ROWTYPE_VIEW; // Render view
+		if ($approval_details->isGridEdit()) { // Grid edit
+			if ($approval_details->EventCancelled)
+				$approval_details_list->restoreCurrentRowFormValues($approval_details_list->RowIndex); // Restore form values
+			if ($approval_details_list->RowAction == "insert")
+				$approval_details->RowType = ROWTYPE_ADD; // Render add
+			else
+				$approval_details->RowType = ROWTYPE_EDIT; // Render edit
+		}
+		if ($approval_details->isGridEdit() && ($approval_details->RowType == ROWTYPE_EDIT || $approval_details->RowType == ROWTYPE_ADD) && $approval_details->EventCancelled) // Update failed
+			$approval_details_list->restoreCurrentRowFormValues($approval_details_list->RowIndex); // Restore form values
+		if ($approval_details->RowType == ROWTYPE_EDIT) // Edit row
+			$approval_details_list->EditRowCnt++;
 
 		// Set up row id / data-rowindex
 		$approval_details->RowAttrs = array_merge($approval_details->RowAttrs, array('data-rowindex'=>$approval_details_list->RowCnt, 'id'=>'r' . $approval_details_list->RowCnt . '_approval_details', 'data-rowtype'=>$approval_details->RowType));
@@ -234,6 +311,9 @@ while ($approval_details_list->RecCnt < $approval_details_list->StopRec) {
 
 		// Render list options
 		$approval_details_list->renderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if ($approval_details_list->RowAction <> "delete" && $approval_details_list->RowAction <> "insertdelete" && !($approval_details_list->RowAction == "insert" && $approval_details->isConfirm() && $approval_details_list->emptyRow())) {
 ?>
 	<tr<?php echo $approval_details->rowAttributes() ?>>
 <?php
@@ -243,34 +323,93 @@ $approval_details_list->ListOptions->render("body", "left", $approval_details_li
 ?>
 	<?php if ($approval_details->short_code->Visible) { // short_code ?>
 		<td data-name="short_code"<?php echo $approval_details->short_code->cellAttributes() ?>>
+<?php if ($approval_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_short_code" class="form-group approval_details_short_code">
+<input type="text" data-table="approval_details" data-field="x_short_code" name="x<?php echo $approval_details_list->RowIndex ?>_short_code" id="x<?php echo $approval_details_list->RowIndex ?>_short_code" size="30" placeholder="<?php echo HtmlEncode($approval_details->short_code->getPlaceHolder()) ?>" value="<?php echo $approval_details->short_code->EditValue ?>"<?php echo $approval_details->short_code->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_short_code" name="o<?php echo $approval_details_list->RowIndex ?>_short_code" id="o<?php echo $approval_details_list->RowIndex ?>_short_code" value="<?php echo HtmlEncode($approval_details->short_code->OldValue) ?>">
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_short_code" class="form-group approval_details_short_code">
+<input type="text" data-table="approval_details" data-field="x_short_code" name="x<?php echo $approval_details_list->RowIndex ?>_short_code" id="x<?php echo $approval_details_list->RowIndex ?>_short_code" size="30" placeholder="<?php echo HtmlEncode($approval_details->short_code->getPlaceHolder()) ?>" value="<?php echo $approval_details->short_code->EditValue ?>"<?php echo $approval_details->short_code->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_short_code" class="approval_details_short_code">
 <span<?php echo $approval_details->short_code->viewAttributes() ?>>
 <?php echo $approval_details->short_code->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="approval_details" data-field="x_id" name="x<?php echo $approval_details_list->RowIndex ?>_id" id="x<?php echo $approval_details_list->RowIndex ?>_id" value="<?php echo HtmlEncode($approval_details->id->CurrentValue) ?>">
+<input type="hidden" data-table="approval_details" data-field="x_id" name="o<?php echo $approval_details_list->RowIndex ?>_id" id="o<?php echo $approval_details_list->RowIndex ?>_id" value="<?php echo HtmlEncode($approval_details->id->OldValue) ?>">
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_EDIT || $approval_details->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="approval_details" data-field="x_id" name="x<?php echo $approval_details_list->RowIndex ?>_id" id="x<?php echo $approval_details_list->RowIndex ?>_id" value="<?php echo HtmlEncode($approval_details->id->CurrentValue) ?>">
+<?php } ?>
 	<?php if ($approval_details->Description->Visible) { // Description ?>
 		<td data-name="Description"<?php echo $approval_details->Description->cellAttributes() ?>>
+<?php if ($approval_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_Description" class="form-group approval_details_Description">
+<textarea data-table="approval_details" data-field="x_Description" name="x<?php echo $approval_details_list->RowIndex ?>_Description" id="x<?php echo $approval_details_list->RowIndex ?>_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_Description" name="o<?php echo $approval_details_list->RowIndex ?>_Description" id="o<?php echo $approval_details_list->RowIndex ?>_Description" value="<?php echo HtmlEncode($approval_details->Description->OldValue) ?>">
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_Description" class="form-group approval_details_Description">
+<textarea data-table="approval_details" data-field="x_Description" name="x<?php echo $approval_details_list->RowIndex ?>_Description" id="x<?php echo $approval_details_list->RowIndex ?>_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
+</span>
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_Description" class="approval_details_Description">
 <span<?php echo $approval_details->Description->viewAttributes() ?>>
 <?php echo $approval_details->Description->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($approval_details->out_status->Visible) { // out_status ?>
 		<td data-name="out_status"<?php echo $approval_details->out_status->cellAttributes() ?>>
+<?php if ($approval_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_out_status" class="form-group approval_details_out_status">
+<input type="text" data-table="approval_details" data-field="x_out_status" name="x<?php echo $approval_details_list->RowIndex ?>_out_status" id="x<?php echo $approval_details_list->RowIndex ?>_out_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->out_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->out_status->EditValue ?>"<?php echo $approval_details->out_status->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_out_status" name="o<?php echo $approval_details_list->RowIndex ?>_out_status" id="o<?php echo $approval_details_list->RowIndex ?>_out_status" value="<?php echo HtmlEncode($approval_details->out_status->OldValue) ?>">
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_out_status" class="form-group approval_details_out_status">
+<input type="text" data-table="approval_details" data-field="x_out_status" name="x<?php echo $approval_details_list->RowIndex ?>_out_status" id="x<?php echo $approval_details_list->RowIndex ?>_out_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->out_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->out_status->EditValue ?>"<?php echo $approval_details->out_status->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_out_status" class="approval_details_out_status">
 <span<?php echo $approval_details->out_status->viewAttributes() ?>>
 <?php echo $approval_details->out_status->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 	<?php if ($approval_details->in_status->Visible) { // in_status ?>
 		<td data-name="in_status"<?php echo $approval_details->in_status->cellAttributes() ?>>
+<?php if ($approval_details->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_in_status" class="form-group approval_details_in_status">
+<input type="text" data-table="approval_details" data-field="x_in_status" name="x<?php echo $approval_details_list->RowIndex ?>_in_status" id="x<?php echo $approval_details_list->RowIndex ?>_in_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->in_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->in_status->EditValue ?>"<?php echo $approval_details->in_status->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_in_status" name="o<?php echo $approval_details_list->RowIndex ?>_in_status" id="o<?php echo $approval_details_list->RowIndex ?>_in_status" value="<?php echo HtmlEncode($approval_details->in_status->OldValue) ?>">
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_in_status" class="form-group approval_details_in_status">
+<input type="text" data-table="approval_details" data-field="x_in_status" name="x<?php echo $approval_details_list->RowIndex ?>_in_status" id="x<?php echo $approval_details_list->RowIndex ?>_in_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->in_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->in_status->EditValue ?>"<?php echo $approval_details->in_status->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($approval_details->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $approval_details_list->RowCnt ?>_approval_details_in_status" class="approval_details_in_status">
 <span<?php echo $approval_details->in_status->viewAttributes() ?>>
 <?php echo $approval_details->in_status->getViewValue() ?></span>
 </span>
+<?php } ?>
 </td>
 	<?php } ?>
 <?php
@@ -279,14 +418,94 @@ $approval_details_list->ListOptions->render("body", "left", $approval_details_li
 $approval_details_list->ListOptions->render("body", "right", $approval_details_list->RowCnt);
 ?>
 	</tr>
+<?php if ($approval_details->RowType == ROWTYPE_ADD || $approval_details->RowType == ROWTYPE_EDIT) { ?>
+<script>
+fapproval_detailslist.updateLists(<?php echo $approval_details_list->RowIndex ?>);
+</script>
+<?php } ?>
 <?php
 	}
+	} // End delete row checking
 	if (!$approval_details->isGridAdd())
-		$approval_details_list->Recordset->moveNext();
+		if (!$approval_details_list->Recordset->EOF)
+			$approval_details_list->Recordset->moveNext();
+}
+?>
+<?php
+	if ($approval_details->isGridAdd() || $approval_details->isGridEdit()) {
+		$approval_details_list->RowIndex = '$rowindex$';
+		$approval_details_list->loadRowValues();
+
+		// Set row properties
+		$approval_details->resetAttributes();
+		$approval_details->RowAttrs = array_merge($approval_details->RowAttrs, array('data-rowindex'=>$approval_details_list->RowIndex, 'id'=>'r0_approval_details', 'data-rowtype'=>ROWTYPE_ADD));
+		AppendClass($approval_details->RowAttrs["class"], "ew-template");
+		$approval_details->RowType = ROWTYPE_ADD;
+
+		// Render row
+		$approval_details_list->renderRow();
+
+		// Render list options
+		$approval_details_list->renderListOptions();
+		$approval_details_list->StartRowCnt = 0;
+?>
+	<tr<?php echo $approval_details->rowAttributes() ?>>
+<?php
+
+// Render list options (body, left)
+$approval_details_list->ListOptions->render("body", "left", $approval_details_list->RowIndex);
+?>
+	<?php if ($approval_details->short_code->Visible) { // short_code ?>
+		<td data-name="short_code">
+<span id="el$rowindex$_approval_details_short_code" class="form-group approval_details_short_code">
+<input type="text" data-table="approval_details" data-field="x_short_code" name="x<?php echo $approval_details_list->RowIndex ?>_short_code" id="x<?php echo $approval_details_list->RowIndex ?>_short_code" size="30" placeholder="<?php echo HtmlEncode($approval_details->short_code->getPlaceHolder()) ?>" value="<?php echo $approval_details->short_code->EditValue ?>"<?php echo $approval_details->short_code->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_short_code" name="o<?php echo $approval_details_list->RowIndex ?>_short_code" id="o<?php echo $approval_details_list->RowIndex ?>_short_code" value="<?php echo HtmlEncode($approval_details->short_code->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($approval_details->Description->Visible) { // Description ?>
+		<td data-name="Description">
+<span id="el$rowindex$_approval_details_Description" class="form-group approval_details_Description">
+<textarea data-table="approval_details" data-field="x_Description" name="x<?php echo $approval_details_list->RowIndex ?>_Description" id="x<?php echo $approval_details_list->RowIndex ?>_Description" cols="35" rows="4" placeholder="<?php echo HtmlEncode($approval_details->Description->getPlaceHolder()) ?>"<?php echo $approval_details->Description->editAttributes() ?>><?php echo $approval_details->Description->EditValue ?></textarea>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_Description" name="o<?php echo $approval_details_list->RowIndex ?>_Description" id="o<?php echo $approval_details_list->RowIndex ?>_Description" value="<?php echo HtmlEncode($approval_details->Description->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($approval_details->out_status->Visible) { // out_status ?>
+		<td data-name="out_status">
+<span id="el$rowindex$_approval_details_out_status" class="form-group approval_details_out_status">
+<input type="text" data-table="approval_details" data-field="x_out_status" name="x<?php echo $approval_details_list->RowIndex ?>_out_status" id="x<?php echo $approval_details_list->RowIndex ?>_out_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->out_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->out_status->EditValue ?>"<?php echo $approval_details->out_status->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_out_status" name="o<?php echo $approval_details_list->RowIndex ?>_out_status" id="o<?php echo $approval_details_list->RowIndex ?>_out_status" value="<?php echo HtmlEncode($approval_details->out_status->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($approval_details->in_status->Visible) { // in_status ?>
+		<td data-name="in_status">
+<span id="el$rowindex$_approval_details_in_status" class="form-group approval_details_in_status">
+<input type="text" data-table="approval_details" data-field="x_in_status" name="x<?php echo $approval_details_list->RowIndex ?>_in_status" id="x<?php echo $approval_details_list->RowIndex ?>_in_status" size="30" placeholder="<?php echo HtmlEncode($approval_details->in_status->getPlaceHolder()) ?>" value="<?php echo $approval_details->in_status->EditValue ?>"<?php echo $approval_details->in_status->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="approval_details" data-field="x_in_status" name="o<?php echo $approval_details_list->RowIndex ?>_in_status" id="o<?php echo $approval_details_list->RowIndex ?>_in_status" value="<?php echo HtmlEncode($approval_details->in_status->OldValue) ?>">
+</td>
+	<?php } ?>
+<?php
+
+// Render list options (body, right)
+$approval_details_list->ListOptions->render("body", "right", $approval_details_list->RowIndex);
+?>
+<script>
+fapproval_detailslist.updateLists(<?php echo $approval_details_list->RowIndex ?>);
+</script>
+	</tr>
+<?php
 }
 ?>
 </tbody>
 </table><!-- /.ew-table -->
+<?php } ?>
+<?php if ($approval_details->isGridEdit()) { ?>
+<input type="hidden" name="action" id="action" value="gridupdate">
+<input type="hidden" name="<?php echo $approval_details_list->FormKeyCountName ?>" id="<?php echo $approval_details_list->FormKeyCountName ?>" value="<?php echo $approval_details_list->KeyCount ?>">
+<?php echo $approval_details_list->MultiSelectKey ?>
 <?php } ?>
 <?php if (!$approval_details->CurrentAction) { ?>
 <input type="hidden" name="action" id="action" value="">
