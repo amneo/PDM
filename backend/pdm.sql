@@ -837,7 +837,7 @@ CREATE TABLE public.document_details (
     document_sequence serial NOT NULL,
     firelink_doc_no varchar NOT NULL,
     project_name varchar NOT NULL,
-    client_doc_no varchar NOT NULL,
+    client_doc_no varchar,
     document_tittle varchar NOT NULL,
     project_system varchar NOT NULL,
     create_date timestamp without time zone DEFAULT now(),
@@ -1100,12 +1100,6 @@ ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_pk
     PRIMARY KEY (document_sequence);
 --
--- Definition for index document_details_client_doc_no_key (OID = 25625) : 
---
-ALTER TABLE ONLY document_details
-    ADD CONSTRAINT document_details_client_doc_no_key
-    UNIQUE (client_doc_no);
---
 -- Definition for index document_details_firelink_doc_no_key (OID = 25627) : 
 --
 ALTER TABLE ONLY document_details
@@ -1243,6 +1237,12 @@ ALTER TABLE ONLY transaction_details
 ALTER TABLE ONLY document_details
     ADD CONSTRAINT document_details_system
     FOREIGN KEY (project_system) REFERENCES document_system(system_name) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+--
+-- Definition for index document_type_pkey (OID = 70703) : 
+--
+ALTER TABLE ONLY document_type
+    ADD CONSTRAINT document_type_pkey
+    PRIMARY KEY (type_id);
 --
 -- Definition for trigger transaction_details_project (OID = 61779) : 
 --
