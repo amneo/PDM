@@ -591,13 +591,6 @@ class userlevelpermissions_delete extends userlevelpermissions
 				$Security->UserID_Loaded();
 			}
 		}
-
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->userlevelid->Visible = FALSE;
 		$this->_tablename->setVisibility();

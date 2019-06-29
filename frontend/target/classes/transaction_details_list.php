@@ -721,13 +721,6 @@ class transaction_details_list extends transaction_details
 			}
 		}
 
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
-
 		// Create form object
 		$CurrentForm = new HttpForm();
 
@@ -1862,12 +1855,6 @@ class transaction_details_list extends transaction_details
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->add("view");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->canView();
-		$item->OnLeft = TRUE;
-
 		// "edit"
 		$item = &$this->ListOptions->add("edit");
 		$item->CssClass = "text-nowrap";
@@ -1951,15 +1938,6 @@ class transaction_details_list extends transaction_details
 					$opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
 				}
 			}
-		}
-
-		// "view"
-		$opt = &$this->ListOptions->Items["view"];
-		$viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-		if ($Security->canView() && $this->showOptionLink('view')) {
-			$opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode($this->ViewUrl) . "\">" . $Language->phrase("ViewLink") . "</a>";
-		} else {
-			$opt->Body = "";
 		}
 
 		// "edit"

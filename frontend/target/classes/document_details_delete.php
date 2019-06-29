@@ -592,13 +592,6 @@ class document_details_delete extends document_details
 				$Security->UserID_Loaded();
 			}
 		}
-
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->document_sequence->Visible = FALSE;
 		$this->firelink_doc_no->setVisibility();

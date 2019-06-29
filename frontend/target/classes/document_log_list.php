@@ -706,13 +706,6 @@ class document_log_list extends document_log
 			}
 		}
 
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
-
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {

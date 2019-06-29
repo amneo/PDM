@@ -707,13 +707,6 @@ class users_list extends users
 			}
 		}
 
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
-
 		// Get export parameters
 		$custom = "";
 		if (Param("export") !== NULL) {
@@ -791,7 +784,6 @@ class users_list extends users
 		// Setup other options
 		$this->setupOtherOptions();
 		$this->ListActions->add("resendregisteremail", $Language->phrase("ResendRegisterEmailBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
-		$this->ListActions->add("resetconcurrentuser", $Language->phrase("ResetConcurrentUserBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 		$this->ListActions->add("resetloginretry", $Language->phrase("ResetLoginRetryBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 		$this->ListActions->add("setpasswordexpired", $Language->phrase("SetPasswordExpiredBtn"), IsAdmin(), ACTION_AJAX, ACTION_SINGLE);
 
@@ -1310,7 +1302,7 @@ class users_list extends users
 					if ($userAction == "resendregisteremail")
 						$processed = $this->sendRegisterEmail($row);
 					elseif ($userAction == "resetconcurrentuser")
-						$processed = $UserProfile->resetConcurrentUser($user);
+						$processed = FALSE;
 					elseif ($userAction == "resetloginretry")
 						$processed = $UserProfile->resetLoginRetry($user);
 					elseif ($userAction == "setpasswordexpired")
@@ -1325,8 +1317,6 @@ class users_list extends users
 					$conn->commitTrans(); // Commit the changes
 					if ($userAction == "resendregisteremail")
 						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResendRegisterEmailSuccess")));
-					if ($userAction == "resetconcurrentuser")
-						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResetConcurrentUserSuccess")));
 					if ($userAction == "resetloginretry")
 						$this->setSuccessMessage(str_replace('%u', $userlist, $Language->phrase("ResetLoginRetrySuccess")));
 					if ($userAction == "setpasswordexpired")
@@ -1337,8 +1327,6 @@ class users_list extends users
 					$conn->rollbackTrans(); // Rollback changes
 					if ($userAction == "resendregisteremail")
 						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResendRegisterEmailFailure")));
-					if ($userAction == "resetconcurrentuser")
-						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResetConcurrentUserFailure")));
 					if ($userAction == "resetloginretry")
 						$this->setFailureMessage(str_replace('%u', $user, $Language->phrase("ResetLoginRetryFailure")));
 					if ($userAction == "setpasswordexpired")

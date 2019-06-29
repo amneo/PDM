@@ -1812,7 +1812,7 @@ if (DEBUG_ENABLED)
 </script>
 <?php if (!$document_log->isExport()) { ?>
 <script>
-ew.scrollableTable("gmp_document_log", "100%", "100%");
+ew.scrollableTable("gmp_document_log", "100%", "");
 </script>
 <?php } ?>
 <?php } ?>

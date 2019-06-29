@@ -584,13 +584,6 @@ class app_version_delete extends app_version
 				$Security->UserID_Loaded();
 			}
 		}
-
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->sequence_no->Visible = FALSE;
 		$this->frontend_version->Visible = FALSE;

@@ -1150,7 +1150,7 @@ if (DEBUG_ENABLED)
 </script>
 <?php if (!$transaction_details->isExport()) { ?>
 <script>
-ew.scrollableTable("gmp_transaction_details", "100%", "100%");
+ew.scrollableTable("gmp_transaction_details", "100%", "");
 </script>
 <?php } ?>
 <?php } ?>

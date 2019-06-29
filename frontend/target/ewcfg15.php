@@ -37,7 +37,7 @@ define(PROJECT_NAMESPACE . "PATH_DELIMITER", ((IS_WINDOWS) ? "\\" : "/")); // Ph
 define(PROJECT_NAMESPACE . "UNFORMAT_YEAR", 50); // Unformat year
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "pdm"); // Project name
 define(PROJECT_NAMESPACE . "CONFIG_FILE_FOLDER", PROJECT_NAME); // Config file name
-define(PROJECT_NAMESPACE . "RANDOM_KEY", 'kurcaA4N30l8htLr'); // Random key for encryption
+define(PROJECT_NAMESPACE . "RANDOM_KEY", 'fHskeQ44AUF31bUf'); // Random key for encryption
 define(PROJECT_NAMESPACE . "ENCRYPTION_KEY", ''); // Encryption key for data protection
 define(PROJECT_NAMESPACE . "PROJECT_STYLESHEET_FILENAME", "phpcss/pdm.css"); // Project stylesheet file name
 define(PROJECT_NAMESPACE . "PROJECT_CHARSET", "utf-8"); // Project charset
@@ -55,7 +55,7 @@ $RELATED_PROJECT_ID = "";
 $BODY_CLASS = "hold-transition sidebar-collapse";
 $SIDEBAR_CLASS = "main-sidebar sidebar-dark-danger";
 $NAVBAR_CLASS = "main-header navbar navbar-expand navbar-dark bg-danger";
-$RESET_HEIGHT = TRUE; // Reset layout height
+$RESET_HEIGHT = FALSE; // Reset layout height
 
 // Class path
 $CLASS_PATH = 'classes/'; // With trailing delimiter
@@ -359,8 +359,8 @@ define(PROJECT_NAMESPACE . "USER_ACTIVATE_FILTER", "(\"uActivated\" = true)");
 // User Profile Constants
 define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_ID", "SessionID");
 define(PROJECT_NAMESPACE . "USER_PROFILE_LAST_ACCESSED_DATE_TIME", "LastAccessedDateTime");
-define(PROJECT_NAMESPACE . "USER_PROFILE_CONCURRENT_SESSION_COUNT", 1); // Maximum sessions allowed
-define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_TIMEOUT", 120);
+define(PROJECT_NAMESPACE . "USER_PROFILE_CONCURRENT_SESSION_COUNT", 3); // Maximum sessions allowed
+define(PROJECT_NAMESPACE . "USER_PROFILE_SESSION_TIMEOUT", 720);
 define(PROJECT_NAMESPACE . "USER_PROFILE_LOGIN_RETRY_COUNT", "LoginRetryCount");
 define(PROJECT_NAMESPACE . "USER_PROFILE_LAST_BAD_LOGIN_DATE_TIME", "LastBadLoginDateTime");
 define(PROJECT_NAMESPACE . "USER_PROFILE_MAX_RETRY", 3);

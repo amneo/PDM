@@ -584,13 +584,6 @@ class inbox_delete extends inbox
 				$Security->UserID_Loaded();
 			}
 		}
-
-		// Update last accessed time
-		if ($UserProfile->isValidUser(CurrentUserName(), session_id())) {
-		} else {
-			Write($Language->phrase("UserProfileCorrupted"));
-			$this->terminate();
-		}
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->inbox_id->Visible = FALSE;
 		$this->from->setVisibility();
