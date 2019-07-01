@@ -731,7 +731,7 @@ class transaction_details_add extends transaction_details
 				if ($this->addRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
-					$returnUrl = $this->GetViewUrl();
+					$returnUrl = "transaction_detailslist.php";
 					if (GetPageName($returnUrl) == "transaction_detailslist.php")
 						$returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
 					elseif (GetPageName($returnUrl) == "transaction_detailsview.php")

@@ -730,7 +730,7 @@ class transaction_details_edit extends transaction_details
 				}
 				break;
 			case "update": // Update
-				$returnUrl = $this->GetViewUrl();
+				$returnUrl = "transaction_detailslist.php";
 				if (GetPageName($returnUrl) == "transaction_detailslist.php")
 					$returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
